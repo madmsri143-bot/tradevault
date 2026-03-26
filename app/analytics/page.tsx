@@ -197,6 +197,13 @@ export default function AnalyticsPage() {
   const rrScore = Math.min((avgRR / 3) * 10, 10);
   const consistencyScore = Math.min(10, (greenRatio * 10) + (currentStreak * 0.5));
 
+  const averageExecution = (wrScore + slScore + rrScore + consistencyScore) / 4;
+  const executionPercentage = averageExecution * 10;
+  
+  let executionColor = "text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]";
+  if (executionPercentage < 40) executionColor = "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]";
+  else if (executionPercentage <= 70) executionColor = "text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]";
+
   const radarData = [
     { subject: 'Consistency', A: Number(consistencyScore.toFixed(1)) || 0, fullMark: 10 },
     { subject: 'Risk-Reward', A: Number(rrScore.toFixed(1)) || 0, fullMark: 10 },
@@ -325,13 +332,24 @@ export default function AnalyticsPage() {
             <Target size={16} className="text-emerald-500" /> Execution Score
           </h2>
           <p className="text-[10px] text-zinc-500 mb-2 text-center uppercase tracking-widest font-semibold">Metrics normalized (0-10 scale)</p>
-          <div className="flex-1 w-full min-h-[220px] -ml-2">
+          <div className="flex-1 w-full min-h-[220px] relative -ml-2">
+            
+            {/* Center Execution Score Overlay */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none z-10 bg-zinc-900/40 backdrop-blur-[2px] w-24 h-24 rounded-full border border-white/5 shadow-inner">
+              <span className={`text-2xl font-black ${executionColor} tracking-tighter`}>
+                {Math.round(executionPercentage)}%
+              </span>
+              <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest mt-1 text-center leading-tight">
+                Execution<br/>Score
+              </span>
+            </div>
+
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
                 <PolarGrid stroke="#27272a" />
                 <PolarAngleAxis dataKey="subject" tick={{ fill: "#a1a1aa", fontSize: 10, fontWeight: 600 }} />
                 <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
-                <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.3} />
+                <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.15} />
               </RadarChart>
             </ResponsiveContainer>
           </div>

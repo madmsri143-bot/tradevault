@@ -12,11 +12,22 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase gracefully for Next.js (SSR compatibility)
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-const storage = getStorage(app);
+// Initialize variables but don't instantiate them until we know we are on the client
+let app;
+let db;
+let auth;
+let storage;
+let googleProvider;
+
+// Only initialize Firebase on the client-side (where 'window' is defined)
+// This strictly prevents Next.js Server-Side Rendering (SSR) from crashing if it tries to access Firebase Auth during Vercel builds.
+if (typeof window !== "undefined") {
+  // Graceful initialization check
+  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  db = getFirestore(app);
+  auth = getAuth(app);
+  googleProvider = new GoogleAuthProvider();
+  storage = getStorage(app);
+}
 
 export { app, db, auth, googleProvider, storage };

@@ -45,6 +45,10 @@ export default function SettingsPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
+  const [exportEntireHistory, setExportEntireHistory] = useState(true);
+  const [exportFromDate, setExportFromDate] = useState("");
+  const [exportToDate, setExportToDate] = useState("");
+
   useEffect(() => {
     setIsDarkMode(!document.documentElement.classList.contains("light"));
     
@@ -80,11 +84,37 @@ export default function SettingsPage() {
     }
   };
 
+  const getFilteredTrades = (allTrades: any[]) => {
+    if (exportEntireHistory) return allTrades;
+    if (!exportFromDate || !exportToDate) {
+      throw new Error("Please select both 'From' and 'To' dates.");
+    }
+    const fromTime = new Date(exportFromDate).getTime();
+    const toDateObj = new Date(exportToDate);
+    toDateObj.setHours(23, 59, 59, 999);
+    const toTime = toDateObj.getTime();
+
+    return allTrades.filter(t => t.date >= fromTime && t.date <= toTime);
+  };
+
   const handleExportExcel = async () => {
     try {
       if (!user) return;
       const snap = await getDocs(collection(db, "users", user.uid, "trades"));
-      const tradesData = snap.docs.map(d => d.data());
+      let tradesData = snap.docs.map(d => d.data());
+      
+      try {
+        tradesData = getFilteredTrades(tradesData);
+      } catch (err: any) {
+        await alert({ message: err.message, title: "Validation Error" });
+        return;
+      }
+      
+      if (tradesData.length === 0) {
+        await alert({ message: "No trades found in the selected date range." });
+        return;
+      }
+
       const exportData = tradesData.map((t: any) => ({
         Date: format(new Date(t.date), "yyyy-MM-dd"),
         Asset: t.symbol,
@@ -97,7 +127,7 @@ export default function SettingsPage() {
       const worksheet = XLSX.utils.json_to_sheet(exportData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Trades");
-      XLSX.writeFile(workbook, "TradingJournal.xlsx");
+      XLSX.writeFile(workbook, `TradingJournal_${exportEntireHistory ? 'All' : exportFromDate}.xlsx`);
     } catch (e) {
       await alert({ message: "Failed to export Excel." });
     }
@@ -107,10 +137,24 @@ export default function SettingsPage() {
     try {
       if (!user) return;
       const snap = await getDocs(collection(db, "users", user.uid, "trades"));
-      const tradesData = snap.docs.map(d => d.data()).sort((a: any, b: any) => b.date - a.date);
+      let tradesData = snap.docs.map(d => d.data());
+
+      try {
+        tradesData = getFilteredTrades(tradesData);
+      } catch (err: any) {
+        await alert({ message: err.message, title: "Validation Error" });
+        return;
+      }
+      
+      if (tradesData.length === 0) {
+        await alert({ message: "No trades found in the selected date range." });
+        return;
+      }
+
+      tradesData = tradesData.sort((a: any, b: any) => b.date - a.date);
       
       const pdfDoc = new jsPDF();
-      pdfDoc.text("Trading Journal Report", 14, 15);
+      pdfDoc.text(exportEntireHistory ? "Trading Journal Report" : `Trading Report (${exportFromDate} to ${exportToDate})`, 14, 15);
       pdfDoc.setFontSize(10);
       pdfDoc.text(`Generated on: ${format(new Date(), "PPpp")}`, 14, 22);
       
@@ -362,14 +406,56 @@ export default function SettingsPage() {
           </div>
           <div className="p-0">
             {/* Export System */}
-            <div className="flex items-center justify-between p-6 border-b border-white/5 md:flex-row flex-col gap-4 items-start md:items-center hover:bg-white/[0.02] transition-colors">
-              <div>
-                <h3 className="text-sm font-medium text-white mb-1 flex items-center gap-2"><Download size={14} className="text-emerald-500"/> Export Local Data</h3>
-                <p className="text-xs text-zinc-500">Download your history offline.</p>
+            <div className="flex flex-col md:flex-row items-start justify-between p-6 border-b border-white/5 gap-4 hover:bg-white/[0.02] transition-colors">
+              <div className="flex-1 w-full max-w-xl">
+                <h3 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+                  <Download size={14} className="text-emerald-500" /> Export Local Data
+                </h3>
+                <p className="text-xs text-zinc-500 mb-4">Download your history offline.</p>
+                
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-zinc-950/50 p-3 rounded-lg border border-black/10 dark:border-white/5 w-full">
+                  <label className="flex items-center gap-2 cursor-pointer shrink-0">
+                    <input 
+                      type="checkbox" 
+                      checked={exportEntireHistory}
+                      onChange={(e) => setExportEntireHistory(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-0 focus:ring-offset-0"
+                    />
+                    <span className="text-xs font-medium text-zinc-300">Entire History</span>
+                  </label>
+                  
+                  <div className={`flex items-center gap-2 transition-opacity duration-200 w-full sm:w-auto ${exportEntireHistory ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
+                    <div className="flex items-center gap-1.5 flex-1 sm:flex-none justify-between sm:justify-start">
+                      <span className="text-[10px] uppercase font-bold text-zinc-500">From</span>
+                      <input 
+                        type="date" 
+                        disabled={exportEntireHistory}
+                        value={exportFromDate}
+                        onChange={(e) => setExportFromDate(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 rounded p-1 text-xs text-zinc-300 focus:outline-none focus:border-emerald-500 [color-scheme:dark] w-[110px]"
+                      />
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-1 sm:flex-none justify-between sm:justify-start">
+                      <span className="text-[10px] uppercase font-bold text-zinc-500">To</span>
+                      <input 
+                        type="date" 
+                        disabled={exportEntireHistory}
+                        value={exportToDate}
+                        onChange={(e) => setExportToDate(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 rounded p-1 text-xs text-zinc-300 focus:outline-none focus:border-emerald-500 [color-scheme:dark] w-[110px]"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <button onClick={handleExportExcel} className="text-xs text-emerald-500 font-medium px-4 py-2 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/10 transition">Export .XLSX</button>
-                <button onClick={handleExportPDF} className="text-xs text-blue-500 font-medium px-4 py-2 border border-blue-500/20 rounded-lg hover:bg-blue-500/10 transition">Export .PDF</button>
+
+              <div className="flex items-center justify-end gap-3 w-full md:w-auto mt-2 md:mt-0 self-end md:self-center">
+                <button onClick={handleExportExcel} className="flex-1 md:flex-none justify-center text-xs text-emerald-500 font-medium px-4 py-2 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/10 transition flex items-center gap-2 shadow-sm">
+                  Export .XLSX
+                </button>
+                <button onClick={handleExportPDF} className="flex-1 md:flex-none justify-center text-xs text-blue-500 font-medium px-4 py-2 border border-blue-500/20 rounded-lg hover:bg-blue-500/10 transition flex items-center gap-2 shadow-sm">
+                  Export .PDF
+                </button>
               </div>
             </div>
 
