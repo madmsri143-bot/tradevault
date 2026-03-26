@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { auth, googleProvider, db } from "@/lib/firebase";
-import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, setPersistence, browserLocalPersistence, browserSessionPersistence } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { TrendingUp, Loader2, Mail, Lock, User as UserIcon, Eye, EyeOff, CheckCircle2, ChevronLeft, Globe, Shield, Target } from "lucide-react";
@@ -38,6 +38,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   
   const [loading, setLoading] = useState(false);
   
@@ -137,6 +138,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           username, 
           lastActive: now, 
           plan: plan,
+          hasUsedTrial: plan === "trial",
           trial_started_at: plan === "trial" ? now : null,
           trial_end_date: plan === "trial" ? now + (7 * 24 * 60 * 60 * 1000) : null,
           isPro: false,
@@ -146,6 +148,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         setSuccessMsg("Verification link sent! Check your inbox.");
         setTimeout(() => router.push(redirectPath), 3000);
       } else {
+        await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         // Redirection will be handled by the useEffect above
       }
@@ -189,6 +192,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         username, 
         lastActive: now, 
         plan: plan,
+        hasUsedTrial: plan === "trial",
         trial_started_at: plan === "trial" ? now : null,
         trial_end_date: plan === "trial" ? now + (7 * 24 * 60 * 60 * 1000) : null,
         isPro: false,
@@ -197,6 +201,25 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       router.push(redirectPath);
     } catch (err) {
       setFieldErrors({ general: "Failed to save profile." });
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFieldErrors({});
+    if (!email.trim() || !email.includes("@")) {
+      setFieldErrors({ email: "Enter a valid email address" });
+      return;
+    }
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setSuccessMsg("Password reset link sent! Check your inbox.");
+      setTimeout(() => setMode("login"), 3000);
+    } catch (err: any) {
+      handleFirebaseError(err);
+    } finally {
       setLoading(false);
     }
   };
@@ -258,17 +281,17 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         <div className="w-full max-w-sm space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="text-center md:text-left space-y-2">
              <h2 className="text-3xl font-bold text-white tracking-tight">
-               {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : "Profile Setup"}
+               {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : mode === "forgot-password" ? "Reset Password" : "Profile Setup"}
              </h2>
              <p className="text-zinc-500 text-sm">
-               {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : "Please enter your details."}
+               {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : mode === "forgot-password" ? "Enter your email to receive a reset link" : "Please enter your details."}
              </p>
           </div>
 
           {successMsg && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
           {fieldErrors.general && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-bold text-center animate-in zoom-in-95">{fieldErrors.general}</div>}
 
-          <form onSubmit={mode === "setup-username" ? handleSetupUsername : handleEmailAuth} className="space-y-4">
+          <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4">
             {mode === "signup" && (
               <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
                 <Input label="Name" value={name} onChange={setName} type="text" placeholder="John" />
@@ -278,19 +301,42 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
             
             {mode === "setup-username" ? (
               <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="pick_a_name" autofocus />
+            ) : mode === "forgot-password" ? (
+              <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autofocus />
             ) : (
               <>
-                <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} />
+                <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autoComplete="off" />
                 <div className="relative">
                   <Input 
                     label="Password" value={password} onChange={setPassword} 
                     type={showPassword ? "text" : "password"} placeholder="••••••••" 
                     error={fieldErrors.password}
+                    autoComplete="off"
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 bottom-3 text-zinc-600 hover:text-white transition-colors">
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
+                
+                {mode === "login" && (
+                  <div className="flex items-center justify-between mt-1 px-1">
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                      <div className="relative flex items-center justify-center">
+                        <input 
+                          type="checkbox" 
+                          checked={rememberMe} 
+                          onChange={(e) => setRememberMe(e.target.checked)} 
+                          className="peer appearance-none w-4 h-4 border border-zinc-700 rounded bg-zinc-900 checked:bg-[#00FFB2] checked:border-[#00FFB2] transition-colors cursor-pointer"
+                        />
+                        <CheckCircle2 size={12} className="absolute text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                      </div>
+                      <span className="text-xs text-zinc-400 group-hover:text-white transition-colors select-none font-medium">Remember me</span>
+                    </label>
+                    <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-zinc-400 hover:text-[#00FFB2] transition-colors font-medium">
+                      Forgot Password?
+                    </button>
+                  </div>
+                )}
               </>
             )}
 
@@ -299,7 +345,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
             )}
 
             <button disabled={loading} type="submit" className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
-              {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? (plan === "free" ? "Get Started Free" : "Start 7-Day Trial") : "Finish Setup"}
+              {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? (plan === "free" ? "Get Started Free" : "Start 7-Day Trial") : mode === "forgot-password" ? "Send Reset Link" : "Finish Setup"}
             </button>
             {mode === "signup" && (
                <p className="text-center text-xs text-zinc-500 font-medium mt-3">
@@ -308,7 +354,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
             )}
           </form>
 
-          {mode !== "setup-username" && (
+          {mode !== "setup-username" && mode !== "forgot-password" && (
             <>
               <div className="relative flex items-center py-2">
                 <div className="flex-grow border-t border-white/5"></div>
@@ -326,8 +372,8 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                 Google
               </button>
 
-              <div className="text-center group">
-                 <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="text-sm text-zinc-500 font-medium hover:text-white transition-colors">
+              <div className="text-center flex flex-col gap-3 group mt-2">
+                 <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-500 font-medium hover:text-white transition-colors">
                    {mode === "login" ? <>New to TradeVault? <span className="text-[#00FFB2] font-black underline underline-offset-4">Start Trial</span></> : <>Already have an account? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
@@ -339,12 +385,13 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   );
 }
 
-function Input({ label, value, onChange, type, placeholder, error, autofocus = false }: any) {
+function Input({ label, value, onChange, type, placeholder, error, autofocus = false, autoComplete }: any) {
   return (
     <div className="relative group">
       <input 
         type={type} value={value} onChange={e => onChange(e.target.value)} placeholder=" "
         autoFocus={autofocus}
+        autoComplete={autoComplete}
         id={`input-${label}`}
         className={`peer w-full bg-white/5 border rounded-2xl px-4 pt-6 pb-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00FFB2]/20 transition-all ${error ? 'border-red-500/50 focus:border-red-500' : 'border-white/5 focus:border-[#00FFB2]'}`} 
       />

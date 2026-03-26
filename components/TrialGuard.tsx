@@ -12,6 +12,7 @@ export interface UserAccessState {
   access: "premium" | "free";
   plan: "trial" | "free" | "pro";
   planName?: string;
+  hasUsedTrial: boolean;
   expiryDate?: number | null;
   trial_days_left: number;
   subscription_days_left: number;
@@ -23,6 +24,7 @@ export function useTrial() {
   const [status, setStatus] = useState<UserAccessState>({ 
     access: "free", 
     plan: "free", 
+    hasUsedTrial: false,
     trial_days_left: 0, 
     subscription_days_left: 0, 
     loading: true 
@@ -35,7 +37,7 @@ export function useTrial() {
         const data = snap.data();
         const now = Date.now();
         
-        let currentState: UserAccessState = { access: "free", plan: "free", trial_days_left: 0, subscription_days_left: 0, loading: false };
+        let currentState: UserAccessState = { access: "free", plan: "free", hasUsedTrial: false, trial_days_left: 0, subscription_days_left: 0, loading: false };
 
         // 1. Friend Access Whitelist
         const friendEmails = (process.env.NEXT_PUBLIC_FRIEND_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
@@ -75,6 +77,7 @@ export function useTrial() {
              access: "premium",
              plan: "pro",
              planName,
+             hasUsedTrial: data.hasUsedTrial || data.plan === "trial" || false,
              expiryDate: data.plan_expiry_date || null,
              trial_days_left: trialLeft,
              subscription_days_left: isFriend ? 999 : subDaysLeft,
@@ -85,6 +88,7 @@ export function useTrial() {
              access: "premium",
              plan: "trial",
              planName: "Professional Trial",
+             hasUsedTrial: true,
              expiryDate: trialEnd,
              trial_days_left: trialLeft,
              subscription_days_left: 0,
@@ -95,6 +99,7 @@ export function useTrial() {
              access: "free",
              plan: "free",
              planName: "Free",
+             hasUsedTrial: data.hasUsedTrial || data.plan === "trial" || false,
              expiryDate: null,
              trial_days_left: 0,
              subscription_days_left: 0,
@@ -104,7 +109,7 @@ export function useTrial() {
 
         setStatus(currentState);
       } else {
-        setStatus({ access: "premium", plan: "trial", planName: "Professional Trial", trial_days_left: 7, subscription_days_left: 0, loading: false });
+        setStatus({ access: "premium", plan: "trial", planName: "Professional Trial", hasUsedTrial: true, trial_days_left: 7, subscription_days_left: 0, loading: false });
       }
     });
     return () => unsub();

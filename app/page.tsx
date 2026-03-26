@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
+import { useTrial } from "@/components/TrialGuard";
 
 export default function LandingPage() {
   const { user } = useAuth();
+  const { hasUsedTrial } = useTrial();
 
   return (
     <div className="min-h-screen bg-[#0B0F14] text-white selection:bg-[#00FFB2]/30 overflow-x-hidden">
@@ -36,8 +38,8 @@ export default function LandingPage() {
           <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
             Login
           </Link>
-          <Link href={user ? "/dashboard" : "/signup?plan=trial"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
-            {user ? "Launch App" : "Start 7-Day Trial"}
+          <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
+            {user ? (hasUsedTrial ? "Upgrade to Pro" : "Launch App") : "Start 7-Day Trial"}
           </Link>
         </div>
       </nav>
@@ -59,8 +61,8 @@ export default function LandingPage() {
               The premier workspace for traders to log execution, identify psychological patterns, and hit mathematical profit targets with surgical precision.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/signup?plan=trial" className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
-                Start 7-Day Trial <ChevronRight size={20} />
+              <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
+                {user ? (hasUsedTrial ? "Upgrade to Pro" : "Launch Workspace") : "Start 7-Day Trial"} <ChevronRight size={20} />
               </Link>
               <Link href="/signup?plan=free" className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all">
                 Get Started for Free
@@ -340,8 +342,8 @@ export default function LandingPage() {
               <PricingTier feature="Unlimited Multi-Device Sync" pro />
             </ul>
             <div className="space-y-4">
-              <Link href="/signup?plan=trial" className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all block text-center">
-                Start 7-Day Free Trial
+              <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all block text-center">
+                {user && hasUsedTrial ? "Upgrade to Pro instantly" : "Start 7-Day Free Trial"}
               </Link>
               <p className="text-[10px] text-zinc-500 text-center uppercase tracking-widest font-bold">Instant Professional Unlock</p>
             </div>
@@ -355,10 +357,10 @@ export default function LandingPage() {
             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none" />
             <h2 className="text-4xl md:text-6xl font-black tracking-tight">Start Tracking. <br /> Start Improving.</h2>
             <p className="text-zinc-400 max-w-xl mx-auto">Join thousands of disciplined traders who use TradeVault to escape inconsistency and master the markets.</p>
-            <Link href="/signup" className="inline-block px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-[#00FFB2] transition-colors relative z-10">
-               Start Free Trial
+            <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup"} className="inline-block px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-[#00FFB2] transition-colors relative z-10">
+               {user && hasUsedTrial ? "Upgrade Now" : "Start Free Trial"}
             </Link>
-            <p className="text-zinc-500 text-sm mt-4 font-medium relative z-10">Try free for 7 days. Pay only if you choose to upgrade.</p>
+            <p className="text-zinc-500 text-sm mt-4 font-medium relative z-10">{user && hasUsedTrial ? "Instant Professional Unlock." : "Try free for 7 days. Pay only if you choose to upgrade."}</p>
          </div>
       </section>
     </div>
