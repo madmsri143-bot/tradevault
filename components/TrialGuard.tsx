@@ -62,6 +62,14 @@ export function useTrial() {
         let planName = data.plan === "pro_monthly" ? "Pro Starter" : data.plan === "pro_yearly" ? "Pro Elite" : "Trial";
         if (isFriend && !hasPaidPlan) planName = "Pro (Friend Access)";
 
+        // Auto-Downgrade Logic
+        if (data.plan === "trial" && !isTrialActive && !isSubActive && !isFriend) {
+          import("firebase/firestore").then(({ updateDoc }) => {
+            updateDoc(doc(db, "users", user.uid, "settings", "profile"), { plan: "free" })
+              .catch(e => console.error("Failed to auto-downgrade:", e));
+          });
+        }
+
         if (isFriend || isSubActive) {
            currentState = {
              access: "premium",

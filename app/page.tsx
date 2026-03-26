@@ -66,6 +66,11 @@ export default function LandingPage() {
                 Get Started for Free
               </Link>
             </div>
+            <div className="pt-2">
+              <Link href="/demo" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-colors py-2 group">
+                <Play size={16} className="text-[#00FFB2] group-hover:scale-110 transition-transform" /> View Live Demo
+              </Link>
+            </div>
             <p className="text-sm font-medium text-zinc-500 mt-2">
                Choose the path that fits your discipline — Free or Pro Trial
             </p>

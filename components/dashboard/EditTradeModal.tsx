@@ -86,9 +86,9 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-zinc-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col scale-100 animate-in zoom-in-95 duration-200">
+      <div className="bg-zinc-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-lg flex flex-col scale-100 animate-in zoom-in-95 duration-200 max-h-[80vh] overflow-hidden relative">
         
-        <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900">
+        <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900 shrink-0 sticky top-0 z-10">
           <h2 className="text-lg font-semibold text-white">Edit Trade</h2>
           <button
             onClick={onClose}
@@ -98,8 +98,8 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
           </button>
         </div>
 
-        <div className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col min-h-0">
+          <div className="p-6 overflow-y-auto space-y-4 flex-1">
             
             {/* SymbolLine */}
             <div>
@@ -287,27 +287,27 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                 className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
+          </div>
 
-            <div className="pt-2 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={loading}
-                className="px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-800 rounded font-medium transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded flex items-center gap-2 font-medium transition-colors disabled:opacity-50"
-              >
-                {loading && <Loader2 size={14} className="animate-spin" />}
-                Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="p-4 border-t border-white/5 bg-zinc-900 flex justify-end gap-3 shrink-0 sticky bottom-0 z-10">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loading}
+              className="px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-800 rounded font-medium transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded flex items-center gap-2 font-medium transition-colors disabled:opacity-50"
+            >
+              {loading && <Loader2 size={14} className="animate-spin" />}
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

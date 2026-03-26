@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { TrendingUp } from "lucide-react";
 
 export default function GlobalLoader() {
   const [loading, setLoading] = useState(true);
-  const pathname = usePathname();
 
   useEffect(() => {
     // Start loading on mount
@@ -18,7 +16,7 @@ export default function GlobalLoader() {
     }, 2800);
 
     return () => clearTimeout(timer);
-  }, [pathname]);
+  }, []);
 
   if (!loading) return null;
 
