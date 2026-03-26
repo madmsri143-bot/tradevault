@@ -29,7 +29,13 @@ export default function UpgradeModal({ onClose }: UpgradeModalProps) {
   }, []);
 
   const handlePayment = async () => {
-    if (!user) return;
+    console.log("PAYMENT CLICKED");
+    
+    if (!user) {
+      console.warn("PAYMENT BLOCKED: No active user session detected in AuthContext");
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -37,6 +43,7 @@ export default function UpgradeModal({ onClose }: UpgradeModalProps) {
         throw new Error("Razorpay SDK not loaded");
       }
 
+      console.log("CALLING API");
       // Step 1: Create Order on Backend
       const orderRes = await fetch("/api/payment/create-order", {
         method: "POST",
@@ -44,7 +51,10 @@ export default function UpgradeModal({ onClose }: UpgradeModalProps) {
         body: JSON.stringify({ plan: selectedPlan, userId: user.uid }),
       });
 
+      console.log("RESPONSE RECEIVED");
       const orderData = await orderRes.json();
+      console.log("API ORDER RESP:", orderData);
+      
       if (!orderRes.ok) throw new Error(orderData.error);
 
       // Step 2: Initialize Razorpay Checkout
