@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Lock, Zap, ChevronRight } from "lucide-react";
+import UpgradeModal from "./UpgradeModal";
 
 interface TrialStatus {
   isTrial: boolean;
@@ -44,6 +45,7 @@ export function useTrial() {
 
 export function TrialBanner() {
   const { isExpired, daysLeft, loading, isTrial } = useTrial();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   if (loading || !isTrial || isExpired) return null;
 
@@ -56,16 +58,18 @@ export function TrialBanner() {
              You are on a <span className="text-[#00FFB2]">Professional Trial</span>. {daysLeft} days remaining.
            </p>
         </div>
-        <button className="text-xs font-black uppercase tracking-widest text-[#00FFB2] hover:text-white transition-colors flex items-center gap-1 group">
+        <button onClick={() => setShowUpgrade(true)} className="text-xs font-black uppercase tracking-widest text-[#00FFB2] hover:text-white transition-colors flex items-center gap-1 group">
            Upgrade Now <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
+      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
     </div>
   );
 }
 
 export function TrialGuard({ children, featureName }: { children: React.ReactNode; featureName: string }) {
   const { isExpired, loading, isTrial } = useTrial();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   if (loading) return <div className="animate-pulse h-64 bg-white/5 rounded-3xl" />;
 
@@ -86,12 +90,13 @@ export function TrialGuard({ children, featureName }: { children: React.ReactNod
                    Your 7-day trial of <strong>{featureName}</strong> has ended. Upgrade to Pro to continue tracking like a professional.
                  </p>
               </div>
-              <button className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
+              <button onClick={() => setShowUpgrade(true)} className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
                  Unlock Professional Access
               </button>
               <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Immediate unlocking • Cancel anytime</p>
            </div>
         </div>
+        {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       </div>
     );
   }

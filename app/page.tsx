@@ -52,7 +52,7 @@ export default function LandingPage() {
             <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1]">
               Stop Guessing. <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFB2] via-[#3B82F6] to-[#00FFB2] bg-[length:200%_auto] animate-gradient-x">
-                Start Tracking Discipline.
+                Start Tracking Your Trading Discipline.
               </span>
             </h1>
             <p className="text-lg md:text-xl text-zinc-400 max-w-md leading-relaxed">
@@ -295,7 +295,7 @@ export default function LandingPage() {
           <div className="bg-[#11161D] border border-white/5 p-8 rounded-[32px] space-y-8 flex flex-col">
             <div className="space-y-2">
               <h3 className="text-lg font-bold">Standard</h3>
-              <p className="text-3xl font-black">$0 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
+              <p className="text-3xl font-black">₹0 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
             </div>
             <ul className="space-y-4 flex-1">
               <PricingTier feature="Detailed Trade Logging" />
@@ -311,11 +311,12 @@ export default function LandingPage() {
           {/* Pro Plan */}
           <div className="bg-gradient-to-br from-[#11161D] to-[#0D1218] border-2 border-[#00FFB2]/20 p-8 rounded-[32px] space-y-8 relative overflow-hidden flex flex-col shadow-[0_0_50px_rgba(0,255,178,0.05)]">
             <div className="absolute top-0 right-0 p-4">
-               <span className="px-3 py-1 bg-[#00FFB2] text-black text-[10px] font-black uppercase rounded-full">Best Value</span>
+               <span className="px-3 py-1 bg-[#00FFB2] text-black text-[10px] font-black uppercase rounded-full">Save 40%</span>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-[#00FFB2]">Professional</h3>
-              <p className="text-3xl font-black">$29 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
+              <p className="text-3xl font-black">₹299 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
+              <p className="text-sm font-bold text-zinc-400">or <span className="text-white">₹1999</span> / year</p>
             </div>
             <ul className="space-y-4 flex-1">
               <PricingTier feature="Elite Target Engine (Daily/Weekly)" pro />
@@ -342,7 +343,7 @@ export default function LandingPage() {
             <h2 className="text-4xl md:text-6xl font-black tracking-tight">Start Tracking. <br /> Start Improving.</h2>
             <p className="text-zinc-400 max-w-xl mx-auto">Join thousands of disciplined traders who use TradeVault to escape inconsistency and master the markets.</p>
             <Link href="/login" className="inline-block px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-[#00FFB2] transition-colors relative z-10">
-               Build My First Journal
+               Start Free Trial
             </Link>
          </div>
       </section>

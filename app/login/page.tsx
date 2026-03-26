@@ -196,7 +196,7 @@ export default function LoginPage() {
                {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : "Profile Setup"}
              </h2>
              <p className="text-zinc-500 text-sm">
-               {mode === "signup" ? "Start your 7-day free trial today." : "Please enter your details."}
+               {mode === "signup" ? "7-day free trial included" : "Please enter your details."}
              </p>
           </div>
 

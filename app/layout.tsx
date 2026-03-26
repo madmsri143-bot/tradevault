@@ -8,6 +8,7 @@ import { ModalProvider } from "@/lib/ModalContext";
 const inter = Inter({ subsets: ["latin"] });
 
 import CookieBanner from "@/components/CookieBanner";
+import SupportWidget from "@/components/SupportWidget";
 
 export const metadata: Metadata = {
   title: "Trading Journal Pro",
@@ -45,6 +46,7 @@ export default function RootLayout({
               {children}
             </AuthWrapper>
             <CookieBanner />
+            <SupportWidget />
           </AuthProvider>
         </ModalProvider>
       </body>
