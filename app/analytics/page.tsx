@@ -341,35 +341,35 @@ export default function AnalyticsPage() {
           </div>
 
           {/* 6. Radar Chart */}
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-xl p-6 shadow-lg lg:col-span-1 flex flex-col items-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none" />
+          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-xl p-4 shadow-sm lg:col-span-1 flex flex-col relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] rounded-full pointer-events-none" />
             
-            <h2 className="text-sm font-semibold text-zinc-300 flex items-center self-start gap-2 w-full relative z-10">
-              <Target size={16} className="text-emerald-500" /> Analytics Dashboard
-            </h2>
-            
-            <div className="flex flex-col items-center justify-center mt-6 lg:mt-8 relative z-10">
-              <span className={`text-[4rem] leading-none font-black ${executionColor} tracking-tighter drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]`}>
-                {executionDecimal}
-              </span>
-              <span className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mt-2 mb-1">
-                Execution Score
-              </span>
+            {/* Merged Header & Score */}
+            <div className="flex items-center justify-between w-full relative z-10 mb-2">
+              <div className="flex items-center gap-2">
+                 <Target size={16} className="text-emerald-500 shrink-0" />
+                 <h2 className="text-sm font-bold text-zinc-300 leading-none">Execution Score</h2>
+              </div>
+              <div className={`text-2xl font-black ${executionColor} tracking-tighter drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]`}>
+                 {executionDecimal}
+              </div>
             </div>
             
-            <div className="flex-1 w-full min-h-[260px] relative mt-2 z-10">
+            {/* Shrunken Radar Container */}
+            <div className="flex-1 w-full min-h-[160px] relative mt-1 z-10">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
+                <RadarChart cx="50%" cy="50%" outerRadius="55%" data={radarData}>
                   <PolarGrid stroke="#3f3f46" strokeDasharray="3 3" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: "#d4d4d8", fontSize: 11, fontWeight: 700 }} />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: "#d4d4d8", fontSize: 10, fontWeight: 600 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
-                  <Radar name="Score" dataKey="A" stroke="#10b981" strokeWidth={3} fill="#10b981" fillOpacity={0.2} style={{ filter: "drop-shadow(0 0 8px rgba(16,185,129,0.5))" }} />
+                  <Radar name="Score" dataKey="A" stroke="#10b981" strokeWidth={2.5} fill="#10b981" fillOpacity={0.15} style={{ filter: "drop-shadow(0 0 5px rgba(16,185,129,0.3))" }} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
             
-            <div className="mt-2 text-sm font-bold text-zinc-400 bg-black/40 px-5 py-2.5 rounded-xl border border-white/5 relative z-10 shadow-inner">
-              Overall Score: <span className="text-white ml-2 text-base">{executionDecimal} / 10</span>
+            {/* Minimal Inline Footer */}
+            <div className="mt-2 text-[11px] font-bold text-zinc-500 w-full text-center relative z-10">
+              Overall Analytics Score: <span className="text-zinc-300 ml-1">{executionDecimal} / 10</span>
             </div>
           </div>
 

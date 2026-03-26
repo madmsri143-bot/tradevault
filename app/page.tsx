@@ -4,10 +4,21 @@ import Link from "next/link";
 import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LandingPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { hasUsedTrial } = useTrial();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace(hasUsedTrial ? "/billing" : "/dashboard");
+    }
+  }, [user, loading, hasUsedTrial, router]);
+
+  if (loading || user) return <div className="min-h-screen bg-[#0B0F14]" />;
 
   return (
     <div className="min-h-screen bg-[#0B0F14] text-white selection:bg-[#00FFB2]/30 overflow-x-hidden">
