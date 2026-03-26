@@ -28,8 +28,16 @@ export async function POST(req: Request) {
 
       const generatedSignature = crypto
         .createHmac("sha256", secret)
-        .update(razorpay_order_id + "|" + razorpay_payment_id)
+        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
         .digest("hex");
+
+      // Debugging Logs
+      console.log("=== RAZORPAY VERIFICATION LOG ===");
+      console.log("razorpay_order_id:", razorpay_order_id);
+      console.log("razorpay_payment_id:", razorpay_payment_id);
+      console.log("expected_signature:", generatedSignature);
+      console.log("razorpay_signature:", razorpay_signature);
+      console.log("=================================");
 
       if (generatedSignature !== razorpay_signature) {
         return NextResponse.json({ error: "Invalid payment signature" }, { status: 400 });
