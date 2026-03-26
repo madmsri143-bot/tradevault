@@ -12,8 +12,8 @@ import SupportWidget from "@/components/SupportWidget";
 import GlobalLoader from "@/components/ui/GlobalLoader";
 
 export const metadata: Metadata = {
-  title: "Trading Journal Pro",
-  description: "Advanced trading journal and analytics dashboard",
+  title: "TradeVault",
+  description: "Smart trading journal and analytics platform",
 };
 
 export default function RootLayout({
@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
