@@ -35,7 +35,9 @@ export async function POST(req: Request) {
     const options = {
       amount: amount * 100, // paise 
       currency: "INR",
-      receipt: `receipt_${userId}_${Date.now()}`,
+      // Razorpay enforces a strict 40-character limit on receipts. 
+      // 'rcpt' (4) + '_' (1) + UID (15) + '_' (1) + Date (13) = 34 chars.
+      receipt: `rcpt_${userId.substring(0, 15)}_${Date.now()}`,
       notes: {
         userId,
         plan
