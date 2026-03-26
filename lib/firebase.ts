@@ -12,22 +12,24 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize variables, cast as exact Types to avoid 'implicit any' errors in Next.js build
-let app: FirebaseApp = {} as FirebaseApp;
-let db: Firestore = {} as Firestore;
-let auth: Auth = {} as Auth;
-let storage: FirebaseStorage = {} as FirebaseStorage;
-let googleProvider: GoogleAuthProvider = {} as GoogleAuthProvider;
+const app: FirebaseApp = typeof window !== "undefined" 
+  ? (!getApps().length ? initializeApp(firebaseConfig) : getApp()) 
+  : ({} as FirebaseApp);
 
-// Only initialize Firebase on the client-side (where 'window' is defined)
-// This strictly prevents Next.js Server-Side Rendering (SSR) from crashing if it tries to access Firebase Auth during Vercel builds.
-if (typeof window !== "undefined") {
-  // Graceful initialization check
-  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  db = getFirestore(app);
-  auth = getAuth(app);
-  googleProvider = new GoogleAuthProvider();
-  storage = getStorage(app);
-}
+const db: Firestore = typeof window !== "undefined" 
+  ? getFirestore(app) 
+  : ({} as Firestore);
+
+const auth: Auth = typeof window !== "undefined" 
+  ? getAuth(app) 
+  : ({} as Auth);
+
+const storage: FirebaseStorage = typeof window !== "undefined" 
+  ? getStorage(app) 
+  : ({} as FirebaseStorage);
+
+const googleProvider: GoogleAuthProvider = typeof window !== "undefined" 
+  ? new GoogleAuthProvider() 
+  : ({} as GoogleAuthProvider);
 
 export { app, db, auth, googleProvider, storage };

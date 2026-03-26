@@ -161,12 +161,17 @@ export default function AnalyticsPage() {
   const greenRatio = totalDays > 0 ? greenDays / totalDays : 0;
 
   // Most Traded Instruments
-  const symbolStats: Record<string, { total: number; wins: number; losses: number }> = {};
+  const symbolStats: Record<string, { total: number; wins: number; losses: number; profit: number; loss: number }> = {};
   normalizedTrades.forEach(t => {
-    if (!symbolStats[t.symbol]) symbolStats[t.symbol] = { total: 0, wins: 0, losses: 0 };
+    if (!symbolStats[t.symbol]) symbolStats[t.symbol] = { total: 0, wins: 0, losses: 0, profit: 0, loss: 0 };
     symbolStats[t.symbol].total++;
-    if (t.pnl > 0) symbolStats[t.symbol].wins++;
-    else if (t.pnl < 0) symbolStats[t.symbol].losses++;
+    if (t.pnl > 0) {
+      symbolStats[t.symbol].wins++;
+      symbolStats[t.symbol].profit += t.pnl;
+    } else if (t.pnl < 0) {
+      symbolStats[t.symbol].losses++;
+      symbolStats[t.symbol].loss += Math.abs(t.pnl);
+    }
   });
 
   const topInstruments = Object.entries(symbolStats)
@@ -401,24 +406,39 @@ export default function AnalyticsPage() {
                 <div className="text-zinc-500 text-sm text-center py-4">No data</div>
               ) : (
                 topInstruments.map(([symbol, stats], idx) => {
-                  const wPct = (stats.wins / stats.total) * 100;
-                  const lPct = (stats.losses / stats.total) * 100;
+                  const totalVolume = stats.profit + stats.loss;
+                  const pPct = totalVolume > 0 ? (stats.profit / totalVolume) * 100 : 0;
+                  const lPct = totalVolume > 0 ? (stats.loss / totalVolume) * 100 : 0;
+                  const netProfit = stats.profit - stats.loss;
+                  const winRateStr = stats.total > 0 ? ((stats.wins / stats.total) * 100).toFixed(0) + '%' : '0%';
+
                   return (
-                    <div key={symbol} className="bg-zinc-950/50 p-3 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest bg-white/5 py-0.5 px-2 rounded">#{idx + 1}</span>
-                          <span className="text-sm font-bold text-white tracking-wide">{symbol}</span>
+                    <div key={symbol} className="bg-zinc-950/50 p-4 rounded-xl border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none group transition-colors hover:bg-zinc-900">
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black text-emerald-500/80 bg-emerald-500/10 px-1.5 py-0.5 rounded tracking-widest">#{idx + 1}</span>
+                            <span className="text-base font-bold text-white tracking-wide">{symbol}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs font-medium">
+                            <span className="text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md">{stats.total} Trades</span>
+                            <span className="text-zinc-500">WR: <span className="text-zinc-300">{winRateStr}</span></span>
+                          </div>
                         </div>
-                        <span className="text-[11px] text-zinc-400 font-medium bg-white/5 py-1 px-2 rounded-md">{stats.total} Trades</span>
+                        <div className={`text-sm font-bold tracking-tight px-2.5 py-1 rounded-md border ${netProfit >= 0 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-red-500/10 text-red-400 border-red-500/20"}`}>
+                          {netProfit >= 0 ? "+" : "-"}{formatCurrency(Math.abs(netProfit), displayCurrency)}
+                        </div>
                       </div>
-                      <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden flex mb-2 mt-3 shadow-inner">
-                        <div className="h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" style={{ width: `${wPct}%` }} />
-                        <div className="h-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" style={{ width: `${lPct}%` }} />
+                      
+                      <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden flex mb-2 mt-2 shadow-inner">
+                        <div className="h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] transition-all duration-500" style={{ width: `${pPct}%` }} />
+                        <div className="h-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] transition-all duration-500" style={{ width: `${lPct}%` }} />
                       </div>
-                      <div className="flex justify-between text-[10px] font-semibold tracking-wider">
-                        <span className="text-emerald-500">{stats.wins} W</span>
-                        <span className="text-red-500">{stats.losses} L</span>
+                      
+                      <div className="flex justify-between text-[11px] font-semibold tracking-wide">
+                        <span className="text-emerald-500">{formatCurrency(stats.profit, displayCurrency)} </span>
+                        <span className="text-zinc-500 text-[10px] font-medium tracking-tight uppercase">Gross</span>
+                        <span className="text-red-500">{formatCurrency(stats.loss, displayCurrency)} </span>
                       </div>
                     </div>
                   );

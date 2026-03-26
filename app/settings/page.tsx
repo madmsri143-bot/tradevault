@@ -406,56 +406,71 @@ export default function SettingsPage() {
           </div>
           <div className="p-0">
             {/* Export System */}
-            <div className="flex flex-col md:flex-row items-start justify-between p-6 border-b border-white/5 gap-4 hover:bg-white/[0.02] transition-colors">
-              <div className="flex-1 w-full max-w-xl">
-                <h3 className="text-sm font-medium text-white mb-1 flex items-center gap-2">
+            <div className="flex flex-col p-6 border-b border-white/5 gap-5 hover:bg-white/[0.02] transition-colors">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-sm font-medium text-white flex items-center gap-2">
                   <Download size={14} className="text-emerald-500" /> Export Local Data
                 </h3>
-                <p className="text-xs text-zinc-500 mb-4">Download your history offline.</p>
-                
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-zinc-950/50 p-3 rounded-lg border border-black/10 dark:border-white/5 w-full">
-                  <label className="flex items-center gap-2 cursor-pointer shrink-0">
-                    <input 
-                      type="checkbox" 
-                      checked={exportEntireHistory}
-                      onChange={(e) => setExportEntireHistory(e.target.checked)}
-                      className="w-3.5 h-3.5 rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-0 focus:ring-offset-0"
-                    />
-                    <span className="text-xs font-medium text-zinc-300">Entire History</span>
+                <p className="text-xs text-zinc-500">Download your history offline.</p>
+              </div>
+              
+              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-zinc-950/50 p-4 rounded-xl border border-black/10 dark:border-white/5 shadow-inner">
+                {/* Inputs Group */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-6 flex-1">
+                  {/* Entire History Toggle */}
+                  <label className="flex items-center gap-2.5 cursor-pointer shrink-0 group">
+                    <div className="relative flex items-center justify-center">
+                      <input 
+                        type="checkbox" 
+                        checked={exportEntireHistory}
+                        onChange={(e) => setExportEntireHistory(e.target.checked)}
+                        className="peer hidden"
+                      />
+                      <div className="w-4 h-4 rounded-[4px] border border-zinc-700 bg-zinc-900 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 transition-colors flex items-center justify-center group-hover:border-zinc-500">
+                        <svg className={`w-2.5 h-2.5 text-white ${exportEntireHistory ? 'opacity-100' : 'opacity-0'} transition-opacity`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    </div>
+                    <span className="text-sm font-semibold text-zinc-300 group-hover:text-white transition-colors">Entire History</span>
                   </label>
+
+                  <div className="w-px h-6 bg-white/10 hidden sm:block"></div>
                   
-                  <div className={`flex items-center gap-2 transition-opacity duration-200 w-full sm:w-auto ${exportEntireHistory ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
-                    <div className="flex items-center gap-1.5 flex-1 sm:flex-none justify-between sm:justify-start">
-                      <span className="text-[10px] uppercase font-bold text-zinc-500">From</span>
+                  {/* Date Range Group */}
+                  <div className={`flex flex-col sm:flex-row items-center gap-3 transition-opacity duration-300 w-full sm:w-auto ${exportEntireHistory ? 'opacity-30 pointer-events-none grayscale' : 'opacity-100'}`}>
+                    <div className="flex items-center gap-2 w-full sm:w-auto bg-zinc-900 border border-zinc-800 rounded-lg pr-1 pl-3 focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 transition-all">
+                      <span className="text-[11px] uppercase tracking-wider font-bold text-zinc-500">From</span>
                       <input 
                         type="date" 
                         disabled={exportEntireHistory}
                         value={exportFromDate}
                         onChange={(e) => setExportFromDate(e.target.value)}
-                        className="bg-zinc-900 border border-zinc-700 rounded p-1 text-xs text-zinc-300 focus:outline-none focus:border-emerald-500 [color-scheme:dark] w-[110px]"
+                        className="bg-transparent border-none p-1.5 text-xs text-zinc-200 focus:outline-none focus:ring-0 [color-scheme:dark] w-full sm:w-[120px]"
                       />
                     </div>
-                    <div className="flex items-center gap-1.5 flex-1 sm:flex-none justify-between sm:justify-start">
-                      <span className="text-[10px] uppercase font-bold text-zinc-500">To</span>
+                    <div className="flex items-center gap-2 w-full sm:w-auto bg-zinc-900 border border-zinc-800 rounded-lg pr-1 pl-3 focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 transition-all">
+                      <span className="text-[11px] uppercase tracking-wider font-bold text-zinc-500">To</span>
                       <input 
                         type="date" 
                         disabled={exportEntireHistory}
                         value={exportToDate}
                         onChange={(e) => setExportToDate(e.target.value)}
-                        className="bg-zinc-900 border border-zinc-700 rounded p-1 text-xs text-zinc-300 focus:outline-none focus:border-emerald-500 [color-scheme:dark] w-[110px]"
+                        className="bg-transparent border-none p-1.5 text-xs text-zinc-200 focus:outline-none focus:ring-0 [color-scheme:dark] w-full sm:w-[120px]"
                       />
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-end gap-3 w-full md:w-auto mt-2 md:mt-0 self-end md:self-center">
-                <button onClick={handleExportExcel} className="flex-1 md:flex-none justify-center text-xs text-emerald-500 font-medium px-4 py-2 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/10 transition flex items-center gap-2 shadow-sm">
-                  Export .XLSX
-                </button>
-                <button onClick={handleExportPDF} className="flex-1 md:flex-none justify-center text-xs text-blue-500 font-medium px-4 py-2 border border-blue-500/20 rounded-lg hover:bg-blue-500/10 transition flex items-center gap-2 shadow-sm">
-                  Export .PDF
-                </button>
+                {/* Actions Group */}
+                <div className="flex items-center gap-3 md:border-l md:border-white/10 md:pl-5 shrink-0 pt-3 md:pt-0 border-t border-white/5 md:border-t-0 mt-2 md:mt-0">
+                  <button onClick={handleExportExcel} className="flex-1 md:flex-none justify-center text-[13px] text-emerald-400 font-semibold px-5 py-2.5 border border-emerald-500/20 bg-emerald-500/10 rounded-lg hover:bg-emerald-500 text-white hover:border-emerald-500 transition-all flex items-center gap-2 shadow-sm group">
+                    <span className="group-hover:text-white transition-colors">Export .XLSX</span>
+                  </button>
+                  <button onClick={handleExportPDF} className="flex-1 md:flex-none justify-center text-[13px] text-blue-400 font-semibold px-5 py-2.5 border border-blue-500/20 bg-blue-500/10 rounded-lg hover:bg-blue-500 text-white hover:border-blue-500 transition-all flex items-center gap-2 shadow-sm group">
+                    <span className="group-hover:text-white transition-colors">Export .PDF</span>
+                  </button>
+                </div>
               </div>
             </div>
 
