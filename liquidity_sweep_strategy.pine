@@ -1,0 +1,180 @@
+//@version=6
+strategy("Liquidity Sweep + EMA Confluence", overlay=true, calc_on_every_tick=false, max_labels_count=500, max_lines_count=500, max_boxes_count=500)
+
+// ============================================================================
+// INPUT PARAMETERS
+// ============================================================================
+grp_ema = "EMA Settings"
+len1 = input.int(8, title="Fast EMA Length (e.g. 8)", group=grp_ema)
+len2 = input.int(18, title="Medium EMA Length (e.g. 18)", group=grp_ema)
+len3 = input.int(50, title="Slow EMA Length (e.g. 50)", group=grp_ema)
+
+ema8_color = input.color(color.blue, title="EMA 8 Color", group=grp_ema)
+ema18_color = input.color(color.red, title="EMA 18 Color", group=grp_ema)
+ema50_color = input.color(color.black, title="EMA 50 Color", group=grp_ema)
+
+grp_sweep = "Sweep Settings"
+lookback = input.int(10, title="Sweep Lookback Candles", minval=3, group=grp_sweep)
+
+grp_candle = "Candle Structure Settings"
+min_wick_pct = input.float(40.0, title="Minimum Wick %", minval=0.0, maxval=100.0, group=grp_candle) / 100.0
+
+grp_filters = "Additional Filters"
+use_filter_toggle = input.bool(true, title="Use Additional Filters", group=grp_filters)
+show_tags = input.bool(true, title="Show Filter Tags", group=grp_filters)
+
+grp_risk = "Risk Management"
+rr_ratio = input.float(3.0, title="Risk to Reward Ratio", minval=0.1, step=0.1, group=grp_risk)
+
+// ============================================================================
+// EMA CALCULATIONS & ALIGNMENT
+// ============================================================================
+ema8 = ta.ema(close, len1)
+ema18 = ta.ema(close, len2)
+ema50 = ta.ema(close, len3)
+
+plot(ema8, color=ema8_color, title="EMA 8")
+plot(ema18, color=ema18_color, title="EMA 18")
+plot(ema50, color=ema50_color, title="EMA 50")
+
+// EMA alignment ONLY validates market structure, does NOT define direction
+ema_aligned = (ema50 > ema18 and ema18 > ema8) or (ema50 < ema18 and ema18 < ema8)
+
+// ============================================================================
+// CANDLE STRUCTURE (WICK DOMINANCE)
+// ============================================================================
+candle_range = high - low
+candle_body = math.abs(close - open)
+upper_wick = high - math.max(open, close)
+lower_wick = math.min(open, close) - low
+
+// LONG
+long_structure = (lower_wick >= candle_range * min_wick_pct) and (lower_wick > upper_wick) and (lower_wick > candle_body)
+
+// SHORT
+short_structure = (upper_wick >= candle_range * min_wick_pct) and (upper_wick > lower_wick) and (upper_wick > candle_body)
+
+// ============================================================================
+// EMA TOUCH CONDITION & ADDITIONAL FILTERS
+// ============================================================================
+ema8_touch = (low <= ema8) and (high >= ema8)
+ema50_touch = (low <= ema50) and (high >= ema50)
+
+// LONG: Current high < previous high OR Candle does NOT touch EMA50
+long_filter_H = (high < high[1])
+long_filter_E = not ema50_touch
+long_filter_passed = use_filter_toggle ? (long_filter_H or long_filter_E) : true
+
+// SHORT: Current low > previous low OR Candle does NOT touch EMA50
+short_filter_H = (low > low[1])
+short_filter_E = not ema50_touch
+short_filter_passed = use_filter_toggle ? (short_filter_H or short_filter_E) : true
+
+// ============================================================================
+// LIQUIDITY SWEEP LOGIC (STRICT)
+// ============================================================================
+is_long_sweep = false
+is_short_sweep = false
+
+float swept_level_long = na
+float swept_level_short = na
+int swept_index_long = na
+int swept_index_short = na
+
+for i = 2 to lookback
+    if low < low[i] and close > low[i] and math.min(open, close) >= math.min(open[i], close[i])
+        clean = true
+        for j = 1 to i - 1
+            if low[j] <= low[i]
+                clean := false
+                break
+        if clean
+            is_long_sweep := true
+            swept_level_long := low[i]
+            swept_index_long := bar_index - i
+            break
+
+    if high > high[i] and close < high[i] and math.max(open, close) <= math.max(open[i], close[i])
+        clean = true
+        for j = 1 to i - 1
+            if high[j] >= high[i]
+                clean := false
+                break
+        if clean
+            is_short_sweep := true
+            swept_level_short := high[i]
+            swept_index_short := bar_index - i
+            break
+
+// ============================================================================
+// SIGNAL CONDITIONS & ALERTS
+// ============================================================================
+longCondition = ema_aligned and is_long_sweep and ema8_touch and long_structure and long_filter_passed
+shortCondition = ema_aligned and is_short_sweep and ema8_touch and short_structure and short_filter_passed
+
+alertcondition(longCondition, title="BUY SIGNAL", message="BUY SIGNAL: Liquidity Sweep + EMA")
+alertcondition(shortCondition, title="SELL SIGNAL", message="SELL SIGNAL: Liquidity Sweep + EMA")
+
+// ============================================================================
+// MANDATORY ENTRY LOGIC
+// ============================================================================
+bool pendingLong = false
+bool pendingShort = false
+
+var float signal_sl = na
+var label signal_label = na
+
+if longCondition
+    pendingLong := true
+    signal_sl := low
+    
+    tag_str = ""
+    if use_filter_toggle and show_tags
+        if long_filter_E
+            tag_str += "E"
+        if long_filter_H
+            tag_str += "H"
+            
+    final_text = (show_tags and str.length(tag_str) > 0) ? "BUY (" + tag_str + ")" : "BUY"
+    signal_label := label.new(bar_index, low, final_text, style=label.style_label_up, color=color.new(color.green, 0), textcolor=color.white, size=size.small)
+    line.new(swept_index_long, swept_level_long, bar_index, swept_level_long, color=color.new(color.blue, 30), style=line.style_dashed, width=2)
+
+if shortCondition
+    pendingShort := true
+    signal_sl := high
+    
+    tag_str = ""
+    if use_filter_toggle and show_tags
+        if short_filter_E
+            tag_str += "E"
+        if short_filter_H
+            tag_str += "H"
+            
+    final_text_short = (show_tags and str.length(tag_str) > 0) ? "SELL (" + tag_str + ")" : "SELL"
+    signal_label := label.new(bar_index, high, final_text_short, style=label.style_label_down, color=color.new(color.red, 0), textcolor=color.white, size=size.small)
+    line.new(swept_index_short, swept_level_short, bar_index, swept_level_short, color=color.new(color.purple, 30), style=line.style_dashed, width=2)
+
+// ============================================================================
+// EXECUTION & EXIT
+// ============================================================================
+
+// Trade executes exactly onNEXT candle OPEN natively by submitting on signal candle close
+if pendingLong and strategy.opentrades == 0
+    float entryPrice = close // SL/TP calculated from exactly where the market is now (which equals next open without gaps)
+    float risk = entryPrice - signal_sl
+    
+    if risk > 0
+        strategy.entry("Long", strategy.long)
+        float tp_price = entryPrice + (risk * rr_ratio)
+        strategy.exit("Exit Long", "Long", stop=signal_sl, limit=tp_price)
+
+if pendingShort and strategy.opentrades == 0
+    float entryPrice = close
+    float risk = signal_sl - entryPrice
+    
+    if risk > 0
+        strategy.entry("Short", strategy.short)
+        float tp_price = entryPrice - (risk * rr_ratio)
+        strategy.exit("Exit Short", "Short", stop=signal_sl, limit=tp_price)
+
+

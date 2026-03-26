@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #09090b; /* zinc-950 */
+  --color-foreground: #fafafa; /* zinc-50 */
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    color-scheme: dark;
+    @apply antialiased;
+  }
+
+  :root.light {
+    color-scheme: light;
+    --color-zinc-50: #09090b;
+    --color-zinc-100: #18181b;
+    --color-zinc-200: #27272a;
+    --color-zinc-300: #3f3f46;
+    --color-zinc-400: #52525b;
+    --color-zinc-500: #71717a;
+    --color-zinc-600: #a1a1aa;
+    --color-zinc-700: #d4d4d8;
+    --color-zinc-800: #e4e4e7;
+    --color-zinc-900: #f4f4f5;
+    --color-zinc-950: #ffffff;
+    --color-white: #000000;
+    --color-black: #ffffff;
+    --color-background: #ffffff;
+    --color-foreground: #09090b;
+  }
+
+  /* Micro-Animations & Polishing */
+  button {
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  button:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+  
+  button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  /* Universal Card Slide-in Appearance */
+  .fade-slide-up {
+    animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .fade-slide-up:nth-child(1) { animation-delay: 0ms; }
+  .fade-slide-up:nth-child(2) { animation-delay: 50ms; }
+  .fade-slide-up:nth-child(3) { animation-delay: 100ms; }
+  .fade-slide-up:nth-child(4) { animation-delay: 150ms; }
+  .fade-slide-up:nth-child(5) { animation-delay: 200ms; }
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-blink {
+  animation: blink 1.2s ease-in-out infinite;
+}
