@@ -1,7 +1,7 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getStorage } from "firebase/storage";
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getFirestore, Firestore } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getStorage, FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,12 +12,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize variables but don't instantiate them until we know we are on the client
-let app: any;
-let db: any;
-let auth: any;
-let storage: any;
-let googleProvider: any;
+// Initialize variables, cast as exact Types to avoid 'implicit any' errors in Next.js build
+let app = {} as FirebaseApp;
+let db = {} as Firestore;
+let auth = {} as Auth;
+let storage = {} as FirebaseStorage;
+let googleProvider = {} as GoogleAuthProvider;
 
 // Only initialize Firebase on the client-side (where 'window' is defined)
 // This strictly prevents Next.js Server-Side Rendering (SSR) from crashing if it tries to access Firebase Auth during Vercel builds.
