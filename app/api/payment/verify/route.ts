@@ -23,6 +23,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return NextResponse.json({ error: "Missing payment parameters" }, { status: 400 });
+    }
+
     const isMock = razorpay_order_id?.startsWith("order_mock");
 
     // Skip true cryptographic validation if it's our mock order for the demo environment without real keys
