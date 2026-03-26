@@ -32,12 +32,12 @@ export default function LandingPage() {
           <a href="#" className="hover:text-white transition-colors">Resources</a>
         </div>
 
-        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4">
           <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
             Login
           </Link>
-          <Link href={user ? "/dashboard" : "/signup"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
-            {user ? "Launch App" : "Start Free Trial"}
+          <Link href={user ? "/dashboard" : "/signup?plan=trial"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
+            {user ? "Launch App" : "Start 7-Day Trial"}
           </Link>
         </div>
       </nav>
@@ -59,15 +59,15 @@ export default function LandingPage() {
               The premier workspace for traders to log execution, identify psychological patterns, and hit mathematical profit targets with surgical precision.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/signup" className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
-                Start Free Trial <ChevronRight size={20} />
+              <Link href="/signup?plan=trial" className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
+                Start 7-Day Trial <ChevronRight size={20} />
               </Link>
-              <Link href="/demo" className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all">
-                <Play size={18} fill="currentColor" /> View Demo
+              <Link href="/signup?plan=free" className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all">
+                Get Started for Free
               </Link>
             </div>
             <p className="text-sm font-medium text-zinc-500 mt-2">
-               Start your 7-day free trial — no credit card required
+               Choose the path that fits your discipline — Free or Pro Trial
             </p>
             <div className="flex items-center gap-6 pt-4 text-zinc-500">
                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest leading-none">
@@ -295,19 +295,24 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto relative z-10">
           {/* Free Plan */}
-          <div className="bg-[#11161D] border border-white/5 p-8 rounded-[32px] space-y-8 flex flex-col">
+          <div className="bg-[#11161D] border border-white/5 p-8 rounded-[32px] space-y-8 flex flex-col group hover:border-white/10 transition-colors">
             <div className="space-y-2">
-              <h3 className="text-lg font-bold">Standard</h3>
-              <p className="text-3xl font-black">₹0 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
+              <h3 className="text-lg font-bold text-zinc-400">Standard Plan</h3>
+              <p className="text-3xl font-black italic">Free <span className="text-sm text-zinc-500 font-medium not-italic">/ forever</span></p>
             </div>
             <ul className="space-y-4 flex-1">
-              <PricingTier feature="Detailed Trade Logging" />
-              <PricingTier feature="Basic Journal Entries" />
-              <PricingTier feature="Single Device Sync" />
-              <PricingTier feature="Daily Performance Summary" />
+              <PricingTier feature="Basic Trade Logging" />
+              <PricingTier feature="Standard Journal View" />
+              <PricingTier feature="Basic Statistics" />
+              <li className="flex items-center gap-3 opacity-30 select-none">
+                <div className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center shrink-0">
+                  <span className="text-[10px]">✕</span>
+                </div>
+                <span className="text-xs text-zinc-500 line-through">Advanced Edge Analytics</span>
+              </li>
             </ul>
-            <Link href="/signup" className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-2xl transition-all text-center">
-              Get Started
+            <Link href="/signup?plan=free" className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-2xl transition-all text-center">
+              Start Free Plan
             </Link>
           </div>
 
@@ -317,23 +322,23 @@ export default function LandingPage() {
                <span className="px-3 py-1 bg-[#00FFB2] text-black text-[10px] font-black uppercase rounded-full">Save 40%</span>
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-[#00FFB2]">Professional</h3>
-              <p className="text-3xl font-black">₹299 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
+              <h3 className="text-lg font-bold text-[#00FFB2]">Professional Access</h3>
+              <p className="text-3xl font-black">₹299 <span className="text-sm text-zinc-500 font-medium font-bold">/ month</span></p>
               <p className="text-sm font-bold text-zinc-400">or <span className="text-white">₹1999</span> / year</p>
             </div>
             <ul className="space-y-4 flex-1">
               <PricingTier feature="Elite Target Engine (Daily/Weekly)" pro />
               <PricingTier feature="Advanced Analytics Dashboard" pro />
               <PricingTier feature="Mistake Intelligence Tracking" pro />
-              <PricingTier feature="Cumulative PnL Graphing" pro />
-              <PricingTier feature="Emotional State Analytics" pro />
+              <PricingTier feature="Export (PDF, Excel, CSV)" pro />
+              <PricingTier feature="AI-Powered Trade Insights" pro />
               <PricingTier feature="Unlimited Multi-Device Sync" pro />
             </ul>
             <div className="space-y-4">
-              <Link href="/signup" className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all block text-center">
+              <Link href="/signup?plan=trial" className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all block text-center">
                 Start 7-Day Free Trial
               </Link>
-              <p className="text-[10px] text-zinc-500 text-center uppercase tracking-widest font-bold">No credit card required to start</p>
+              <p className="text-[10px] text-zinc-500 text-center uppercase tracking-widest font-bold">Instant Professional Unlock</p>
             </div>
           </div>
         </div>

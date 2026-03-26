@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/lib/AuthContext";
+import { useTrial } from "@/components/TrialGuard";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
@@ -10,6 +11,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 export default function AuthWrapper({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const { access, plan, loading: planLoading } = useTrial();
   const router = useRouter();
   const pathname = usePathname();
   
@@ -21,10 +23,28 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   const isPublicRoute = publicRoutes.includes(pathname);
 
   useEffect(() => {
-    if (!loading && !user && !isPublicRoute) {
+    if (loading || planLoading) return;
+
+    if (!user && !isPublicRoute) {
       router.push("/login");
+      return;
     }
-  }, [user, loading, isPublicRoute, router]);
+
+    if (user && !isPublicRoute) {
+      // Redirect based on plan
+      if (plan === "free" && pathname === "/dashboard") {
+        router.push("/free-dashboard");
+      } else if ((plan === "trial" || plan === "pro") && pathname === "/free-dashboard") {
+        router.push("/dashboard");
+      }
+      
+      // Prevent free users from accessing pro-only routes
+      const proOnlyRoutes = ["/analytics", "/target", "/journal"];
+      if (plan === "free" && proOnlyRoutes.some(route => pathname.startsWith(route))) {
+        router.push("/free-dashboard");
+      }
+    }
+  }, [user, loading, planLoading, plan, pathname, isPublicRoute, router]);
 
   // Synchronous Fast-Check & Activity Tracking
   useEffect(() => {

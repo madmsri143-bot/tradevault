@@ -76,17 +76,17 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
                         {trade.symbol}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                          trade.type === 'buy' ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400'
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                          trade.type === 'buy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'
                         }`}>
                           {trade.type.toUpperCase()}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-zinc-300">{trade.lot}</td>
-                      <td className="px-4 py-3 text-zinc-400">{trade.entryPrice || "-"}</td>
-                      <td className="px-4 py-3 text-zinc-400">{trade.exitPrice || "-"}</td>
-                      <td className={`px-4 py-3 font-medium ${isProfit ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {formatCurrency(Math.abs(trade.normalizedPnl || trade.pnl), displayCurrency)}
+                      <td className="px-4 py-3 text-zinc-300 font-medium">{trade.lot}</td>
+                      <td className="px-4 py-3 text-zinc-400 font-mono">{trade.entryPrice || "-"}</td>
+                      <td className="px-4 py-3 text-zinc-400 font-mono">{trade.exitPrice || "-"}</td>
+                      <td className={`px-4 py-3 font-black tabular-nums ${isProfit ? 'text-[#00FFB2]' : 'text-red-500'}`}>
+                        {isProfit ? "+" : "-"}{formatCurrency(Math.abs(trade.normalizedPnl || trade.pnl || 0), displayCurrency)}
                       </td>
                       <td className="px-4 py-3 max-w-[200px] truncate text-zinc-500">
                         {trade.note || "-"}

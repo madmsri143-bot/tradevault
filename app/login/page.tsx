@@ -58,7 +58,9 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           if (!profileSnap.exists()) {
              setMode("setup-username");
           } else {
-             router.push("/dashboard");
+             const data = profileSnap.data();
+             const targetPath = data?.plan === "free" ? "/free-dashboard" : "/dashboard";
+             router.push(targetPath);
           }
         } catch (err) {
           if (isMounted) router.push("/dashboard"); // Fallback
@@ -69,6 +71,15 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     checkProfileAndRedirect();
     return () => { isMounted = false; };
   }, [user, authLoading, mode, router]);
+
+  const [plan, setPlan] = useState<"free" | "trial">("trial");
+  
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get("plan");
+    if (p === "free") setPlan("free");
+    else setPlan("trial");
+  }, []);
 
   const handleFirebaseError = (err: any) => {
     const code = err.code;
@@ -105,6 +116,8 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         return;
       }
 
+      const redirectPath = plan === "free" ? "/free-dashboard" : "/dashboard";
+
       if (mode === "signup") {
         if (password !== confirmPassword) {
           setFieldErrors({ confirmPassword: "Passwords do not match." });
@@ -123,18 +136,18 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           email, 
           username, 
           lastActive: now, 
-          plan: "trial",
-          trial_started_at: now,
-          trial_end_date: now + (7 * 24 * 60 * 60 * 1000), // + 7 days
+          plan: plan,
+          trial_started_at: plan === "trial" ? now : null,
+          trial_end_date: plan === "trial" ? now + (7 * 24 * 60 * 60 * 1000) : null,
           isPro: false,
           photoUrl: ""
         });
         await sendEmailVerification(res.user);
         setSuccessMsg("Verification link sent! Check your inbox.");
-        setTimeout(() => router.push("/dashboard"), 3000);
+        setTimeout(() => router.push(redirectPath), 3000);
       } else {
         await signInWithEmailAndPassword(auth, email, password);
-        router.push("/dashboard");
+        // Redirection will be handled by the useEffect above
       }
     } catch (err: any) {
       handleFirebaseError(err);
@@ -169,18 +182,19 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     setLoading(true);
     try {
       const now = Date.now();
+      const redirectPath = plan === "free" ? "/free-dashboard" : "/dashboard";
       await setDoc(doc(db, "users", auth.currentUser.uid, "settings", "profile"), {
         name, 
         email, 
         username, 
         lastActive: now, 
-        plan: "trial",
-        trial_started_at: now,
-        trial_end_date: now + (7 * 24 * 60 * 60 * 1000), 
+        plan: plan,
+        trial_started_at: plan === "trial" ? now : null,
+        trial_end_date: plan === "trial" ? now + (7 * 24 * 60 * 60 * 1000) : null,
         isPro: false,
         photoUrl: auth.currentUser.photoURL || ""
       }, { merge: true });
-      router.push("/dashboard");
+      router.push(redirectPath);
     } catch (err) {
       setFieldErrors({ general: "Failed to save profile." });
       setLoading(false);
@@ -247,7 +261,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : "Profile Setup"}
              </h2>
              <p className="text-zinc-500 text-sm">
-               {mode === "signup" ? "7-day free trial included" : "Please enter your details."}
+               {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : "Please enter your details."}
              </p>
           </div>
 
@@ -285,11 +299,11 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
             )}
 
             <button disabled={loading} type="submit" className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
-              {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? "Start Free Trial" : "Finish Setup"}
+              {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? (plan === "free" ? "Get Started Free" : "Start 7-Day Trial") : "Finish Setup"}
             </button>
             {mode === "signup" && (
                <p className="text-center text-xs text-zinc-500 font-medium mt-3">
-                 No payment details required. Your 7-day trial starts instantly.
+                 {plan === "free" ? "No credit card required. Always free." : "No credit card required. Trial starts instantly."}
                </p>
             )}
           </form>

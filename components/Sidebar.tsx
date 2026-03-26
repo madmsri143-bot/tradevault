@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, BookText, Menu, X, TrendingUp, Calculator, Settings, Crosshair, BarChart3, LogOut } from "lucide-react";
+import { LayoutDashboard, BookText, Menu, X, TrendingUp, Calculator, Settings, Crosshair, BarChart3, LogOut, Lock } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useModal } from "@/lib/ModalContext";
+import { useTrial } from "@/components/TrialGuard";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,6 +20,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { confirm } = useModal();
+  const { plan } = useTrial();
 
   const toggleSidebar = () => setIsExpanded(!isExpanded);
 
@@ -38,11 +40,11 @@ export default function Sidebar() {
   };
 
   const navItems = [
-    { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={20} /> },
-    { label: "Journal", href: "/journal", icon: <BookText size={20} /> },
+    { label: "Dashboard", href: plan === "free" ? "/free-dashboard" : "/dashboard", icon: <LayoutDashboard size={20} /> },
+    { label: "Journal", href: "/journal", icon: <BookText size={20} />, locked: plan === "free" },
     { label: "Calculator", href: "/calculator", icon: <Calculator size={20} /> },
-    { label: "Target", href: "/target", icon: <Crosshair size={20} /> },
-    { label: "Analytics", href: "/analytics", icon: <BarChart3 size={20} /> },
+    { label: "Target", href: "/target", icon: <Crosshair size={20} />, locked: plan === "free" },
+    { label: "Analytics", href: "/analytics", icon: <BarChart3 size={20} />, locked: plan === "free" },
   ];
 
   return (
@@ -69,20 +71,23 @@ export default function Sidebar() {
       <nav className="flex-1 py-4 flex flex-col gap-2 px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+          const isNavItemLocked = "locked" in item && item.locked;
+          
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={isNavItemLocked ? "/billing" : item.href}
               className={cn(
                 "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative",
                 isActive
                   ? "bg-emerald-500/10 text-emerald-400 font-medium"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-900",
+                isNavItemLocked && "opacity-50 grayscale cursor-not-allowed"
               )}
               title={!isExpanded ? item.label : undefined}
             >
               <div className="shrink-0 flex items-center justify-center w-8">
-                {item.icon}
+                {isNavItemLocked ? <Lock size={16} className="text-zinc-600" /> : item.icon}
               </div>
               <span
                 className={cn(
@@ -95,7 +100,7 @@ export default function Sidebar() {
               
               {!isExpanded && (
                 <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
-                  {item.label}
+                  {item.label} {isNavItemLocked ? " (Pro Only)" : ""}
                 </div>
               )}
             </Link>

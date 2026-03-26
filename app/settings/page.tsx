@@ -14,6 +14,7 @@ import Modal from "@/components/ui/Modal";
 import { signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import { useTrial } from "@/components/TrialGuard";
 
 interface UserProfile {
   name: string;
@@ -23,6 +24,7 @@ interface UserProfile {
 
 export default function SettingsPage() {
   const { user } = useAuth();
+  const { plan } = useTrial();
   const { confirm, alert } = useModal();
   const router = useRouter();
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -465,11 +467,27 @@ export default function SettingsPage() {
 
                 {/* Actions Group */}
                 <div className="flex items-center gap-3 md:border-l md:border-white/10 md:pl-5 shrink-0 pt-3 md:pt-0 border-t border-white/5 md:border-t-0 mt-2 md:mt-0">
-                  <button onClick={handleExportExcel} className="flex-1 md:flex-none justify-center text-[13px] text-emerald-400 font-semibold px-5 py-2.5 border border-emerald-500/20 bg-emerald-500/10 rounded-lg hover:bg-emerald-500 text-white hover:border-emerald-500 transition-all flex items-center gap-2 shadow-sm group">
-                    <span className="group-hover:text-white transition-colors">Export .XLSX</span>
+                  <button 
+                    onClick={plan === "free" ? () => alert({ message: "Export is a Pro feature. Please upgrade to unlock.", title: "Pro Feature" }) : handleExportExcel} 
+                    className={`flex-1 md:flex-none justify-center text-[13px] font-semibold px-5 py-2.5 border rounded-lg transition-all flex items-center gap-2 shadow-sm group ${
+                      plan === "free" 
+                        ? "text-zinc-500 border-zinc-500/20 bg-zinc-500/10 cursor-not-allowed" 
+                        : "text-emerald-400 border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500 text-white hover:border-emerald-500"
+                    }`}
+                  >
+                    <span className={plan === "free" ? "" : "group-hover:text-white transition-colors"}>Export .XLSX</span>
+                    {plan === "free" && <Lock size={14} className="text-zinc-600" />}
                   </button>
-                  <button onClick={handleExportPDF} className="flex-1 md:flex-none justify-center text-[13px] text-blue-400 font-semibold px-5 py-2.5 border border-blue-500/20 bg-blue-500/10 rounded-lg hover:bg-blue-500 text-white hover:border-blue-500 transition-all flex items-center gap-2 shadow-sm group">
-                    <span className="group-hover:text-white transition-colors">Export .PDF</span>
+                  <button 
+                    onClick={plan === "free" ? () => alert({ message: "Export is a Pro feature. Please upgrade to unlock.", title: "Pro Feature" }) : handleExportPDF} 
+                    className={`flex-1 md:flex-none justify-center text-[13px] font-semibold px-5 py-2.5 border rounded-lg transition-all flex items-center gap-2 shadow-sm group ${
+                      plan === "free" 
+                        ? "text-zinc-500 border-zinc-500/20 bg-zinc-500/10 cursor-not-allowed" 
+                        : "text-blue-400 border-blue-500/20 bg-blue-500/10 hover:bg-blue-500 text-white hover:border-blue-500"
+                    }`}
+                  >
+                    <span className={plan === "free" ? "" : "group-hover:text-white transition-colors"}>Export .PDF</span>
+                    {plan === "free" && <Lock size={14} className="text-zinc-600" />}
                   </button>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Trade, Currency } from "@/types";
-import { Lock } from "lucide-react";
+import { Lock, ArrowLeft } from "lucide-react";
 import MetricsCards from "@/components/dashboard/MetricsCards";
 import TradeList from "@/components/dashboard/TradeList";
 
@@ -38,9 +38,17 @@ export default function DemoPage() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard Overview</h1>
-            <p className="text-sm text-zinc-400 mt-1">Track, analyze, and optimize your trading performance.</p>
+          <div className="flex items-center gap-4">
+            <Link 
+              href="/" 
+              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/5 transition-all group"
+            >
+              <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard Overview</h1>
+              <p className="text-sm text-zinc-400 mt-1">Track, analyze, and optimize your trading performance.</p>
+            </div>
           </div>
           
           <div className="flex items-center gap-2 bg-zinc-900 border border-white/5 p-2 rounded-lg">

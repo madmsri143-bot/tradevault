@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 import CookieBanner from "@/components/CookieBanner";
 import SupportWidget from "@/components/SupportWidget";
+import GlobalLoader from "@/components/ui/GlobalLoader";
 
 export const metadata: Metadata = {
   title: "Trading Journal Pro",
@@ -47,6 +48,7 @@ export default function RootLayout({
             </AuthWrapper>
             <CookieBanner />
             <SupportWidget />
+            <GlobalLoader />
           </AuthProvider>
         </ModalProvider>
       </body>
