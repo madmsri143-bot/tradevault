@@ -9,6 +9,7 @@ import { format, formatDistanceToNow, differenceInHours, differenceInDays } from
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import { TrialGuard } from "@/components/TrialGuard";
 
 // Helper to get local date string YYYY-MM-DD
 const getLocalDateString = () => {
@@ -211,7 +212,8 @@ export default function TargetPage() {
   // Show passed targets locally if they haven't explicitly expired by time, or just let them sit in active if date is ongoing
   
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
+    <TrialGuard featureName="Elite Targets & Pacing Engine">
+      <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       
       {/* Header & Gamification Banner */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -451,6 +453,7 @@ export default function TargetPage() {
         <EditTargetModal target={editingTarget} onClose={() => setEditingTarget(null)} />
       )}
     </div>
+    </TrialGuard>
   );
 }
 
