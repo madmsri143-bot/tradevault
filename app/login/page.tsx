@@ -84,8 +84,17 @@ export default function LoginPage() {
           return;
         }
         const res = await createUserWithEmailAndPassword(auth, email, password);
+        const now = Date.now();
         await setDoc(doc(db, "users", res.user.uid, "settings", "profile"), {
-          name, email, username, lastActive: Date.now(), trialStartedAt: Date.now(), photoUrl: ""
+          name, 
+          email, 
+          username, 
+          lastActive: now, 
+          plan: "trial",
+          trial_started_at: now,
+          trial_end_date: now + (7 * 24 * 60 * 60 * 1000), // + 7 days
+          isPro: false,
+          photoUrl: ""
         });
         await sendEmailVerification(res.user);
         setSuccessMsg("Verification link sent! Check your inbox.");
@@ -126,8 +135,17 @@ export default function LoginPage() {
     if (!username.trim() || !auth.currentUser) return;
     setLoading(true);
     try {
+      const now = Date.now();
       await setDoc(doc(db, "users", auth.currentUser.uid, "settings", "profile"), {
-        name, email, username, lastActive: Date.now(), trialStartedAt: Date.now(), photoUrl: auth.currentUser.photoURL || ""
+        name, 
+        email, 
+        username, 
+        lastActive: now, 
+        plan: "trial",
+        trial_started_at: now,
+        trial_end_date: now + (7 * 24 * 60 * 60 * 1000), 
+        isPro: false,
+        photoUrl: auth.currentUser.photoURL || ""
       }, { merge: true });
       router.push("/dashboard");
     } catch (err) {

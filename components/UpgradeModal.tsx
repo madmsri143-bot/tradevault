@@ -32,57 +32,71 @@ export default function UpgradeModal({ onClose }: UpgradeModalProps) {
     if (!user) return;
     setLoading(true);
 
-    const amount = selectedPlan === "yearly" ? 1999 : 299;
-
-    // Simulate network delay for realistic "processing"
-    await new Promise(resolve => setTimeout(resolve, 800));
-
     try {
       if (!(window as any).Razorpay) {
         throw new Error("Razorpay SDK not loaded");
       }
 
-      // Mock Razorpay Configuration for demonstration without viable keys
+      // Step 1: Create Order on Backend
+      const orderRes = await fetch("/api/payment/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: selectedPlan, userId: user.uid }),
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) throw new Error(orderData.error);
+
+      // Step 2: Initialize Razorpay Checkout
       const options = {
-        key: "rzp_test_mockkey", // Mock Key
-        amount: amount * 100, // paise
-        currency: "INR",
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_mock", 
+        amount: orderData.amount, 
+        currency: orderData.currency,
+        order_id: orderData.id,
         name: "TradeVault",
         description: selectedPlan === "yearly" ? "TradeVault Professional (Yearly)" : "TradeVault Professional (Monthly)",
         handler: async function (response: any) {
           try {
-            // Update Firestore with Pro status
-            await setDoc(doc(db, "users", user.uid, "settings", "profile"), {
-              isPro: true,
-            }, { merge: true });
-            
-            setSuccess(true);
-            setTimeout(() => {
-              window.location.reload(); // Reload to refresh contexts cleanly
-            }, 2000);
+             // Step 3: Verify Payment securely on Backend
+             const verifyRes = await fetch("/api/payment/verify", {
+               method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id || orderData.id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  userId: user.uid,
+                  plan: selectedPlan
+                })
+             });
+
+             if (!verifyRes.ok) throw new Error("Payment Verification Failed by Server");
+             
+             setSuccess(true);
+             setTimeout(() => window.location.reload(), 2000);
           } catch (error) {
-            console.error("Failed to upgrade account:", error);
+            console.error("Backend verification failed:", error);
             setLoading(false);
+            alert("Payment verification failed. Please contact support.");
           }
         },
-        prefill: {
-          email: user.email || "",
-        },
-        theme: {
-          color: "#00FFB2",
-        },
+        prefill: { email: user.email || "" },
+        theme: { color: "#00FFB2" },
       };
 
       const razorpayInstance = new (window as any).Razorpay(options);
       
-      // Override the open method for mock environment since we don't have a real test key that works 100%
-      // In a real scenario, razorpayInstance.open() would be called.
-      // We will simulate success immediately:
-      options.handler({ razorpay_payment_id: "pay_mock12345" });
+      // If mock order, intercept and bypass checkout
+      if (orderData.mock) {
+         options.handler({ razorpay_payment_id: "pay_mock_" + Date.now() });
+      } else {
+         razorpayInstance.open();
+      }
       
     } catch (err) {
       console.error(err);
       setLoading(false);
+      alert("Failed to initiate checkout. Please try again.");
     }
   };
 

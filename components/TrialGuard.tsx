@@ -23,18 +23,45 @@ export function useTrial() {
     const unsub = onSnapshot(doc(db, "users", user.uid, "settings", "profile"), (snap) => {
       if (snap.exists()) {
         const data = snap.data();
-        const start = data.trialStartedAt || Date.now();
         const now = Date.now();
-        const diffMs = now - start;
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const remaining = 7 - diffDays;
         
+        // 1. Friend Access Whitelist 
+        // Note: NEXT_PUBLIC_ is used so the frontend can read evaluating strict logic natively.
+        const friendEmails = (process.env.NEXT_PUBLIC_FRIEND_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+        const isFriend = user.email ? friendEmails.includes(user.email.toLowerCase()) : false;
+
+        if (isFriend) {
+          setStatus({ isTrial: false, daysLeft: 0, isExpired: false, loading: false });
+          return;
+        }
+
+        // 2. Paid Subscription Systems
+        const hasPaidPlan = data.plan === "pro_monthly" || data.plan === "pro_yearly";
+        if (hasPaidPlan && data.plan_expiry_date) {
+           if (now < data.plan_expiry_date) {
+              const daysLeft = Math.max(0, Math.floor((data.plan_expiry_date - now) / (1000 * 60 * 60 * 24)));
+              setStatus({ isTrial: false, daysLeft, isExpired: false, loading: false });
+              return;
+           }
+           // Fallthrough if plan is expired
+        }
+
+        // 3. Trial System Fallback
+        const trialStart = data.trial_started_at || data.trialStartedAt || now; // handle legacy too
+        const trialEnd = data.trial_end_date || (trialStart + (7 * 24 * 60 * 60 * 1000));
+        const diffDays = Math.floor((trialEnd - now) / (1000 * 60 * 60 * 24));
+        const remainingTrial = Math.max(0, diffDays);
+
+        const isTrialActive = now <= trialEnd;
+
         setStatus({
-          isTrial: !data.isPro,
-          daysLeft: Math.max(0, remaining),
-          isExpired: !data.isPro && remaining <= 0,
+          isTrial: true,
+          daysLeft: remainingTrial,
+          isExpired: !isTrialActive && !data.isPro, // Legacy check integration
           loading: false
         });
+      } else {
+        setStatus({ isTrial: true, daysLeft: 7, isExpired: false, loading: false });
       }
     });
     return () => unsub();
