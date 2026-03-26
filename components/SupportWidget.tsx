@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Headset, Send, Loader2, CheckCircle } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";

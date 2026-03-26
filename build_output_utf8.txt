@@ -1,0 +1,70 @@
+﻿
+> trading-journal@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.1 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 11.9s
+  Running TypeScript ...
+  Finished TypeScript in 7.4s ...
+  Collecting page data using 11 workers ...
+node.exe : ΓÜá∩╕Å Build-Time / 
+Vercel Edge Check: Firebase 
+Variables missing, falling back 
+to dummy initializeApp() to 
+prevent compiler/lambda 
+evaluation crashes.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
+    + CategoryInfo          : Not 
+   Specified: (ΓÜá∩╕Å Build-Ti..  
+  .uation crashes.:String) [],    
+ RemoteException
+    + FullyQualifiedErrorId : Nat 
+   iveCommandError
+ 
+  Generating static pages using 11 workers (0/19) ...
+ΓÜá∩╕Å Build-Time / Vercel Edge 
+Check: Firebase Variables 
+missing, falling back to dummy 
+initializeApp() to prevent 
+compiler/lambda evaluation 
+crashes.
+  Generating static pages using 11 workers (4/19) 
+  Generating static pages using 11 workers (9/19) 
+  Generating static pages using 11 workers (14/19) 
+Γ£ô Generating static pages using 11 workers (19/19) in 1348ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ Γùï /analytics
+Γö£ ╞Æ /api/payment/create-order
+Γö£ ╞Æ /api/payment/verify
+Γö£ ╞Æ /api/razorpay
+Γö£ ╞Æ /api/support
+Γö£ Γùï /billing
+Γö£ Γùï /calculator
+Γö£ Γùï /dashboard
+Γö£ Γùï /demo
+Γö£ Γùï /journal
+Γö£ Γùï /login
+Γö£ Γùï /privacy
+Γö£ Γùï /settings
+Γö£ Γùï /signup
+Γö£ Γùï /target
+Γöö Γùï /terms
+
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+
