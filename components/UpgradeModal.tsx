@@ -8,11 +8,12 @@ import { db } from "@/lib/firebase";
 
 interface UpgradeModalProps {
   onClose: () => void;
+  initialPlan?: "monthly" | "yearly";
 }
 
-export default function UpgradeModal({ onClose }: UpgradeModalProps) {
+export default function UpgradeModal({ onClose, initialPlan = "yearly" }: UpgradeModalProps) {
   const { user } = useAuth();
-  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("yearly");
+  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">(initialPlan);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 

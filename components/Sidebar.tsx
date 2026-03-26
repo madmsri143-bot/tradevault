@@ -85,9 +85,36 @@ export default function Sidebar() {
       
       <div className="px-2 py-4 border-t border-white/10 flex flex-col gap-2">
         <Link
-          href="/settings"
+          href="/billing"
           className={cn(
             "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative",
+            pathname === "/billing"
+              ? "bg-emerald-500/10 text-emerald-400 font-medium"
+              : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+          )}
+          title={!isExpanded ? "Billing" : undefined}
+        >
+          <div className="shrink-0 flex items-center justify-center w-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <span
+            className={cn(
+              "whitespace-nowrap transition-all duration-300",
+              !isExpanded ? "opacity-0 w-0 hidden" : "opacity-100"
+            )}
+          >
+            Billing
+          </span>
+          {!isExpanded && (
+            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+              Billing
+            </div>
+          )}
+        </Link>
+        <Link
+          href="/settings"
+          className={cn(
+            "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative mt-1",
             pathname === "/settings"
               ? "bg-emerald-500/10 text-emerald-400 font-medium"
               : "text-zinc-400 hover:text-white hover:bg-zinc-900"
