@@ -32,12 +32,13 @@ export interface ExchangeRates {
   [key: string]: number;
 }
 
-export type TargetType = "daily" | "monthly" | "custom";
+export type TargetType = "daily" | "weekly" | "monthly" | "custom";
 
 export interface TradingTarget {
   id?: string;
   type: TargetType;
   targetValue: number;
+  maxLoss?: number;
   startDate: number; // Unix timestamp
   endDate: number; // Unix timestamp
   createdAt: number;

@@ -267,7 +267,7 @@ export default function JournalPage() {
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Coaching System</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Journal</h1>
           <p className="text-sm text-zinc-400 mt-1">Structured reflections and mistake intelligence framework.</p>
         </div>
         
@@ -402,7 +402,7 @@ export default function JournalPage() {
                 disabled={submitting || !text.trim()}
                 className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5"
               >
-                {submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Log Coaching Entry"}
+                {submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Log Journal Entry"}
               </button>
             </form>
           </div>
@@ -445,7 +445,7 @@ export default function JournalPage() {
               <div className="w-20 h-20 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
                 <BookText size={32} className="text-zinc-600" />
               </div>
-              <h3 className="text-lg font-bold text-white">No Coaching Entries Yet</h3>
+              <h3 className="text-lg font-bold text-white">No Journal Entries Yet</h3>
               <p className="text-sm text-zinc-500 max-w-sm mt-2">
                 Start structuring your lessons on the left. Transformation happens through disciplined reflection.
               </p>
@@ -675,7 +675,7 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
       <div className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900 shrink-0">
-          <h2 className="text-lg font-bold text-white">Edit Coaching Entry</h2>
+          <h2 className="text-lg font-bold text-white">Edit Journal Entry</h2>
           <button onClick={onClose} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
         </div>
         

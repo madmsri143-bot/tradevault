@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Trade, TradingTarget, TargetType } from "@/types";
-import { Target, Calendar as CalendarIcon, CheckCircle2, XCircle, Trash2, Pencil, CalendarRange, X, Clock } from "lucide-react";
-import { format } from "date-fns";
+import { Target, Calendar as CalendarIcon, CheckCircle2, XCircle, Trash2, Pencil, X, Clock, AlertTriangle, TrendingUp, TrendingDown, Hourglass, Medal } from "lucide-react";
+import { format, formatDistanceToNow, differenceInHours, differenceInDays } from "date-fns";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 
 // Helper to get local date string YYYY-MM-DD
 const getLocalDateString = () => {
@@ -15,10 +16,27 @@ const getLocalDateString = () => {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
 };
 
-const getLocalMonthString = () => {
+const getHelperDates = (tab: TargetType) => {
   const d = new Date();
-  const m = d.getMonth() + 1;
-  return `${d.getFullYear()}-${m < 10 ? '0' + m : m}`;
+  d.setHours(0,0,0,0);
+  if (tab === "daily") {
+     return { start: d.getTime(), end: new Date(d.getTime() + 86400000 - 1).getTime() };
+  }
+  if (tab === "weekly") {
+     const day = d.getDay() || 7; 
+     const monday = new Date(d);
+     monday.setDate(d.getDate() - day + 1);
+     const sunday = new Date(monday);
+     sunday.setDate(monday.getDate() + 6);
+     sunday.setHours(23,59,59,999);
+     return { start: monday.getTime(), end: sunday.getTime() };
+  }
+  if (tab === "monthly") {
+     const first = new Date(d.getFullYear(), d.getMonth(), 1);
+     const last = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999);
+     return { start: first.getTime(), end: last.getTime() };
+  }
+  return { start: d.getTime(), end: new Date(d.getTime() + 86400000 - 1).getTime() };
 };
 
 export default function TargetPage() {
@@ -26,41 +44,30 @@ export default function TargetPage() {
   const { confirm, alert } = useModal();
   const [activeTab, setActiveTab] = useState<TargetType>("daily");
   
-  // Data
   const [targets, setTargets] = useState<TradingTarget[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   
-  // Forms
+  // Form Setup
   const [targetValue, setTargetValue] = useState("");
-  const [dailyDate, setDailyDate] = useState(getLocalDateString());
-  const [monthlyDate, setMonthlyDate] = useState(getLocalMonthString());
+  const [maxLoss, setMaxLoss] = useState("");
   const [customStart, setCustomStart] = useState(getLocalDateString());
   const [customEnd, setCustomEnd] = useState(getLocalDateString());
   const [submitting, setSubmitting] = useState(false);
 
-  // Edit Modal
   const [editingTarget, setEditingTarget] = useState<TradingTarget | null>(null);
 
-  // Fetch Targets & Trades
   useEffect(() => {
     if (!user) return;
-    const targetsQ = query(collection(db, "users", user.uid, "targets"), orderBy("createdAt", "desc"));
-    const unsubTargets = onSnapshot(targetsQ, (snapshot) => {
-      const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as TradingTarget[];
-      setTargets(fetched);
+    const unsubTargets = onSnapshot(query(collection(db, "users", user.uid, "targets"), orderBy("createdAt", "desc")), (snapshot) => {
+      setTargets(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as TradingTarget[]);
     });
 
-    const tradesQ = query(collection(db, "users", user.uid, "trades"));
-    const unsubTrades = onSnapshot(tradesQ, (snapshot) => {
-      const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Trade[];
-      setTrades(fetched);
+    const unsubTrades = onSnapshot(query(collection(db, "users", user.uid, "trades")), (snapshot) => {
+      setTrades(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Trade[]);
     });
 
-    return () => {
-      unsubTargets();
-      unsubTrades();
-    };
-  }, []);
+    return () => { unsubTargets(); unsubTrades(); };
+  }, [user]);
 
   const handleCreateTarget = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,30 +76,28 @@ export default function TargetPage() {
     setSubmitting(true);
     let start = 0, end = 0;
 
-    if (activeTab === "daily") {
-      const [y, m, d] = dailyDate.split('-');
-      start = new Date(parseInt(y), parseInt(m)-1, parseInt(d), 0, 0, 0, 0).getTime();
-      end = new Date(parseInt(y), parseInt(m)-1, parseInt(d), 23, 59, 59, 999).getTime();
-    } else if (activeTab === "monthly") {
-      const [y, m] = monthlyDate.split('-');
-      start = new Date(parseInt(y), parseInt(m)-1, 1).getTime();
-      end = new Date(parseInt(y), parseInt(m), 0, 23, 59, 59, 999).getTime();
-    } else if (activeTab === "custom") {
+    if (activeTab === "custom") {
       const [sy, sm, sd] = customStart.split('-');
       start = new Date(parseInt(sy), parseInt(sm)-1, parseInt(sd), 0, 0, 0, 0).getTime();
       const [ey, em, ed] = customEnd.split('-');
       end = new Date(parseInt(ey), parseInt(em)-1, parseInt(ed), 23, 59, 59, 999).getTime();
+    } else {
+      const bounds = getHelperDates(activeTab);
+      start = bounds.start;
+      end = bounds.end;
     }
 
     try {
       await addDoc(collection(db, "users", user!.uid, "targets"), {
         type: activeTab,
         targetValue: parseFloat(targetValue),
+        maxLoss: maxLoss ? parseFloat(maxLoss) : null,
         startDate: start,
         endDate: end,
         createdAt: Date.now()
       });
       setTargetValue("");
+      setMaxLoss("");
     } catch (err) {
       console.error(err);
       await alert({ message: "Failed to create target." });
@@ -103,62 +108,151 @@ export default function TargetPage() {
 
   const handleDelete = async (id?: string) => {
     if (!id || !user) return;
-    const isConfirmed = await confirm({
-      title: "Delete Target",
-      message: "Are you sure you want to permanently delete this target?",
-      confirmLabel: "Delete",
-      variant: "danger"
-    });
-    
-    if (isConfirmed) {
-      await deleteDoc(doc(db, "users", user.uid, "targets", id));
-    }
+    const isConfirmed = await confirm({ title: "Delete Target", message: "Are you sure?", variant: "danger" });
+    if (isConfirmed) await deleteDoc(doc(db, "users", user.uid, "targets", id));
   };
 
-  // Helper to calculate PnL within target range
-  const evaluateTarget = (target: TradingTarget) => {
+  // Gamification & Streak processing
+  const completedTargets = targets.filter(t => Date.now() > t.endDate || (evaluateTarget(t).status === "PASSED" || evaluateTarget(t).status === "FAILED_LOSS"));
+  const sortedCompleted = completedTargets.sort((a,b) => b.endDate - a.endDate);
+  
+  let currentStreak = 0;
+  for (let i = 0; i < sortedCompleted.length; i++) {
+    const { status } = evaluateTarget(sortedCompleted[i]);
+    if (status === "PASSED") currentStreak++;
+    else break;
+  }
+
+  // Helper Evaluator
+  function evaluateTarget(target: TradingTarget) {
     const relevantTrades = trades.filter(t => t.date >= target.startDate && t.date <= target.endDate);
     const totalPnl = relevantTrades.reduce((sum, t) => sum + (t.normalizedPnl !== undefined ? t.normalizedPnl : t.pnl), 0);
-    const isPassed = totalPnl >= target.targetValue;
-    const isExpired = Date.now() > target.endDate;
-    const status = isPassed ? "PASSED" : isExpired ? "FAILED" : "IN PROGRESS";
-    return { totalPnl, status, isPassed };
-  };
+    const now = Date.now();
+    
+    let timeRemainingStr = "Ended";
+    if (now < target.endDate) {
+       const dh = differenceInHours(target.endDate, now);
+       if (dh < 24) timeRemainingStr = `${dh} hours left`;
+       else timeRemainingStr = `${differenceInDays(target.endDate, now)} days left`;
+    }
 
-  const formatTargetDate = (t: TradingTarget) => {
-    if (t.type === "daily") return format(new Date(t.startDate), "MMM do, yyyy");
-    if (t.type === "monthly") return format(new Date(t.startDate), "MMMM yyyy");
-    return `${format(new Date(t.startDate), "MMM d, yyyy")} - ${format(new Date(t.endDate), "MMM d, yyyy")}`;
-  };
+    let status = "IN PROGRESS";
+    let statusLabel = "On Track";
+    let colorClass = "text-emerald-400";
+    let hexColor = "#34d399";
+    
+    if (target.maxLoss && totalPnl <= -target.maxLoss) {
+       status = "FAILED_LOSS";
+       statusLabel = "Max Loss Hit";
+       colorClass = "text-red-500";
+       hexColor = "#ef4444";
+    } else if (totalPnl >= target.targetValue) {
+       status = "PASSED";
+       statusLabel = "Achieved";
+       colorClass = "text-emerald-500";
+       hexColor = "#10b981";
+    } else if (now > target.endDate) {
+       status = "FAILED_TIME";
+       statusLabel = "Expired Missed";
+       colorClass = "text-zinc-500";
+       hexColor = "#71717a";
+    } else {
+       // Pacing Logic
+       const totalDuration = target.endDate - target.startDate;
+       const elapsed = now - target.startDate;
+       let timeFraction = elapsed / totalDuration;
+       if (timeFraction < 0) timeFraction = 0;
+       
+       const expectedPnl = target.targetValue * timeFraction;
+       if (totalPnl >= expectedPnl) {
+          status = "AHEAD";
+          statusLabel = "Ahead of Target";
+          colorClass = "text-blue-400";
+          hexColor = "#60a5fa";
+       } else {
+          status = "BEHIND";
+          statusLabel = "Slightly Behind";
+          colorClass = "text-amber-500";
+          hexColor = "#f59e0b";
+       }
+    }
 
-  return (
-    <div className="space-y-8 animate-in fade-in duration-500 max-w-5xl mx-auto pb-10">
+    const unclippedPercentage = (totalPnl / target.targetValue) * 100;
+    const progressPercentage = Math.max(0, Math.min(100, unclippedPercentage));
+    
+    // Line Chart Data Gen
+    const chartData = [];
+    if (relevantTrades.length > 0) {
+      // Sort trades chronologically
+      const sortedT = [...relevantTrades].sort((a,b)=>a.date-b.date);
+      let runningSum = 0;
+      chartData.push({ time: "Start", pnl: 0, targetPath: 0 });
       
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-          <Target className="text-emerald-500" size={32} />
-          Trading Targets
-        </h1>
-        <p className="text-sm text-zinc-400 mt-1">Set and evaluate your daily, monthly, and custom profit goals automatically.</p>
+      sortedT.forEach(t => {
+         runningSum += (t.normalizedPnl !== undefined ? t.normalizedPnl : t.pnl);
+         // calculate what target path 'should' have been at this trade's time
+         const tf = Math.max(0, Math.min(1, (t.date - target.startDate) / (target.endDate - target.startDate)));
+         chartData.push({ 
+           time: format(new Date(t.date), "MMM d, h:mm a"), 
+           pnl: runningSum, 
+           targetPath: target.targetValue * tf 
+         });
+      });
+      // Add current point
+      const finalTf = Math.max(0, Math.min(1, (now - target.startDate) / (target.endDate - target.startDate)));
+      chartData.push({ time: "Now", pnl: runningSum, targetPath: target.targetValue * finalTf });
+    }
+
+    return { totalPnl, status, statusLabel, colorClass, hexColor, progressPercentage, timeRemainingStr, chartData, unclippedPercentage };
+  }
+
+  // Render separation
+  const activeTargets = targets.filter(t => evaluateTarget(t).status !== "FAILED_LOSS" && evaluateTarget(t).status !== "FAILED_TIME" && Date.now() <= t.endDate);
+  // Show passed targets locally if they haven't explicitly expired by time, or just let them sit in active if date is ongoing
+  
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
+      
+      {/* Header & Gamification Banner */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <Target className="text-emerald-500" size={32} /> Goals Engine
+          </h1>
+          <p className="text-sm text-zinc-400 mt-1">Where am I? How far am I? Set explicit targets to drive focused behavior.</p>
+        </div>
+        
+        {currentStreak > 0 && (
+          <div className="bg-orange-500/10 border border-orange-500/30 px-4 py-2.5 rounded-xl flex items-center gap-3 shadow-[0_0_15px_rgba(249,115,22,0.15)]">
+             <Medal className="text-orange-400" size={24} />
+             <div>
+               <p className="text-xs text-orange-400 uppercase font-black tracking-widest">Consistency Badge</p>
+               <p className="text-sm text-white font-bold">{currentStreak} Target{currentStreak > 1 ? 's' : ''} Hit String 🔥</p>
+             </div>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         
-        {/* Left Column: Form */}
-        <div className="md:col-span-1 space-y-6">
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-xl overflow-hidden shadow-sm">
+        {/* Left Column: Elite Form */}
+        <div className="xl:col-span-1 space-y-6">
+          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm sticky top-6">
             
-            {/* Tabs */}
-            <div className="flex border-b border-white/5">
-              {(['daily', 'monthly', 'custom'] as TargetType[]).map((tab) => (
+            <div className="p-5 border-b border-white/5 bg-zinc-900/50">
+               <h2 className="text-sm font-bold uppercase tracking-wider text-emerald-400">Deploy Target</h2>
+            </div>
+            
+            {/* Native Tabs */}
+            <div className="flex bg-zinc-950 p-1 m-4 rounded-xl shadow-inner mb-0 border border-white/5">
+              {(['daily', 'weekly', 'monthly', 'custom'] as TargetType[]).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-3 text-sm font-medium transition-colors capitalize ${
+                  className={`flex-1 py-2 text-xs font-bold transition-all rounded-lg uppercase tracking-wider ${
                     activeTab === tab 
-                      ? 'bg-emerald-500/10 text-emerald-400 border-b-2 border-emerald-500' 
-                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'
+                      ? 'bg-zinc-800 text-white shadow-sm ring-1 ring-white/10' 
+                      : 'text-zinc-500 hover:text-zinc-300'
                   }`}
                 >
                   {tab}
@@ -166,174 +260,205 @@ export default function TargetPage() {
               ))}
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleCreateTarget} className="p-6 space-y-4">
+            <form onSubmit={handleCreateTarget} className="p-5 space-y-6">
               
-              {activeTab === "daily" && (
-                <div>
-                  <label className="block text-xs font-medium text-zinc-400 mb-1">Select Date</label>
-                  <div className="relative">
-                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                    <input type="date" value={dailyDate} onChange={e => setDailyDate(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2.5 pl-10 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark" />
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "monthly" && (
-                <div>
-                  <label className="block text-xs font-medium text-zinc-400 mb-1">Select Month</label>
-                  <div className="relative">
-                    <CalendarRange className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                    <input type="month" value={monthlyDate} onChange={e => setMonthlyDate(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2.5 pl-10 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark" />
-                  </div>
-                </div>
-              )}
-
               {activeTab === "custom" && (
-                <div className="space-y-3">
+                <div className="space-y-3 p-3 bg-zinc-950/50 rounded-xl border border-white/5 shadow-inner">
                   <div>
-                    <label className="block text-xs font-medium text-zinc-400 mb-1">Start Date</label>
-                    <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark" />
+                    <label className="block text-[10px] uppercase font-bold text-zinc-500 mb-1">Start Date</label>
+                    <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark" />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-zinc-400 mb-1">End Date</label>
-                    <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark" />
+                    <label className="block text-[10px] uppercase font-bold text-zinc-500 mb-1">End Date</label>
+                    <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark" />
                   </div>
                 </div>
               )}
 
-              <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Target Value ($)</label>
-                <input 
-                  type="number" 
-                  step="0.01" 
-                  value={targetValue} 
-                  onChange={e => setTargetValue(e.target.value)} 
-                  placeholder="e.g. 500.00" 
-                  required 
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded p-2.5 text-sm focus:border-emerald-500 focus:outline-none"
-                />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider font-bold text-emerald-500 mb-1 flex justify-between">
+                    Target Value ($) <TrendingUp size={14} />
+                  </label>
+                  <input 
+                    type="number" step="0.01" value={targetValue} onChange={e => setTargetValue(e.target.value)} placeholder="e.g. 500.00" required 
+                    className="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none shadow-inner text-emerald-400 font-bold placeholder-emerald-900/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider font-bold text-red-500 mb-1 flex justify-between">
+                    Drawdown Max Loss ($) <TrendingDown size={14} />
+                  </label>
+                  <input 
+                    type="number" step="0.01" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} placeholder="e.g. 150.00 (Optional)" 
+                    className="w-full bg-zinc-950 border border-red-500/30 rounded-xl p-3 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500/20 focus:outline-none shadow-inner text-red-400 font-bold placeholder-red-900/40"
+                  />
+                  <p className="text-[10px] text-zinc-500 mt-1.5 leading-tight">If your actual PnL crosses this negative threshold, the target instantly fails. Prevents revenge trading.</p>
+                </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg transition-colors mt-2 disabled:opacity-50"
-              >
-                {submitting ? "Saving..." : "Create Target"}
+              <button type="submit" disabled={submitting} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wide py-3.5 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:-translate-y-0.5 disabled:opacity-50">
+                {submitting ? "Engaging..." : "Commit Target"}
               </button>
 
             </form>
           </div>
         </div>
 
-        {/* Right Column: Display Cards */}
-        <div className="md:col-span-2 space-y-4">
+        {/* Right Column: Display Engine */}
+        <div className="xl:col-span-2 space-y-6">
           
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Active Goals</h2>
-            <div className="text-xs text-zinc-500">Auto-evaluating against dashboard trades</div>
-          </div>
-
           {targets.length === 0 ? (
-            <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-12 rounded-xl flex flex-col items-center justify-center text-center shadow-sm">
-              <Target size={48} className="text-zinc-800 mb-4" />
-              <h3 className="text-lg font-medium text-zinc-300">No Targets Set</h3>
+            <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up p-12 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm h-full min-h-[400px]">
+              <div className="w-20 h-20 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
+                <Target size={32} className="text-zinc-600" />
+              </div>
+              <h3 className="text-lg font-bold text-white">No Actionable Targets</h3>
               <p className="text-sm text-zinc-500 max-w-sm mt-2">
-                Use the form on the left to set your first trading goal and start tracking your consistency.
+                Targets should drive action. Set a Daily or Weekly goal to the left to activate the behavioral pacing engine.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {targets.map(target => {
-                const { totalPnl, status } = evaluateTarget(target);
-                const progressPercentage = Math.max(0, Math.min(100, (totalPnl / target.targetValue) * 100));
+            <div className="space-y-6">
+              {/* Prioritize rendering Actives natively at the top, rendering individually with huge radial rings */}
+              {activeTargets.map(target => {
+                const { totalPnl, status, statusLabel, colorClass, hexColor, progressPercentage, timeRemainingStr, chartData, unclippedPercentage } = evaluateTarget(target);
                 
-                let badgeClass = "bg-blue-500/10 text-blue-400";
-                let StatusIcon = Clock;
-                
-                if (status === "PASSED") {
-                  badgeClass = "bg-emerald-500/10 text-emerald-400";
-                  StatusIcon = CheckCircle2;
-                } else if (status === "FAILED") {
-                  badgeClass = "bg-red-500/10 text-red-500";
-                  StatusIcon = XCircle;
-                }
+                // SVG Circle Math
+                const circleRadius = 55;
+                const circleCircumference = 2 * Math.PI * circleRadius;
+                const circleOffset = circleCircumference - (progressPercentage / 100) * circleCircumference;
 
                 return (
-                  <div key={target.id} className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-xl shadow-sm relative group">
-                    
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <span className="inline-block px-2 py-0.5 bg-zinc-800 text-zinc-300 text-[10px] font-bold uppercase tracking-wider rounded mb-2">
-                          {target.type}
-                        </span>
-                        <h3 className="text-zinc-200 text-sm font-medium">{formatTargetDate(target)}</h3>
-                      </div>
+                  <div key={target.id} className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-6 md:p-8 rounded-3xl relative overflow-hidden group">
+                    <div className="absolute top-4 right-4 bg-zinc-950/80 backdrop-blur rounded-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center p-1 z-20">
+                      <button onClick={() => setEditingTarget(target)} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-zinc-800 rounded transition-colors" title="Edit Goal"><Pencil size={14} /></button>
+                      <button onClick={() => handleDelete(target.id)} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-zinc-800 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row gap-8 items-center md:items-start relative z-10">
                       
-                      <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase ${badgeClass}`}>
-                        <StatusIcon size={14} />
-                        {status}
+                      {/* Big Radial Progress Ring */}
+                      <div className="relative w-[140px] h-[140px] shrink-0 drop-shadow-2xl flex items-center justify-center">
+                        <svg className="absolute inset-0 w-full h-full transform -rotate-90 filter drop-shadow-md">
+                           <circle cx="70" cy="70" r={circleRadius} stroke="currentColor" strokeWidth="12" fill="transparent" className="text-zinc-800/80" />
+                           <circle cx="70" cy="70" r={circleRadius} stroke={hexColor} strokeWidth="12" fill="transparent" strokeDasharray={circleCircumference} strokeDashoffset={circleOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" style={{ filter: `drop-shadow(0 0 10px ${hexColor}60)` }} />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                           <p className="text-2xl font-black text-white">{Math.floor(progressPercentage)}%</p>
+                           <p className={`text-[10px] font-bold uppercase tracking-widest ${colorClass}`}>{statusLabel}</p>
+                        </div>
+                      </div>
+
+                      {/* Info & Metrics */}
+                      <div className="flex-1 w-full space-y-5">
+                         
+                         <div>
+                           <div className="flex items-center gap-2 mb-1">
+                             <span className="bg-zinc-800 text-zinc-300 text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full">{target.type}</span>
+                             <span className="text-xs text-zinc-500 font-bold flex items-center gap-1"><Clock size={12}/> {timeRemainingStr}</span>
+                           </div>
+                           <div className="flex justify-between items-baseline mt-2">
+                             <p className="text-sm text-zinc-400 font-medium">Trajectory Progress</p>
+                             <div className="text-right">
+                               <span className={`text-2xl font-bold ${totalPnl >= 0 ? 'text-white' : 'text-red-400'}`}>
+                                 ${totalPnl.toFixed(2)}
+                               </span>
+                               <span className="text-zinc-500 font-medium ml-2">/ ${target.targetValue.toFixed(2)}</span>
+                             </div>
+                           </div>
+                         </div>
+
+                         {target.maxLoss && (
+                           <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                              <span className="text-xs text-zinc-500 font-bold uppercase tracking-wider flex items-center gap-2"><AlertTriangle size={14} className="text-red-500/70" /> Drawdown Limit</span>
+                              <span className="text-sm font-bold text-red-400">-${target.maxLoss.toFixed(2)}</span>
+                           </div>
+                         )}
+                         
+                         {/* Intelligent Status Feedback */}
+                         <div className={`p-3 rounded-xl border flex items-center gap-3 ${status === 'PASSED' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : status === 'AHEAD' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : status === 'BEHIND' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                            {status === 'PASSED' ? <CheckCircle2 size={18} /> : status === 'AHEAD' ? <TrendingUp size={18} /> : status === 'BEHIND' ? <Hourglass size={18} /> : <XCircle size={18} />}
+                            <span className="text-sm font-bold">
+                               {status === 'PASSED' ? "Target obliterated! Unstoppable execution." 
+                              : status === 'AHEAD' ? "You are ahead of schedule. Guard your capital." 
+                              : status === 'BEHIND' ? "You are trailing the necessary run rate. Do not force setups." 
+                              : "Target failed. Live to trade another day."}
+                            </span>
+                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-zinc-500">Target</span>
-                        <span className="text-white font-semibold">${target.targetValue.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-zinc-500">Actual PnL</span>
-                        <span className={`font-semibold ${totalPnl >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                          {totalPnl >= 0 ? '+' : '-'}${Math.abs(totalPnl).toFixed(2)}
-                        </span>
-                      </div>
-
-                      {/* Progress Bar */}
-                      <div className="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden mt-2">
-                        <div 
-                           className={`h-full rounded-full transition-all duration-1000 ${status === "FAILED" ? 'bg-red-500' : status === "PASSED" ? 'bg-emerald-500' : 'bg-blue-500'}`} 
-                           style={{ width: `${isNaN(progressPercentage) ? 0 : progressPercentage}%` }} 
-                        />
-                      </div>
-                    </div>
-
-                    {/* Hover Actions */}
-                    <div className="absolute top-4 right-4 bg-zinc-900 shadow-lg rounded-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center p-1 translate-x-4 group-hover:-translate-x-0 group-hover:duration-200">
-                      <button onClick={() => setEditingTarget(target)} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-zinc-800 rounded transition-colors" title="Edit Goal">
-                        <Pencil size={14} />
-                      </button>
-                      <button onClick={() => handleDelete(target.id)} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-zinc-800 rounded transition-colors" title="Delete">
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-
+                    {/* Chart visual underbelly */}
+                    {chartData.length > 2 && (
+                       <div className="h-32 mt-6 -mx-2 mb-[-10px]">
+                         <ResponsiveContainer width="100%" height="100%">
+                           <LineChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+                             <ReferenceLine y={target.targetValue} stroke="#10b981" strokeDasharray="3 3" opacity={0.5} />
+                             {target.maxLoss && <ReferenceLine y={-target.maxLoss} stroke="#ef4444" strokeDasharray="3 3" opacity={0.5} />}
+                             <Tooltip 
+                               contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '12px' }}
+                               itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}
+                               labelStyle={{ color: '#71717a', fontSize: '10px' }}
+                             />
+                             <Line type="monotone" dataKey="targetPath" name="Required Pace" stroke="#71717a" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                             <Line type="monotone" dataKey="pnl" name="Actual PnL" stroke={hexColor} strokeWidth={3} dot={{ r: 2, fill: hexColor }} activeDot={{ r: 5 }} />
+                           </LineChart>
+                         </ResponsiveContainer>
+                       </div>
+                    )}
                   </div>
-                );
+                )
               })}
+
+              {/* Inactive / History targets */}
+              {targets.length > activeTargets.length && (
+                <div className="mt-8 border-t border-white/5 pt-8">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-4 px-2">Archived Resolutions</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {targets.filter(t => !activeTargets.includes(t)).map(target => {
+                      const { totalPnl, status, hexColor } = evaluateTarget(target);
+                      return (
+                        <div key={target.id} className="bg-zinc-950/50 border border-white/5 p-4 rounded-2xl flex justify-between items-center group relative overflow-hidden shadow-inner">
+                           <div className="absolute inset-0 flex">
+                             <div className="w-1 h-full" style={{ backgroundColor: hexColor }} />
+                           </div>
+                           <div className="pl-3">
+                             <div className="flex items-center gap-2 mb-1">
+                               <span className="text-[10px] font-black uppercase text-zinc-500">{target.type}</span>
+                               <span className="text-[10px] text-zinc-600 font-bold">{format(target.startDate, "MMM d")} - {format(target.endDate, "MMM d")}</span>
+                             </div>
+                             <p className={`text-sm font-bold ${totalPnl >= 0 ? 'text-zinc-300' : 'text-red-400/80'}`}>${totalPnl.toFixed(2)} <span className="text-zinc-600 text-xs">/ ${target.targetValue}</span></p>
+                           </div>
+                           <div className="flex items-center gap-2">
+                             <span className="text-[10px] font-bold uppercase py-1 px-2 rounded-lg" style={{ color: hexColor, backgroundColor: `${hexColor}20` }}>{status}</span>
+                             <button onClick={() => handleDelete(target.id)} className="p-1.5 text-zinc-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={14}/></button>
+                           </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
-
         </div>
       </div>
-
+      
+      {/* Simple Edit Modal Overlay Layer */}
       {editingTarget && (
-        <EditTargetModal 
-          target={editingTarget} 
-          onClose={() => setEditingTarget(null)} 
-        />
+        <EditTargetModal target={editingTarget} onClose={() => setEditingTarget(null)} />
       )}
-
     </div>
   );
 }
 
-// Edit Modal Component embedded for locality
 function EditTargetModal({ target, onClose }: { target: TradingTarget, onClose: () => void }) {
   const { user } = useAuth();
   const { alert } = useModal();
   const [targetValue, setTargetValue] = useState<string>(target.targetValue.toString());
-  // Pre-fill limits based on type and timestamp structure. For simplicity, editing limits supports picking new dates.
+  const [maxLoss, setMaxLoss] = useState<string>(target.maxLoss ? target.maxLoss.toString() : "");
   const [startD, setStartD] = useState(() => format(new Date(target.startDate), "yyyy-MM-dd"));
   const [endD, setEndD] = useState(() => format(new Date(target.endDate), "yyyy-MM-dd"));
   const [submitting, setSubmitting] = useState(false);
@@ -351,6 +476,7 @@ function EditTargetModal({ target, onClose }: { target: TradingTarget, onClose: 
 
       await updateDoc(doc(db, "users", user!.uid, "targets", target.id), {
         targetValue: parseFloat(targetValue),
+        maxLoss: maxLoss ? parseFloat(maxLoss) : null,
         startDate: start,
         endDate: end
       });
@@ -364,31 +490,31 @@ function EditTargetModal({ target, onClose }: { target: TradingTarget, onClose: 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
-      <div className="bg-zinc-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
+      <div className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900">
-           <h2 className="text-lg font-semibold text-white">Edit Target</h2>
+           <h2 className="text-sm uppercase tracking-widest font-bold text-white">Modify Logic</h2>
            <button onClick={onClose} className="p-1.5 text-zinc-400 hover:text-white rounded-md"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Target Value ($)</label>
-            <input type="number" step="0.01" value={targetValue} onChange={e => setTargetValue(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none" />
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Target Value ($)</label>
+            <input type="number" step="0.01" value={targetValue} onChange={e => setTargetValue(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 text-sm focus:border-emerald-500 focus:outline-none shadow-inner" />
           </div>
-          <div className="space-y-2">
-            <span className="block text-xs text-zinc-300 font-medium">Edit Date Limits</span>
-            <div>
-              <label className="block text-[10px] text-zinc-500 mb-0.5">Start Date</label>
-              <input type="date" value={startD} onChange={e => setStartD(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark" />
-            </div>
-            <div>
-              <label className="block text-[10px] text-zinc-500 mb-0.5">End Date</label>
-              <input type="date" value={endD} onChange={e => setEndD(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark" />
+          <div>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Max Loss Limit ($)</label>
+            <input type="number" step="0.01" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 text-sm focus:border-red-500 focus:outline-none shadow-inner" />
+          </div>
+          <div className="space-y-2 pt-2">
+            <span className="block text-[10px] text-zinc-500 uppercase font-black">Edit Date Bounds</span>
+            <div className="flex gap-2">
+              <input type="date" value={startD} onChange={e => setStartD(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 flex-1 color-scheme-dark" />
+              <input type="date" value={endD} onChange={e => setEndD(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 flex-1 color-scheme-dark" />
             </div>
           </div>
-          <div className="pt-2 flex justify-end gap-3">
-             <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-zinc-400 hover:text-white rounded transition-colors">Cancel</button>
-             <button type="submit" disabled={submitting} className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded font-medium disabled:opacity-50">Sav{submitting ? "ing..." : "e Changes"}</button>
+          <div className="pt-4 flex justify-end gap-3 mt-4">
+             <button type="button" onClick={onClose} className="px-4 py-2.5 text-xs text-zinc-400 hover:text-white rounded-lg font-bold">Abort</button>
+             <button type="submit" disabled={submitting} className="px-5 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold disabled:opacity-50">Sav{submitting ? "ing..." : "e Params"}</button>
           </div>
         </form>
       </div>
