@@ -13,11 +13,11 @@ const firebaseConfig = {
 };
 
 // Initialize variables but don't instantiate them until we know we are on the client
-let app;
-let db;
-let auth;
-let storage;
-let googleProvider;
+let app: any;
+let db: any;
+let auth: any;
+let storage: any;
+let googleProvider: any;
 
 // Only initialize Firebase on the client-side (where 'window' is defined)
 // This strictly prevents Next.js Server-Side Rendering (SSR) from crashing if it tries to access Firebase Auth during Vercel builds.
