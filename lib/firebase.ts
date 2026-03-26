@@ -13,11 +13,11 @@ const firebaseConfig = {
 };
 
 // Initialize variables, cast as exact Types to avoid 'implicit any' errors in Next.js build
-let app = {} as FirebaseApp;
-let db = {} as Firestore;
-let auth = {} as Auth;
-let storage = {} as FirebaseStorage;
-let googleProvider = {} as GoogleAuthProvider;
+let app: FirebaseApp = {} as FirebaseApp;
+let db: Firestore = {} as Firestore;
+let auth: Auth = {} as Auth;
+let storage: FirebaseStorage = {} as FirebaseStorage;
+let googleProvider: GoogleAuthProvider = {} as GoogleAuthProvider;
 
 // Only initialize Firebase on the client-side (where 'window' is defined)
 // This strictly prevents Next.js Server-Side Rendering (SSR) from crashing if it tries to access Firebase Auth during Vercel builds.
