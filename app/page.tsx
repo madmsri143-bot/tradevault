@@ -59,12 +59,12 @@ export default function LandingPage() {
               The premier workspace for traders to log execution, identify psychological patterns, and hit mathematical profit targets with surgical precision.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/login" className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
+              <Link href="/signup" className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
                 Start Free Trial <ChevronRight size={20} />
               </Link>
-              <button className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all">
+              <Link href="/demo" className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all">
                 <Play size={18} fill="currentColor" /> View Demo
-              </button>
+              </Link>
             </div>
             <div className="flex items-center gap-6 pt-4 text-zinc-500">
                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest leading-none">
@@ -303,7 +303,7 @@ export default function LandingPage() {
               <PricingTier feature="Single Device Sync" />
               <PricingTier feature="Daily Performance Summary" />
             </ul>
-            <Link href="/login" className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-2xl transition-all text-center">
+            <Link href="/signup" className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-2xl transition-all text-center">
               Get Started
             </Link>
           </div>
@@ -327,7 +327,7 @@ export default function LandingPage() {
               <PricingTier feature="Unlimited Multi-Device Sync" pro />
             </ul>
             <div className="space-y-4">
-              <Link href="/login" className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all block text-center">
+              <Link href="/signup" className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all block text-center">
                 Start 7-Day Free Trial
               </Link>
               <p className="text-[10px] text-zinc-500 text-center uppercase tracking-widest font-bold">No credit card required to start</p>
@@ -342,7 +342,7 @@ export default function LandingPage() {
             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none" />
             <h2 className="text-4xl md:text-6xl font-black tracking-tight">Start Tracking. <br /> Start Improving.</h2>
             <p className="text-zinc-400 max-w-xl mx-auto">Join thousands of disciplined traders who use TradeVault to escape inconsistency and master the markets.</p>
-            <Link href="/login" className="inline-block px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-[#00FFB2] transition-colors relative z-10">
+            <Link href="/signup" className="inline-block px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-[#00FFB2] transition-colors relative z-10">
                Start Free Trial
             </Link>
          </div>

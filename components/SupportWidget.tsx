@@ -8,10 +8,10 @@ import { useTrial } from "@/components/TrialGuard";
 export default function SupportWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
-  const { isTrial, loading } = useTrial();
+  const { access, plan, loading } = useTrial();
 
   const handleEmailSupport = () => {
-    const isPro = (!loading && !isTrial) ? "Pro" : "Free";
+    const isPro = (!loading && access === "premium" && plan === "pro") ? "Pro" : "Free";
     const userEmail = user?.email || "Not logged in";
     
     const subject = encodeURIComponent("TradeVault Support Request");

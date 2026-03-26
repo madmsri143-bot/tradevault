@@ -17,7 +17,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   const [resendLoading, setResendLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const publicRoutes = ["/", "/login", "/terms", "/privacy"];
+  const publicRoutes = ["/", "/login", "/signup", "/demo", "/terms", "/privacy"];
   const isPublicRoute = publicRoutes.includes(pathname);
 
   useEffect(() => {

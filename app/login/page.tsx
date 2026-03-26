@@ -28,9 +28,9 @@ const getAuthErrorMessage = (errCode: string): string => {
   }
 };
 
-export default function LoginPage() {
+export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   const router = useRouter();
-  const [mode, setMode] = useState<"login" | "signup" | "setup-username" | "forgot-password">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "setup-username" | "forgot-password">(forceSignup ? "signup" : "login");
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

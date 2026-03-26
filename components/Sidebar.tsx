@@ -18,7 +18,7 @@ export default function Sidebar() {
   const toggleSidebar = () => setIsExpanded(!isExpanded);
 
   const navItems = [
-    { label: "Dashboard", href: "/", icon: <LayoutDashboard size={20} /> },
+    { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={20} /> },
     { label: "Journal", href: "/journal", icon: <BookText size={20} /> },
     { label: "Calculator", href: "/calculator", icon: <Calculator size={20} /> },
     { label: "Target", href: "/target", icon: <Crosshair size={20} /> },
