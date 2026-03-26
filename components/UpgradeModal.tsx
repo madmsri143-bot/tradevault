@@ -190,7 +190,8 @@ export default function UpgradeModal({ onClose }: UpgradeModalProps) {
            >
              {loading ? <Loader2 className="animate-spin text-black" size={20} /> : "Continue to Payment"}
            </button>
-           <div className="mt-4 flex items-center gap-4 text-[10px] text-zinc-500 font-semibold uppercase tracking-widest">
+           <p className="text-zinc-500 text-xs mt-3 font-medium">You will only be charged after choosing a plan.</p>
+           <div className="mt-3 flex items-center gap-4 text-[10px] text-zinc-500 font-semibold uppercase tracking-widest">
              <span className="flex items-center gap-1"><Zap size={12} className="text-emerald-500" /> Secure</span>
              <span className="flex items-center gap-1"><Zap size={12} className="text-emerald-500" /> Encrypted</span>
              <span>Powered by Razorpay</span>

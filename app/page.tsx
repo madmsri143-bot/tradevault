@@ -66,6 +66,9 @@ export default function LandingPage() {
                 <Play size={18} fill="currentColor" /> View Demo
               </Link>
             </div>
+            <p className="text-sm font-medium text-zinc-500 mt-2">
+               Start your 7-day free trial — no credit card required
+            </p>
             <div className="flex items-center gap-6 pt-4 text-zinc-500">
                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest leading-none">
                  <ShieldCheck size={16} className="text-[#00FFB2]" /> 100% Private
@@ -345,6 +348,7 @@ export default function LandingPage() {
             <Link href="/signup" className="inline-block px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-[#00FFB2] transition-colors relative z-10">
                Start Free Trial
             </Link>
+            <p className="text-zinc-500 text-sm mt-4 font-medium relative z-10">Try free for 7 days. Pay only if you choose to upgrade.</p>
          </div>
       </section>
     </div>

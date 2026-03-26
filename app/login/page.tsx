@@ -254,6 +254,11 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
             <button disabled={loading} type="submit" className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
               {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? "Start Free Trial" : "Finish Setup"}
             </button>
+            {mode === "signup" && (
+               <p className="text-center text-xs text-zinc-500 font-medium mt-3">
+                 No payment details required. Your 7-day trial starts instantly.
+               </p>
+            )}
           </form>
 
           {mode !== "setup-username" && (

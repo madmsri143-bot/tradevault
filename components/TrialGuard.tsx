@@ -125,7 +125,7 @@ export function TrialBanner() {
         <div className="flex items-center gap-3">
            <Zap size={18} className="text-[#00FFB2] fill-[#00FFB2]/20" />
            <p className="text-sm font-bold text-white">
-             You are on a <span className="text-[#00FFB2]">Professional Trial</span>. {trial_days_left} days remaining.
+             You are on a <span className="text-[#00FFB2]">Professional Trial</span>. Trial ends in {trial_days_left} days. <span className="text-zinc-400 font-medium">No charges applied.</span>
            </p>
         </div>
         <button onClick={() => setShowUpgrade(true)} className="text-xs font-black uppercase tracking-widest text-[#00FFB2] hover:text-white transition-colors flex items-center gap-1 group">
