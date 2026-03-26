@@ -210,12 +210,19 @@ export default function AnalyticsPage() {
   if (executionPercentage < 40) executionColor = "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]";
   else if (executionPercentage <= 70) executionColor = "text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]";
 
+  const wrScoreFormatted = Number(wrScore.toFixed(1)) || 0;
+  const slScoreFormatted = Number(slScore.toFixed(1)) || 0;
+  const rrScoreFormatted = Number(rrScore.toFixed(1)) || 0;
+  const consScoreFormatted = Number(consistencyScore.toFixed(1)) || 0;
+
   const radarData = [
-    { subject: 'Consistency', A: Number(consistencyScore.toFixed(1)) || 0, fullMark: 10 },
-    { subject: 'Risk-Reward', A: Number(rrScore.toFixed(1)) || 0, fullMark: 10 },
-    { subject: 'Stop Loss Usage', A: Number(slScore.toFixed(1)) || 0, fullMark: 10 },
-    { subject: 'Win Rate', A: Number(wrScore.toFixed(1)) || 0, fullMark: 10 },
+    { subject: `CONS: ${consScoreFormatted}`, A: consScoreFormatted, fullMark: 10 },
+    { subject: `RR: ${rrScoreFormatted}`, A: rrScoreFormatted, fullMark: 10 },
+    { subject: `SL: ${slScoreFormatted}`, A: slScoreFormatted, fullMark: 10 },
+    { subject: `WR: ${wrScoreFormatted}`, A: wrScoreFormatted, fullMark: 10 },
   ];
+
+  const executionDecimal = (averageExecution).toFixed(1);
 
   return (
     <TrialGuard featureName="Advanced Performance Analytics">
@@ -334,31 +341,35 @@ export default function AnalyticsPage() {
           </div>
 
           {/* 6. Radar Chart */}
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-xl p-5 shadow-sm lg:col-span-1 flex flex-col">
-            <h2 className="text-sm font-semibold text-zinc-300 flex items-center gap-2 mb-2">
-              <Target size={16} className="text-emerald-500" /> Execution Score
+          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-xl p-6 shadow-lg lg:col-span-1 flex flex-col items-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none" />
+            
+            <h2 className="text-sm font-semibold text-zinc-300 flex items-center self-start gap-2 w-full relative z-10">
+              <Target size={16} className="text-emerald-500" /> Analytics Dashboard
             </h2>
-            <p className="text-[10px] text-zinc-500 mb-2 text-center uppercase tracking-widest font-semibold">Metrics normalized (0-10 scale)</p>
-            <div className="flex-1 w-full min-h-[220px] relative -ml-2">
-              
-              {/* Center Execution Score Overlay */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none z-10 bg-zinc-900/40 backdrop-blur-[2px] w-24 h-24 rounded-full border border-white/5 shadow-inner">
-                <span className={`text-2xl font-black ${executionColor} tracking-tighter`}>
-                  {Math.round(executionPercentage)}%
-                </span>
-                <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest mt-1 text-center leading-tight">
-                  Execution<br/>Score
-                </span>
-              </div>
-
+            
+            <div className="flex flex-col items-center justify-center mt-6 lg:mt-8 relative z-10">
+              <span className={`text-[4rem] leading-none font-black ${executionColor} tracking-tighter drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]`}>
+                {executionDecimal}
+              </span>
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mt-2 mb-1">
+                Execution Score
+              </span>
+            </div>
+            
+            <div className="flex-1 w-full min-h-[260px] relative mt-2 z-10">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                  <PolarGrid stroke="#27272a" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: "#a1a1aa", fontSize: 10, fontWeight: 600 }} />
+                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
+                  <PolarGrid stroke="#3f3f46" strokeDasharray="3 3" />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: "#d4d4d8", fontSize: 11, fontWeight: 700 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
-                  <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.15} />
+                  <Radar name="Score" dataKey="A" stroke="#10b981" strokeWidth={3} fill="#10b981" fillOpacity={0.2} style={{ filter: "drop-shadow(0 0 8px rgba(16,185,129,0.5))" }} />
                 </RadarChart>
               </ResponsiveContainer>
+            </div>
+            
+            <div className="mt-2 text-sm font-bold text-zinc-400 bg-black/40 px-5 py-2.5 rounded-xl border border-white/5 relative z-10 shadow-inner">
+              Overall Score: <span className="text-white ml-2 text-base">{executionDecimal} / 10</span>
             </div>
           </div>
 

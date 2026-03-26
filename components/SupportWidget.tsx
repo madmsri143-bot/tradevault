@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Headset, Send, Loader2, CheckCircle, ImagePlus, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Headset, Send, Loader2, CheckCircle } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
 import Modal from "@/components/ui/Modal";
@@ -21,10 +21,7 @@ export default function SupportWidget() {
     message: ""
   });
   
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user && isOpen) {
@@ -36,26 +33,7 @@ export default function SupportWidget() {
     }
   }, [user, isOpen]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (!file.type.startsWith("image/jpeg") && !file.type.startsWith("image/png")) {
-        setErrorMsg("Only JPG and PNG files are allowed.");
-        return;
-      }
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onload = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
-      setErrorMsg("");
-    }
-  };
-
-  const removeImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  // Image attachment temporarily disabled for text-only pipeline
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,17 +50,6 @@ export default function SupportWidget() {
     
     setLoading(true);
     try {
-      let uploadedImageUrl = null;
-      if (imageFile) {
-        const cloudData = new FormData();
-        cloudData.append("file", imageFile);
-        cloudData.append("upload_preset", "journal_upload");
-        const cloudRes = await fetch("https://api.cloudinary.com/v1_1/dnvuge0qb/image/upload", { method: "POST", body: cloudData });
-        if (!cloudRes.ok) throw new Error("Image upload failed");
-        const cloudJson = await cloudRes.json();
-        uploadedImageUrl = cloudJson.secure_url;
-      }
-
       const res = await fetch("/api/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -91,13 +58,12 @@ export default function SupportWidget() {
           email: formData.email,
           plan: planName || "Unknown",
           subject: formData.subject,
-          message: formData.message,
-          imageUrl: uploadedImageUrl
+          message: formData.message
         })
       });
 
       if (!res.ok) {
-        const resData = await res.json();
+        const resData = await res.json().catch(() => ({}));
         throw new Error(resData.error || "Failed to send message");
       }
       
@@ -106,11 +72,10 @@ export default function SupportWidget() {
         setIsOpen(false);
         setSuccess(false);
         setFormData({ name: user?.displayName || "", email: user?.email || "", subject: "", message: "" });
-        removeImage();
       }, 3000);
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "Failed to send support request. Please try again.");
+      setErrorMsg(err.message || "Failed to send message");
     } finally {
       setLoading(false);
     }
@@ -143,7 +108,7 @@ export default function SupportWidget() {
             <div className="w-16 h-16 bg-[#00FFB2]/10 rounded-full flex items-center justify-center mb-4 border border-[#00FFB2]/20">
               <CheckCircle size={32} className="text-[#00FFB2]" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Message Sent!</h3>
+            <h3 className="text-xl font-bold text-white mb-2">Message sent successfully</h3>
             <p className="text-sm text-zinc-400">Our support team will get back to your registered email shortly.</p>
           </div>
         ) : (
@@ -212,29 +177,7 @@ export default function SupportWidget() {
               />
             </div>
 
-            {/* Image Upload Option */}
-            <div>
-               <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-1.5 ml-1">Attachment (Optional JPG/PNG)</label>
-               {!imagePreview ? (
-                 <button 
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full border-2 border-dashed border-white/10 rounded-xl p-4 flex flex-col items-center justify-center gap-2 text-zinc-500 hover:text-white hover:border-white/20 transition-colors bg-zinc-950/30"
-                 >
-                   <ImagePlus size={24} />
-                   <span className="text-xs font-medium">Click to upload screenshot</span>
-                 </button>
-               ) : (
-                 <div className="relative w-max">
-                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                   <img src={imagePreview} alt="Preview" className="h-24 w-auto rounded-lg border border-white/10 object-cover" />
-                   <button type="button" onClick={removeImage} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:scale-110 transition-transform">
-                     <X size={12} />
-                   </button>
-                 </div>
-               )}
-               <input type="file" ref={fileInputRef} onChange={handleImageChange} accept=".jpg,.jpeg,.png" className="hidden" />
-            </div>
+            {/* Image attachment temporarily disabled for text-only pipeline */}
             
             <button 
               type="submit" 
