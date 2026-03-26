@@ -10,8 +10,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
     
-    if (message.length < 150) {
-      return NextResponse.json({ error: "Message must be at least 150 characters long" }, { status: 400 });
+    if (message.length < 10) {
+      return NextResponse.json({ error: "Message must be at least 10 characters long" }, { status: 400 });
     }
 
     const transporter = nodemailer.createTransport({
