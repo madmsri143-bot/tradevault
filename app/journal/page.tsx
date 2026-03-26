@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { JournalEntry } from "@/types";
-import { format } from "date-fns";
-import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText } from "lucide-react";
+import { JournalEntry, Trade } from "@/types";
+import { format, subDays, startOfDay } from "date-fns";
+import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText, TrendingUp, AlertTriangle, Target, Flame, Activity } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
 
@@ -79,58 +79,80 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
   return data.secure_url;
 };
 
+const DEFAULT_PROMPT = "Setup:\n\nRules Followed:\n\nWhat I'd do differently:\n\nMarket Lesson:\n";
+
+const MOODS_BEFORE = ["😤 Impatient", "😐 Neutral", "😎 Confident", "😰 Fearful"];
+const MOODS_AFTER = ["😡 Frustrated", "🙂 Satisfied", "🤯 Shocked", "😶 Numb"];
+const MISTAKE_TAGS = ["FOMO", "Overtrading", "Revenge trading", "Ignored SL", "Early exit", "Late entry", "No setup"];
+const QUALITY_SCORES = ["A", "B", "C", "D"];
+
+function SmartText({ text }: { text: string }) {
+  if (!text) return null;
+  const regex = /(FOMO|Discipline|Mistakes?)/ig;
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) => {
+        const lower = part.toLowerCase();
+        if (lower === "fomo") return <span key={i} className="text-red-400 bg-red-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
+        if (lower === "discipline") return <span key={i} className="text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
+        if (lower.startsWith("mistake")) return <span key={i} className="text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
+        return <span key={i}>{part}</span>;
+      })}
+    </>
+  );
+}
+
 export default function JournalPage() {
   const { user } = useAuth();
   const { confirm, alert } = useModal();
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [trades, setTrades] = useState<Trade[]>([]);
   
   // Filter State
   const [filterDate, setFilterDate] = useState("");
 
   // Form State
   const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
-  const [text, setText] = useState("");
+  const [text, setText] = useState(DEFAULT_PROMPT);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Elite System Form State
+  const [moodBefore, setMoodBefore] = useState("");
+  const [moodAfter, setMoodAfter] = useState("");
+  const [mistakes, setMistakes] = useState<string[]>([]);
+  const [qualityScore, setQualityScore] = useState<"A"|"B"|"C"|"D"|"">("");
 
   // Modal States
   const [viewingEntry, setViewingEntry] = useState<JournalEntry | null>(null);
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
 
-  // Keep the opened modal synced with live background uploads mapping in from Firestore
+  // Sync opened modal with live updates
   useEffect(() => {
     if (viewingEntry) {
       const liveUpdate = entries.find(e => e.id === viewingEntry.id);
-      // Only trigger a re-render if the imageUrl or text genuinely changed
       if (liveUpdate && (liveUpdate.imageUrl !== viewingEntry.imageUrl || liveUpdate.text !== viewingEntry.text)) {
         setViewingEntry(liveUpdate);
       }
     }
   }, [entries, viewingEntry]);
 
-  // Fetch Entries
+  // Fetch Entries & Trades
   useEffect(() => {
     if (!user) return;
-    const q = query(collection(db, "users", user.uid, "journal"), orderBy("date", "desc"));
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const fetched: JournalEntry[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as JournalEntry[];
-        setEntries(fetched);
-      },
-      (error) => {
-        console.error("Error fetching journal entries:", error);
-      }
-    );
+    const unsubJournal = onSnapshot(query(collection(db, "users", user.uid, "journal"), orderBy("date", "desc")), (snap) => {
+      setEntries(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as JournalEntry[]);
+    });
+    
+    const unsubTrades = onSnapshot(query(collection(db, "users", user.uid, "trades"), orderBy("date", "desc")), (snap) => {
+      setTrades(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Trade[]);
+    });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    return () => { unsubJournal(); unsubTrades(); };
+  }, [user]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -138,6 +160,10 @@ export default function JournalPage() {
       setImageFile(file);
       setPreviewUrl(URL.createObjectURL(file));
     }
+  };
+
+  const toggleMistake = (tag: string) => {
+    setMistakes(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -154,20 +180,25 @@ export default function JournalPage() {
       const newEntry: JournalEntry = {
         date: new Date(date).getTime(),
         text,
+        moodBefore,
+        moodAfter,
+        mistakes,
+        ...(qualityScore ? { qualityScore: qualityScore as "A"|"B"|"C"|"D" } : {})
       };
 
-      // Create doc first to unblock UI immediately
       const docRef = await addDoc(collection(db, "users", user!.uid, "journal"), newEntry);
-
       const fileToUpload = imageFile;
       
       // Reset form instantly
-      setText("");
+      setText(DEFAULT_PROMPT);
       setImageFile(null);
       setPreviewUrl(null);
+      setMoodBefore("");
+      setMoodAfter("");
+      setMistakes([]);
+      setQualityScore("");
       setSubmitting(false);
 
-      // Background upload
       if (fileToUpload) {
         try {
           const compressedFile = await compressImage(fileToUpload);
@@ -180,21 +211,14 @@ export default function JournalPage() {
       }
     } catch (error) {
       console.error("Error saving journal entry:", error);
-      await alert({ message: "Failed to save entry. Check Firebase configuration." });
+      await alert({ message: "Failed to save entry." });
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (id?: string) => {
     if (!id || !user) return;
-    
-    const isConfirmed = await confirm({
-      title: "Delete Journal Entry",
-      message: "Are you sure you want to delete this journal entry?",
-      confirmLabel: "Delete",
-      variant: "danger"
-    });
-    
+    const isConfirmed = await confirm({ title: "Delete Journal Entry", message: "Are you sure you want to delete this?", variant: "danger" });
     if (isConfirmed) {
       try {
         await deleteDoc(doc(db, "users", user.uid, "journal", id));
@@ -206,7 +230,7 @@ export default function JournalPage() {
     }
   };
 
-  // Group entries by date
+  // Group entries
   const groupedEntries: Record<string, JournalEntry[]> = {};
   entries.forEach((entry) => {
     const dateStr = format(new Date(entry.date), "yyyy-MM-dd");
@@ -217,183 +241,289 @@ export default function JournalPage() {
   const sortedDates = Object.keys(groupedEntries).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
   const displayDates = filterDate ? sortedDates.filter(d => d === filterDate) : sortedDates;
 
+  // Elite System Calculations
+  const relevantTrades = filterDate 
+    ? trades.filter(t => format(new Date(t.date), "yyyy-MM-dd") === filterDate)
+    : trades;
+  const totalTradesCount = relevantTrades.length;
+  const winRate = totalTradesCount > 0 ? (relevantTrades.filter(t => t.pnl > 0).length / totalTradesCount) * 100 : 0;
+
+  const mistakesCount: Record<string, number> = {};
+  displayDates.forEach(dateStr => {
+    groupedEntries[dateStr].forEach(entry => {
+      entry.mistakes?.forEach(m => {
+         mistakesCount[m] = (mistakesCount[m] || 0) + 1;
+      });
+    });
+  });
+  const topMistake = Object.keys(mistakesCount).length > 0 ? Object.entries(mistakesCount).sort((a,b)=>b[1]-a[1])[0] : null;
+
+  const recent7Days = Array.from({ length: 7 }).map((_, i) => format(startOfDay(subDays(new Date(), i)), "yyyy-MM-dd"));
+  const daysLedger = [...new Set(entries.map(e => format(new Date(e.date), "yyyy-MM-dd")))];
+  const streakCount = recent7Days.filter(d => daysLedger.includes(d)).length;
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl mx-auto pb-10">
+    <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">Trading Journal</h1>
-        <p className="text-sm text-zinc-400 mt-1">Review your mindset, document lessons, and analyze your charts.</p>
-      </div>
-
-      {/* Date Filter Bar */}
-      <div className="flex items-center gap-4 bg-zinc-900/50 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-4 rounded-xl">
-        <label className="text-sm font-medium text-zinc-300">Filter by Date:</label>
-        <div className="relative">
-          <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-          <input
-            type="date"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="w-48 bg-zinc-950 border border-zinc-800 rounded p-2 pl-9 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark transition-colors"
-          />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Coaching System</h1>
+          <p className="text-sm text-zinc-400 mt-1">Structured reflections and mistake intelligence framework.</p>
         </div>
-        {filterDate && (
-          <button
-            onClick={() => setFilterDate("")}
-            className="text-sm text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors"
-          >
-            Clear Filter
-          </button>
-        )}
+        
+        {/* Date Filter Bar */}
+        <div className="flex items-center gap-3 bg-zinc-900 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-xl">
+          <label className="text-sm font-medium text-zinc-400 pl-2">Filter:</label>
+          <div className="relative">
+            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
+            <input
+              type="date"
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              className="bg-zinc-950 border border-zinc-800 rounded-lg py-1.5 pr-2 pl-9 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark transition-colors"
+            />
+          </div>
+          {filterDate && (
+            <button
+              onClick={() => setFilterDate("")}
+              className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Form Panel */}
-        <div className="md:col-span-1">
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-6 rounded-xl sticky top-6">
-            <h2 className="text-xl font-semibold mb-4 text-emerald-400">New Entry</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        {/* LEFT PANEL: Elite Form */}
+        <div className="xl:col-span-1">
+          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl sticky top-6 shadow-sm">
+            <h2 className="text-sm font-bold tracking-wider uppercase text-emerald-400 mb-5">New Reflection</h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
               
-              <div>
-                <label className="block text-xs text-zinc-400 mb-1">Date</label>
-                <div className="relative">
-                  <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                  <input
-                    type="date"
-                    name="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    required
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 pl-9 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark transition-colors"
-                  />
+              <div className="space-y-2.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Emotional Intelligence</label>
+                <div className="bg-zinc-950/50 p-3 rounded-xl border border-white/5 space-y-4 shadow-inner">
+                  <div>
+                    <span className="text-[10px] text-zinc-400 mb-2 block">Before Trade</span>
+                    <div className="flex flex-wrap gap-2">
+                      {MOODS_BEFORE.map(m => (
+                        <button key={m} type="button" onClick={() => setMoodBefore(m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="h-px bg-white/5" />
+                  <div>
+                    <span className="text-[10px] text-zinc-400 mb-2 block">After Trade</span>
+                    <div className="flex flex-wrap gap-2">
+                      {MOODS_AFTER.map(m => (
+                        <button key={m} type="button" onClick={() => setMoodAfter(m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs text-zinc-400 mb-1">Notes & Lesson</label>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Mistake Intelligence</label>
+                  <span className="text-[9px] text-zinc-500 uppercase tracking-widest bg-white/5 px-1.5 rounded">Multi-select</span>
+                </div>
+                <div className="flex flex-wrap gap-2 bg-zinc-950/50 p-3 rounded-xl border border-white/5 shadow-inner">
+                  {MISTAKE_TAGS.map(tag => (
+                    <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-xs px-2.5 py-1 rounded-full border transition-all ${mistakes.includes(tag) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'}`}>
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Execution Score</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {QUALITY_SCORES.map(s => {
+                    const activeColor = s === 'A' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : s === 'B' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : s === 'C' ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-red-500/20 border-red-500/50 text-red-400';
+                    return (
+                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300 shadow-inner'}`}>
+                        {s}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className="space-y-2.5 relative group">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Smart Reflection</label>
+                <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none" />
                 <textarea
-                  name="text"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  placeholder="How did you feel about today's trades? What did you learn?"
                   required
-                  rows={6}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded p-3 text-sm focus:border-emerald-500 focus:outline-none transition-colors resize-none"
+                  rows={8}
+                  className="w-full relative bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-sm focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none transition-all resize-none shadow-inner leading-relaxed text-zinc-300"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs text-zinc-400 mb-2">Screenshot (Chart Setup)</label>
-                
-                {previewUrl ? (
-                  <div className="relative rounded-lg overflow-hidden border border-zinc-800 bg-zinc-950 group">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={previewUrl} alt="Preview" className="w-full h-40 object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImageFile(null);
-                        setPreviewUrl(null);
-                      }}
-                      className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-sm font-medium text-red-400 transition-opacity"
-                    >
-                      Remove Image
-                    </button>
-                  </div>
-                ) : (
-                  <label className="cursor-pointer flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-zinc-800 rounded-lg bg-zinc-950 hover:bg-zinc-900/50 hover:border-emerald-500/50 transition-colors">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <ImagePlus size={24} className="mb-2 text-zinc-500" />
-                      <p className="text-xs text-zinc-400"><span className="font-semibold text-emerald-400">Click to upload</span> or drag and drop</p>
+              <div className="space-y-2.5 flex gap-4">
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  required
+                  className="w-1/3 bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 text-xs text-zinc-400 focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner transition-colors"
+                />
+                <div className="flex-1 relative">
+                  {previewUrl ? (
+                    <div className="relative rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 h-[42px] group flex items-center shadow-inner">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+                      <span className="relative z-10 text-xs text-zinc-300 px-4 font-medium truncate">Image attached</span>
+                      <button type="button" onClick={() => { setImageFile(null); setPreviewUrl(null); }} className="absolute z-20 inset-y-0 right-0 px-3 bg-red-500/90 text-white text-xs font-bold transition-colors">
+                        X
+                      </button>
                     </div>
-                    <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
-                  </label>
-                )}
+                  ) : (
+                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[42px] border border-dashed border-zinc-700/50 rounded-xl bg-zinc-950/50 hover:bg-zinc-900 hover:border-emerald-500/50 transition-all text-xs text-zinc-400 group shadow-inner">
+                      <ImagePlus size={14} className="group-hover:text-emerald-400 transition-colors" />
+                      <span className="font-medium group-hover:text-emerald-400 transition-colors">Attach Setup</span>
+                      <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                    </label>
+                  )}
+                </div>
               </div>
 
               <button
                 type="submit"
                 disabled={submitting || !text.trim()}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5"
               >
-                {submitting ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" /> Saving...
-                  </>
-                ) : (
-                  "Save Journal Entry"
-                )}
+                {submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Log Coaching Entry"}
               </button>
             </form>
           </div>
         </div>
 
-        {/* Display Panel */}
-        <div className="md:col-span-2 space-y-8">
+        {/* RIGHT PANEL: Display & Summary */}
+        <div className="xl:col-span-2 space-y-6">
+          
+          {/* ELITE DAILY SUMMARY BLOCK */}
+          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4 tracking-tight shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+            
+            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
+              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><Activity size={12} className="text-blue-500" /> Trades View</span>
+              <p className="text-2xl font-bold text-white mt-1">{totalTradesCount}</p>
+            </div>
+            
+            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
+              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><TrendingUp size={12} className="text-emerald-500" /> Win Rate</span>
+              <p className="text-2xl font-bold text-white mt-1">{winRate.toFixed(1)}%</p>
+            </div>
+            
+            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
+              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><AlertTriangle size={12} className="text-amber-500" /> Top Mistake</span>
+              <p className="text-base font-bold text-amber-400 mt-2 truncate">
+                {topMistake ? `${topMistake[0]} (${topMistake[1]})` : "None 🎉"}
+              </p>
+            </div>
+
+            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
+              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><Flame size={12} className="text-orange-500" /> Discipline Score</span>
+              <p className="text-sm font-bold text-zinc-300 mt-2">
+                <span className="text-orange-400 text-lg mr-1">{streakCount}</span> / 7 Days
+              </p>
+            </div>
+          </div>
+
           {displayDates.length === 0 ? (
-            <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-12 rounded-xl flex flex-col items-center justify-center text-center">
-              <BookText size={48} className="text-zinc-700 mb-4" />
-              <h3 className="text-lg font-medium text-zinc-300">No Journal Entries Yet</h3>
+            <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-12 rounded-2xl flex flex-col items-center justify-center text-center">
+              <div className="w-20 h-20 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
+                <BookText size={32} className="text-zinc-600" />
+              </div>
+              <h3 className="text-lg font-bold text-white">No Coaching Entries Yet</h3>
               <p className="text-sm text-zinc-500 max-w-sm mt-2">
-                Start writing your daily logs on the left to review your performance and improve your strategy.
+                Start structuring your lessons on the left. Transformation happens through disciplined reflection.
               </p>
             </div>
           ) : (
             displayDates.map((dateStr) => (
-              <div key={dateStr} className="relative pl-6 before:absolute before:inset-0 before:left-2 before:w-0.5 before:bg-zinc-800 before:z-0">
+              <div key={dateStr} className="relative pl-6 before:absolute before:inset-0 before:left-[11px] before:w-0.5 before:bg-zinc-800 before:z-0">
                 
-                <div className="relative z-10 flex items-center gap-4 mb-4 -ml-6">
-                  <div className="w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-zinc-950 shrink-0" />
-                  <h3 className="text-lg font-bold text-white tracking-widest uppercase">
-                    {format(new Date(dateStr), "EEEE, MMM do, yyyy")}
+                <div className="relative z-10 flex items-center gap-4 mb-5 -ml-6">
+                  <div className="w-[14px] h-[14px] ml-[5px] rounded-full bg-emerald-500 ring-4 ring-zinc-950 shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                  <h3 className="text-[13px] font-black text-white tracking-widest uppercase bg-zinc-900 border border-white/10 px-3 py-1.5 rounded-lg shadow-sm">
+                    {format(new Date(dateStr), "EEEE, MMM do")}
                   </h3>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {groupedEntries[dateStr].map((entry) => (
                     <div 
                       key={entry.id} 
                       onClick={() => setViewingEntry(entry)}
-                      className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-xl shadow-sm hover:border-emerald-500/50 hover:bg-zinc-800/50 transition-all cursor-pointer group relative"
+                      className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-6 rounded-2xl shadow-sm hover:border-emerald-500/30 hover:bg-zinc-800/20 transition-all cursor-pointer group relative"
                     >
-                      <div className="flex items-start justify-between mb-2">
-                        <span className="text-xs text-zinc-500 font-medium">
-                          {format(new Date(entry.date), "h:mm a")}
-                        </span>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="text-[11px] font-bold tracking-wider text-emerald-500 border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                            {format(new Date(entry.date), "h:mm a")}
+                          </span>
+                          
+                          {entry.qualityScore && (
+                            <span className={`text-[11px] font-bold tracking-wider px-2 py-0.5 rounded-full border ${entry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : entry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : entry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
+                              Grade: {entry.qualityScore}
+                            </span>
+                          )}
+
+                          {entry.moodBefore && (
+                            <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-950 px-2 py-0.5 rounded-full">
+                              Prep: {entry.moodBefore}
+                            </span>
+                          )}
+                          {entry.moodAfter && (
+                            <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-950 px-2 py-0.5 rounded-full">
+                              Post: {entry.moodAfter}
+                            </span>
+                          )}
+                        </div>
                         
-                        {/* Action Buttons (appear on hover) */}
+                        {/* Action Buttons */}
                         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }}
-                            className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors"
-                            title="Edit"
-                          >
-                            <Pencil size={14} />
-                          </button>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }}
-                            className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors"
-                            title="Delete"
-                          >
-                            <Trash2 size={14} />
-                          </button>
+                          <button onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={14} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
                         </div>
                       </div>
-                      <p className="text-zinc-300 text-sm whitespace-pre-wrap leading-relaxed line-clamp-3">
-                        {entry.text}
-                      </p>
+
+                      <div className="text-zinc-300 text-[14px] whitespace-pre-wrap leading-[1.8] line-clamp-4 font-medium opacity-90">
+                        <SmartText text={entry.text} />
+                      </div>
+
+                      {entry.mistakes && entry.mistakes.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-5">
+                          {entry.mistakes.map(m => (
+                            <span key={m} className="text-[10px] font-bold tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 rounded-full shadow-sm">{m}</span>
+                          ))}
+                        </div>
+                      )}
                       
                       {entry.imageUrl && (
-                        <div className="mt-4 rounded-lg overflow-hidden border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none bg-zinc-950/50 h-32 relative">
+                        <div className="mt-5 rounded-xl overflow-hidden border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none bg-zinc-950/50 h-40 relative group/img">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 
                             src={entry.imageUrl} 
                             alt="Trading Chart Snapshot" 
-                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                            className="w-full h-full object-cover opacity-80 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-500"
                             loading="lazy"
                           />
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                             <Maximize2 className="text-white drop-shadow-lg" size={24} />
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+                             <div className="bg-zinc-900/90 text-white border border-white/20 px-4 py-2 rounded-lg backdrop-blur flex items-center gap-2 text-sm font-bold tracking-tight">
+                               <Maximize2 size={16} className="text-emerald-400" /> Expand Setup
+                             </div>
                           </div>
                         </div>
                       )}
@@ -411,46 +541,64 @@ export default function JournalPage() {
       {viewingEntry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setViewingEntry(null)}>
           <div 
-            className="bg-zinc-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200"
+            className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900 shrink-0 rounded-t-xl">
+            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900 shrink-0 rounded-t-2xl">
               <div className="flex items-center gap-3">
                 <CalendarIcon className="text-emerald-500" size={18} />
-                <h2 className="text-lg font-semibold text-white">
+                <h2 className="text-lg font-bold text-white tracking-tight">
                   {format(new Date(viewingEntry.date), "EEEE, MMM do, yyyy - h:mm a")}
                 </h2>
+                {viewingEntry.qualityScore && (
+                  <span className={`text-[11px] font-black tracking-wider uppercase px-2 py-0.5 rounded border ${viewingEntry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : viewingEntry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : viewingEntry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
+                    Grade {viewingEntry.qualityScore}
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-1">
-                <button
-                  onClick={() => { setEditingEntry(viewingEntry); setViewingEntry(null); }}
-                  className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors mr-2"
-                  title="Edit"
-                >
-                  <Pencil size={18} />
-                </button>
-                <button
-                  onClick={() => setViewingEntry(null)}
-                  className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
-                >
-                  <X size={18} />
-                </button>
+                <button onClick={() => { setEditingEntry(viewingEntry); setViewingEntry(null); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors mr-2" title="Edit"><Pencil size={18} /></button>
+                <button onClick={() => setViewingEntry(null)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
               </div>
             </div>
             
-            <div className="p-6 overflow-y-auto custom-scrollbar">
-              <p className="text-zinc-300 whitespace-pre-wrap leading-relaxed mb-6 font-medium text-[15px]">
-                {viewingEntry.text}
-              </p>
+            <div className="p-8 overflow-y-auto custom-scrollbar flex flex-col md:flex-row gap-8">
+              <div className="flex-1 space-y-6">
+                
+                <div className="flex flex-wrap gap-2">
+                  {viewingEntry.moodBefore && (
+                    <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/10 bg-zinc-950 px-2.5 py-1 rounded-lg shadow-inner">Prep: {viewingEntry.moodBefore}</span>
+                  )}
+                  {viewingEntry.moodAfter && (
+                    <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/10 bg-zinc-950 px-2.5 py-1 rounded-lg shadow-inner">Post: {viewingEntry.moodAfter}</span>
+                  )}
+                </div>
+
+                <div className="text-zinc-300 whitespace-pre-wrap leading-[1.8] font-medium text-[15px] opacity-90">
+                  <SmartText text={viewingEntry.text} />
+                </div>
+                
+                {viewingEntry.mistakes && viewingEntry.mistakes.length > 0 && (
+                  <div className="pt-4 border-t border-white/5">
+                    <span className="block text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-3">Identified Mistakes</span>
+                    <div className="flex flex-wrap gap-2">
+                       {viewingEntry.mistakes.map(m => (
+                         <span key={m} className="text-[11px] font-bold tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 rounded-lg shadow-sm">{m}</span>
+                       ))}
+                    </div>
+                  </div>
+                )}
+              </div>
               
               {viewingEntry.imageUrl && (
-                <div className="rounded-lg overflow-hidden border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none bg-zinc-950/50 flex justify-center">
+                <div className="flex-1 rounded-xl overflow-hidden border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none bg-zinc-950/50 flex flex-col">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img 
-                    src={viewingEntry.imageUrl} 
-                    alt="Trading Chart Snapshot" 
-                    className="max-w-full h-auto max-h-[60vh] object-contain"
-                  />
+                  <img src={viewingEntry.imageUrl} alt="Trading Chart Snapshot" className="w-full h-auto object-contain bg-black/40" />
+                  <div className="p-3 bg-zinc-900 border-t border-white/5 flex justify-center">
+                    <a href={viewingEntry.imageUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-2 uppercase tracking-wider">
+                      <Maximize2 size={12} /> View Original Full Resolution
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
@@ -458,18 +606,14 @@ export default function JournalPage() {
         </div>
       )}
 
-      {/* Edit Modal */}
+      {/* Edit Modal Base (Minimal update) */}
       {editingEntry && (
-        <EditEntryModal 
-           entry={editingEntry}
-           onClose={() => setEditingEntry(null)}
-        />
+        <EditEntryModal entry={editingEntry} onClose={() => setEditingEntry(null)} />
       )}
     </div>
   );
 }
 
-// Separate component for Edit Modal to manage its own state cleanly
 function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () => void }) {
   const { user } = useAuth();
   const { alert } = useModal();
@@ -479,6 +623,11 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
   const [previewUrl, setPreviewUrl] = useState<string | null>(entry.imageUrl || null);
   const [submitting, setSubmitting] = useState(false);
 
+  const [moodBefore, setMoodBefore] = useState(entry.moodBefore || "");
+  const [moodAfter, setMoodAfter] = useState(entry.moodAfter || "");
+  const [mistakes, setMistakes] = useState<string[]>(entry.mistakes || []);
+  const [qualityScore, setQualityScore] = useState<"A"|"B"|"C"|"D" | "">(entry.qualityScore || "");
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -487,21 +636,17 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
     }
   };
 
+  const toggleMistake = (tag: string) => setMistakes(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim() || !entry.id) return;
-
-    if (imageFile && imageFile.size > 2 * 1024 * 1024) {
-      await alert({ message: "Max 2MB image allowed", variant: "info" });
-      return;
-    }
+    if (imageFile && imageFile.size > 2 * 1024 * 1024) { await alert({ message: "Max 2MB image allowed", variant: "info" }); return; }
     
     setSubmitting(true);
     try {
       let finalImageUrl = entry.imageUrl || null;
-
       if (imageFile) {
-        // We reuse the compressImage function from above
         const compressedFile = await compressImage(imageFile);
         finalImageUrl = await uploadToCloudinary(compressedFile);
       } else if (!previewUrl) {
@@ -511,7 +656,11 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
       await updateDoc(doc(db, "users", user!.uid, "journal", entry.id), {
         date: new Date(date).getTime(),
         text,
-        imageUrl: finalImageUrl
+        imageUrl: finalImageUrl,
+        moodBefore,
+        moodAfter,
+        mistakes,
+        ...(qualityScore ? { qualityScore } : {})
       });
 
       onClose();
@@ -523,50 +672,47 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
-      <div 
-        className="bg-zinc-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col scale-100 animate-in zoom-in-95 duration-200"
-        onClick={e => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
+      <div className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900 shrink-0">
-          <h2 className="text-lg font-semibold text-white">Edit Entry</h2>
+          <h2 className="text-lg font-bold text-white">Edit Coaching Entry</h2>
           <button onClick={onClose} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
         </div>
         
-        <div className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs text-zinc-400 mb-1">Date</label>
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark" />
+              <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Date</label>
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner" />
+            </div>
+
+            <div className="space-y-1">
+               <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Grade</label>
+               <div className="flex gap-2">
+                 {QUALITY_SCORES.map(s => (
+                   <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`flex-1 py-1.5 rounded-lg border font-bold text-sm transition-all ${qualityScore === s ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-zinc-950 border-zinc-800 text-zinc-500 shadow-inner'}`}>{s}</button>
+                 ))}
+               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-zinc-400 mb-1">Notes</label>
-              <textarea value={text} onChange={(e) => setText(e.target.value)} required rows={6} className="w-full bg-zinc-950 border border-zinc-800 rounded p-3 text-sm focus:border-emerald-500 focus:outline-none resize-none" />
+              <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Mistakes</label>
+              <div className="flex flex-wrap gap-2">
+                {MISTAKE_TAGS.map(tag => (
+                  <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-[11px] px-2 py-1 rounded-md border transition-all ${mistakes.includes(tag) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-zinc-950 border-zinc-800 text-zinc-500'}`}>{tag}</button>
+                ))}
+              </div>
             </div>
 
             <div>
-              <label className="block text-xs text-zinc-400 mb-2">Image</label>
-              {previewUrl ? (
-                <div className="relative rounded-lg overflow-hidden border border-zinc-800 bg-zinc-950 group h-32">
-                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                  <button type="button" onClick={() => { setImageFile(null); setPreviewUrl(null); }} className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-sm font-medium text-red-400 transition-opacity">
-                    Remove Image
-                  </button>
-                </div>
-              ) : (
-                <label className="cursor-pointer flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-zinc-800 rounded-lg bg-zinc-950 hover:bg-zinc-900/50 hover:border-emerald-500/50 transition-colors">
-                  <ImagePlus size={20} className="mb-1 text-zinc-500" />
-                  <span className="text-xs text-zinc-400">Click to add image</span>
-                  <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
-                </label>
-              )}
+              <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Notes</label>
+              <textarea value={text} onChange={(e) => setText(e.target.value)} required rows={6} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm focus:border-emerald-500 focus:outline-none resize-none shadow-inner text-zinc-300" />
             </div>
 
-            <div className="pt-2 flex justify-end gap-3">
-              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-800 rounded font-medium transition-colors">Cancel</button>
-              <button type="submit" disabled={submitting} className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded flex items-center gap-2 font-medium transition-colors disabled:opacity-50">
-                {submitting && <Loader2 size={14} className="animate-spin" />} Save Changes
+            <div className="pt-2 flex justify-end gap-3 border-t border-white/5">
+              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2.5 text-[13px] text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-xl font-bold transition-colors">Cancel</button>
+              <button type="submit" disabled={submitting} className="px-5 py-2.5 text-[13px] bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl flex items-center gap-2 font-bold transition-colors shadow-sm disabled:opacity-50">
+                {submitting && <Loader2 size={14} className="animate-spin" />} Save Updates
               </button>
             </div>
           </form>

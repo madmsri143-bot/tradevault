@@ -22,6 +22,10 @@ export interface JournalEntry {
   date: number; // Unix timestamp
   text: string;
   imageUrl?: string;
+  moodBefore?: string;
+  moodAfter?: string;
+  mistakes?: string[];
+  qualityScore?: "A" | "B" | "C" | "D";
 }
 
 export interface ExchangeRates {
