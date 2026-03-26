@@ -13,6 +13,12 @@ export async function POST(req: Request) {
       plan 
     } = await req.json();
 
+    // Explicit diagnostic logging as requested
+    console.log("=== RAZORPAY VERIFICATION DIAGNOSTICS ===");
+    console.log("RAZORPAY KEY:", process.env.RAZORPAY_KEY_ID);
+    console.log("RAZORPAY SECRET:", process.env.RAZORPAY_KEY_SECRET ? "Present (Hidden)" : "undefined");
+    console.log("========================================");
+
     if (!userId || !plan) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
