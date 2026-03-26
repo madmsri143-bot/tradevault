@@ -60,7 +60,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
         {/* Left: Plan Info */}
         <div>
           <h3 className="text-3xl font-bold text-white mb-2">
-            {isYearly ? "Pro Yearly" : isMonthly ? "Pro Monthly" : "Professional Trial"}
+            {isYearly ? "Pro Elite" : isMonthly ? "Pro Starter" : "Professional Trial"}
           </h3>
           <div className="text-[#00FFB2] font-semibold text-lg mb-2">
             {isYearly ? "₹1999 / year" : isMonthly ? "₹299 / month" : "₹0 / forever"}

@@ -51,7 +51,7 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
                className="w-full sm:w-auto px-8 py-3.5 bg-zinc-800 border border-zinc-700 text-white font-bold rounded-xl hover:border-[#00FFB2] hover:bg-zinc-800 transition-all text-sm group relative overflow-hidden"
              >
                <span className="relative z-10 flex items-center gap-2">
-                 Switch to Yearly <span className="bg-[#00FFB2] text-black px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase">Save 40%</span>
+                 Switch to Pro Elite <span className="bg-[#00FFB2] text-black px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase">Save 40%</span>
                </span>
                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00FFB2]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
              </button>

@@ -65,7 +65,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
         currency: orderData.currency,
         order_id: orderData.id,
         name: "TradeVault",
-        description: selectedPlan === "yearly" ? "TradeVault Professional (Yearly)" : "TradeVault Professional (Monthly)",
+        description: selectedPlan === "yearly" ? "TradeVault Pro Elite" : "TradeVault Pro Starter",
         handler: async function (response: any) {
           try {
              // Step 3: Verify Payment securely on Backend
@@ -159,7 +159,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
           >
             <div className="space-y-4">
               <div className="space-y-1">
-                <h3 className="text-lg font-bold text-white">Monthly Plan</h3>
+                <h3 className="text-lg font-bold text-white">Pro Starter</h3>
                 <p className="text-3xl font-black text-white">₹299 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
               </div>
               <ul className="space-y-3 pt-4 border-t border-white/5">
@@ -182,7 +182,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
             
             <div className="space-y-4">
               <div className="space-y-1">
-                <h3 className="text-lg font-bold text-[#00FFB2]">Yearly Plan (Best Value)</h3>
+                <h3 className="text-lg font-bold text-[#00FFB2]">Pro Elite (Best Value)</h3>
                 <p className="text-3xl font-black text-white">₹1999 <span className="text-sm text-zinc-500 font-medium">/ year</span></p>
                 <p className="text-xs text-[#00FFB2] font-semibold mt-1">Breaks down to ₹166/month</p>
               </div>

@@ -36,7 +36,7 @@ export default function LandingPage() {
           <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
             Login
           </Link>
-          <Link href={user ? "/dashboard" : "/login"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
+          <Link href={user ? "/dashboard" : "/signup"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
             {user ? "Launch App" : "Start Free Trial"}
           </Link>
         </div>

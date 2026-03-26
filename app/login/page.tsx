@@ -48,9 +48,26 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    if (!authLoading && user && mode !== "setup-username") {
-      router.push("/dashboard");
-    }
+    let isMounted = true;
+    const checkProfileAndRedirect = async () => {
+      if (!authLoading && user && mode !== "setup-username") {
+        try {
+          const profileSnap = await getDoc(doc(db, "users", user.uid, "settings", "profile"));
+          if (!isMounted) return;
+          
+          if (!profileSnap.exists()) {
+             setMode("setup-username");
+          } else {
+             router.push("/dashboard");
+          }
+        } catch (err) {
+          if (isMounted) router.push("/dashboard"); // Fallback
+        }
+      }
+    };
+    
+    checkProfileAndRedirect();
+    return () => { isMounted = false; };
   }, [user, authLoading, mode, router]);
 
   const handleFirebaseError = (err: any) => {
@@ -72,6 +89,22 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     setLoading(true);
 
     try {
+      if (!email.trim()) {
+        setFieldErrors({ email: "Enter email address" });
+        setLoading(false);
+        return;
+      }
+      if (!email.includes("@") || !email.includes(".")) {
+        setFieldErrors({ email: "Invalid email address" });
+        setLoading(false);
+        return;
+      }
+      if (!password.trim()) {
+        setFieldErrors({ password: "Enter password" });
+        setLoading(false);
+        return;
+      }
+
       if (mode === "signup") {
         if (password !== confirmPassword) {
           setFieldErrors({ confirmPassword: "Passwords do not match." });
@@ -204,7 +237,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
       {/* Right Column: Auth Form */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative">
-        <Link href="/" className="md:hidden absolute top-6 left-6 flex items-center gap-2 text-zinc-500 font-bold text-sm">
+        <Link href="/" className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-zinc-500 hover:text-white transition-colors font-bold text-sm">
           <ChevronLeft size={16} /> Back
         </Link>
 

@@ -10,6 +10,7 @@ import autoTable from "jspdf-autotable";
 import { format } from "date-fns";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
+import Modal from "@/components/ui/Modal";
 import { signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -516,10 +517,10 @@ export default function SettingsPage() {
             <div className="p-6 border-b border-white/5">
               <div className="flex items-center justify-between hover:bg-white/[0.02] -m-6 p-6 transition-colors group cursor-pointer" onClick={() => setShowPasswordChange(!showPasswordChange)}>
                 <div>
-                  <h3 className="text-sm font-medium text-white mb-1 flex items-center gap-2"><Key size={14} className="text-blue-400"/> Change Password</h3>
+                  <h3 className="text-sm font-medium text-white mb-1 flex items-center gap-2"><Key size={14} className="text-emerald-400"/> Change Password</h3>
                   <p className="text-xs text-zinc-500">Update your account password using your current credentials.</p>
                 </div>
-                <button className="text-sm text-blue-500 font-medium px-4 py-2 border border-blue-500/20 rounded-lg hover:bg-blue-500/10 transition">
+                <button className="text-sm text-emerald-500 font-medium px-4 py-2 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/10 transition">
                   {showPasswordChange ? "Cancel" : "Change"}
                 </button>
               </div>
@@ -535,7 +536,7 @@ export default function SettingsPage() {
                         required
                         value={passwordData.current}
                         onChange={e => setPasswordData({...passwordData, current: e.target.value})}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                       />
                     </div>
                     <div>
@@ -545,7 +546,7 @@ export default function SettingsPage() {
                         required
                         value={passwordData.new}
                         onChange={e => setPasswordData({...passwordData, new: e.target.value})}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                       />
                     </div>
                     <div>
@@ -555,10 +556,10 @@ export default function SettingsPage() {
                         required
                         value={passwordData.confirm}
                         onChange={e => setPasswordData({...passwordData, confirm: e.target.value})}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                       />
                     </div>
-                    <button type="submit" disabled={passwordLoading} className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium py-2.5 px-4 rounded-lg w-full transition flex justify-center">
+                    <button type="submit" disabled={passwordLoading} className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium py-2.5 px-4 rounded-lg w-full transition flex justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
                       {passwordLoading ? <Loader2 size={16} className="animate-spin" /> : "Update Password"}
                     </button>
                   </form>
@@ -615,57 +616,55 @@ export default function SettingsPage() {
       </div>
 
       {/* MODALS OVERLAY ZONE */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-zinc-900 border border-red-500/30 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
-            <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
-               <AlertTriangle size={24} className="text-red-500" />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-2">Delete Account</h2>
-            <p className="text-sm text-red-400 mb-6 bg-red-500/10 p-3 rounded-lg border border-red-500/20">
-              This will permanently delete your account and all trading data. This action absolutely cannot be undone.
-            </p>
-            
-            <div className="space-y-4">
-              {deleteError && <div className="text-xs text-red-500 font-medium">{deleteError}</div>}
-              <div>
-                <label className="block text-xs text-zinc-400 mb-1">Type <strong className="text-white">DELETE</strong> to confirm</label>
-                <input 
-                  type="text"
-                  value={deleteInput}
-                  onChange={(e) => setDeleteInput(e.target.value)}
-                  placeholder="DELETE"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-red-500 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-zinc-400 mb-1">Current Password (optional for specific users)</label>
-                <input 
-                  type="password"
-                  value={deletePassword}
-                  onChange={(e) => setDeletePassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-red-500 transition-colors"
-                />
-              </div>
-              
-              <div className="flex gap-3 pt-4 border-t border-white/5">
-                <button onClick={() => { setShowDeleteModal(false); setDeleteError(""); }} className="flex-1 px-4 py-2.5 bg-zinc-800 text-white rounded-lg text-sm font-medium hover:bg-zinc-700 transition">
-                  Cancel
-                </button>
-                <button 
-                  onClick={handleDeleteAccount}
-                  disabled={deleteInput !== "DELETE" || deleteLoading}
-                  className="flex-1 px-4 py-2.5 bg-red-600 disabled:opacity-50 text-white rounded-lg text-sm font-bold hover:bg-red-700 transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(220,38,38,0.4)]"
-                >
-                  {deleteLoading ? <Loader2 size={16} className="animate-spin" /> : "Delete Forever"}
-                </button>
-              </div>
-            </div>
-            
+      <Modal 
+        isOpen={showDeleteModal} 
+        onClose={() => { setShowDeleteModal(false); setDeleteError(""); }} 
+        title="Delete Account" 
+        icon={<AlertTriangle size={24} className="text-red-500" />}
+        className="border-red-500/30 shadow-[0_0_40px_rgba(220,38,38,0.1)]"
+        maxWidth="md"
+      >
+        <p className="text-sm text-red-400 mb-6 bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+          This will permanently delete your account and all trading data. This action absolutely cannot be undone.
+        </p>
+        
+        <div className="space-y-4">
+          {deleteError && <div className="text-xs text-red-500 font-medium">{deleteError}</div>}
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">Type <strong className="text-white">DELETE</strong> to confirm</label>
+            <input 
+              type="text"
+              value={deleteInput}
+              onChange={(e) => setDeleteInput(e.target.value)}
+              placeholder="DELETE"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-zinc-400 mb-1">Current Password (optional for specific users)</label>
+            <input 
+              type="password"
+              value={deletePassword}
+              onChange={(e) => setDeletePassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-red-500 transition-colors"
+            />
+          </div>
+          
+          <div className="flex gap-3 pt-4 border-t border-white/5 mt-4">
+            <button onClick={() => { setShowDeleteModal(false); setDeleteError(""); }} className="flex-1 px-4 py-3 bg-zinc-800 text-white rounded-lg text-sm font-medium hover:bg-zinc-700 transition">
+              Cancel
+            </button>
+            <button 
+              onClick={handleDeleteAccount}
+              disabled={deleteInput !== "DELETE" || deleteLoading}
+              className="flex-1 px-4 py-3 bg-red-600 disabled:opacity-50 text-white rounded-lg text-sm font-bold hover:bg-red-700 transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(220,38,38,0.4)]"
+            >
+              {deleteLoading ? <Loader2 size={16} className="animate-spin" /> : "Delete Forever"}
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
 
     </div>
   );

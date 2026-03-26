@@ -171,7 +171,9 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
     <div className="flex h-[100dvh] overflow-hidden bg-background max-w-full">
       <Sidebar />
       <main className="flex-1 overflow-y-auto p-4 md:p-8 relative selection:bg-emerald-500/30 animate-in fade-in duration-300">
-        {children}
+        <div className="max-w-7xl mx-auto w-full">
+          {children}
+        </div>
       </main>
     </div>
   );

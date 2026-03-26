@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookText, Menu, X, TrendingUp, Calculator, Settings, Crosshair, BarChart3 } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LayoutDashboard, BookText, Menu, X, TrendingUp, Calculator, Settings, Crosshair, BarChart3, LogOut } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useModal } from "@/lib/ModalContext";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,8 +17,25 @@ function cn(...inputs: ClassValue[]) {
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { confirm } = useModal();
 
   const toggleSidebar = () => setIsExpanded(!isExpanded);
+
+  const handleLogout = async () => {
+    const isConfirmed = await confirm({
+      title: "Confirm Logout",
+      message: "Are you sure you want to securely log out of your session?",
+      confirmLabel: "Logout",
+      cancelLabel: "Cancel",
+      variant: "danger"
+    });
+    
+    if (isConfirmed) {
+      await signOut(auth);
+      router.push("/login"); // Explicit routing to clean up session
+    }
+  };
 
   const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={20} /> },
@@ -35,7 +55,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-between p-4 border-b border-white/10 h-16 shrink-0">
         <div className={cn("flex items-center gap-3 overflow-hidden transition-all", !isExpanded && "w-0 opacity-0")}>
           <TrendingUp className="text-emerald-500 shrink-0" size={24} />
-          <span className="font-semibold text-white whitespace-nowrap tracking-tight">TradeJournal</span>
+          <span className="font-semibold text-white whitespace-nowrap tracking-tight">TradeVault</span>
         </div>
         <button
           onClick={toggleSidebar}
@@ -114,7 +134,7 @@ export default function Sidebar() {
         <Link
           href="/settings"
           className={cn(
-            "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative mt-1",
+            "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative",
             pathname === "/settings"
               ? "bg-emerald-500/10 text-emerald-400 font-medium"
               : "text-zinc-400 hover:text-white hover:bg-zinc-900"
@@ -138,9 +158,31 @@ export default function Sidebar() {
             </div>
           )}
         </Link>
-        <div className={cn("text-xs text-zinc-500 transition-all text-center mt-2", !isExpanded && "opacity-0 hidden")}>
-          v1.0.0 &copy; 2026
-        </div>
+        
+        {/* Unified Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative mt-2 text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
+          title={!isExpanded ? "Logout" : undefined}
+        >
+          <div className="shrink-0 flex items-center justify-center w-8">
+            <LogOut size={20} />
+          </div>
+          <span
+            className={cn(
+              "whitespace-nowrap transition-all duration-300",
+              !isExpanded ? "opacity-0 w-0 hidden" : "opacity-100"
+            )}
+          >
+            Logout
+          </span>
+          {!isExpanded && (
+            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+              Logout
+            </div>
+          )}
+        </button>
+
       </div>
     </aside>
   );

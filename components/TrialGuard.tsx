@@ -4,12 +4,15 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Lock, Zap, ChevronRight } from "lucide-react";
+import { Lock, Zap, ChevronRight, Clock, ShieldAlert, Calendar } from "lucide-react";
+import { format } from "date-fns";
 import UpgradeModal from "./UpgradeModal";
 
 export interface UserAccessState {
   access: "premium" | "free";
   plan: "trial" | "free" | "pro";
+  planName?: string;
+  expiryDate?: number | null;
   trial_days_left: number;
   subscription_days_left: number;
   loading: boolean;
@@ -56,10 +59,15 @@ export function useTrial() {
            subDaysLeft = 999; // Legacy handling
         }
 
+        let planName = data.plan === "pro_monthly" ? "Pro Starter" : data.plan === "pro_yearly" ? "Pro Elite" : "Trial";
+        if (isFriend && !hasPaidPlan) planName = "Pro (Friend Access)";
+
         if (isFriend || isSubActive) {
            currentState = {
              access: "premium",
              plan: "pro",
+             planName,
+             expiryDate: data.plan_expiry_date || null,
              trial_days_left: trialLeft,
              subscription_days_left: isFriend ? 999 : subDaysLeft,
              loading: false
@@ -68,6 +76,8 @@ export function useTrial() {
            currentState = {
              access: "premium",
              plan: "trial",
+             planName: "Professional Trial",
+             expiryDate: trialEnd,
              trial_days_left: trialLeft,
              subscription_days_left: 0,
              loading: false
@@ -76,6 +86,8 @@ export function useTrial() {
            currentState = {
              access: "free",
              plan: "free",
+             planName: "Free",
+             expiryDate: null,
              trial_days_left: 0,
              subscription_days_left: 0,
              loading: false
@@ -84,7 +96,7 @@ export function useTrial() {
 
         setStatus(currentState);
       } else {
-        setStatus({ access: "premium", plan: "trial", trial_days_left: 7, subscription_days_left: 0, loading: false });
+        setStatus({ access: "premium", plan: "trial", planName: "Professional Trial", trial_days_left: 7, subscription_days_left: 0, loading: false });
       }
     });
     return () => unsub();
@@ -94,44 +106,80 @@ export function useTrial() {
 }
 
 export function TrialBanner() {
-  const { access, plan, trial_days_left, loading } = useTrial();
+  const { access, plan, planName, expiryDate, trial_days_left, subscription_days_left, loading } = useTrial();
   const [showUpgrade, setShowUpgrade] = useState(false);
 
   if (loading) return null;
 
-  if (access === "premium" && plan === "pro") {
-     return (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 px-4 py-3 rounded-xl mb-6 flex items-center justify-between text-sm font-bold animate-in fade-in duration-500">
-           <div className="flex items-center gap-2"><Zap size={16} /> TradeVault Pro Active</div>
-        </div>
-     );
-  }
+  const styles = {
+    pro: {
+      cardBorder: "border-emerald-500/20",
+      iconBg: "bg-emerald-500/10",
+      iconBorder: "border-emerald-500/20",
+      iconColor: "text-emerald-500",
+      badgeBg: "bg-emerald-500/10",
+      badgeText: "text-emerald-500",
+      badgeBorder: "border-emerald-500/20",
+      Icon: Zap
+    },
+    trial: {
+      cardBorder: "border-blue-500/20",
+      iconBg: "bg-blue-500/10",
+      iconBorder: "border-blue-500/20",
+      iconColor: "text-blue-500",
+      badgeBg: "bg-blue-500/10",
+      badgeText: "text-blue-500",
+      badgeBorder: "border-blue-500/20",
+      Icon: Clock
+    },
+    free: {
+      cardBorder: "border-red-500/20",
+      iconBg: "bg-red-500/10",
+      iconBorder: "border-red-500/20",
+      iconColor: "text-red-500",
+      badgeBg: "bg-red-500/10",
+      badgeText: "text-red-500",
+      badgeBorder: "border-red-500/20",
+      Icon: ShieldAlert
+    }
+  };
 
-  if (access === "free" || plan === "free") {
-     return (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-xl mb-6 flex items-center justify-between text-sm font-bold animate-in fade-in duration-500">
-           <div className="flex items-center gap-2"><Lock size={16} /> Trial Expired. Upgrade to Pro required.</div>
-           <button onClick={() => setShowUpgrade(true)} className="px-4 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-              Upgrade Now
-           </button>
-           {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
-        </div>
-     );
-  }
+  const currStyle = styles[plan];
+  const Icon = currStyle.Icon;
+  const daysLeft = plan === "pro" ? subscription_days_left : trial_days_left;
 
   return (
-    <div className="bg-gradient-to-r from-[#00FFB2] to-[#3B82F6] p-[1px] rounded-xl mb-6 shadow-lg shadow-[#00FFB2]/5 animate-in slide-in-from-top-2 duration-500">
-      <div className="bg-[#0B0F14] rounded-[11px] px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-           <Zap size={18} className="text-[#00FFB2] fill-[#00FFB2]/20" />
-           <p className="text-sm font-bold text-white">
-             You are on a <span className="text-[#00FFB2]">Professional Trial</span>. Trial ends in {trial_days_left} days. <span className="text-zinc-400 font-medium">No charges applied.</span>
-           </p>
+    <div className={`bg-zinc-900 border ${currStyle.cardBorder} shadow-[0_1px_2px_rgba(0,0,0,0.05)] p-5 rounded-xl mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-500`}>
+      <div className="flex items-center gap-4">
+        <div className={`w-12 h-12 rounded-full ${currStyle.iconBg} flex items-center justify-center border ${currStyle.iconBorder} shrink-0`}>
+          <Icon size={20} className={currStyle.iconColor} />
         </div>
-        <button onClick={() => setShowUpgrade(true)} className="text-xs font-black uppercase tracking-widest text-[#00FFB2] hover:text-white transition-colors flex items-center gap-1 group">
-           Upgrade Now <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-        </button>
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-lg font-bold text-white tracking-tight">{planName}</h3>
+            <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${currStyle.badgeBg} ${currStyle.badgeText} border ${currStyle.badgeBorder}`}>
+              {plan === "pro" ? "Active" : plan === "trial" ? "Trial Active" : "Expired"}
+            </span>
+          </div>
+          <p className="text-sm text-zinc-400 flex items-center gap-2">
+            <Calendar size={14} className="text-zinc-500" /> 
+            {expiryDate ? `Expires on ${format(new Date(expiryDate), "MMM dd, yyyy")}` : "No expiry date set"} 
+            <span className="text-zinc-600 font-bold">•</span> 
+            <span className="text-zinc-300 font-medium">{daysLeft} days remaining</span>
+          </p>
+        </div>
       </div>
+      
+      {(plan === "trial" || plan === "free") && (
+        <button 
+          onClick={() => setShowUpgrade(true)} 
+          className="w-full md:w-auto px-6 py-2.5 bg-[#00FFB2] text-black font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all text-sm flex items-center justify-center gap-2 shrink-0 group"
+        >
+          Upgrade to Pro
+          <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+      )}
+
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
     </div>
   );

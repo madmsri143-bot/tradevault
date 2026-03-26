@@ -92,17 +92,17 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
                         {trade.note || "-"}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => setEditingTrade(trade)}
-                            className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors"
+                            className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors"
                             title="Edit"
                           >
                             <Pencil size={14} />
                           </button>
                           <button
                             onClick={() => handleDelete(trade.id)}
-                            className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors"
+                            className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-500/20 rounded-md transition-colors"
                             title="Delete"
                           >
                             <Trash2 size={14} />

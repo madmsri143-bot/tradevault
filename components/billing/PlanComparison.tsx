@@ -28,7 +28,7 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
                Current Plan
             </div>
           )}
-          <h4 className="text-[#00FFB2] font-semibold tracking-widest text-sm uppercase mb-2">Monthly Foundation</h4>
+          <h4 className="text-[#00FFB2] font-semibold tracking-widest text-sm uppercase mb-2">Pro Starter</h4>
           <div className="text-white text-4xl font-black tracking-tighter mb-1">
             ₹299 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ mo</span>
           </div>
@@ -62,7 +62,7 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
             </div>
           )}
 
-          <h4 className="text-white font-semibold tracking-widest text-sm uppercase mb-2">Yearly Mastery</h4>
+          <h4 className="text-white font-semibold tracking-widest text-sm uppercase mb-2">Pro Elite</h4>
           <div className="text-white text-4xl font-black tracking-tighter mb-1 flex items-baseline gap-3">
             ₹1999 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ yr</span>
             <span className="text-sm text-zinc-500 line-through tracking-normal font-normal">₹3588</span>
@@ -72,7 +72,7 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
           </div>
           
           <ul className="space-y-4 text-sm text-zinc-100 flex-1">
-            <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#00FFB2]" /> Everything in Monthly, plus:</li>
+            <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#00FFB2]" /> Everything in Pro Starter, plus:</li>
             <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#00FFB2]" /> Long-Term Pattern Recognition</li>
             <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#00FFB2]" /> 40% Annual Discount</li>
             <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#00FFB2]" /> Priority Infrastructure</li>
