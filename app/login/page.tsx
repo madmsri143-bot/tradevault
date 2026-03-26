@@ -37,7 +37,6 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   
   const [loading, setLoading] = useState(false);
@@ -161,6 +160,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
+      googleProvider.setCustomParameters({ prompt: "select_account" });
       const res = await signInWithPopup(auth, googleProvider);
       const profileRef = doc(db, "users", res.user.uid, "settings", "profile");
       const profileSnap = await getDoc(profileRef);
@@ -291,32 +291,27 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           {successMsg && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
           {fieldErrors.general && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-bold text-center animate-in zoom-in-95">{fieldErrors.general}</div>}
 
-          <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4">
+          <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4" autoComplete="off">
             {mode === "signup" && (
               <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
-                <Input label="Name" value={name} onChange={setName} type="text" placeholder="John" />
-                <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="trader1" />
+                <Input label="Name" value={name} onChange={setName} type="text" placeholder="John" autoComplete="off" />
+                <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="trader1" autoComplete="off" />
               </div>
             )}
             
             {mode === "setup-username" ? (
-              <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="pick_a_name" autofocus />
+              <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="pick_a_name" autofocus autoComplete="off" />
             ) : mode === "forgot-password" ? (
-              <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autofocus />
+              <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autofocus autoComplete="off" />
             ) : (
               <>
-                <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autoComplete="off" />
-                <div className="relative">
-                  <Input 
-                    label="Password" value={password} onChange={setPassword} 
-                    type={showPassword ? "text" : "password"} placeholder="••••••••" 
-                    error={fieldErrors.password}
-                    autoComplete="off"
-                  />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 bottom-3 text-zinc-600 hover:text-white transition-colors">
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
+                <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autoComplete="new-email" />
+                <Input 
+                  label="Password" value={password} onChange={setPassword} 
+                  type="password" placeholder="••••••••" 
+                  error={fieldErrors.password}
+                  autoComplete="new-password"
+                />
                 
                 {mode === "login" && (
                   <div className="flex items-center justify-between mt-1 px-1">
@@ -341,7 +336,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
             )}
 
             {mode === "signup" && (
-              <Input label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} type="password" placeholder="••••••••" error={fieldErrors.confirmPassword} />
+              <Input label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} type="password" placeholder="••••••••" error={fieldErrors.confirmPassword} autoComplete="new-password" />
             )}
 
             <button disabled={loading} type="submit" className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
@@ -386,21 +381,36 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 }
 
 function Input({ label, value, onChange, type, placeholder, error, autofocus = false, autoComplete }: any) {
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === "password";
+  const inputType = isPassword ? (showPassword ? "text" : "password") : type;
+
   return (
-    <div className="relative group">
-      <input 
-        type={type} value={value} onChange={e => onChange(e.target.value)} placeholder=" "
-        autoFocus={autofocus}
-        autoComplete={autoComplete}
-        id={`input-${label}`}
-        className={`peer w-full bg-white/5 border rounded-2xl px-4 pt-6 pb-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00FFB2]/20 transition-all ${error ? 'border-red-500/50 focus:border-red-500' : 'border-white/5 focus:border-[#00FFB2]'}`} 
-      />
-      <label 
-        htmlFor={`input-${label}`}
-        className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-[#00FFB2] peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
-      >
-        {label}
-      </label>
+    <div className="flex flex-col">
+      <div className="relative group">
+        <input 
+          type={inputType} value={value} onChange={e => onChange(e.target.value)} placeholder=" "
+          autoFocus={autofocus}
+          autoComplete={autoComplete}
+          id={`input-${label}`}
+          className={`peer w-full bg-white/5 border rounded-2xl px-4 pt-6 pb-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00FFB2]/20 transition-all ${isPassword ? 'pr-12' : ''} ${error ? 'border-red-500/50 focus:border-red-500' : 'border-white/5 focus:border-[#00FFB2]'}`} 
+        />
+        <label 
+          htmlFor={`input-${label}`}
+          className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-[#00FFB2] peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
+        >
+          {label}
+        </label>
+        {isPassword && (
+          <button 
+            type="button" 
+            onClick={() => setShowPassword(!showPassword)} 
+            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors outline-none focus:outline-none ${error ? 'text-red-500 hover:text-red-400' : 'text-zinc-500 hover:text-white'}`}
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        )}
+      </div>
       {error && <p className="text-[10px] text-red-500 font-bold pl-4 mt-1">{error}</p>}
     </div>
   );
