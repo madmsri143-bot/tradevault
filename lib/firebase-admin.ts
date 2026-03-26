@@ -18,12 +18,12 @@ if (!admin.apps.length) {
         }),
       });
     } else {
-      console.warn("⚠️ Build-Time Check: Firebase Variables missing, falling back to dummy initializeApp() to prevent compiler evaluation crashes.");
-      admin.initializeApp();
+      console.warn("⚠️ Build-Time / Vercel Edge Check: Firebase Variables missing, falling back to dummy initializeApp() to prevent compiler/lambda evaluation crashes.");
+      admin.initializeApp({ projectId: "dummy-project-id" });
     }
   } catch (error) {
     console.error("🔥 FATAL: Firebase admin initialization error. Generating dummy app to prevent complete server crash.", error);
-    admin.initializeApp();
+    admin.initializeApp({ projectId: "dummy-project-id" });
   }
 }
 
