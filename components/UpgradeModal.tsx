@@ -69,15 +69,19 @@ export default function UpgradeModal({ onClose }: UpgradeModalProps) {
                   plan: selectedPlan
                 })
              });
+             
+             const verifyData = await verifyRes.json();
 
-             if (!verifyRes.ok) throw new Error("Payment Verification Failed by Server");
+             if (!verifyRes.ok) {
+                throw new Error(verifyData.error || "Payment Verification Failed by Server");
+             }
              
              setSuccess(true);
              setTimeout(() => window.location.reload(), 2000);
-          } catch (error) {
+          } catch (error: any) {
             console.error("Backend verification failed:", error);
             setLoading(false);
-            alert("Payment verification failed. Please contact support.");
+            alert(`Payment Error: ${error.message}`);
           }
         },
         prefill: { email: user.email || "" },
