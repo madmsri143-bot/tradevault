@@ -37,9 +37,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               setLoading(false);
               return;
             } else {
-              // Trial Logic: Ensure trialStartedAt exists
-              if (!data.trialStartedAt) {
-                await setDoc(profileRef, { trialStartedAt: now }, { merge: true });
+              // Trial Logic: Ensure trial_started_at exists
+              if (!data.trial_started_at && !data.trialStartedAt) {
+                await setDoc(profileRef, { trial_started_at: now }, { merge: true });
               }
               // Update last active
               localStorage.setItem("lastActive", now.toString());

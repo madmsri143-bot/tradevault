@@ -52,7 +52,7 @@ export function useTrial() {
         const allVipEmails = [...VIP_EMAILS, ...envEmails];
         const isVIP = user.email ? allVipEmails.includes(user.email.toLowerCase()) : false;
         
-        // Trial Calculations
+        // Trial Calculations (Bug #3 fix: normalize dual timestamp fields)
         const trialStart = data.trial_started_at || data.trialStartedAt || now;
         const trialEnd = data.trial_end_date || (trialStart + (7 * 24 * 60 * 60 * 1000));
         const trialLeft = Math.max(0, Math.floor((trialEnd - now) / (1000 * 60 * 60 * 24)));
@@ -74,9 +74,14 @@ export function useTrial() {
         if (isVIP && !hasPaidPlan) planName = "Pro (VIP Access)";
 
         // Auto-Downgrade Logic (VIP users are exempt)
-        if (data.plan === "trial" && !isTrialActive && !isSubActive && !isVIP) {
+        // Bug #1 fix: guard with data.plan !== "free" to prevent snapshot write loop
+        // Bug #2 fix: also downgrade expired paid subscriptions, not just trials
+        const needsTrialDowngrade = data.plan === "trial" && !isTrialActive;
+        const needsSubDowngrade = hasPaidPlan && data.plan_expiry_date && !isSubActive;
+        
+        if ((needsTrialDowngrade || needsSubDowngrade) && !isVIP && data.plan !== "free") {
           import("firebase/firestore").then(({ updateDoc }) => {
-            updateDoc(doc(db, "users", user.uid, "settings", "profile"), { plan: "free" })
+            updateDoc(doc(db, "users", user.uid, "settings", "profile"), { plan: "free", isPro: false })
               .catch(e => console.error("Failed to auto-downgrade:", e));
           });
         }
