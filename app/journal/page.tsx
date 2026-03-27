@@ -5,7 +5,7 @@ import { collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, deleteD
 import { db } from "@/lib/firebase";
 import { JournalEntry, Trade } from "@/types";
 import { format, subDays, startOfDay } from "date-fns";
-import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText, TrendingUp, AlertTriangle, Target, Flame, Activity, Lock } from "lucide-react";
+import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText, TrendingUp, AlertTriangle, Target, Flame, Activity, Lock, BrainCircuit, HeartPulse, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
 import { useTrial } from "@/components/TrialGuard";
@@ -80,6 +80,15 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
   return data.secure_url;
 };
 
+// Safe date parser for Firebase timestamps or regular numbers
+const getValidDate = (ts: any): Date => {
+  if (!ts) return new Date();
+  if (typeof ts === "object" && ts !== null && "seconds" in ts) {
+    return new Date(ts.seconds * 1000);
+  }
+  return new Date(ts);
+};
+
 const DEFAULT_PROMPT = "Setup:\n\nRules Followed:\n\nWhat I'd do differently:\n\nMarket Lesson:\n";
 
 const MOODS_BEFORE = ["😤 Impatient", "😐 Neutral", "😎 Confident", "😰 Fearful"];
@@ -133,6 +142,8 @@ export default function JournalPage() {
   const [moodAfter, setMoodAfter] = useState("");
   const [mistakes, setMistakes] = useState<string[]>([]);
   const [qualityScore, setQualityScore] = useState<"A"|"B"|"C"|"D"|"">("");
+  const [pnl, setPnl] = useState<number | "">("");
+  const [slFollowed, setSlFollowed] = useState(false);
 
   // Modal States
   const [viewingEntry, setViewingEntry] = useState<JournalEntry | null>(null);
@@ -191,10 +202,37 @@ export default function JournalPage() {
         moodBefore,
         moodAfter,
         mistakes,
-        ...(qualityScore ? { qualityScore: qualityScore as "A"|"B"|"C"|"D" } : {})
+        ...(qualityScore ? { qualityScore: qualityScore as "A"|"B"|"C"|"D" } : {}),
+        ...(pnl !== "" ? { pnl: Number(pnl) } : {}),
+        slFollowed
       };
 
-      const docRef = await addDoc(collection(db, "users", user!.uid, "journal"), newEntry);
+      // 🤖 Fetch AI Score
+      let aiResult = null;
+      try {
+        const res = await fetch("/api/ai-score", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newEntry),
+        });
+        if (res.ok) {
+          aiResult = await res.json();
+        }
+      } catch (err) {
+        console.error("AI Scoring fetch error:", err);
+      }
+
+      const dbEntry = {
+        ...newEntry,
+        ...(aiResult && !aiResult.error ? {
+          aiScore: aiResult.score,
+          aiInsight: aiResult.insight,
+          aiMistake: aiResult.mistake,
+          aiSuggestion: aiResult.suggestion,
+        } : {})
+      };
+
+      const docRef = await addDoc(collection(db, "users", user!.uid, "journal"), dbEntry);
       const fileToUpload = imageFile;
       
       // Reset form instantly
@@ -205,6 +243,8 @@ export default function JournalPage() {
       setMoodAfter("");
       setMistakes([]);
       setQualityScore("");
+      setPnl("");
+      setSlFollowed(false);
       setSubmitting(false);
 
       if (fileToUpload) {
@@ -241,7 +281,8 @@ export default function JournalPage() {
   // Group entries
   const groupedEntries: Record<string, JournalEntry[]> = {};
   entries.forEach((entry) => {
-    const dateStr = format(new Date(entry.date), "yyyy-MM-dd");
+    const validD = getValidDate(entry.date);
+    const dateStr = format(validD, "yyyy-MM-dd");
     if (!groupedEntries[dateStr]) groupedEntries[dateStr] = [];
     groupedEntries[dateStr].push(entry);
   });
@@ -366,6 +407,27 @@ export default function JournalPage() {
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Trade PnL ($)</label>
+                  <input
+                    type="number"
+                    value={pnl}
+                    onChange={(e) => setPnl(e.target.value ? Number(e.target.value) : "")}
+                    placeholder="e.g. 150 or -50"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner text-white placeholder:text-zinc-600"
+                  />
+                </div>
+                <div className="space-y-1.5 flex flex-col justify-end">
+                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-zinc-800 rounded-xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-zinc-950 text-zinc-400 hover:bg-zinc-900'}`} onClick={() => setSlFollowed(!slFollowed)}>
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${slFollowed ? 'border-emerald-500 bg-emerald-500 text-zinc-950' : 'border-zinc-700 bg-zinc-900 text-transparent'}`}>
+                       <CheckCircle2 size={12} strokeWidth={4} />
+                    </div>
+                    <span className="font-bold tracking-wide">Followed SL</span>
+                  </label>
+                </div>
+              </div>
+
               <div className="space-y-2.5 relative group">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Smart Reflection</label>
                 <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none" />
@@ -476,74 +538,87 @@ export default function JournalPage() {
                   </h3>
                 </div>
 
-                <div className="space-y-5">
-                  {groupedEntries[dateStr].map((entry) => (
-                    <div 
-                      key={entry.id} 
-                      onClick={() => setViewingEntry(entry)}
-                      className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-6 rounded-2xl shadow-sm hover:border-emerald-500/30 hover:bg-zinc-800/20 transition-all cursor-pointer group relative"
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <span className="text-[11px] font-bold tracking-wider text-emerald-500 border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                            {format(new Date(entry.date), "h:mm a")}
-                          </span>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">
+                  {groupedEntries[dateStr].map((entry) => {
+                    const hasRuleViolation = entry.mistakes && entry.mistakes.length > 0;
+                    const isProfit = entry.pnl && entry.pnl > 0;
+                    const isLoss = entry.pnl && entry.pnl < 0;
+                    
+                    let borderColorClass = "border-black/10 dark:border-white/5";
+                    if (hasRuleViolation) borderColorClass = "border-amber-500/50";
+                    else if (isProfit) borderColorClass = "border-emerald-500/50";
+                    else if (isLoss) borderColorClass = "border-red-500/50";
+
+                    const validDate = getValidDate(entry.date);
+                    
+                    return (
+                      <div 
+                        key={entry.id} 
+                        onClick={() => setViewingEntry(entry)}
+                        className={`bg-zinc-900 border fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl shadow-sm hover:bg-zinc-800/40 transition-all cursor-pointer flex flex-col h-full group relative ${borderColorClass}`}
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[11px] font-black tracking-widest uppercase text-zinc-400">
+                              {validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                            {entry.pnl !== undefined && entry.pnl !== null && (
+                               <span className={`text-[13px] font-bold ${entry.pnl > 0 ? 'text-emerald-400' : entry.pnl < 0 ? 'text-red-400' : 'text-zinc-400'}`}>
+                                 {entry.pnl > 0 ? '+' : ''}${entry.pnl}
+                               </span>
+                            )}
+                          </div>
                           
+                          {/* Action Buttons */}
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={14} /></button>
+                            <button onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5 mb-3">
                           {entry.qualityScore && (
-                           <span className={`text-[11px] font-bold tracking-wider px-2 py-0.5 rounded-full border ${entry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : entry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : entry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
-                             Grade: {entry.qualityScore}
+                           <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${entry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : entry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : entry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
+                             Grade {entry.qualityScore}
                            </span>
                           )}
-
                           {entry.moodBefore && (
-                            <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-950 px-2 py-0.5 rounded-full">
-                              Prep: {entry.moodBefore}
-                            </span>
-                          )}
-                          {entry.moodAfter && (
-                            <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-950 px-2 py-0.5 rounded-full">
-                              Post: {entry.moodAfter}
+                            <span className="text-[10px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-950 px-2 py-0.5 rounded">
+                              {entry.moodBefore.replace(/[^a-zA-Z]/g, '').trim() || entry.moodBefore}
                             </span>
                           )}
                         </div>
                         
-                        {/* Action Buttons */}
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={14} /></button>
-                          <button onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
+                        {/* Text Content */}
+                        <div className="text-zinc-300 text-[13px] whitespace-pre-wrap leading-[1.6] line-clamp-3 font-medium opacity-90 mb-4 flex-grow">
+                          <SmartText text={entry.text} />
+                        </div>
+
+                        {/* Mistakes & AI Score */}
+                        <div className="mt-auto pt-4 border-t border-white/5">
+                          {entry.mistakes && entry.mistakes.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 mb-3">
+                              {entry.mistakes.map(m => (
+                                <span key={m} className="text-[9px] font-black tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 rounded shadow-sm">{m}</span>
+                              ))}
+                            </div>
+                          )}
+                          
+                          {entry.aiScore !== undefined && (
+                            <div className="flex items-center gap-2">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black shadow-inner border ${entry.aiScore >= 80 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : entry.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                                {entry.aiScore}
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-[9px] text-zinc-500 uppercase font-black tracking-widest block">AI Insight</span>
+                                <span className="text-[11px] font-medium text-zinc-300 line-clamp-1">{entry.aiInsight || "No insight generated."}</span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
-
-                      <div className="text-zinc-300 text-[14px] whitespace-pre-wrap leading-[1.8] line-clamp-4 font-medium opacity-90">
-                        <SmartText text={entry.text} />
-                      </div>
-
-                      {entry.mistakes && entry.mistakes.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-5">
-                          {entry.mistakes.map(m => (
-                            <span key={m} className="text-[10px] font-bold tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 rounded-full shadow-sm">{m}</span>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {entry.imageUrl && (
-                        <div className="mt-5 rounded-xl overflow-hidden border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none bg-zinc-950/50 h-40 relative group/img">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img 
-                            src={entry.imageUrl} 
-                            alt="Trading Chart Snapshot" 
-                            className="w-full h-full object-cover opacity-80 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-500"
-                            loading="lazy"
-                          />
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                             <div className="bg-zinc-900/90 text-white border border-white/20 px-4 py-2 rounded-lg backdrop-blur flex items-center gap-2 text-sm font-bold tracking-tight">
-                               <Maximize2 size={16} className="text-emerald-400" /> Expand Setup
-                             </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
               </div>
@@ -600,6 +675,40 @@ export default function JournalPage() {
                        {viewingEntry.mistakes.map(m => (
                          <span key={m} className="text-[11px] font-bold tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 rounded-lg shadow-sm">{m}</span>
                        ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Score Box */}
+                {viewingEntry.aiScore !== undefined && (
+                  <div className="mt-8 pt-6 border-t border-white/5">
+                    <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-4">
+                      <BrainCircuit size={16} className="text-emerald-400" />
+                      AI Behavior Analysis
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                      <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center justify-center text-center shadow-inner">
+                        <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-2">Score</span>
+                        <div className={`text-4xl font-black ${viewingEntry.aiScore >= 80 ? 'text-emerald-400' : viewingEntry.aiScore >= 50 ? 'text-amber-400' : 'text-red-400'}`}>
+                          {viewingEntry.aiScore}
+                        </div>
+                      </div>
+                      <div className="sm:col-span-2 bg-zinc-950/50 p-4 rounded-xl border border-emerald-500/20 shadow-inner flex flex-col justify-center">
+                        <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Key Insight</span>
+                        <p className="text-sm text-zinc-300 font-medium leading-relaxed">{viewingEntry.aiInsight}</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="bg-red-500/5 p-4 rounded-xl border border-red-500/10 shadow-inner">
+                        <span className="text-[10px] text-red-400/70 uppercase font-black tracking-widest block mb-1 flex items-center gap-1.5"><HeartPulse size={12} /> Root Mistake</span>
+                        <p className="text-sm text-red-200 font-medium">{viewingEntry.aiMistake || "N/A"}</p>
+                      </div>
+                      <div className="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10 shadow-inner">
+                        <span className="text-[10px] text-blue-400/70 uppercase font-black tracking-widest block mb-1 flex items-center gap-1.5"><Target size={12} /> Suggestion</span>
+                        <p className="text-sm text-blue-200 font-medium">{viewingEntry.aiSuggestion || "N/A"}</p>
+                      </div>
                     </div>
                   </div>
                 )}

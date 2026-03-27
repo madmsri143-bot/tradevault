@@ -26,6 +26,12 @@ export interface JournalEntry {
   moodAfter?: string;
   mistakes?: string[];
   qualityScore?: "A" | "B" | "C" | "D";
+  pnl?: number;
+  slFollowed?: boolean;
+  aiScore?: number;
+  aiInsight?: string;
+  aiMistake?: string;
+  aiSuggestion?: string;
 }
 
 export interface ExchangeRates {
