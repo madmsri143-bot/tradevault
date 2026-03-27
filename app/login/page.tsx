@@ -60,12 +60,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
              setMode("setup-username");
           } else {
              const data = profileSnap.data();
-             const targetPath = data?.plan === "free" ? "/free-dashboard" : "/dashboard";
-             
-             // Prevent infinite redirect loop for unverified users going to dashboard
-             if (!user.emailVerified) {
-               return; // Remain on login screen so they can click "Sign In" and see AuthWrapper or stay
-             }
+             const targetPath = !user.emailVerified ? "/verify-email" : (data?.plan === "free" ? "/free-dashboard" : "/dashboard");
 
              setShowSplash(true);
              setTimeout(() => {
@@ -155,7 +150,6 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           photoUrl: ""
         });
         await sendEmailVerification(res.user);
-        setMode("verification-sent");
       } else {
         await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
@@ -173,6 +167,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     try {
       googleProvider.setCustomParameters({ prompt: "select_account" });
       const res = await signInWithPopup(auth, googleProvider);
+
       const profileRef = doc(db, "users", res.user.uid, "settings", "profile");
       const profileSnap = await getDoc(profileRef);
       
@@ -197,7 +192,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     setLoading(true);
     try {
       const now = Date.now();
-      const redirectPath = plan === "free" ? "/free-dashboard" : "/dashboard";
+      const redirectPath = !auth.currentUser.emailVerified ? "/verify-email" : (plan === "free" ? "/free-dashboard" : "/dashboard");
       await setDoc(doc(db, "users", auth.currentUser.uid, "settings", "profile"), {
         name, 
         email, 
@@ -250,7 +245,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     );
   }
 
-  if (authLoading || (user && user.emailVerified && mode !== "setup-username")) {
+  if (authLoading || (user && mode !== "setup-username")) {
     return <div className="flex h-screen items-center justify-center bg-[#0B0F14]" />;
   }
 
@@ -305,39 +300,20 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         </Link>
 
         <div className="w-full max-w-sm space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          {mode !== "verification-sent" && (
-            <div className="text-center md:text-left space-y-2">
-               <h2 className="text-3xl font-bold text-white tracking-tight">
-                 {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : mode === "forgot-password" ? "Reset Password" : "Profile Setup"}
-               </h2>
-               <p className="text-zinc-500 text-sm">
-                 {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : mode === "forgot-password" ? "Enter your email to receive a reset link" : "Please enter your details."}
-               </p>
-            </div>
-          )}
+          <div className="text-center md:text-left space-y-2">
+             <h2 className="text-3xl font-bold text-white tracking-tight">
+               {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : mode === "forgot-password" ? "Reset Password" : "Profile Setup"}
+             </h2>
+             <p className="text-zinc-500 text-sm">
+               {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : mode === "forgot-password" ? "Enter your email to receive a reset link" : "Please enter your details."}
+             </p>
+          </div>
 
           {successMsg && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
           {fieldErrors.general && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-bold text-center animate-in zoom-in-95">{fieldErrors.general}</div>}
 
-          {mode === "verification-sent" ? (
-            <div className="text-center space-y-6 animate-in zoom-in-95 duration-500">
-               <div className="w-20 h-20 mx-auto bg-[#00FFB2]/10 flex items-center justify-center rounded-3xl border border-[#00FFB2]/20 shadow-[0_0_30px_rgba(0,255,178,0.15)]">
-                 <Mail size={32} className="text-[#00FFB2]" />
-               </div>
-               <div>
-                 <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Check your inbox</h2>
-                 <p className="text-zinc-400 text-sm max-w-sm mx-auto leading-relaxed">
-                   We've sent a verification link to <br/>
-                   <span className="text-[#00FFB2] font-bold">{email}</span>
-                 </p>
-               </div>
-               <button onClick={() => setMode("login")} className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 border border-white/5 mt-4">
-                 <ArrowLeft size={18} /> Back to Login
-               </button>
-            </div>
-          ) : (
-            <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4" autoComplete="off">
-              {mode === "signup" && (
+          <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4" autoComplete="off">
+            {mode === "signup" && (
                 <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
                   <Input label="Name" value={name} onChange={setName} type="text" placeholder="John" autoComplete="off" />
                   <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="trader1" autoComplete="off" />
@@ -392,10 +368,9 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                    {plan === "free" ? "No credit card required. Always free." : "No credit card required. Trial starts instantly upon verification."}
                  </p>
               )}
-            </form>
-          )}
+          </form>
 
-          {mode !== "setup-username" && mode !== "forgot-password" && mode !== "verification-sent" && (
+          {mode !== "setup-username" && mode !== "forgot-password" && (
             <>
               <div className="relative flex items-center py-2">
                 <div className="flex-grow border-t border-white/5"></div>
