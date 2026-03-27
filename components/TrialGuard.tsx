@@ -260,3 +260,56 @@ export function TrialGuard({ children, featureName }: { children: React.ReactNod
 
   return <>{children}</>;
 }
+
+/**
+ * Reusable overlay for gated sections.
+ * Shows blurred children behind a centered lock card.
+ */
+export function FeatureBlockOverlay({
+  children,
+  title,
+  subtitle,
+  show,
+}: {
+  children: React.ReactNode;
+  title: string;
+  subtitle: string;
+  show: boolean;
+}) {
+  const [showUpgrade, setShowUpgrade] = useState(false);
+
+  if (!show) return <>{children}</>;
+
+  return (
+    <div className="relative">
+      <div className="filter blur-[6px] pointer-events-none opacity-30 select-none">
+        {children}
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center p-6 z-10">
+        <div className="bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#00FFB2]/15 p-8 rounded-[28px] max-w-sm text-center space-y-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] scale-100 animate-in zoom-in-95 duration-300">
+          <div className="mx-auto w-14 h-14 bg-zinc-800/80 rounded-2xl flex items-center justify-center border border-white/10 shadow-inner">
+            <Lock size={28} className="text-zinc-400" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold text-white tracking-tight">{title}</h3>
+            <p className="text-zinc-500 text-sm leading-relaxed">{subtitle}</p>
+          </div>
+          <button
+            onClick={() => setShowUpgrade(true)}
+            className="w-full bg-[#00FFB2] text-black font-black py-3.5 rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all pointer-events-auto cursor-pointer text-sm"
+          >
+            Upgrade to Professional
+          </button>
+          <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
+            Instant access • Cancel anytime
+          </p>
+        </div>
+      </div>
+      {showUpgrade && (
+        <div className="pointer-events-auto">
+          <UpgradeModal onClose={() => setShowUpgrade(false)} />
+        </div>
+      )}
+    </div>
+  );
+}

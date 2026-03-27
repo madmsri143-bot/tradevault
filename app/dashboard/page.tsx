@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/AuthContext";
 
 import TradeForm from "@/components/dashboard/TradeForm";
 import MetricsCards from "@/components/dashboard/MetricsCards";
+import { useTrial, FeatureBlockOverlay } from "@/components/TrialGuard";
 
 import AnalyticsTab from "@/components/dashboard/AnalyticsTab";
 import HistoryTab from "@/components/dashboard/HistoryTab";
@@ -26,6 +27,8 @@ const CalendarView = dynamic(() => import("@/components/dashboard/CalendarView")
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { access } = useTrial();
+  const isFree = access === "free";
   const [trades, setTrades] = useState<Trade[]>([]);
   const [rates, setRates] = useState<Record<string, number>>({});
   const [displayCurrency, setDisplayCurrency] = useState<Currency>("USD");
@@ -180,7 +183,13 @@ export default function DashboardPage() {
                 <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
                 
                 <div className="w-full">
-                  <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
+                  <FeatureBlockOverlay
+                    show={isFree}
+                    title="Feature Disabled"
+                    subtitle="Upgrade to unlock advanced analytics"
+                  >
+                    <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
+                  </FeatureBlockOverlay>
                 </div>
               </div>
 
@@ -190,13 +199,40 @@ export default function DashboardPage() {
 
       {activeTab === "calendar" && (
         <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-white/5">
-          <CalendarView trades={normalizedTrades} displayCurrency={displayCurrency} />
+          <CalendarView trades={normalizedTrades} displayCurrency={displayCurrency} isFree={isFree} />
         </div>
       )}
 
       {activeTab === "analytics" && (
         <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-white/5">
-          <AnalyticsTab trades={filteredTrades} displayCurrency={displayCurrency} />
+          {isFree ? (
+            <div className="relative min-h-[60vh]">
+              {/* Ghosted preview */}
+              <div className="filter blur-[6px] pointer-events-none opacity-20 select-none">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="bg-zinc-900 border border-white/5 rounded-xl p-5 h-64" />
+                  <div className="bg-zinc-900 border border-white/5 rounded-xl p-5 h-64 lg:col-span-2" />
+                  <div className="bg-zinc-900 border border-white/5 rounded-xl p-5 h-80" />
+                  <div className="bg-zinc-900 border border-white/5 rounded-xl p-5 h-80 lg:col-span-2" />
+                </div>
+              </div>
+              {/* Center overlay */}
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <div className="bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#00FFB2]/15 p-10 rounded-[28px] max-w-md text-center space-y-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] animate-in zoom-in-95 duration-300">
+                  <div className="text-4xl">🔒</div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-white tracking-tight">Analytics Disabled</h3>
+                    <p className="text-zinc-500 text-sm leading-relaxed">Upgrade to access advanced trading insights</p>
+                  </div>
+                  <button onClick={() => window.location.href = '/billing'} className="w-full bg-[#00FFB2] text-black font-black py-3.5 rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all text-sm">
+                    Upgrade to Professional
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <AnalyticsTab trades={filteredTrades} displayCurrency={displayCurrency} />
+          )}
         </div>
       )}
 

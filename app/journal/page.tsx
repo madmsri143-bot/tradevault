@@ -5,9 +5,10 @@ import { collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, deleteD
 import { db } from "@/lib/firebase";
 import { JournalEntry, Trade } from "@/types";
 import { format, subDays, startOfDay } from "date-fns";
-import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText, TrendingUp, AlertTriangle, Target, Flame, Activity } from "lucide-react";
+import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText, TrendingUp, AlertTriangle, Target, Flame, Activity, Lock } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
+import { useTrial } from "@/components/TrialGuard";
 
 // Shared compressImage utility
 const compressImage = (file: File): Promise<File> => {
@@ -107,11 +108,18 @@ function SmartText({ text }: { text: string }) {
 export default function JournalPage() {
   const { user } = useAuth();
   const { confirm, alert } = useModal();
+  const { access } = useTrial();
+  const isFree = access === "free";
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   
   // Filter State
   const [filterDate, setFilterDate] = useState("");
+
+  // Daily journal limit for free users (max 1 per day)
+  const todayStr = new Date().toISOString().substring(0, 10);
+  const todayEntryCount = entries.filter(e => format(new Date(e.date), "yyyy-MM-dd") === todayStr).length;
+  const dailyJournalLimitReached = isFree && todayEntryCount >= 1;
 
   // Form State
   const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
@@ -398,12 +406,18 @@ export default function JournalPage() {
                 </div>
               </div>
 
+              {isFree && dailyJournalLimitReached && (
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-2">
+                  <Lock size={14} /> Daily limit reached. Upgrade to log unlimited journal entries.
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={submitting || !text.trim()}
+                disabled={submitting || !text.trim() || (isFree && dailyJournalLimitReached)}
                 className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5"
               >
-                {submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Log Journal Entry"}
+                {isFree && dailyJournalLimitReached ? "Limit Reached" : submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Log Journal Entry"}
               </button>
             </form>
           </div>

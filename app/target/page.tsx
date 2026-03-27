@@ -9,7 +9,7 @@ import { format, formatDistanceToNow, differenceInHours, differenceInDays } from
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
-import { TrialGuard } from "@/components/TrialGuard";
+import { useTrial, FeatureBlockOverlay } from "@/components/TrialGuard";
 
 // Helper to get local date string YYYY-MM-DD
 const getLocalDateString = () => {
@@ -43,6 +43,8 @@ const getHelperDates = (tab: TargetType) => {
 export default function TargetPage() {
   const { user } = useAuth();
   const { confirm, alert } = useModal();
+  const { access } = useTrial();
+  const isFree = access === "free";
   const [activeTab, setActiveTab] = useState<TargetType>("daily");
   
   const [targets, setTargets] = useState<TradingTarget[]>([]);
@@ -212,7 +214,7 @@ export default function TargetPage() {
   // Show passed targets locally if they haven't explicitly expired by time, or just let them sit in active if date is ongoing
   
   return (
-    <TrialGuard featureName="Elite Targets & Pacing Engine">
+    <FeatureBlockOverlay show={isFree} title="Targets Disabled" subtitle="Upgrade to set and track your trading goals">
       <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       
       {/* Header & Gamification Banner */}
@@ -453,7 +455,7 @@ export default function TargetPage() {
         <EditTargetModal target={editingTarget} onClose={() => setEditingTarget(null)} />
       )}
     </div>
-    </TrialGuard>
+    </FeatureBlockOverlay>
   );
 }
 

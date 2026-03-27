@@ -18,11 +18,11 @@ import {
   startOfYear,
   endOfYear
 } from "date-fns";
-import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, LayoutGrid } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, LayoutGrid, Lock } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatCurrency } from "@/lib/utils";
-import { TrialGuard } from "@/components/TrialGuard";
+import { FeatureBlockOverlay } from "@/components/TrialGuard";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -64,10 +64,13 @@ function calcStats(label: string, tradeList: any[]): PeriodStats {
 // ----------------------------------------------------
 // MAIN COMPONENT
 // ----------------------------------------------------
-export default function CalendarView({ trades, displayCurrency = "USD" }: { trades: Trade[], displayCurrency?: string }) {
+export default function CalendarView({ trades, displayCurrency = "USD", isFree = false }: { trades: Trade[], displayCurrency?: string, isFree?: boolean }) {
   const [viewMode, setViewMode] = useState<ViewMode>("monthly");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // Free users are locked to monthly view
+  const effectiveViewMode = isFree ? "monthly" : viewMode;
 
   // Parse mapped dates 
   const normalizedTrades = useMemo(() => {
@@ -75,8 +78,8 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
   }, [trades]);
 
   // View Navigation
-  const handlePrev = () => setCurrentDate(viewMode === "monthly" ? subMonths(currentDate, 1) : subYears(currentDate, 1));
-  const handleNext = () => setCurrentDate(viewMode === "monthly" ? addMonths(currentDate, 1) : addYears(currentDate, 1));
+  const handlePrev = () => setCurrentDate(effectiveViewMode === "monthly" ? subMonths(currentDate, 1) : subYears(currentDate, 1));
+  const handleNext = () => setCurrentDate(effectiveViewMode === "monthly" ? addMonths(currentDate, 1) : addYears(currentDate, 1));
 
   // ----------------------------------------------------
   // MONTHLY GRID LOGIC
@@ -93,7 +96,7 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
 
   // Weekly Stats Calculation for Monthly View
   const weeklyStats: PeriodStats[] = useMemo(() => {
-    if (viewMode !== "monthly") return [];
+    if (effectiveViewMode !== "monthly") return [];
     
     // 5-6 possible weeks in a month
     const weeks: Record<number, any[]> = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
@@ -112,9 +115,6 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
     Object.keys(weeks).forEach((key) => {
       const wIdx = parseInt(key);
       const wTrades = weeks[wIdx];
-      // Only show up to week 4, 5, or 6 if they are within month days theoretically
-      // Let's dynamically include a week if it actually has days in this month
-      // Max possible weeks is 6
       const weekStartD = ((wIdx - 1) * 7) - startOffset + 1;
       if (weekStartD <= monthEnd.getDate()) {
          stats.push(calcStats(labels[wIdx - 1], wTrades));
@@ -122,13 +122,13 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
     });
 
     return stats;
-  }, [normalizedTrades, currentDate, viewMode, startOffset, monthEnd]);
+  }, [normalizedTrades, currentDate, effectiveViewMode, startOffset, monthEnd]);
 
   // ----------------------------------------------------
   // YEARLY GRID LOGIC
   // ----------------------------------------------------
   const monthlyStatsInYear: PeriodStats[] = useMemo(() => {
-    if (viewMode !== "yearly") return [];
+    if (effectiveViewMode !== "yearly") return [];
 
     const months: Record<number, any[]> = {};
     for (let i = 0; i < 12; i++) months[i] = [];
@@ -147,7 +147,7 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
     return Object.keys(months).map(mIdx => {
       return calcStats(mLabels[parseInt(mIdx)], months[parseInt(mIdx)]);
     });
-  }, [normalizedTrades, currentDate, viewMode]);
+  }, [normalizedTrades, currentDate, effectiveViewMode]);
 
   // ----------------------------------------------------
   // TABLE RENDERER
@@ -162,7 +162,7 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
     const avgAvgLoss = data.reduce((acc, d) => acc + d.avgLoss, 0) / data.length;
 
     // Totals Row calculation
-    const allTradesInPeriod = viewMode === "monthly" 
+    const allTradesInPeriod = effectiveViewMode === "monthly" 
         ? normalizedTrades.filter(t => isSameMonth(t.dateObj, currentDate))
         : normalizedTrades.filter(t => isSameYear(t.dateObj, currentDate));
     
@@ -234,7 +234,6 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
 
 
   return (
-    <TrialGuard featureName="Advanced Performance Calendar">
       <div className="space-y-2 animate-in fade-in duration-500 pb-10">
         
         {/* Toggle & Header Section */}
@@ -243,17 +242,19 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
              <div className="flex bg-zinc-950 p-1 rounded-lg border border-white/5 shadow-inner">
                <button 
                  onClick={() => setViewMode("monthly")}
-                 className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", viewMode === "monthly" ? "bg-zinc-800 text-white shadow-sm ring-1 ring-white/10" : "text-zinc-500 hover:text-zinc-300")}
-               >
+                  className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", effectiveViewMode === "monthly" ? "bg-zinc-800 text-white shadow-sm ring-1 ring-white/10" : "text-zinc-500 hover:text-zinc-300")}
+                >
                  <CalendarIcon size={14} /> Monthly
-               </button>
-               <button 
-                 onClick={() => setViewMode("yearly")}
-                 className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", viewMode === "yearly" ? "bg-zinc-800 text-white shadow-sm ring-1 ring-white/10" : "text-zinc-500 hover:text-zinc-300")}
-               >
-                 <LayoutGrid size={14} /> Yearly
-               </button>
-             </div>
+                </button>
+                {!isFree && (
+                  <button 
+                    onClick={() => setViewMode("yearly")}
+                    className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", effectiveViewMode === "yearly" ? "bg-zinc-800 text-white shadow-sm ring-1 ring-white/10" : "text-zinc-500 hover:text-zinc-300")}
+                  >
+                   <LayoutGrid size={14} /> Yearly
+                  </button>
+                )}
+              </div>
            </div>
 
            <div className="flex items-center gap-4">
@@ -261,7 +262,7 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
                 <ChevronLeft size={20} />
               </button>
               <h2 className="text-lg font-black tracking-tight text-white w-32 text-center pointer-events-none">
-                {viewMode === "monthly" ? format(currentDate, "MMMM yyyy") : format(currentDate, "yyyy")}
+                {effectiveViewMode === "monthly" ? format(currentDate, "MMMM yyyy") : format(currentDate, "yyyy")}
               </h2>
               <button onClick={handleNext} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors border border-transparent hover:border-white/5">
                 <ChevronRight size={20} />
@@ -272,7 +273,7 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
         {/* ------------------------------------------------ */}
         {/* MONTHLY VIEW ENGINES                             */}
         {/* ------------------------------------------------ */}
-        {viewMode === "monthly" && (
+        {effectiveViewMode === "monthly" && (
           <div className="animate-in fade-in zoom-in duration-300">
             {/* Visual Calendar Grid */}
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -301,11 +302,11 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
                     return (
                       <div
                         key={day.toISOString()}
-                        onClick={() => setSelectedDate(day)}
+                        onClick={() => !isFree && setSelectedDate(day)}
                         className={cn(
-                          "h-20 flex flex-col items-center justify-center rounded-xl border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none cursor-pointer transition-all relative",
-                          bgColor,
-                          isSelected && "ring-2 ring-emerald-500 z-10 scale-105 shadow-xl",
+                          "h-20 flex flex-col items-center justify-center rounded-xl border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none transition-all relative",
+                          isFree ? bgColor : `${bgColor} cursor-pointer`,
+                          !isFree && isSelected && "ring-2 ring-emerald-500 z-10 scale-105 shadow-xl",
                           !isSameMonth(day, currentDate) && "opacity-40"
                         )}
                       >
@@ -327,9 +328,9 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
               <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 flex flex-col rounded-xl h-[450px] xl:h-auto overflow-hidden">
                 <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4 shrink-0">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2 tracking-wide">
-                    {selectedDate ? format(selectedDate, "MMM do, yyyy") : "Day Review"}
+                    {isFree ? "Day Review" : selectedDate ? format(selectedDate, "MMM do, yyyy") : "Day Review"}
                   </h3>
-                  {selectedDate && (
+                  {selectedDate && !isFree && (
                     <button onClick={() => setSelectedDate(null)} className="p-1.5 bg-zinc-800 text-zinc-400 hover:text-white rounded-lg transition-colors">
                       <X size={14} />
                     </button>
@@ -337,7 +338,12 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
                 </div>
                 
                 <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                  {!selectedDate ? (
+                  {isFree ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center gap-3 py-8">
+                      <Lock size={28} className="text-zinc-600" />
+                      <p className="text-zinc-500 text-sm font-medium">Upgrade to view performance insights</p>
+                    </div>
+                  ) : !selectedDate ? (
                     <div className="h-full flex items-center justify-center text-zinc-500 text-sm font-medium italic">
                       Click any date to inspect trades.
                     </div>
@@ -365,7 +371,7 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
                         </div>
                         {trade.note && (
                           <p className="text-xs text-zinc-400 bg-white/5 p-2.5 rounded-lg italic">
-                            "{trade.note}"
+                            &quot;{trade.note}&quot;
                           </p>
                         )}
                       </div>
@@ -376,14 +382,16 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
             </div>
 
             {/* Weekly Detailed Performance Table */}
-            {renderTable(weeklyStats, "Week")}
+            <FeatureBlockOverlay show={isFree} title="Weekly Summary Disabled" subtitle="Upgrade to view performance insights">
+              {renderTable(weeklyStats, "Week")}
+            </FeatureBlockOverlay>
           </div>
         )}
 
         {/* ------------------------------------------------ */}
         {/* YEARLY VIEW ENGINES                              */}
         {/* ------------------------------------------------ */}
-        {viewMode === "yearly" && (
+        {effectiveViewMode === "yearly" && (
           <div className="animate-in fade-in zoom-in duration-300">
              
             {/* Visual Yearly Heatmap / Metric Grid */}
@@ -424,6 +432,5 @@ export default function CalendarView({ trades, displayCurrency = "USD" }: { trad
         )}
 
       </div>
-    </TrialGuard>
   );
 }

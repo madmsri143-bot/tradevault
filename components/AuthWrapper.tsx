@@ -32,17 +32,9 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
     }
 
     if (user && !isPublicRoute) {
-      // Redirect based on plan
-      if (plan === "free" && pathname === "/dashboard") {
-        router.push("/free-dashboard");
-      } else if ((plan === "trial" || plan === "pro") && pathname === "/free-dashboard") {
+      // Redirect legacy /free-dashboard to /dashboard
+      if (pathname === "/free-dashboard") {
         router.push("/dashboard");
-      }
-      
-      // Prevent free users from accessing pro-only routes
-      const proOnlyRoutes = ["/target", "/journal"];
-      if (plan === "free" && proOnlyRoutes.some(route => pathname.startsWith(route))) {
-        router.push("/free-dashboard");
       }
     }
   }, [user, loading, planLoading, plan, pathname, isPublicRoute, router]);

@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { TrialGuard } from "@/components/TrialGuard";
+
 
 interface AnalyticsTabProps {
   trades: any[];
@@ -192,8 +192,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
   const executionDecimal = (averageExecution).toFixed(1);
 
   return (
-    <TrialGuard featureName="Advanced Performance Analytics">
-      <div className="space-y-6 animate-in fade-in duration-500 pb-10">
+    <div className="space-y-6 animate-in fade-in duration-500 pb-10">
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -475,7 +474,6 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
             </div>
           )}
         </div>
-      </div>
-    </TrialGuard>
+    </div>
   );
 }

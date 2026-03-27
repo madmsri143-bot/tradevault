@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
-import { Flame, Camera, Loader2 } from "lucide-react";
+import { Flame, Camera, Loader2, Lock } from "lucide-react";
 import BulkPreviewModal from "./BulkPreviewModal";
+import { useTrial } from "@/components/TrialGuard";
 
 const getLocalDateString = () => {
   const d = new Date();
@@ -17,7 +18,10 @@ const getLocalDateString = () => {
 export default function TradeForm() {
   const { user } = useAuth();
   const { alert } = useModal();
+  const { access } = useTrial();
+  const isFree = access === "free";
   const [loading, setLoading] = useState(false);
+  const [dailyTradeCount, setDailyTradeCount] = useState(0);
   const [riskAutoSynced, setRiskAutoSynced] = useState(false);
   const [riskManuallyOverridden, setRiskManuallyOverridden] = useState(false);
   const [formData, setFormData] = useState({
@@ -45,6 +49,27 @@ export default function TradeForm() {
   const [extractedTrades, setExtractedTrades] = useState<any[]>([]);
 
   const commonSymbols = ["EURUSD", "GBPUSD", "USDJPY", "BTCUSD", "ETHUSD", "XAUUSD", "NIFTY", "BANKNIFTY"];
+
+  // Daily trade count for free users
+  useEffect(() => {
+    if (!user || !isFree) return;
+    const checkDailyCount = async () => {
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const todayEnd = new Date();
+      todayEnd.setHours(23, 59, 59, 999);
+      const q = query(
+        collection(db, "users", user.uid, "trades"),
+        where("date", ">=", todayStart.getTime()),
+        where("date", "<=", todayEnd.getTime())
+      );
+      const snap = await getDocs(q);
+      setDailyTradeCount(snap.size);
+    };
+    checkDailyCount();
+  }, [user, isFree, loading]); // re-check after each save
+
+  const dailyLimitReached = isFree && dailyTradeCount >= 2;
 
   // Smart Defaults: When result changes
   useEffect(() => {
@@ -228,12 +253,15 @@ export default function TradeForm() {
         
         <button
           type="button"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={scanningTrades}
-          className="text-xs font-bold text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d] px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => !isFree && fileInputRef.current?.click()}
+          disabled={scanningTrades || isFree}
+          title={isFree ? "Available in Pro plans" : "Upload MT5 screenshot"}
+          className={`text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+            isFree ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed' : 'text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d]'
+          }`}
         >
-          {scanningTrades ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
-          {scanningTrades ? "Scanning trades..." : "Upload Screenshot (Auto Fill)"}
+          {isFree ? <Lock size={14} /> : scanningTrades ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
+          {isFree ? "Pro Only" : scanningTrades ? "Scanning trades..." : "Upload Screenshot (Auto Fill)"}
         </button>
       </div>
 
@@ -453,12 +481,18 @@ export default function TradeForm() {
           />
         </div>
 
+        {dailyLimitReached && (
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-2">
+            <Lock size={14} /> Daily trade limit reached ({dailyTradeCount}/2). Upgrade for unlimited access.
+          </div>
+        )}
+
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || dailyLimitReached}
           className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2 rounded transition-colors disabled:opacity-50"
         >
-          {loading ? "Saving..." : "Save Trade"}
+          {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}
         </button>
       </form>
     </div>

@@ -46,10 +46,10 @@ export default function Sidebar() {
   };
 
   const navItems = [
-    { label: "Dashboard", href: plan === "free" ? "/free-dashboard" : "/dashboard", icon: <LayoutDashboard size={20} /> },
-    { label: "Journal", href: "/journal", icon: <BookText size={20} />, locked: plan === "free" },
+    { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={20} /> },
+    { label: "Journal", href: "/journal", icon: <BookText size={20} />, proHint: plan === "free" },
     { label: "Calculator", href: "/calculator", icon: <Calculator size={20} /> },
-    { label: "Target", href: "/target", icon: <Crosshair size={20} />, locked: plan === "free" },
+    { label: "Target", href: "/target", icon: <Crosshair size={20} />, proHint: plan === "free" },
   ];
 
   return (
@@ -77,23 +77,22 @@ export default function Sidebar() {
       <nav className="flex-1 py-4 flex flex-col gap-2 px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
-          const isNavItemLocked = "locked" in item && item.locked;
+          const hasProHint = "proHint" in item && item.proHint;
           
           return (
             <Link
               key={item.href}
-              href={isNavItemLocked ? "/billing" : item.href}
+              href={item.href}
               className={cn(
                 "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative",
                 isActive
                   ? "bg-emerald-500/10 text-emerald-400 font-medium"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900",
-                isNavItemLocked && "opacity-50 grayscale cursor-not-allowed"
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-900"
               )}
               title={!isExpanded ? item.label : undefined}
             >
               <div className="shrink-0 flex items-center justify-center w-8">
-                {isNavItemLocked ? <Lock size={16} className="text-zinc-600" /> : item.icon}
+                {item.icon}
               </div>
               <span
                 className={cn(
@@ -104,9 +103,16 @@ export default function Sidebar() {
                 {item.label}
               </span>
               
+              {/* Pro hint badge */}
+              {hasProHint && isExpanded && (
+                <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-zinc-600 bg-zinc-800 px-1.5 py-0.5 rounded">
+                  Pro
+                </span>
+              )}
+
               {!isExpanded && (
                 <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
-                  {item.label} {isNavItemLocked ? " (Pro Only)" : ""}
+                  {item.label} {hasProHint ? " (Limited)" : ""}
                 </div>
               )}
             </Link>
