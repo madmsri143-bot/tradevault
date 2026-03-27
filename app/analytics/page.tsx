@@ -90,6 +90,9 @@ export default function AnalyticsPage() {
   const winRate = nonBreakevenTotal > 0 ? (totalWins / nonBreakevenTotal) * 100 : 0;
   
   const totalProfit = normalizedTrades.reduce((acc, t) => acc + t.pnl, 0);
+  const totalGrossProfit = wins.reduce((acc, t) => acc + t.pnl, 0);
+  const totalGrossLoss = Math.abs(losses.reduce((acc, t) => acc + t.pnl, 0));
+  const profitEfficiency = (totalGrossProfit + totalGrossLoss) > 0 ? (totalGrossProfit / (totalGrossProfit + totalGrossLoss)) * 100 : 0;
 
   // RR & SL Calcs
   let totalRR = 0;
@@ -265,14 +268,18 @@ export default function AnalyticsPage() {
                 </p>
               </div>
               <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
-                <p className="text-xs text-zinc-400 mb-1">Win Rate</p>
+                <p className="text-xs text-zinc-400 mb-1">Strike Rate</p>
                 <p className="text-xl font-bold text-white">{winRate.toFixed(2)}%</p>
+              </div>
+              <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
+                <p className="text-xs text-amber-400/80 mb-1">Profit Efficiency</p>
+                <p className="text-xl font-bold text-amber-400">{profitEfficiency.toFixed(2)}%</p>
               </div>
               <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
                 <p className="text-xs text-zinc-400 mb-1">Total Trades</p>
                 <p className="text-xl font-bold text-white">{totalTrades}</p>
               </div>
-              <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
+              <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none col-span-2">
                 <p className="text-xs text-zinc-400 mb-1">Wins / Losses</p>
                 <p className="text-xl font-bold text-white">
                   <span className="text-emerald-400">{totalWins}</span>
@@ -354,9 +361,9 @@ export default function AnalyticsPage() {
             </div>
             
             {/* Shrunken Radar Container */}
-            <div className="flex-1 w-full min-h-[160px] relative mt-1 z-10">
+            <div className="flex-1 w-full min-h-[250px] relative mt-1 z-10">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="55%" data={radarData}>
+                <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
                   <PolarGrid stroke="#3f3f46" strokeDasharray="3 3" />
                   <PolarAngleAxis dataKey="subject" tick={{ fill: "#d4d4d8", fontSize: 10, fontWeight: 600 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />

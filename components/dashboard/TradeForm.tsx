@@ -284,14 +284,9 @@ export default function TradeForm() {
             {!formData.stopLossFollowed && (
                <p className="text-[10px] text-zinc-500 mt-1.5 font-medium">Risk not required when SL is not used</p>
             )}
-            {riskAutoSynced && formData.result === "Loss" && (
-               <p className="text-[10px] text-amber-400/80 mt-1.5 font-medium flex items-center gap-1">
-                 <Flame size={10} /> Risk auto-filled from loss amount
-               </p>
-            )}
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Did price hit your planned Stop Loss?</label>
+            <label className="block text-xs text-zinc-400 mb-1">SL Followed?</label>
             <div className="flex items-center gap-4 mt-2.5">
               <label className="flex items-center gap-1.5 cursor-pointer text-sm font-medium">
                 <input 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Trade } from "@/types";
-import { DollarSign, Activity, Hash, ArrowUpRight, ArrowDownRight, Layers } from "lucide-react";
+import { DollarSign, Activity, Hash, ArrowUpRight, ArrowDownRight, Layers, Target } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -26,6 +26,12 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
   const biggestWin = trades.length > 0 ? Math.max(0, ...trades.map(t => t.normalizedPnl || 0)) : 0;
   const biggestLoss = trades.length > 0 ? Math.min(0, ...trades.map(t => t.normalizedPnl || 0)) : 0;
 
+  const totalGrossProfit = trades.reduce((acc, t) => acc + ((t.normalizedPnl || 0) > 0 ? (t.normalizedPnl || 0) : 0), 0);
+  const totalGrossLoss = Math.abs(trades.reduce((acc, t) => acc + ((t.normalizedPnl || 0) < 0 ? (t.normalizedPnl || 0) : 0), 0));
+  const profitEfficiency = (totalGrossProfit + totalGrossLoss) > 0 
+    ? (totalGrossProfit / (totalGrossProfit + totalGrossLoss)) * 100 
+    : 0;
+
   const cards = [
     {
       title: "Total PnL",
@@ -34,10 +40,16 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
       colorClass: totalPnl >= 0 ? "text-emerald-400" : "text-red-400"
     },
     {
-      title: "Win Rate",
+      title: "Strike Rate",
       value: `${winRate.toFixed(2)}%`,
       icon: <Activity size={20} className="text-blue-500" />,
       colorClass: "text-blue-400"
+    },
+    {
+      title: "Profit Efficiency",
+      value: `${profitEfficiency.toFixed(2)}%`,
+      icon: <Target size={20} className="text-amber-500" />,
+      colorClass: "text-amber-400"
     },
     {
       title: "Total Trades",
