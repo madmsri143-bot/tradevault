@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { useMemo } from "react";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
-import { Loader2, BarChart3, Activity, Crosshair, Target, Flame, Scale, Calendar } from "lucide-react";
+import { BarChart3, Activity, Crosshair, Target, Flame, Scale, Calendar } from "lucide-react";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Cell

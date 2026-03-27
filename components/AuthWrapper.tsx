@@ -40,7 +40,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
       }
       
       // Prevent free users from accessing pro-only routes
-      const proOnlyRoutes = ["/analytics", "/target", "/journal"];
+      const proOnlyRoutes = ["/target"];
       if (plan === "free" && proOnlyRoutes.some(route => pathname.startsWith(route))) {
         router.push("/free-dashboard");
       }
