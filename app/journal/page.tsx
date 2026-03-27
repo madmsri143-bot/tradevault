@@ -93,6 +93,8 @@ const getValidDate = (ts: any): Date => {
 
 const DEFAULT_PROMPT = "Setup:\n\nRules Followed:\n\nWhat I'd do differently:\n\nMarket Lesson:\n";
 
+const getTodayDate = () => new Date().toISOString().split("T")[0];
+
 const MOODS_BEFORE = ["😤 Impatient", "😐 Neutral", "😎 Confident", "😰 Fearful"];
 const MOODS_AFTER = ["😡 Frustrated", "🙂 Satisfied", "🤯 Shocked", "😶 Numb"];
 const MISTAKE_TAGS = ["FOMO", "Overtrading", "Revenge trading", "Ignored SL", "Early exit", "Late entry", "No setup"];
@@ -133,7 +135,7 @@ export default function JournalPage() {
   const dailyJournalLimitReached = isFree && todayEntryCount >= 1;
 
   // Form State
-  const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
+  const [date, setDate] = useState(getTodayDate());
   const [text, setText] = useState(DEFAULT_PROMPT);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -242,6 +244,7 @@ export default function JournalPage() {
       const fileToUpload = imageFile;
       
       // Reset form instantly
+      setDate(getTodayDate());
       setText(DEFAULT_PROMPT);
       setImageFile(null);
       setPreviewUrl(null);
@@ -365,7 +368,7 @@ export default function JournalPage() {
                     <span className="text-[10px] text-zinc-400 mb-2 block">Before Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_BEFORE.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodBefore(m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
+                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
                           {m}
                         </button>
                       ))}
@@ -376,7 +379,7 @@ export default function JournalPage() {
                     <span className="text-[10px] text-zinc-400 mb-2 block">After Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_AFTER.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodAfter(m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
+                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
                           {m}
                         </button>
                       ))}
@@ -568,7 +571,7 @@ export default function JournalPage() {
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex flex-col gap-1">
                             <span className="text-[11px] font-black tracking-widest uppercase text-zinc-400">
-                              {validDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {validDate.toLocaleDateString()}
                             </span>
                             {entry.pnl !== undefined && entry.pnl !== null && (
                                <span className={`text-[13px] font-bold ${entry.pnl > 0 ? 'text-emerald-400' : entry.pnl < 0 ? 'text-red-400' : 'text-zinc-400'}`}>
