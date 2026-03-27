@@ -20,10 +20,21 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   const [resendLoading, setResendLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [displayEmail, setDisplayEmail] = useState("");
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [isCheckingLocals, setIsCheckingLocals] = useState(true);
 
   useEffect(() => {
-    if (user?.email) {
-      setDisplayEmail(localStorage.getItem("signupEmail") || user.email);
+    if (typeof window !== "undefined") {
+      if (user?.email) {
+        setDisplayEmail(localStorage.getItem("signupEmail") || user.email);
+      }
+      if (user?.emailVerified) {
+        localStorage.removeItem("needsVerification");
+        setNeedsVerification(false);
+      } else {
+        setNeedsVerification(localStorage.getItem("needsVerification") === "true");
+      }
+      setIsCheckingLocals(false);
     }
   }, [user]);
 
@@ -122,11 +133,14 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
     }
   };
 
-  const handleBackToLogin = () => {
+  const handleBackToLogin = async () => {
+    localStorage.removeItem("needsVerification");
+    setNeedsVerification(false);
+    await signOut(auth);
     router.push("/login");
   };
 
-  if (loading) {
+  if (loading || isCheckingLocals) {
     return (
       <div className="flex h-[100dvh] items-center justify-center bg-background">
         <div className="text-[32px] md:text-[40px] font-bold text-black dark:text-white animate-blink tracking-tight">
@@ -143,8 +157,8 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
 
   if (!user) return null; // Prevent flash
 
-  // Ensure email verification for dashboard access
-  if (!user.emailVerified) {
+  // Ensure email verification for dashboard access only conditionally via flag
+  if (!user.emailVerified && needsVerification) {
     return (
       <div className="min-h-[100dvh] bg-black flex items-center justify-center p-6 selection:bg-emerald-500/30">
         <div className="max-w-md w-full bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-8 rounded-2xl shadow-xl text-center space-y-6 animate-in slide-in-from-bottom-4 fade-in duration-700">
@@ -152,15 +166,16 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
             <Mail className="text-emerald-500" size={32} />
           </div>
           
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight text-white mb-3">Please verify your email to continue</h2>
-            <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-xl text-emerald-500 text-sm leading-relaxed mb-4 text-left">
-              We've sent a verification link to:<br/>
-              <span className="font-bold text-white block mt-1">{displayEmail}</span>
-            </div>
-            <p className="text-zinc-400 text-sm">
-              Once verified, simply refresh this page to access your dashboard.
+          <div className="space-y-4">
+            <h2 className="text-2xl font-black tracking-tight text-white">Check your inbox</h2>
+            <p className="text-zinc-400 leading-relaxed text-sm">
+              We've sent a verification link to <br/>
+              <span className="font-bold text-emerald-400 mt-1 block">{displayEmail}</span>
             </p>
+            <div className="space-y-2 text-xs text-zinc-500 pt-2">
+              <p>If you don’t see the email, please check your spam or promotions folder.</p>
+              <p>Once verified, refresh this page to access your dashboard.</p>
+            </div>
           </div>
 
           <div className="space-y-3 pt-4 border-t border-white/5">
