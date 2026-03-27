@@ -166,24 +166,29 @@ export default function DashboardPage() {
       </div>
 
       {/* RENDER ACTIVE TAB */}
-      {activeTab === "overview" && (
-        <div className="animate-in fade-in duration-300 mt-6 space-y-6">
-          {/* Top Section: Action & Metrics */}
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-            <div className="xl:col-span-1 border-white/5">
-              <TradeForm />
-            </div>
-            <div className="xl:col-span-3">
-              <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
+        {activeTab === "overview" && (
+          <div className="animate-in fade-in zoom-in-95 duration-300">
+            <div className="flex flex-col xl:flex-row gap-6">
+              
+              {/* Left Side: Fixed Panel (Log New Trade) */}
+              <div className="w-full xl:w-[380px] shrink-0">
+                <div className="sticky top-6">
+                  <TradeForm />
+                </div>
+              </div>
+
+              {/* Right Side: PnL Cards & Charts */}
+              <div className="flex-1 min-w-0 flex flex-col gap-6">
+                <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
+                
+                <div className="w-full">
+                  <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
+                </div>
+              </div>
+
             </div>
           </div>
-          
-          {/* Bottom Section: Charts */}
-          <div className="w-full">
-            <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
-          </div>
-        </div>
-      )}
+        )}
 
       {activeTab === "calendar" && (
         <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-white/5">

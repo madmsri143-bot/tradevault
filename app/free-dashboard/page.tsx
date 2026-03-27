@@ -59,41 +59,45 @@ export default function FreeDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-6">
-        {/* Top Left: Action Form */}
-        <div className="xl:col-span-1 border-white/5">
-          <TradeForm />
+      {/* Content Layout */}
+      <div className="flex flex-col xl:flex-row gap-6 mt-6">
+        
+        {/* Left Side: Fixed Form Panel */}
+        <div className="w-full xl:w-[380px] shrink-0">
+          <div className="sticky top-6">
+            <TradeForm />
+          </div>
         </div>
         
-        {/* Top Right: Metrics */}
-        <div className="xl:col-span-3">
+        {/* Right Side: Metrics, Graphics, and Lists */}
+        <div className="flex-1 min-w-0 flex flex-col gap-6">
           <MetricsCards trades={trades} displayCurrency="USD" />
+          
+          {/* Locked Analytics Preview */}
+          <div className="relative group w-full">
+             <div className="absolute inset-0 z-10 bg-black/40 backdrop-blur-[3px] rounded-[2rem] border border-white/5 flex flex-col items-center justify-center p-8 text-center space-y-4">
+                <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center border border-white/10">
+                   <Lock className="text-zinc-500" size={32} />
+                </div>
+                <div>
+                   <h3 className="text-xl font-bold text-white">Advanced Analytics Locked</h3>
+                   <p className="text-zinc-500 text-sm max-w-xs mt-2">Win rate probability, equity curves, and behavioral heatmaps are exclusive to Pro users.</p>
+                </div>
+                <Link href="/billing" className="text-[#00FFB2] font-black text-xs uppercase tracking-widest hover:underline flex items-center gap-2">
+                   See Pro Features <ArrowRight size={14} />
+                 </Link>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-20 grayscale pointer-events-none">
+                <div className="h-64 bg-zinc-900 border border-white/5 rounded-[2rem]" />
+                <div className="h-64 bg-zinc-900 border border-white/5 rounded-[2rem]" />
+             </div>
+          </div>
+
+          <div className="w-full">
+            <TradeList trades={trades} displayCurrency="USD" />
+          </div>
         </div>
-      </div>
 
-      {/* Bottom Section: Charts and List */}
-      <div className="w-full space-y-6 mt-6">
-         {/* Locked Analytics Preview */}
-         <div className="relative group">
-            <div className="absolute inset-0 z-10 bg-black/40 backdrop-blur-[3px] rounded-[2rem] border border-white/5 flex flex-col items-center justify-center p-8 text-center space-y-4">
-               <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center border border-white/10">
-                  <Lock className="text-zinc-500" size={32} />
-               </div>
-               <div>
-                  <h3 className="text-xl font-bold text-white">Advanced Analytics Locked</h3>
-                  <p className="text-zinc-500 text-sm max-w-xs mt-2">Win rate probability, equity curves, and behavioral heatmaps are exclusive to Pro users.</p>
-               </div>
-               <Link href="/billing" className="text-[#00FFB2] font-black text-xs uppercase tracking-widest hover:underline flex items-center gap-2">
-                  See Pro Features <ArrowRight size={14} />
-                </Link>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-20 grayscale pointer-events-none">
-               <div className="h-64 bg-zinc-900 border border-white/5 rounded-[2rem]" />
-               <div className="h-64 bg-zinc-900 border border-white/5 rounded-[2rem]" />
-            </div>
-         </div>
-
-         <TradeList trades={trades} displayCurrency="USD" />
       </div>
 
       {/* Upgrade Call-to-Action Grid */}

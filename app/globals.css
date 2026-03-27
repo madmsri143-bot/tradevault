@@ -20,21 +20,29 @@
 
   :root.light {
     color-scheme: light;
-    --color-zinc-50: #09090b;
-    --color-zinc-100: #18181b;
-    --color-zinc-200: #27272a;
-    --color-zinc-300: #3f3f46;
-    --color-zinc-400: #52525b;
-    --color-zinc-500: #71717a;
-    --color-zinc-600: #a1a1aa;
-    --color-zinc-700: #d4d4d8;
-    --color-zinc-800: #e4e4e7;
-    --color-zinc-900: #f4f4f5;
-    --color-zinc-950: #ffffff;
-    --color-white: #000000;
-    --color-black: #ffffff;
-    --color-background: #ffffff;
-    --color-foreground: #09090b;
+    
+    /* Primary Text (Headings) */
+    --color-white: #111827;
+    
+    /* Secondary Text (Labels, Subtitles) */
+    --color-zinc-300: #6B7280;
+    --color-zinc-400: #6B7280;
+    
+    /* Muted (Placeholders, Hints) */
+    --color-zinc-500: #9CA3AF;
+    
+    /* Layout Backgrounds */
+    --color-background: #FFFFFF;
+    --color-zinc-900: #F9FAFB; /* Card Backgrounds */
+    --color-zinc-950: #FFFFFF; /* Nested Cards & Inputs */
+    
+    /* Structural Borders */
+    --color-zinc-800: #D1D5DB; /* Standard Input Borders */
+    
+    /* Handle hardcoded global dark mode utility classes seamlessly */
+    --color-black\/10: #E5E7EB; /* Main Cards Border separation */
+    --color-white\/5: transparent; /* Override extraneous dark mode glow lines */
+    --color-white\/10: #E5E7EB;
   }
 
   /* Micro-Animations & Polishing */
