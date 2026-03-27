@@ -5,6 +5,7 @@ import { DollarSign, Activity, Hash, ArrowUpRight, ArrowDownRight, Layers, Targe
 import { formatCurrency } from "@/lib/utils";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { ResponsiveContainer, LineChart, Line } from "recharts";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -32,6 +33,30 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
     ? (totalGrossProfit / (totalGrossProfit + totalGrossLoss)) * 100 
     : 0;
 
+  // Trend Data Calculation
+  const chronologicalTrades = [...trades].reverse();
+  const srTrend: {value: number}[] = [];
+  let cumWinsSR = 0;
+  let cumTotalSR = 0;
+  
+  const peTrend: {value: number}[] = [];
+  let cumGrossProf = 0;
+  let cumGrossLoss = 0;
+
+  chronologicalTrades.forEach(t => {
+    const val = t.normalizedPnl || 0;
+    if (val !== 0) {
+      cumTotalSR++;
+      if (val > 0) cumWinsSR++;
+    }
+    srTrend.push({ value: cumTotalSR > 0 ? (cumWinsSR / cumTotalSR) * 100 : 0 });
+
+    if (val > 0) cumGrossProf += val;
+    if (val < 0) cumGrossLoss += Math.abs(val);
+    const totalV = cumGrossProf + cumGrossLoss;
+    peTrend.push({ value: totalV > 0 ? (cumGrossProf / totalV) * 100 : 0 });
+  });
+
   const cards = [
     {
       title: "Total PnL",
@@ -43,13 +68,17 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
       title: "Strike Rate",
       value: `${winRate.toFixed(2)}%`,
       icon: <Activity size={20} className="text-blue-500" />,
-      colorClass: "text-blue-400"
+      colorClass: "text-blue-400",
+      chartData: srTrend,
+      chartColor: "#60a5fa"
     },
     {
       title: "Profit Efficiency",
       value: `${profitEfficiency.toFixed(2)}%`,
       icon: <Target size={20} className="text-amber-500" />,
-      colorClass: "text-amber-400"
+      colorClass: "text-amber-400",
+      chartData: peTrend,
+      chartColor: "#fbbf24"
     },
     {
       title: "Total Trades",
@@ -80,16 +109,27 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
       {cards.map((card, i) => (
-        <div key={i} className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-4 rounded-xl flex items-center justify-between">
-          <div>
-            <p className="text-xs text-zinc-400 mb-1">{card.title}</p>
-            <p className={cn("text-xl font-bold tracking-tight", card.colorClass)}>
-              {card.value}
-            </p>
+        <div key={i} className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-4 rounded-xl flex flex-col justify-center">
+          <div className="flex items-center justify-between w-full">
+            <div>
+              <p className="text-xs text-zinc-400 mb-1">{card.title}</p>
+              <p className={cn("text-xl font-bold tracking-tight", card.colorClass)}>
+                {card.value}
+              </p>
+            </div>
+            <div className="h-10 w-10 bg-zinc-950 flex items-center justify-center rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none shrink-0">
+              {card.icon}
+            </div>
           </div>
-          <div className="h-10 w-10 bg-zinc-950 flex items-center justify-center rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none shrink-0">
-            {card.icon}
-          </div>
+          {card.chartData && card.chartData.length > 1 && (
+            <div className="h-6 w-full mt-3 opacity-90 relative -mb-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={card.chartData}>
+                  <Line type="monotone" dataKey="value" stroke={card.chartColor} strokeWidth={2} dot={false} isAnimationActive={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
       ))}
     </div>

@@ -56,7 +56,7 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
                     {format(new Date(payment.date), "MMM dd, yyyy")}
                   </td>
                   <td className="px-6 py-4 text-white font-bold">
-                    {payment.plan === "pro_yearly" ? "$199" : "$29"}
+                    {payment.plan === "pro_yearly" ? "$21" : "$3"}
                   </td>
                   <td className="px-6 py-4 text-zinc-400 capitalize">
                     {payment.plan.replace("pro_", "")}

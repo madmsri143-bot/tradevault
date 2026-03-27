@@ -60,11 +60,12 @@ export default function Sidebar() {
         isExpanded ? "w-64 absolute md:relative shadow-2xl md:shadow-none" : "w-16"
       )}
     >
-      <div className="flex items-center justify-between p-4 border-b border-white/10 h-16 shrink-0">
-        <div className={cn("flex items-center gap-3 overflow-hidden transition-all", !isExpanded && "w-0 opacity-0")}>
-          <TrendingUp className="text-emerald-500 shrink-0" size={24} />
-          <span className="font-semibold text-white whitespace-nowrap tracking-tight">TradeVault</span>
-        </div>
+      <div className={cn("flex items-center border-b border-white/10 h-16 shrink-0", isExpanded ? "justify-between px-4" : "justify-center")}>
+        {isExpanded && (
+          <div className="flex items-center gap-3 overflow-hidden transition-all">
+            <TrendingUp className="text-emerald-500 shrink-0" size={24} />
+          </div>
+        )}
         <button
           onClick={toggleSidebar}
           className="p-1 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"

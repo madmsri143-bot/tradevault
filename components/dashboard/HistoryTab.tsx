@@ -104,14 +104,16 @@ function SmartText({ text }: { text: string }) {
   );
 }
 
-export default function JournalPage() {
+interface HistoryTabProps {
+  trades: Trade[];
+  displayCurrency: string;
+  dateRange: { from: string; to: string } | null;
+}
+
+export default function HistoryTab({ trades, displayCurrency, dateRange }: HistoryTabProps) {
   const { user } = useAuth();
   const { confirm, alert } = useModal();
   const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [trades, setTrades] = useState<Trade[]>([]);
-  
-  // Filter State
-  const [filterDate, setFilterDate] = useState("");
 
   // Form State
   const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
@@ -140,18 +142,14 @@ export default function JournalPage() {
     }
   }, [entries, viewingEntry]);
 
-  // Fetch Entries & Trades
+  // Fetch Entries
   useEffect(() => {
     if (!user) return;
     const unsubJournal = onSnapshot(query(collection(db, "users", user.uid, "journal"), orderBy("date", "desc")), (snap) => {
       setEntries(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as JournalEntry[]);
     });
-    
-    const unsubTrades = onSnapshot(query(collection(db, "users", user.uid, "trades"), orderBy("date", "desc")), (snap) => {
-      setTrades(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Trade[]);
-    });
 
-    return () => { unsubJournal(); unsubTrades(); };
+    return () => unsubJournal();
   }, [user]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,21 +228,36 @@ export default function JournalPage() {
     }
   };
 
+  // Filter entries by Global dateRange
+  const filteredEntries = entries.filter((entry) => {
+    if (!dateRange || (!dateRange.from && !dateRange.to)) return true;
+    const eDate = new Date(entry.date);
+    const fromDate = dateRange.from ? new Date(dateRange.from) : null;
+    let toDate = dateRange.to ? new Date(dateRange.to) : null;
+    
+    // Set toDate to end of day
+    if (toDate) {
+      toDate.setHours(23, 59, 59, 999);
+    }
+    
+    if (fromDate && eDate < fromDate) return false;
+    if (toDate && eDate > toDate) return false;
+    return true;
+  });
+
   // Group entries
   const groupedEntries: Record<string, JournalEntry[]> = {};
-  entries.forEach((entry) => {
+  filteredEntries.forEach((entry) => {
     const dateStr = format(new Date(entry.date), "yyyy-MM-dd");
     if (!groupedEntries[dateStr]) groupedEntries[dateStr] = [];
     groupedEntries[dateStr].push(entry);
   });
 
   const sortedDates = Object.keys(groupedEntries).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-  const displayDates = filterDate ? sortedDates.filter(d => d === filterDate) : sortedDates;
+  const displayDates = sortedDates;
 
-  // Elite System Calculations
-  const relevantTrades = filterDate 
-    ? trades.filter(t => format(new Date(t.date), "yyyy-MM-dd") === filterDate)
-    : trades;
+  // Elite System Calculations (Trades are already filtered by Dashboard!)
+  const relevantTrades = trades;
   const totalTradesCount = relevantTrades.length;
   const nonBreakevenTrades = relevantTrades.filter(t => t.pnl !== 0);
   const winRate = nonBreakevenTrades.length > 0 ? (relevantTrades.filter(t => t.pnl > 0).length / nonBreakevenTrades.length) * 100 : 0;
@@ -260,38 +273,16 @@ export default function JournalPage() {
   const topMistake = Object.keys(mistakesCount).length > 0 ? Object.entries(mistakesCount).sort((a,b)=>b[1]-a[1])[0] : null;
 
   const recent7Days = Array.from({ length: 7 }).map((_, i) => format(startOfDay(subDays(new Date(), i)), "yyyy-MM-dd"));
-  const daysLedger = [...new Set(entries.map(e => format(new Date(e.date), "yyyy-MM-dd")))];
+  const daysLedger = [...new Set(filteredEntries.map(e => format(new Date(e.date), "yyyy-MM-dd")))];
   const streakCount = recent7Days.filter(d => daysLedger.includes(d)).length;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
+    <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10 mt-6 mt-6">
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Journal</h1>
+          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Reflection Journal</h2>
           <p className="text-sm text-zinc-400 mt-1">Structured reflections and mistake intelligence framework.</p>
-        </div>
-        
-        {/* Date Filter Bar */}
-        <div className="flex items-center gap-3 bg-zinc-900 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-xl">
-          <label className="text-sm font-medium text-zinc-400 pl-2">Filter:</label>
-          <div className="relative">
-            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
-            <input
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-              className="bg-zinc-950 border border-zinc-800 rounded-lg py-1.5 pr-2 pl-9 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark transition-colors"
-            />
-          </div>
-          {filterDate && (
-            <button
-              onClick={() => setFilterDate("")}
-              className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors"
-            >
-              Clear
-            </button>
-          )}
         </div>
       </div>
 

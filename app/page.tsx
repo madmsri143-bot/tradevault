@@ -49,6 +49,9 @@ export default function LandingPage() {
           <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
             Login
           </Link>
+          <Link href="/demo" className="text-sm font-medium text-zinc-400 hover:text-[#00FFB2] transition-colors flex items-center gap-1.5">
+            <Play size={14} className="text-[#00FFB2]" /> Live Demo
+          </Link>
           <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
             {user ? (hasUsedTrial ? "Upgrade to Pro" : "Launch App") : "Start 7-Day Trial"}
           </Link>
@@ -79,11 +82,7 @@ export default function LandingPage() {
                 Get Started for Free
               </Link>
             </div>
-            <div className="pt-2">
-              <Link href="/demo" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-colors py-2 group">
-                <Play size={16} className="text-[#00FFB2] group-hover:scale-110 transition-transform" /> View Live Demo
-              </Link>
-            </div>
+            <div className="pt-2" />
             <p className="text-sm font-medium text-zinc-500 mt-2">
                Choose the path that fits your discipline — Free or Pro Trial
             </p>
@@ -341,8 +340,8 @@ export default function LandingPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-[#00FFB2]">Professional Access</h3>
-              <p className="text-3xl font-black">$29 <span className="text-sm text-zinc-500 font-medium font-bold">/ month</span></p>
-              <p className="text-sm font-bold text-zinc-400">or <span className="text-white">$199</span> / year</p>
+              <p className="text-3xl font-black">$3 <span className="text-sm text-zinc-500 font-medium font-bold">/ month</span></p>
+              <p className="text-sm font-bold text-zinc-400">or <span className="text-white">$21</span> / year</p>
             </div>
             <ul className="space-y-4 flex-1">
               <PricingTier feature="Elite Target Engine (Daily/Weekly)" pro />

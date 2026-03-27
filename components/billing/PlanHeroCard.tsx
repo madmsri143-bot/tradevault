@@ -63,7 +63,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
             {isYearly ? "Pro Elite" : isMonthly ? "Pro Starter" : "Professional Trial"}
           </h3>
           <div className="text-[#00FFB2] font-semibold text-lg mb-2">
-            {isYearly ? "$199 / year" : isMonthly ? "$29 / month" : "$0 / forever"}
+            {isYearly ? "$21 / year" : isMonthly ? "$3 / month" : "$0 / forever"}
           </div>
           <p className="text-sm text-zinc-400 max-w-sm">
             Full analytics, pacing targets, and artificial intelligence psychological mistake detection.

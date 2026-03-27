@@ -44,6 +44,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string; confirmPassword?: string; general?: string }>({});
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isResetSent, setIsResetSent] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
 
   const { user, loading: authLoading } = useAuth();
 
@@ -60,7 +61,10 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           } else {
              const data = profileSnap.data();
              const targetPath = data?.plan === "free" ? "/free-dashboard" : "/dashboard";
-             router.push(targetPath);
+             setShowSplash(true);
+             setTimeout(() => {
+               if (isMounted) router.push(targetPath);
+             }, 1500);
           }
         } catch (err) {
           if (isMounted) router.push("/dashboard"); // Fallback
@@ -224,8 +228,21 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     }
   };
 
+  if (showSplash) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-[#0B0F14] flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center gap-6 animate-in zoom-in-50 fade-in duration-500">
+          <div className="w-24 h-24 bg-[#00FFB2]/10 rounded-3xl flex items-center justify-center border border-[#00FFB2]/20 shadow-[0_0_80px_rgba(0,255,178,0.2)]">
+            <TrendingUp size={48} className="text-[#00FFB2]" />
+          </div>
+          <span className="text-4xl font-black text-white tracking-tight">TradeVault</span>
+        </div>
+      </div>
+    );
+  }
+
   if (authLoading || (user && mode !== "setup-username")) {
-    return <div className="flex h-screen items-center justify-center bg-[#0B0F14] text-white font-bold animate-pulse">TradeVault</div>;
+    return <div className="flex h-screen items-center justify-center bg-[#0B0F14]" />;
   }
 
   return (

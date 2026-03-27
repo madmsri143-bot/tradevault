@@ -14,56 +14,18 @@ import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { TrialGuard } from "@/components/TrialGuard";
 
-export default function AnalyticsPage() {
+interface AnalyticsTabProps {
+  trades: any[];
+  displayCurrency: Currency;
+}
+
+export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabProps) {
   const { user } = useAuth();
-  const [trades, setTrades] = useState<Trade[]>([]);
-  const [rates, setRates] = useState<Record<string, number>>({});
-  const [displayCurrency, setDisplayCurrency] = useState<Currency>("USD");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const res = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
-        const data = await res.json();
-        setRates(data.rates);
-      } catch (error) {
-        console.error("Failed to fetch exchange rates:", error);
-      }
-    };
-    fetchRates();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const q = query(collection(db, "users", user.uid, "trades"), orderBy("date", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedTrades = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Trade[];
-      setTrades(fetchedTrades);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, [user]);
-
+  
+  // Trades passed from dashboard are already normalized, but this component expects 'pnl' to be the normalized value
   const normalizedTrades = useMemo(() => {
-    return trades.map((trade) => {
-      let normalizedPnl = trade.pnl;
-      if (Object.keys(rates).length > 0) {
-        const tradeRate = rates[trade.currency] || 1;
-        const amountInUSD = trade.pnl / tradeRate;
-        const displayRate = rates[displayCurrency] || 1;
-        normalizedPnl = amountInUSD * displayRate;
-      }
-      return { ...trade, pnl: normalizedPnl }; 
-    });
-  }, [trades, rates, displayCurrency]);
-
-  if (loading) {
-    return <div className="h-full flex items-center justify-center pt-20"><Loader2 className="animate-spin text-emerald-500" size={32} /></div>;
-  }
+    return trades.map(t => ({ ...t, pnl: t.normalizedPnl ?? t.pnl }));
+  }, [trades]);
 
   if (normalizedTrades.length === 0) {
     return (
@@ -231,23 +193,10 @@ export default function AnalyticsPage() {
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-3">
               <BarChart3 className="text-emerald-500" /> Performance Analytics
-            </h1>
+            </h2>
             <p className="text-sm text-zinc-400 mt-1">Deep dive into your edge, biases, and execution consistency.</p>
-          </div>
-          
-          <div className="flex items-center gap-2 bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-lg relative z-20">
-            <span className="text-sm text-zinc-400 font-medium ml-2">Displaying in:</span>
-            <select
-              value={displayCurrency}
-              onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-              className="bg-zinc-950 border border-zinc-800 text-emerald-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none cursor-pointer"
-            >
-              <option value="USD">USD ($)</option>
-              <option value="EUR">EUR (€)</option>
-              <option value="INR">INR (₹)</option>
-            </select>
           </div>
         </div>
 

@@ -15,7 +15,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
   const { user } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">(initialPlan);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<"idle" | "verifying" | "success" | "error">("idle");
 
   // Load Razorpay script
   useEffect(() => {
@@ -38,6 +38,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
     }
     
     setLoading(true);
+    setPaymentStatus("idle");
 
     try {
       if (!(window as any).Razorpay) {
@@ -68,6 +69,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
         description: selectedPlan === "yearly" ? "TradeVault Pro Elite" : "TradeVault Pro Starter",
         handler: async function (response: any) {
           try {
+             setPaymentStatus("verifying");
              // Step 3: Verify Payment securely on Backend
              const verifyRes = await fetch("/api/payment/verify", {
                method: "POST",
@@ -87,12 +89,19 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
                 throw new Error(verifyData.error || "Payment Verification Failed by Server");
              }
              
-             setSuccess(true);
+             setPaymentStatus("success");
+             setLoading(false);
              setTimeout(() => window.location.reload(), 2000);
           } catch (error: any) {
             console.error("Backend verification failed:", error);
             setLoading(false);
-            alert(`Payment Error: ${error.message}`);
+            setPaymentStatus("error");
+          }
+        },
+        modal: {
+          ondismiss: function() {
+            setLoading(false);
+            setPaymentStatus("error");
           }
         },
         prefill: { email: user.email || "" },
@@ -111,23 +120,11 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
     } catch (err) {
       console.error(err);
       setLoading(false);
-      alert("Failed to initiate checkout. Please try again.");
+      setPaymentStatus("error");
     }
   };
 
-  if (success) {
-    return (
-      <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-        <div className="bg-[#11161D] border-2 border-[#00FFB2]/20 w-full max-w-sm rounded-[32px] p-8 shadow-[0_0_50px_rgba(0,255,178,0.1)] text-center animate-in zoom-in-95">
-          <div className="mx-auto w-16 h-16 bg-[#00FFB2]/10 rounded-full flex items-center justify-center border border-[#00FFB2]/20 mb-6">
-            <Check size={32} className="text-[#00FFB2]" />
-          </div>
-          <h2 className="text-2xl font-black text-white mb-2">Payment Successful!</h2>
-          <p className="text-zinc-400">Welcome to TradeVault Professional. All premium features are now unlocked.</p>
-        </div>
-      </div>
-    );
-  }
+  // Remove old full-screen success check
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 animate-in fade-in duration-200">
@@ -160,7 +157,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
             <div className="space-y-4">
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-white">Pro Starter</h3>
-                <p className="text-3xl font-black text-white">$29 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
+                <p className="text-3xl font-black text-white">$3 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
               </div>
               <ul className="space-y-3 pt-4 border-t border-white/5">
                 <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#00FFB2]" : "text-zinc-500"} /> <span className="text-sm text-zinc-300">Full Analytics</span></li>
@@ -183,8 +180,8 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
             <div className="space-y-4">
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-[#00FFB2]">Pro Elite (Best Value)</h3>
-                <p className="text-3xl font-black text-white">$199 <span className="text-sm text-zinc-500 font-medium">/ year</span></p>
-                <p className="text-xs text-[#00FFB2] font-semibold mt-1">Breaks down to $16/month</p>
+                <p className="text-3xl font-black text-white">$21 <span className="text-sm text-zinc-500 font-medium">/ year</span></p>
+                <p className="text-xs text-[#00FFB2] font-semibold mt-1">Breaks down to $1.75/month</p>
               </div>
               <ul className="space-y-3 pt-4 border-t border-[#00FFB2]/10">
                 <li className="flex items-center gap-3"><Check size={16} className="text-[#00FFB2]" /> <span className="text-sm font-medium text-white">Full Analytics</span></li>
@@ -200,12 +197,19 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
         <div className="p-6 border-t border-white/5 bg-[#11161D] flex flex-col items-center">
            <button 
              onClick={handlePayment}
-             disabled={loading}
+             disabled={loading || paymentStatus === "success"}
              className="w-full md:w-auto md:min-w-[300px] bg-[#00FFB2] text-black font-black py-4 px-8 rounded-2xl hover:shadow-[0_0_25px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center"
            >
-             {loading ? <Loader2 className="animate-spin text-black" size={20} /> : "Continue to Payment"}
+             {loading && paymentStatus !== "verifying" ? <Loader2 className="animate-spin text-black" size={20} /> : paymentStatus === "success" ? "Unlocked" : "Continue to Payment"}
            </button>
-           <p className="text-zinc-500 text-xs mt-3 font-medium">You will only be charged after choosing a plan.</p>
+           
+           <div className="h-6 mt-3 font-medium flex items-center justify-center">
+             {paymentStatus === "idle" && <p className="text-zinc-500 text-xs">You will only be charged after choosing a plan.</p>}
+             {paymentStatus === "verifying" && <p className="text-blue-400 text-sm animate-pulse">Checking payment status...</p>}
+             {paymentStatus === "success" && <p className="text-[#00FFB2] text-sm font-bold flex items-center gap-1"><Check size={16} /> Payment successful. You can now start your journey.</p>}
+             {paymentStatus === "error" && <p className="text-red-400 text-sm">Payment not completed. Please try again.</p>}
+           </div>
+           
            <div className="mt-3 flex items-center gap-4 text-[10px] text-zinc-500 font-semibold uppercase tracking-widest">
              <span className="flex items-center gap-1"><Zap size={12} className="text-emerald-500" /> Secure</span>
              <span className="flex items-center gap-1"><Zap size={12} className="text-emerald-500" /> Encrypted</span>

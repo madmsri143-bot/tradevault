@@ -20,8 +20,8 @@ export async function POST(req: Request) {
     const { plan } = body; // 'monthly' or 'yearly'
 
     let amount = 0;
-    if (plan === "monthly") amount = 2900; // $29 in cents
-    else if (plan === "yearly") amount = 19900; // $199 in cents
+    if (plan === "monthly") amount = 300; // $3 in cents
+    else if (plan === "yearly") amount = 2100; // $21 in cents
     else return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
 
     const options = {

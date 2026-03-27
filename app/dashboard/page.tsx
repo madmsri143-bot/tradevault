@@ -9,8 +9,11 @@ import { useAuth } from "@/lib/AuthContext";
 
 import TradeForm from "@/components/dashboard/TradeForm";
 import MetricsCards from "@/components/dashboard/MetricsCards";
-import TradeList from "@/components/dashboard/TradeList";
 import { TrialBanner } from "@/components/TrialGuard";
+
+import AnalyticsTab from "@/components/dashboard/AnalyticsTab";
+import HistoryTab from "@/components/dashboard/HistoryTab";
+import { Calendar as CalendarIcon } from "lucide-react";
 
 const Charts = dynamic(() => import("@/components/dashboard/Charts"), {
   ssr: false,
@@ -28,6 +31,10 @@ export default function DashboardPage() {
   const [rates, setRates] = useState<Record<string, number>>({});
   const [displayCurrency, setDisplayCurrency] = useState<Currency>("USD");
   const [loading, setLoading] = useState(true);
+
+  // Tab & Date State
+  const [activeTab, setActiveTab] = useState<"overview" | "calendar" | "analytics" | "history">("overview");
+  const [dateRange, setDateRange] = useState<{from: string, to: string}>({from: "", to: ""});
 
   // Fetch Exchange Rates
   useEffect(() => {
@@ -66,7 +73,7 @@ export default function DashboardPage() {
     return () => unsubscribe();
   }, [user]);
 
-  // Normalize Trades
+  // Normalize Trades strictly for currency
   const normalizedTrades = useMemo(() => {
     return trades.map((trade) => {
       let normalizedPnl = trade.pnl;
@@ -80,11 +87,28 @@ export default function DashboardPage() {
     });
   }, [trades, rates, displayCurrency]);
 
+  // Global Date Filtering
+  const filteredTrades = useMemo(() => {
+    return normalizedTrades.filter(t => {
+      if (!dateRange.from && !dateRange.to) return true;
+      const tDate = new Date(t.date);
+      const fromD = dateRange.from ? new Date(dateRange.from) : null;
+      const toD = dateRange.to ? new Date(dateRange.to) : null;
+      
+      if (toD) toD.setHours(23, 59, 59, 999);
+      
+      if (fromD && tDate < fromD) return false;
+      if (toD && tDate > toD) return false;
+      return true;
+    });
+  }, [normalizedTrades, dateRange]);
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in duration-500 pb-10">
       <TrialBanner />
+      
       {/* Header and Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard Overview</h1>
           <p className="text-sm text-zinc-400 mt-1">Track, analyze, and optimize your trading performance.</p>
@@ -104,21 +128,78 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <MetricsCards trades={normalizedTrades} displayCurrency={displayCurrency} />
-      
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-        <div className="xl:col-span-1 border-white/5 order-last xl:order-first">
-          <TradeForm />
+      {/* TABS & GLOBAL DATE FILTER */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-1 bg-zinc-900 border border-white/5 p-1 rounded-xl w-fit">
+          {["overview", "calendar", "analytics", "history"].map(t => (
+            <button 
+              key={t}
+              onClick={() => setActiveTab(t as any)}
+              className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
+                activeTab === t ? 'bg-zinc-800 text-[#00FFB2] shadow-sm' : 'text-zinc-500 hover:text-white'
+              }`}
+            >
+              {t === "history" ? "Trade History" : t}
+            </button>
+          ))}
         </div>
-        <div className="xl:col-span-3 h-full">
-          <Charts trades={normalizedTrades} displayCurrency={displayCurrency} />
-          <CalendarView trades={normalizedTrades} displayCurrency={displayCurrency} />
-        </div>
+
+        {activeTab !== "calendar" && (
+          <div className="flex items-center gap-3 bg-zinc-900 border border-white/5 p-2 rounded-xl">
+            <CalendarIcon size={16} className="text-zinc-500 ml-1" />
+            <input 
+              type="date" 
+              value={dateRange.from} 
+              onChange={e => setDateRange({...dateRange, from: e.target.value})} 
+              className="bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#00FFB2]" 
+            />
+            <span className="text-zinc-500 text-xs font-medium">to</span>
+            <input 
+              type="date" 
+              value={dateRange.to} 
+              onChange={e => setDateRange({...dateRange, to: e.target.value})} 
+              className="bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#00FFB2]" 
+            />
+            {(dateRange.from || dateRange.to) && (
+              <button onClick={() => setDateRange({from: "", to: ""})} className="text-xs text-zinc-400 hover:text-white px-2">Clear</button>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className="mt-6 border-white/5">
-        <TradeList trades={normalizedTrades} displayCurrency={displayCurrency} />
-      </div>
+      {/* RENDER ACTIVE TAB */}
+      {activeTab === "overview" && (
+        <div className="animate-in fade-in duration-300 mt-6">
+          <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
+          
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-6">
+            <div className="xl:col-span-1 border-white/5 order-last xl:order-first">
+              <TradeForm />
+            </div>
+            <div className="xl:col-span-3 h-full space-y-6">
+              <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "calendar" && (
+        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-white/5">
+          <CalendarView trades={normalizedTrades} displayCurrency={displayCurrency} />
+        </div>
+      )}
+
+      {activeTab === "analytics" && (
+        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-white/5">
+          <AnalyticsTab trades={filteredTrades} displayCurrency={displayCurrency} />
+        </div>
+      )}
+
+      {activeTab === "history" && (
+        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-white/5">
+          <HistoryTab trades={filteredTrades} displayCurrency={displayCurrency} dateRange={dateRange} />
+        </div>
+      )}
 
     </div>
   );
