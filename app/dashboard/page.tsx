@@ -9,7 +9,6 @@ import { useAuth } from "@/lib/AuthContext";
 
 import TradeForm from "@/components/dashboard/TradeForm";
 import MetricsCards from "@/components/dashboard/MetricsCards";
-import { TrialBanner } from "@/components/TrialGuard";
 
 import AnalyticsTab from "@/components/dashboard/AnalyticsTab";
 import HistoryTab from "@/components/dashboard/HistoryTab";
@@ -105,7 +104,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-10">
-      <TrialBanner />
       
       {/* Header and Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
@@ -197,7 +195,7 @@ export default function DashboardPage() {
 
       {activeTab === "history" && (
         <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-white/5">
-          <HistoryTab trades={filteredTrades} displayCurrency={displayCurrency} dateRange={dateRange} />
+          <HistoryTab trades={filteredTrades} displayCurrency={displayCurrency} />
         </div>
       )}
 

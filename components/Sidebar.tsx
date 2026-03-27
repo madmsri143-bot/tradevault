@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Menu, X, TrendingUp, Calculator, Crosshair, Lock, Headset, Sun, Moon } from "lucide-react";
+import { LayoutDashboard, BookText, Menu, X, TrendingUp, Calculator, Crosshair, Lock, Headset, Sun, Moon } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { signOut } from "firebase/auth";
@@ -47,6 +47,7 @@ export default function Sidebar() {
 
   const navItems = [
     { label: "Dashboard", href: plan === "free" ? "/free-dashboard" : "/dashboard", icon: <LayoutDashboard size={20} /> },
+    { label: "Journal", href: "/journal", icon: <BookText size={20} />, locked: plan === "free" },
     { label: "Calculator", href: "/calculator", icon: <Calculator size={20} /> },
     { label: "Target", href: "/target", icon: <Crosshair size={20} />, locked: plan === "free" },
   ];
