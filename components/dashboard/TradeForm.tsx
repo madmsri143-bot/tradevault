@@ -76,7 +76,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       setDailyTradeCount(snap.size);
     };
     checkDailyCount();
-  }, [user, isFree, loading]); // re-check after each save
+  }, [user, isFree]); // fetch once on load, manage locally after
 
   const dailyLimitReached = isFree && dailyTradeCount >= 2;
 
@@ -132,6 +132,9 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (dailyLimitReached) {
+      return;
+    }
     setLoading(true);
 
     try {
@@ -188,6 +191,11 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       setLoading(false);
       setRiskAutoSynced(false);
       setRiskManuallyOverridden(false);
+      
+      // Optimistic instant update for free plan
+      if (isFree) {
+        setDailyTradeCount((prev) => prev + 1);
+      }
 
       // Fire and forget Firebase write (onSnapshot handles latency compensation)
       if (user) {
