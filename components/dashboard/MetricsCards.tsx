@@ -14,18 +14,11 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
   const totalTrades = trades.length;
   const totalLots = trades.reduce((acc, t) => acc + t.lot, 0);
   
-  const totalProfit = trades.reduce((acc, t) => {
-    const pnl = t.normalizedPnl || 0;
-    return pnl > 0 ? acc + pnl : acc;
-  }, 0);
-
-  const totalLoss = trades.reduce((acc, t) => {
-    const pnl = t.normalizedPnl || 0;
-    return pnl < 0 ? acc + Math.abs(pnl) : acc;
-  }, 0);
-
-  const winRate = (totalProfit + totalLoss) > 0 
-    ? (totalProfit / (totalProfit + totalLoss)) * 100 
+  // Count-based win rate: wins / total (excluding break-even)
+  const nonBreakevenTrades = trades.filter(t => (t.normalizedPnl || 0) !== 0);
+  const winningTrades = trades.filter(t => (t.normalizedPnl || 0) > 0);
+  const winRate = nonBreakevenTrades.length > 0 
+    ? (winningTrades.length / nonBreakevenTrades.length) * 100 
     : 0;
   
   const totalPnl = trades.reduce((acc, t) => acc + (t.normalizedPnl || 0), 0);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
@@ -17,6 +17,8 @@ export default function TradeForm() {
   const { user } = useAuth();
   const { alert } = useModal();
   const [loading, setLoading] = useState(false);
+  const [riskAutoSynced, setRiskAutoSynced] = useState(false);
+  const [riskManuallyOverridden, setRiskManuallyOverridden] = useState(false);
   const [formData, setFormData] = useState({
     symbol: "XAUUSD",
     customSymbol: "",
@@ -34,11 +36,57 @@ export default function TradeForm() {
   });
 
   const [useCustomSymbol, setUseCustomSymbol] = useState(false);
+  const prevResult = useRef(formData.result);
 
   const commonSymbols = ["EURUSD", "GBPUSD", "USDJPY", "BTCUSD", "ETHUSD", "XAUUSD", "NIFTY", "BANKNIFTY"];
 
+  // Smart Defaults: When result changes
+  useEffect(() => {
+    const prev = prevResult.current;
+    prevResult.current = formData.result;
+
+    if (formData.result === "Loss") {
+      // Auto-fill SL Followed = Yes (smart default)
+      setFormData(p => ({ ...p, stopLossFollowed: true }));
+      setRiskManuallyOverridden(false);
+
+      // Auto-sync risk from amount if amount is set
+      if (formData.pnl && !riskManuallyOverridden) {
+        const absAmount = Math.abs(parseFloat(formData.pnl) || 0);
+        if (absAmount > 0) {
+          setFormData(p => ({ ...p, risk: absAmount.toString() }));
+          setRiskAutoSynced(true);
+        }
+      }
+    } else if (prev === "Loss" && formData.result === "Profit") {
+      // Loss → Profit: disable auto-sync, clear auto-filled risk
+      setRiskAutoSynced(false);
+      setRiskManuallyOverridden(false);
+      setFormData(p => ({ ...p, risk: "" }));
+    }
+  }, [formData.result]);
+
+  // Auto-sync risk when amount changes (only for Loss trades)
+  useEffect(() => {
+    if (formData.result === "Loss" && !riskManuallyOverridden && formData.pnl) {
+      const absAmount = Math.abs(parseFloat(formData.pnl) || 0);
+      if (absAmount > 0) {
+        setFormData(p => ({ ...p, risk: absAmount.toString() }));
+        setRiskAutoSynced(true);
+      }
+    }
+  }, [formData.pnl, formData.result, riskManuallyOverridden]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    
+    // Track manual risk override
+    if (name === "risk") {
+      setRiskManuallyOverridden(true);
+      setRiskAutoSynced(false);
+    }
+    
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
 
@@ -97,6 +145,8 @@ export default function TradeForm() {
         date: getLocalDateString(),
       }));
       setLoading(false);
+      setRiskAutoSynced(false);
+      setRiskManuallyOverridden(false);
 
       // Fire and forget Firebase write (onSnapshot handles latency compensation)
       if (user) {
@@ -229,14 +279,19 @@ export default function TradeForm() {
               placeholder="e.g. 20.00"
               required={formData.stopLossFollowed}
               disabled={!formData.stopLossFollowed}
-              className={`w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${!formData.stopLossFollowed ? 'opacity-40 cursor-not-allowed' : ''}`}
+              className={`w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${!formData.stopLossFollowed ? 'opacity-40 cursor-not-allowed' : ''} ${riskAutoSynced ? 'border-amber-500/30' : ''}`}
             />
             {!formData.stopLossFollowed && (
                <p className="text-[10px] text-zinc-500 mt-1.5 font-medium">Risk not required when SL is not used</p>
             )}
+            {riskAutoSynced && formData.result === "Loss" && (
+               <p className="text-[10px] text-amber-400/80 mt-1.5 font-medium flex items-center gap-1">
+                 <Flame size={10} /> Risk auto-filled from loss amount
+               </p>
+            )}
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Stop Loss Followed?</label>
+            <label className="block text-xs text-zinc-400 mb-1">Did price hit your planned Stop Loss?</label>
             <div className="flex items-center gap-4 mt-2.5">
               <label className="flex items-center gap-1.5 cursor-pointer text-sm font-medium">
                 <input 

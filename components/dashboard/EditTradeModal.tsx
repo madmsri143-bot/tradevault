@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, Flame } from "lucide-react";
 import { format } from "date-fns";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
@@ -13,6 +13,8 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
   const { user } = useAuth();
   const { alert } = useModal();
   const [loading, setLoading] = useState(false);
+  const [riskAutoSynced, setRiskAutoSynced] = useState(false);
+  const [riskManuallyOverridden, setRiskManuallyOverridden] = useState(true); // Start as overridden since user already set values
   const [formData, setFormData] = useState({
     symbol: trade.symbol,
     type: trade.type,
@@ -28,8 +30,58 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
     date: format(new Date(trade.date), "yyyy-MM-dd"),
   });
 
+  const prevResult = useRef(formData.result);
+
+  // Smart Defaults: When result changes during editing
+  useEffect(() => {
+    const prev = prevResult.current;
+    prevResult.current = formData.result;
+
+    // Only react to actual changes, not initial mount
+    if (prev === formData.result) return;
+
+    if (formData.result === "Loss") {
+      // Smart defaults for Loss
+      setFormData(p => ({ ...p, stopLossFollowed: true }));
+      setRiskManuallyOverridden(false);
+
+      // Auto-sync risk from amount
+      if (formData.pnl) {
+        const absAmount = Math.abs(parseFloat(formData.pnl) || 0);
+        if (absAmount > 0) {
+          setFormData(p => ({ ...p, risk: absAmount.toString() }));
+          setRiskAutoSynced(true);
+        }
+      }
+    } else if (prev === "Loss" && formData.result === "Profit") {
+      // Loss → Profit: disable auto-sync, clear auto-filled risk
+      setRiskAutoSynced(false);
+      setRiskManuallyOverridden(false);
+      setFormData(p => ({ ...p, risk: "" }));
+    }
+  }, [formData.result]);
+
+  // Auto-sync risk when amount changes (only for Loss trades, not manually overridden)
+  useEffect(() => {
+    if (formData.result === "Loss" && !riskManuallyOverridden && formData.pnl) {
+      const absAmount = Math.abs(parseFloat(formData.pnl) || 0);
+      if (absAmount > 0) {
+        setFormData(p => ({ ...p, risk: absAmount.toString() }));
+        setRiskAutoSynced(true);
+      }
+    }
+  }, [formData.pnl, formData.result, riskManuallyOverridden]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    
+    // Track manual risk override
+    if (name === "risk") {
+      setRiskManuallyOverridden(true);
+      setRiskAutoSynced(false);
+    }
+    
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
 
@@ -187,14 +239,19 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                   placeholder="e.g. 20.00"
                   required={formData.stopLossFollowed}
                   disabled={!formData.stopLossFollowed}
-                  className={`w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${!formData.stopLossFollowed ? 'opacity-40 cursor-not-allowed' : ''}`}
+                  className={`w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${!formData.stopLossFollowed ? 'opacity-40 cursor-not-allowed' : ''} ${riskAutoSynced ? 'border-amber-500/30' : ''}`}
                 />
                 {!formData.stopLossFollowed && (
                    <p className="text-[10px] text-zinc-500 mt-1.5 font-medium">Risk not required when SL is not used</p>
                 )}
+                {riskAutoSynced && formData.result === "Loss" && (
+                   <p className="text-[10px] text-amber-400/80 mt-1.5 font-medium flex items-center gap-1">
+                     <Flame size={10} /> Risk auto-filled from loss amount
+                   </p>
+                )}
               </div>
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Stop Loss Followed?</label>
+                <label className="block text-xs text-zinc-400 mb-1">Did price hit your planned Stop Loss?</label>
                 <div className="flex items-center gap-4 mt-2.5">
                   <label className="flex items-center gap-1.5 cursor-pointer text-sm font-medium">
                     <input 

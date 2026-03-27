@@ -246,7 +246,8 @@ export default function JournalPage() {
     ? trades.filter(t => format(new Date(t.date), "yyyy-MM-dd") === filterDate)
     : trades;
   const totalTradesCount = relevantTrades.length;
-  const winRate = totalTradesCount > 0 ? (relevantTrades.filter(t => t.pnl > 0).length / totalTradesCount) * 100 : 0;
+  const nonBreakevenTrades = relevantTrades.filter(t => t.pnl !== 0);
+  const winRate = nonBreakevenTrades.length > 0 ? (relevantTrades.filter(t => t.pnl > 0).length / nonBreakevenTrades.length) * 100 : 0;
 
   const mistakesCount: Record<string, number> = {};
   displayDates.forEach(dateStr => {
@@ -422,7 +423,7 @@ export default function JournalPage() {
             
             <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
               <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><TrendingUp size={12} className="text-emerald-500" /> Win Rate</span>
-              <p className="text-2xl font-bold text-white mt-1">{winRate.toFixed(1)}%</p>
+              <p className="text-2xl font-bold text-white mt-1">{winRate.toFixed(2)}%</p>
             </div>
             
             <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">

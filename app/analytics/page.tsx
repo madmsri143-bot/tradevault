@@ -85,9 +85,9 @@ export default function AnalyticsPage() {
   const totalWins = wins.length;
   const totalLosses = losses.length;
   
-  const totalProfitValue = wins.reduce((acc, t) => acc + t.pnl, 0);
-  const totalLossValue = losses.reduce((acc, t) => acc + Math.abs(t.pnl), 0);
-  const winRate = (totalProfitValue + totalLossValue) > 0 ? (totalProfitValue / (totalProfitValue + totalLossValue)) * 100 : 0;
+  // Count-based win rate: wins / (wins + losses), excluding break-even
+  const nonBreakevenTotal = totalWins + totalLosses;
+  const winRate = nonBreakevenTotal > 0 ? (totalWins / nonBreakevenTotal) * 100 : 0;
   
   const totalProfit = normalizedTrades.reduce((acc, t) => acc + t.pnl, 0);
 
@@ -113,15 +113,13 @@ export default function AnalyticsPage() {
 
   const buyProfit = buys.reduce((acc, t) => acc + t.pnl, 0);
   const buyWins = buys.filter(t => t.pnl > 0).length;
-  const buyProfitValue = buys.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
-  const buyLossValue = buys.filter(t => t.pnl < 0).reduce((acc, t) => acc + Math.abs(t.pnl), 0);
-  const buyWinRate = (buyProfitValue + buyLossValue) > 0 ? (buyProfitValue / (buyProfitValue + buyLossValue)) * 100 : 0;
+  const buyLosses = buys.filter(t => t.pnl < 0).length;
+  const buyWinRate = (buyWins + buyLosses) > 0 ? (buyWins / (buyWins + buyLosses)) * 100 : 0;
 
   const sellProfit = sells.reduce((acc, t) => acc + t.pnl, 0);
   const sellWins = sells.filter(t => t.pnl > 0).length;
-  const sellProfitValue = sells.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
-  const sellLossValue = sells.filter(t => t.pnl < 0).reduce((acc, t) => acc + Math.abs(t.pnl), 0);
-  const sellWinRate = (sellProfitValue + sellLossValue) > 0 ? (sellProfitValue / (sellProfitValue + sellLossValue)) * 100 : 0;
+  const sellLosses = sells.filter(t => t.pnl < 0).length;
+  const sellWinRate = (sellWins + sellLosses) > 0 ? (sellWins / (sellWins + sellLosses)) * 100 : 0;
 
   // Behavioral Bias
   let bias = "Neutral";
@@ -268,7 +266,7 @@ export default function AnalyticsPage() {
               </div>
               <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
                 <p className="text-xs text-zinc-400 mb-1">Win Rate</p>
-                <p className="text-xl font-bold text-white">{winRate.toFixed(1)}%</p>
+                <p className="text-xl font-bold text-white">{winRate.toFixed(2)}%</p>
               </div>
               <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
                 <p className="text-xs text-zinc-400 mb-1">Total Trades</p>
@@ -309,7 +307,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400 text-sm">Win Rate</span>
-                    <span className="font-bold text-white">{buyWinRate.toFixed(1)}%</span>
+                    <span className="font-bold text-white">{buyWinRate.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400 text-sm">Wins / Losses</span>
@@ -329,7 +327,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400 text-sm">Win Rate</span>
-                    <span className="font-bold text-white">{sellWinRate.toFixed(1)}%</span>
+                    <span className="font-bold text-white">{sellWinRate.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400 text-sm">Wins / Losses</span>
