@@ -83,12 +83,12 @@ export default function Topbar() {
       {/* Brand Logo - Left Aligned */}
       <h1 
         onClick={() => window.location.reload()}
-        className="text-2xl md:text-3xl tracking-tight cursor-pointer hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-all select-none flex items-center"
+        className="text-2xl md:text-3xl tracking-tight cursor-pointer hover:drop-shadow-[0_0_8px_rgba(0,255,178,0.4)] transition-all select-none flex items-center"
       >
-        <span className="text-[#111827] font-bold">T</span>
-        <span className="text-[#FFFFFF] font-normal">rade</span>
-        <span className="text-[#111827] font-bold">V</span>
-        <span className="text-[#FFFFFF] font-normal">ault</span>
+        <span className="text-[#00FFB2] font-bold">T</span>
+        <span className="text-zinc-950 dark:text-white font-normal">rade</span>
+        <span className="text-[#00FFB2] font-bold">V</span>
+        <span className="text-zinc-950 dark:text-white font-normal">ault</span>
       </h1>
 
       <div className="relative" ref={dropdownRef}>
