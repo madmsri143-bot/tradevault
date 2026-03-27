@@ -8,6 +8,14 @@ import { Lock, Zap, ChevronRight, Clock, ShieldAlert, Calendar } from "lucide-re
 import { format } from "date-fns";
 import UpgradeModal from "./UpgradeModal";
 
+// ── VIP Override: These emails ALWAYS get forced premium access ──
+// They bypass all trial limits, expiry, and feature restrictions.
+// To add more VIP users, simply append their email (lowercase) to this array.
+const VIP_EMAILS: string[] = [
+  "sribharathi72@gmail.com",
+  "madhis770@gmail.com",
+];
+
 export interface UserAccessState {
   access: "premium" | "free";
   plan: "trial" | "free" | "pro";
@@ -39,9 +47,10 @@ export function useTrial() {
         
         let currentState: UserAccessState = { access: "free", plan: "free", hasUsedTrial: false, trial_days_left: 0, subscription_days_left: 0, loading: false };
 
-        // 1. Friend Access Whitelist
-        const friendEmails = (process.env.NEXT_PUBLIC_FRIEND_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
-        const isFriend = user.email ? friendEmails.includes(user.email.toLowerCase()) : false;
+        // 1. VIP Override — hardcoded list + optional env var fallback
+        const envEmails = (process.env.NEXT_PUBLIC_FRIEND_EMAILS || "").split(",").map(e => e.trim().toLowerCase()).filter(Boolean);
+        const allVipEmails = [...VIP_EMAILS, ...envEmails];
+        const isVIP = user.email ? allVipEmails.includes(user.email.toLowerCase()) : false;
         
         // Trial Calculations
         const trialStart = data.trial_started_at || data.trialStartedAt || now;
@@ -62,17 +71,17 @@ export function useTrial() {
         }
 
         let planName = data.plan === "pro_monthly" ? "Pro Starter" : data.plan === "pro_yearly" ? "Pro Elite" : "Trial";
-        if (isFriend && !hasPaidPlan) planName = "Pro (Friend Access)";
+        if (isVIP && !hasPaidPlan) planName = "Pro (VIP Access)";
 
-        // Auto-Downgrade Logic
-        if (data.plan === "trial" && !isTrialActive && !isSubActive && !isFriend) {
+        // Auto-Downgrade Logic (VIP users are exempt)
+        if (data.plan === "trial" && !isTrialActive && !isSubActive && !isVIP) {
           import("firebase/firestore").then(({ updateDoc }) => {
             updateDoc(doc(db, "users", user.uid, "settings", "profile"), { plan: "free" })
               .catch(e => console.error("Failed to auto-downgrade:", e));
           });
         }
 
-        if (isFriend || isSubActive) {
+        if (isVIP || isSubActive) {
            currentState = {
              access: "premium",
              plan: "pro",
@@ -80,7 +89,7 @@ export function useTrial() {
              hasUsedTrial: data.hasUsedTrial || data.plan === "trial" || false,
              expiryDate: data.plan_expiry_date || null,
              trial_days_left: trialLeft,
-             subscription_days_left: isFriend ? 999 : subDaysLeft,
+             subscription_days_left: isVIP ? 999 : subDaysLeft,
              loading: false
            };
         } else if (isTrialActive) {
