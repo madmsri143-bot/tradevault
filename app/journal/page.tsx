@@ -91,7 +91,7 @@ const getValidDate = (ts: any): Date => {
   return new Date(ts);
 };
 
-const DEFAULT_PROMPT = "Setup:\n\nRules Followed:\n\nWhat I'd do differently:\n\nMarket Lesson:\n";
+const DEFAULT_PROMPT = "Setup:\nWhat was your setup?\n\nRules Followed:\nDid you follow your plan?\n\nWhat I'd do differently:\nWhat will you improve next time?\n\nMarket Lesson:\nWhat did the market teach you today?\n";
 
 const getTodayDate = () => new Date().toISOString().split("T")[0];
 
@@ -358,7 +358,10 @@ export default function JournalPage() {
         {/* LEFT PANEL: Elite Form */}
         <div className="xl:col-span-1">
           <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl sticky top-6 shadow-sm">
-            <h2 className="text-sm font-bold tracking-wider uppercase text-emerald-400 mb-5">New Reflection</h2>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-sm font-bold tracking-wider uppercase text-emerald-400">New Reflection</h2>
+              <span className="text-[11px] font-bold text-zinc-500 bg-zinc-950 border border-white/5 px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div className="space-y-2.5">
@@ -483,13 +486,22 @@ export default function JournalPage() {
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={submitting || !text.trim() || (isFree && dailyJournalLimitReached)}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5"
-              >
-                {isFree && dailyJournalLimitReached ? "Limit Reached" : submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Log Journal Entry"}
-              </button>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => { setText(DEFAULT_PROMPT); setMoodBefore(""); setMoodAfter(""); setMistakes([]); setQualityScore(""); setPnl(""); setSlFollowed(false); setImageFile(null); setPreviewUrl(null); }}
+                  className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-3.5 rounded-xl transition-all text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting || !text.trim() || (isFree && dailyJournalLimitReached)}
+                  className="flex-[2] bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5"
+                >
+                  {isFree && dailyJournalLimitReached ? "Limit Reached" : submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Save Journal"}
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -545,7 +557,7 @@ export default function JournalPage() {
                 <div className="relative z-10 flex items-center gap-4 mb-5 -ml-6">
                   <div className="w-[14px] h-[14px] ml-[5px] rounded-full bg-emerald-500 ring-4 ring-zinc-950 shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                   <h3 className="text-[13px] font-black text-white tracking-widest uppercase bg-zinc-900 border border-white/10 px-3 py-1.5 rounded-lg shadow-sm">
-                    {format(new Date(dateStr), "EEEE, MMM do")}
+                    {format(new Date(dateStr), "EEEE, MMM dd, yyyy")}
                   </h3>
                 </div>
 
@@ -649,7 +661,7 @@ export default function JournalPage() {
               <div className="flex items-center gap-3">
                 <CalendarIcon className="text-emerald-500" size={18} />
                 <h2 className="text-lg font-bold text-white tracking-tight">
-                  {format(new Date(viewingEntry.date), "EEEE, MMM do, yyyy - h:mm a")}
+                  {format(new Date(viewingEntry.date), "EEEE, MMM dd, yyyy")}
                 </h2>
                 {viewingEntry.qualityScore && (
                   <span className={`text-[11px] font-black tracking-wider uppercase px-2 py-0.5 rounded border ${viewingEntry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : viewingEntry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : viewingEntry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
