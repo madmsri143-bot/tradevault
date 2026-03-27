@@ -78,7 +78,12 @@ export default function Topbar() {
   };
 
   return (
-    <div className="w-full h-16 shrink-0 bg-transparent flex items-center justify-end px-4 md:px-8 relative z-50">
+    <div className="w-full h-16 shrink-0 bg-transparent flex items-center justify-between px-4 md:px-8 relative z-50">
+      {/* Brand Logo - Left Aligned */}
+      <h1 className="text-2xl md:text-3xl font-black text-[#00FFB2] tracking-tight drop-shadow-[0_0_8px_rgba(0,255,178,0.4)]">
+        TradeVault
+      </h1>
+
       <div className="relative" ref={dropdownRef}>
         <button 
           onClick={() => setIsOpen(!isOpen)}
@@ -117,7 +122,7 @@ export default function Topbar() {
           isOpen ? "opacity-100 scale-100 visible" : "opacity-0 scale-95 invisible"
         )}>
           <div className="p-2 space-y-1">
-            <Link onClick={() => setIsOpen(false)} href="/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 transition-colors group">
+            <Link onClick={() => setIsOpen(false)} href="/profile" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 transition-colors group">
               <User size={16} className="text-zinc-500 group-hover:text-white transition-colors" />
               Profile
             </Link>

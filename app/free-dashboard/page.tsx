@@ -52,11 +52,6 @@ export default function FreeDashboardPage() {
          </Link>
       </div>
 
-      {/* Brand Header */}
-      <div className="mb-2">
-        <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">TradeVault</h1>
-      </div>
-
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-[#00FFB2]">Free Workspace</h2>

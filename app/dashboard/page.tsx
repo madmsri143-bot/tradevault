@@ -105,11 +105,6 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-10">
       
-      {/* Brand Header */}
-      <div className="mb-2">
-        <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">TradeVault</h1>
-      </div>
-
       {/* Header and Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div>
