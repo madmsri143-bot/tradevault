@@ -61,6 +61,12 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           } else {
              const data = profileSnap.data();
              const targetPath = data?.plan === "free" ? "/free-dashboard" : "/dashboard";
+             
+             // Prevent infinite redirect loop for unverified users going to dashboard
+             if (!user.emailVerified) {
+               return; // Remain on login screen so they can click "Sign In" and see AuthWrapper or stay
+             }
+
              setShowSplash(true);
              setTimeout(() => {
                if (isMounted) router.push(targetPath);
@@ -135,6 +141,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         }
         const res = await createUserWithEmailAndPassword(auth, email, password);
         const now = Date.now();
+        localStorage.setItem("signupEmail", email); // Store for the AuthWrapper verify screen
         await setDoc(doc(db, "users", res.user.uid, "settings", "profile"), {
           name, 
           email, 
@@ -149,14 +156,14 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         });
         await sendEmailVerification(res.user);
         setMode("verification-sent");
-        setLoading(false);
       } else {
         await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
-        // Redirection will be handled by the useEffect above
+        // Redirection will be handled by the useEffect above (if verified)
       }
     } catch (err: any) {
       handleFirebaseError(err);
+    } finally {
       setLoading(false);
     }
   };
@@ -179,6 +186,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       }
     } catch (err: any) {
       if (err.code !== "auth/popup-closed-by-user") handleFirebaseError(err);
+    } finally {
       setLoading(false);
     }
   };
@@ -205,6 +213,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       router.push(redirectPath);
     } catch (err) {
       setFieldErrors({ general: "Failed to save profile." });
+    } finally {
       setLoading(false);
     }
   };
@@ -241,7 +250,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     );
   }
 
-  if (authLoading || (user && mode !== "setup-username")) {
+  if (authLoading || (user && user.emailVerified && mode !== "setup-username")) {
     return <div className="flex h-screen items-center justify-center bg-[#0B0F14]" />;
   }
 

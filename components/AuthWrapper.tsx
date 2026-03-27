@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import { Loader2, Mail, RefreshCw, LogOut } from "lucide-react";
+import { Loader2, Mail, RefreshCw, LogOut, ArrowLeft } from "lucide-react";
 import { sendEmailVerification, signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -19,6 +19,13 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   const [cooldown, setCooldown] = useState(0);
   const [resendLoading, setResendLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [displayEmail, setDisplayEmail] = useState("");
+
+  useEffect(() => {
+    if (user?.email) {
+      setDisplayEmail(localStorage.getItem("signupEmail") || user.email);
+    }
+  }, [user]);
 
   const publicRoutes = ["/", "/login", "/signup", "/demo", "/terms", "/privacy"];
   const isPublicRoute = publicRoutes.includes(pathname);
@@ -115,8 +122,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
     }
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleBackToLogin = () => {
     router.push("/login");
   };
 
@@ -149,7 +155,8 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-white mb-3">Please verify your email to continue</h2>
             <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-xl text-emerald-500 text-sm leading-relaxed mb-4 text-left">
-              We've sent a verification link to your email. If you don't see it, check your spam or promotions folder.
+              We've sent a verification link to:<br/>
+              <span className="font-bold text-white block mt-1">{displayEmail}</span>
             </div>
             <p className="text-zinc-400 text-sm">
               Once verified, simply refresh this page to access your dashboard.
@@ -167,11 +174,11 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
             </button>
             
             <button 
-              onClick={handleLogout}
+              onClick={handleBackToLogin}
               className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-semibold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
             >
-              <LogOut size={18} />
-              Logout
+              <ArrowLeft size={18} />
+              Back to Login
             </button>
           </div>
         </div>
