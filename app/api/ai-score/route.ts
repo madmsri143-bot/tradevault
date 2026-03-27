@@ -38,6 +38,9 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
+    // 🔍 Debug: verify API key is connected
+    console.log("GEMINI_API_KEY:", apiKey ? "✅ Connected" : "❌ undefined");
+
     // ⚡ Step 1: Instant score
     const baseScore = calculateScore(body);
 
@@ -77,7 +80,17 @@ Return JSON only:
       contents: prompt,
     });
 
-    let aiText = response.text || "{}";
+    let aiText = response.text || "";
+
+    // ⚠️ Fallback if Gemini returns nothing
+    if (!aiText) {
+      return NextResponse.json({
+        score: baseScore,
+        insight: "AI not responding",
+        mistake: "N/A",
+        suggestion: "Try again",
+      });
+    }
 
     // 🧹 Clean AI output (IMPORTANT)
     aiText = aiText.replace(/```json|```/g, "").trim();
@@ -86,6 +99,7 @@ Return JSON only:
     try {
       parsed = JSON.parse(aiText);
     } catch {
+      console.error("Failed to parse AI response:", aiText);
       parsed = {
         insight: "No insight generated",
         mistake: "N/A",

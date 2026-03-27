@@ -7,8 +7,11 @@ const ai = process.env.GEMINI_API_KEY ? new GoogleGenAI({ apiKey: process.env.GE
 export async function POST(req: NextRequest) {
   try {
     if (!ai) {
+      console.warn("GEMINI_API_KEY:", process.env.GEMINI_API_KEY ? "✅ Connected" : "❌ undefined");
       return NextResponse.json({ error: "Gemini API key not configured." }, { status: 500 });
     }
+
+    console.log("GEMINI_API_KEY: ✅ Connected (weekly-report)");
 
     const { journals } = await req.json();
 
@@ -50,13 +53,25 @@ Ensure the response is STRICTLY valid parseable JSON. No markdown blocks.
       contents: prompt,
     });
 
-    const text = response.text?.replace(/```json|```/g, "").trim() || "{}";
+    const rawText = response.text?.replace(/```json|```/g, "").trim() || "";
+
+    // ⚠️ Fallback if Gemini returns nothing
+    if (!rawText) {
+      console.error("Weekly report: Gemini returned empty response");
+      return NextResponse.json({
+        avgScore: 0,
+        topMistake: "AI not responding",
+        bestDay: "N/A",
+        weakness: "N/A",
+        advice: "Try again later",
+      });
+    }
     
     try {
-      const parsed = JSON.parse(text);
+      const parsed = JSON.parse(rawText);
       return NextResponse.json(parsed);
     } catch (e) {
-      console.error("Failed to parse Gemini JSON for weekly report", text);
+      console.error("Failed to parse Gemini JSON for weekly report:", rawText);
       return NextResponse.json({ error: "Failed to generate report format." }, { status: 500 });
     }
   } catch (error) {
