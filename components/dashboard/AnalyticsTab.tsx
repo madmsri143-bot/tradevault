@@ -220,7 +220,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                 </p>
               </div>
               <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
-                <p className="text-xs text-zinc-400 mb-1">Strike Rate</p>
+                <p className="text-xs text-zinc-400 mb-1 cursor-help" title="Win Rate (Winning trades / Total trades)">Win Rate</p>
                 <p className="text-xl font-bold text-white">{winRate.toFixed(2)}%</p>
               </div>
               <div className="bg-zinc-950/50 p-4 rounded-lg border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none">
@@ -265,7 +265,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                     <span className={`font-bold ${buyProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(buyProfit, displayCurrency)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400 text-sm">Strike Rate</span>
+                    <span className="text-zinc-400 text-sm">Win Rate</span>
                     <span className="font-bold text-white">{buyWinRate.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
@@ -289,7 +289,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                     <span className={`font-bold ${sellProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(sellProfit, displayCurrency)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400 text-sm">Strike Rate</span>
+                    <span className="text-zinc-400 text-sm">Win Rate</span>
                     <span className="font-bold text-white">{sellWinRate.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">

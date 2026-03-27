@@ -65,7 +65,8 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
       colorClass: totalPnl >= 0 ? "text-emerald-400" : "text-red-400"
     },
     {
-      title: "Strike Rate",
+      title: "Win Rate",
+      tooltip: "Win Rate (Winning trades / Total trades)",
       value: `${winRate.toFixed(2)}%`,
       icon: <Activity size={20} className="text-blue-500" />,
       colorClass: "text-blue-400",
@@ -112,7 +113,12 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
         <div key={i} className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_4px_20px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] p-6 rounded-2xl flex flex-col justify-center transition-all hover:-translate-y-1 hover:border-emerald-500/20 group">
           <div className="flex items-center justify-between w-full">
             <div>
-              <p className="text-[13px] text-zinc-400 mb-1.5 font-medium tracking-wide uppercase">{card.title}</p>
+              <p 
+                className="text-[13px] text-zinc-400 mb-1.5 font-medium tracking-wide uppercase cursor-help"
+                title={(card as any).tooltip || card.title}
+              >
+                {card.title}
+              </p>
               <p className={cn("text-2xl font-black tracking-tight", card.colorClass)}>
                 {card.value}
               </p>

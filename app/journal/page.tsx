@@ -436,7 +436,7 @@ export default function JournalPage() {
             </div>
             
             <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
-              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><TrendingUp size={12} className="text-emerald-500" /> Strike Rate</span>
+              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5 cursor-help" title="Win Rate (Winning trades / Total trades)"><TrendingUp size={12} className="text-emerald-500" /> Win Rate</span>
               <p className="text-2xl font-bold text-white mt-1">{winRate.toFixed(2)}%</p>
             </div>
             
