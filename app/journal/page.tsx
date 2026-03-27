@@ -93,7 +93,10 @@ const getValidDate = (ts: any): Date => {
 
 const DEFAULT_PROMPT = "Setup:\nWhat was your setup?\n\nRules Followed:\nDid you follow your plan?\n\nWhat I'd do differently:\nWhat will you improve next time?\n\nMarket Lesson:\nWhat did the market teach you today?\n";
 
-const getTodayDate = () => new Date().toISOString().split("T")[0];
+const getTodayDate = () => {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+};
 
 const MOODS_BEFORE = ["😤 Impatient", "😐 Neutral", "😎 Confident", "😰 Fearful"];
 const MOODS_AFTER = ["😡 Frustrated", "🙂 Satisfied", "🤯 Shocked", "😶 Numb"];
@@ -130,7 +133,7 @@ export default function JournalPage() {
   const [filterDate, setFilterDate] = useState("");
 
   // Daily journal limit for free users (max 1 per day)
-  const todayStr = new Date().toISOString().substring(0, 10);
+  const todayStr = getTodayDate();
   const todayEntryCount = entries.filter(e => format(new Date(e.date), "yyyy-MM-dd") === todayStr).length;
   const dailyJournalLimitReached = isFree && todayEntryCount >= 1;
 
