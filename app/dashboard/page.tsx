@@ -108,7 +108,7 @@ export default function DashboardPage() {
       {/* Header and Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#00FFB2]">Dashboard Overview</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-white">Dashboard Overview</h2>
           <p className="text-sm text-zinc-400 mt-1">Track, analyze, and optimize your trading performance.</p>
         </div>
         

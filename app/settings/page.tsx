@@ -27,6 +27,9 @@ export default function SettingsPage() {
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [isResettingEmail, setIsResettingEmail] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [exportMode, setExportMode] = useState<"all" | "range" | null>(null);
+  const [exportFrom, setExportFrom] = useState("");
+  const [exportTo, setExportTo] = useState("");
 
   // Initialize theme from HTML tag which is managed by layout script
   useEffect(() => {
@@ -112,19 +115,48 @@ export default function SettingsPage() {
     return trades.sort((a: any, b: any) => parseFloat(b.date) - parseFloat(a.date));
   };
 
+  const fetchAndFilterTrades = async () => {
+    if (!exportMode) {
+      alert("Please select Entire History or Specific Date Range.");
+      return null;
+    }
+    
+    if (exportMode === "range" && (!exportFrom || !exportTo)) {
+      alert("Please select both From and To dates for the Specific Date Range.");
+      return null;
+    }
+
+    const allTrades = await getTradeData();
+    let filtered = allTrades;
+    
+    if (exportMode === "range") {
+      const fromD = new Date(exportFrom).setHours(0,0,0,0);
+      const toD = new Date(exportTo).setHours(23,59,59,999);
+      filtered = allTrades.filter((t: any) => {
+        const d = new Date(t.date).getTime();
+        return d >= fromD && d <= toD;
+      });
+    }
+
+    if (filtered.length === 0) {
+      alert("No trades available for selected range.");
+      return null;
+    }
+    return filtered;
+  };
+
   const handleExportCSV = async () => {
+    const trades = await fetchAndFilterTrades();
+    if (!trades) return;
     setIsExporting(true);
     try {
-      const trades = await getTradeData();
-      if (trades.length === 0) return alert("No trades found to export.");
-      
       const headers = ["Date", "Pair", "Direction", "Entry", "Exit", "PnL", "Result", "Tags"];
       const csvContent = [
         headers.join(","),
         ...trades.map((t: any) => [
           format(new Date(parseFloat(t.date)), "yyyy-MM-dd"),
-          t.pair,
-          t.direction,
+          t.pair || t.symbol || "", // Ensure backwards compatibility for symbol naming
+          t.direction || t.type || "",
           t.entryPrice || 0,
           t.exitPrice || 0,
           t.pnl || 0,
@@ -150,11 +182,10 @@ export default function SettingsPage() {
   };
 
   const handleExportPDF = async () => {
+    const trades = await fetchAndFilterTrades();
+    if (!trades) return;
     setIsExporting(true);
     try {
-      const trades = await getTradeData();
-      if (trades.length === 0) return alert("No trades found to export.");
-      
       const doc = new jsPDF();
       doc.setFontSize(22);
       doc.setFont("helvetica", "bold");
@@ -165,8 +196,8 @@ export default function SettingsPage() {
       
       const bodyData = trades.map((t: any) => [
         format(new Date(parseFloat(t.date)), "MM/dd/yy"),
-        t.pair,
-        t.direction,
+        t.pair || t.symbol || "Unknown",
+        t.direction || t.type || "N/A",
         `$${t.pnl?.toFixed(2) || "0.00"}`,
         t.result
       ]);
@@ -189,11 +220,10 @@ export default function SettingsPage() {
   };
 
   const handleExportPPT = async () => {
+    const trades = await fetchAndFilterTrades();
+    if (!trades) return;
     setIsExporting(true);
     try {
-      const trades = await getTradeData();
-      if (trades.length === 0) return alert("No trades found to export.");
-      
       const PptxGenJS = (await import("pptxgenjs")).default;
       const pptx = new PptxGenJS();
       
@@ -203,7 +233,7 @@ export default function SettingsPage() {
       slide.addText("TradeVault Performance Report", { x: 1.5, y: 1.5, w: "80%", h: 1, fontSize: 36, bold: true, color: "00FFB2" });
       slide.addText(`Generated on ${format(new Date(), "PP")}`, { x: 1.5, y: 2.5, w: "80%", h: 1, fontSize: 18, color: "888888" });
       
-      const winningTrades = trades.filter((t:any) => t.result === "WIN").length;
+      const winningTrades = trades.filter((t:any) => t.result === "Profit" || t.result === "WIN").length;
       const totalTrades = trades.length;
       const winRate = totalTrades > 0 ? ((winningTrades / totalTrades) * 100).toFixed(1) : "0.0";
       
@@ -278,6 +308,50 @@ export default function SettingsPage() {
                  Download your entire trading history for external accounting, presentations, or offline analytics. All exports include your full historical dataset.
                </p>
                
+               <div className="mb-6 space-y-4">
+                 <div className="flex flex-col gap-3 p-4 bg-black/20 rounded-xl border border-white/5">
+                   <label className="flex items-center gap-3 cursor-pointer group w-fit">
+                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'all' ? 'border-[#00FFB2] bg-[#00FFB2]/20' : 'border-zinc-700 bg-zinc-900 group-hover:border-zinc-500'}`}>
+                       {exportMode === 'all' && <div className="w-2.5 h-2.5 rounded-full bg-[#00FFB2]" />}
+                     </div>
+                     <span className={`text-sm font-bold select-none ${exportMode === 'all' ? 'text-white' : 'text-zinc-400'}`}>Entire History</span>
+                     <input type="radio" className="hidden" checked={exportMode === 'all'} onChange={() => setExportMode('all')} />
+                   </label>
+                   
+                   <label className="flex items-center gap-3 cursor-pointer group w-fit">
+                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'range' ? 'border-orange-500 bg-orange-500/20' : 'border-zinc-700 bg-zinc-900 group-hover:border-zinc-500'}`}>
+                       {exportMode === 'range' && <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />}
+                     </div>
+                     <span className={`text-sm font-bold select-none ${exportMode === 'range' ? 'text-white' : 'text-zinc-400'}`}>Specific Date Range</span>
+                     <input type="radio" className="hidden" checked={exportMode === 'range'} onChange={() => setExportMode('range')} />
+                   </label>
+
+                   {exportMode === 'range' && (
+                     <div className="flex flex-col sm:flex-row sm:items-center gap-3 ml-8 mt-1 animate-in slide-in-from-top-2">
+                       <input 
+                         type="date"
+                         value={exportFrom}
+                         onChange={(e) => setExportFrom(e.target.value)} 
+                         className="bg-zinc-950 border border-zinc-800 rounded p-2 text-xs text-white focus:outline-none focus:border-orange-500 color-scheme-dark" 
+                       />
+                       <span className="text-zinc-500 text-xs font-bold">TO</span>
+                       <input 
+                         type="date" 
+                         value={exportTo}
+                         onChange={(e) => setExportTo(e.target.value)} 
+                         className="bg-zinc-950 border border-zinc-800 rounded p-2 text-xs text-white focus:outline-none focus:border-orange-500 color-scheme-dark" 
+                       />
+                     </div>
+                   )}
+                 </div>
+               </div>
+               
+               {isExporting && (
+                 <div className="mb-4 flex items-center gap-2 text-xs font-bold text-[#00FFB2] bg-[#00FFB2]/10 p-3 rounded-lg border border-[#00FFB2]/20 shadow-sm animate-pulse">
+                   <Loader2 size={14} className="animate-spin" /> Exporting trades... Please wait.
+                 </div>
+               )}
+
                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                  <button 
                    onClick={handleExportCSV}

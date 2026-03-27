@@ -6,7 +6,8 @@ import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
-import { Flame } from "lucide-react";
+import { Flame, Camera, Loader2 } from "lucide-react";
+import BulkPreviewModal from "./BulkPreviewModal";
 
 const getLocalDateString = () => {
   const d = new Date();
@@ -37,6 +38,11 @@ export default function TradeForm() {
 
   const [useCustomSymbol, setUseCustomSymbol] = useState(false);
   const prevResult = useRef(formData.result);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [scanningTrades, setScanningTrades] = useState(false);
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [extractedTrades, setExtractedTrades] = useState<any[]>([]);
 
   const commonSymbols = ["EURUSD", "GBPUSD", "USDJPY", "BTCUSD", "ETHUSD", "XAUUSD", "NIFTY", "BANKNIFTY"];
 
@@ -158,13 +164,79 @@ export default function TradeForm() {
       
     } catch (error) {
       console.error("Error processing trade:", error);
+      console.error("Error processing trade:", error);
       setLoading(false);
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      await alert({ message: "Please upload a valid image file." });
+      return;
+    }
+
+    setScanningTrades(true);
+
+    try {
+      const base64Image = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+      });
+
+      const response = await fetch("/api/extract-trades", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64Image })
+      });
+      
+      if (!response.ok) throw new Error("API parsing failed.");
+      const data = await response.json();
+      
+      if (data.trades && Array.isArray(data.trades)) {
+         setExtractedTrades(data.trades);
+         setShowBulkModal(true);
+      } else {
+         throw new Error("Invalid format returned.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      await alert({ message: "Failed to extract trades. Try manual entry." });
+    } finally {
+      setScanningTrades(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   return (
+    <>
     <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-6 rounded-xl">
-      <h2 className="text-xl font-semibold mb-4 text-emerald-400">Log New Trade</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-emerald-400">Log New Trade</h2>
+        
+        <input 
+          type="file" 
+          accept="image/*" 
+          ref={fileInputRef} 
+          onChange={handleFileUpload} 
+          className="hidden" 
+        />
+        
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={scanningTrades}
+          className="text-xs font-bold text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d] px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {scanningTrades ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
+          {scanningTrades ? "Scanning trades..." : "Upload Screenshot (Auto Fill)"}
+        </button>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* Symbol Line */}
@@ -390,5 +462,14 @@ export default function TradeForm() {
         </button>
       </form>
     </div>
+
+    {showBulkModal && (
+      <BulkPreviewModal 
+        isOpen={showBulkModal} 
+        onClose={() => setShowBulkModal(false)} 
+        extractedTrades={extractedTrades} 
+      />
+    )}
+    </>
   );
 }
