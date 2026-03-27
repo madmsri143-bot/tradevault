@@ -9,6 +9,8 @@ import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximi
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
 import { useTrial } from "@/components/TrialGuard";
+import AIScoreCard from "@/components/journal/AIScoreCard";
+import WeeklyReportWidget from "@/components/journal/WeeklyReportWidget";
 
 // Shared compressImage utility
 const compressImage = (file: File): Promise<File> => {
@@ -233,6 +235,10 @@ export default function JournalPage() {
       };
 
       const docRef = await addDoc(collection(db, "users", user!.uid, "journal"), dbEntry);
+      
+      // Auto-open modal so they see the AIScoreCard right away
+      setViewingEntry({ id: docRef.id, ...dbEntry } as JournalEntry);
+      
       const fileToUpload = imageFile;
       
       // Reset form instantly
@@ -517,6 +523,8 @@ export default function JournalPage() {
             </div>
           </div>
 
+          <WeeklyReportWidget recentEntries={entries.filter(e => new Date(e.date) >= subDays(new Date(), 7))} />
+
           {displayDates.length === 0 ? (
             <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-12 rounded-2xl flex flex-col items-center justify-center text-center">
               <div className="w-20 h-20 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
@@ -681,35 +689,8 @@ export default function JournalPage() {
 
                 {/* AI Score Box */}
                 {viewingEntry.aiScore !== undefined && (
-                  <div className="mt-8 pt-6 border-t border-white/5">
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-4">
-                      <BrainCircuit size={16} className="text-emerald-400" />
-                      AI Behavior Analysis
-                    </h3>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                      <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center justify-center text-center shadow-inner">
-                        <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-2">Score</span>
-                        <div className={`text-4xl font-black ${viewingEntry.aiScore >= 80 ? 'text-emerald-400' : viewingEntry.aiScore >= 50 ? 'text-amber-400' : 'text-red-400'}`}>
-                          {viewingEntry.aiScore}
-                        </div>
-                      </div>
-                      <div className="sm:col-span-2 bg-zinc-950/50 p-4 rounded-xl border border-emerald-500/20 shadow-inner flex flex-col justify-center">
-                        <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Key Insight</span>
-                        <p className="text-sm text-zinc-300 font-medium leading-relaxed">{viewingEntry.aiInsight}</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="bg-red-500/5 p-4 rounded-xl border border-red-500/10 shadow-inner">
-                        <span className="text-[10px] text-red-400/70 uppercase font-black tracking-widest block mb-1 flex items-center gap-1.5"><HeartPulse size={12} /> Root Mistake</span>
-                        <p className="text-sm text-red-200 font-medium">{viewingEntry.aiMistake || "N/A"}</p>
-                      </div>
-                      <div className="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10 shadow-inner">
-                        <span className="text-[10px] text-blue-400/70 uppercase font-black tracking-widest block mb-1 flex items-center gap-1.5"><Target size={12} /> Suggestion</span>
-                        <p className="text-sm text-blue-200 font-medium">{viewingEntry.aiSuggestion || "N/A"}</p>
-                      </div>
-                    </div>
+                  <div className="mt-8">
+                    <AIScoreCard data={viewingEntry} />
                   </div>
                 )}
               </div>

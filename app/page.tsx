@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck } from "lucide-react";
+import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck, BrainCircuit } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
 import { useRouter } from "next/navigation";
@@ -224,38 +224,51 @@ export default function LandingPage() {
         {/* Feature 2: Journal System */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
-            <div className="w-12 h-12 bg-[#FF4D6D]/10 rounded-2xl flex items-center justify-center border border-[#FF4D6D]/20">
-              <BookText className="text-[#FF4D6D]" size={24} />
+            <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+              <BrainCircuit className="text-amber-500" size={24} />
             </div>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">Advanced Journaling & Psychology</h2>
-            <p className="text-zinc-400 text-lg leading-relaxed">Log your emotional state before and after every trade. Tag your mistakes to find exactly what's costing you money.</p>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">AI-Powered Trading Psychology Engine</h2>
+            <p className="text-zinc-400 text-lg leading-relaxed">TradeVault analyzes your trading behavior, scores your discipline, and identifies exactly what's costing you money using AI-driven insights.</p>
             <ul className="space-y-3 pt-4">
-              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-[#FF4D6D]" /> Pre & Post Trade Mood Tracking</li>
-              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-[#FF4D6D]" /> Mistake tagging (FOMO, Revenge Trading)</li>
-              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-[#FF4D6D]" /> A/B/C/D Quality Execution Scoring</li>
+              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> AI Trade Scoring (0–100 based on discipline)</li>
+              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> Automatic mistake detection (Overtrading, FOMO, etc.)</li>
+              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> Personalized insights after every trade</li>
+              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> Weekly AI performance reports and behavior analysis</li>
             </ul>
           </div>
           <div className="relative group">
-             <div className="absolute inset-0 bg-[#FF4D6D]/10 blur-[60px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
-             <div className="relative bg-gradient-to-br from-[#11161D] to-[#0D1218] border border-white/10 p-6 rounded-[2rem] shadow-2xl space-y-4">
-                <div className="bg-[#0B0F14] border border-white/5 p-4 rounded-xl space-y-3">
-                   <p className="text-xs font-bold text-zinc-500 uppercase">Mistakes Made</p>
-                   <div className="flex flex-wrap gap-2">
-                     <span className="bg-red-500/20 text-red-400 text-xs px-2 py-1 rounded">FOMO</span>
-                     <span className="bg-amber-500/20 text-amber-500 text-xs px-2 py-1 rounded">Early Exit</span>
+             <div className="absolute inset-0 bg-amber-500/10 blur-[60px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
+             <div className="relative bg-[#111] border border-[#222] p-6 rounded-[2rem] shadow-2xl space-y-4 transform group-hover:scale-[1.02] transition-transform duration-500 overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-[50px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
+               <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
+                 <BrainCircuit size={16} className="text-amber-400" /> AI Trade Score
+               </h3>
+               <div className="text-5xl font-black text-amber-400 drop-shadow-lg mb-6 flex items-baseline gap-2 leading-none">
+                 72 <span className="text-xl text-zinc-700 font-bold">/ 100</span>
+               </div>
+               <div className="space-y-4 text-sm text-zinc-300">
+                 <div className="bg-[#1a1a1a] p-3.5 rounded-xl border border-white/5 flex gap-3 shadow-inner">
+                   <div className="mt-0.5"><span className="text-red-400">⚠</span></div>
+                   <div className="flex flex-col">
+                     <span className="text-red-400/80 uppercase font-black tracking-widest text-[10px] mb-0.5">Mistake</span> 
+                     <span className="font-medium text-white">Overtrading</span>
                    </div>
-                </div>
-                <div className="bg-[#0B0F14] border border-white/5 p-4 rounded-xl space-y-3">
-                   <div className="flex justify-between items-center">
-                      <p className="text-xs font-bold text-zinc-500 uppercase">Emotional State</p>
-                      <span className="bg-[#00FFB2]/10 text-[#00FFB2] text-xs font-bold px-2 py-1 rounded border border-[#00FFB2]/20">A-Quality Trade</span>
+                 </div>
+                 <div className="bg-[#1a1a1a] p-3.5 rounded-xl border border-white/5 flex gap-3 shadow-inner">
+                   <div className="mt-0.5"><span className="text-blue-400">💡</span></div>
+                   <div className="flex flex-col">
+                     <span className="text-blue-400/80 uppercase font-black tracking-widest text-[10px] mb-0.5">Insight</span> 
+                     <span className="font-medium text-white">You entered early due to impatience.</span>
                    </div>
-                   <div className="flex gap-4">
-                      <div className="flex items-center gap-2"><span className="text-xl">😎</span> <span className="text-sm font-medium">Confident</span></div>
-                      <span className="text-zinc-600">→</span>
-                      <div className="flex items-center gap-2"><span className="text-xl">🙂</span> <span className="text-sm font-medium">Satisfied</span></div>
+                 </div>
+                 <div className="bg-[#1a1a1a] p-3.5 rounded-xl border border-white/5 flex gap-3 shadow-inner">
+                   <div className="mt-0.5"><span className="text-emerald-400">🚀</span></div>
+                   <div className="flex flex-col">
+                     <span className="text-emerald-400/80 uppercase font-black tracking-widest text-[10px] mb-0.5">Suggestion</span> 
+                     <span className="font-medium text-white">Wait for confirmation before entry.</span>
                    </div>
-                </div>
+                 </div>
+               </div>
              </div>
           </div>
         </div>
