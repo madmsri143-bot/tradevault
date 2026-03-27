@@ -493,7 +493,7 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-6 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+            <div className="flex items-center justify-between p-6 hover:bg-white/[0.02] transition-colors">
               <div>
                 <h3 className="text-sm font-medium text-white mb-1 flex items-center gap-2"><RefreshCw size={14} className="text-zinc-500" /> Force Sync</h3>
                 <p className="text-xs text-zinc-500">Pull latest configuration.</p>
@@ -503,20 +503,6 @@ export default function SettingsPage() {
                 className="flex items-center gap-2 px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-medium text-zinc-300 hover:text-white transition-colors"
               >
                 Refresh
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between p-6 hover:bg-white/[0.02] transition-colors">
-              <div>
-                <h3 className="text-sm font-medium text-white mb-1">Theme</h3>
-                <p className="text-xs text-zinc-500">Toggle dark / light appearance.</p>
-              </div>
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-2 px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-medium text-zinc-300 hover:text-white transition-colors"
-                title="Toggle Theme"
-              >
-                {isDarkMode ? <><Moon size={14} className="text-blue-400" /> Dark Mode</> : <><Sun size={14} className="text-amber-400" /> Light Mode</>}
               </button>
             </div>
           </div>

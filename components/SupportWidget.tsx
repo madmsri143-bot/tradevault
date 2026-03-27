@@ -33,6 +33,12 @@ export default function SupportWidget() {
     }
   }, [user, isOpen]);
 
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener("openSupportModal", handleOpen);
+    return () => window.removeEventListener("openSupportModal", handleOpen);
+  }, []);
+
   // Image attachment temporarily disabled for text-only pipeline
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,16 +89,7 @@ export default function SupportWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {/* Floating Button */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="w-14 h-14 bg-[#11161D] border border-white/10 rounded-full flex items-center justify-center text-white shadow-xl hover:bg-zinc-800 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all group relative animate-in zoom-in"
-        >
-          <span className="absolute inset-0 rounded-full group-hover:bg-[#00FFB2]/5 transition-colors" />
-          <Headset size={24} className="group-hover:text-[#00FFB2] transition-colors relative z-10" />
-        </button>
-      )}
+      {/* Floating Button removed, now triggered centrally via Sidebar */}
 
       {/* Support Chat Modal */}
       <Modal 

@@ -4,6 +4,7 @@ import { useTrial } from "@/components/TrialGuard";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
+import Topbar from "./Topbar";
 import { Loader2, Mail, RefreshCw, LogOut } from "lucide-react";
 import { sendEmailVerification, signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
@@ -190,11 +191,14 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   return (
     <div className="flex h-[100dvh] overflow-hidden bg-background max-w-full">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 relative selection:bg-emerald-500/30 animate-in fade-in duration-300">
-        <div className="max-w-7xl mx-auto w-full">
-          {children}
-        </div>
-      </main>
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+        <Topbar />
+        <main className="flex-1 overflow-y-auto px-4 pb-4 md:px-8 md:pb-8 relative selection:bg-emerald-500/30 animate-in fade-in duration-300">
+          <div className="max-w-7xl mx-auto w-full">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

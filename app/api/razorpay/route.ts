@@ -20,13 +20,13 @@ export async function POST(req: Request) {
     const { plan } = body; // 'monthly' or 'yearly'
 
     let amount = 0;
-    if (plan === "monthly") amount = 29900; // ₹299 in paisa
-    else if (plan === "yearly") amount = 199900; // ₹1999 in paisa
+    if (plan === "monthly") amount = 2900; // $29 in cents
+    else if (plan === "yearly") amount = 19900; // $199 in cents
     else return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
 
     const options = {
       amount,
-      currency: "INR",
+      currency: "USD",
       receipt: `rcpt_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
     };
 

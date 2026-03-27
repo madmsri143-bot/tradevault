@@ -30,7 +30,7 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
           )}
           <h4 className="text-[#00FFB2] font-semibold tracking-widest text-sm uppercase mb-2">Pro Starter</h4>
           <div className="text-white text-4xl font-black tracking-tighter mb-1">
-            ₹299 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ mo</span>
+            $29 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ mo</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6 pb-6 border-b border-white/5">
             Perfect for casual traders looking to establish their execution baseline.
@@ -64,11 +64,11 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
 
           <h4 className="text-white font-semibold tracking-widest text-sm uppercase mb-2">Pro Elite</h4>
           <div className="text-white text-4xl font-black tracking-tighter mb-1 flex items-baseline gap-3">
-            ₹1999 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ yr</span>
-            <span className="text-sm text-zinc-500 line-through tracking-normal font-normal">₹3588</span>
+            $199 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ yr</span>
+            <span className="text-sm text-zinc-500 line-through tracking-normal font-normal">$348</span>
           </div>
           <div className="text-[#00FFB2] text-sm font-bold mb-6 pb-6 border-b border-white/5">
-            Breaks down to strictly ₹166/month.
+            Breaks down to strictly $16/month.
           </div>
           
           <ul className="space-y-4 text-sm text-zinc-100 flex-1">
