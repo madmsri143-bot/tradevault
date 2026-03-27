@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
-import { Flame, Camera, Loader2, Lock, X } from "lucide-react";
+import { Flame, Camera, Loader2, Lock, X, BookText } from "lucide-react";
 import BulkPreviewModal from "./BulkPreviewModal";
 import { useTrial } from "@/components/TrialGuard";
 
@@ -65,10 +65,14 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       todayEnd.setHours(23, 59, 59, 999);
       const q = query(
         collection(db, "users", user.uid, "trades"),
-        where("date", ">=", todayStart.getTime()),
-        where("date", "<=", todayEnd.getTime())
+        where("createdAt", ">=", todayStart.getTime()),
+        where("createdAt", "<=", todayEnd.getTime())
       );
       const snap = await getDocs(q);
+      
+      console.log("Today Trades Count:", snap.size);
+      console.log("Trades considered:", snap.docs.map(d => new Date(d.data().createdAt).toString()));
+
       setDailyTradeCount(snap.size);
     };
     checkDailyCount();
@@ -156,6 +160,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
         currency: formData.currency as Currency,
         note: formData.note,
         date: new Date(formData.date).getTime(),
+        createdAt: Date.now(),
       };
 
       if (formData.stopLossFollowed) {
@@ -499,9 +504,24 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
           />
         </div>
 
-        {dailyLimitReached && (
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-2">
-            <Lock size={14} /> Daily trade limit reached ({dailyTradeCount}/2). Upgrade for unlimited access.
+        {/* Free Plan Daily Limit Tracker */}
+        {isFree && (
+          <div className={`p-3 rounded-xl border flex items-center justify-between transition-colors ${
+            dailyLimitReached ? "bg-amber-500/10 border-amber-500/20 text-amber-400" : "bg-zinc-800/50 border-white/5 text-zinc-400"
+          }`}>
+            <div className="flex items-center gap-2 text-xs font-bold">
+              {dailyLimitReached ? <Lock size={14} /> : <BookText size={14} className="text-emerald-400" />}
+              <span>{dailyLimitReached ? `Daily limit reached (${dailyTradeCount}/2)` : `${dailyTradeCount}/2 trades used today`}</span>
+            </div>
+            {dailyLimitReached && (
+              <button 
+                type="button" 
+                onClick={() => window.dispatchEvent(new Event("openPricingModal"))}
+                className="text-[10px] bg-amber-500 text-black px-2 py-1 flex items-center rounded font-black uppercase tracking-widest hover:bg-amber-400 transition-colors"
+              >
+                Upgrade
+              </button>
+            )}
           </div>
         )}
 
@@ -520,9 +540,11 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             type="button"
             onClick={(e) => handleSubmit(e as any)}
             disabled={loading || dailyLimitReached}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:-translate-y-0.5 disabled:opacity-50"
+            className={`flex-1 font-bold py-3 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none ${
+              dailyLimitReached ? "bg-zinc-800 text-zinc-500 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-500 text-white"
+            }`}
           >
-            {dailyLimitReached ? "Daily Limit Reached (2/2)" : loading ? "Saving..." : "Save Trade"}
+            {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}
           </button>
         </div>
       </div>
