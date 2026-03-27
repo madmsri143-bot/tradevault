@@ -173,20 +173,22 @@ export default function DashboardPage() {
         {activeTab === "overview" && (
           <div className="animate-in fade-in zoom-in-95 duration-300 relative">
             
-            {/* Floating Action Button */}
-            {!isTradeModalOpen && (
-              <button 
-                onClick={() => setIsTradeModalOpen(true)}
-                className="absolute -top-14 right-0 xl:top-0 xl:-right-4 z-20 bg-emerald-500 hover:bg-emerald-400 text-black p-3.5 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] hover:scale-110 transition-all group flex items-center justify-center pointer-events-auto"
-              >
-                <Plus size={24} />
-                <span className="absolute right-full mr-4 bg-zinc-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 group-hover:-translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-lg border border-white/5">
-                  Add Trade
-                </span>
-              </button>
-            )}
+            {/* Add Trade Button Line */}
+            <div className="mb-6 w-full flex justify-start">
+              {!isTradeModalOpen && (
+                <button 
+                  onClick={() => setIsTradeModalOpen(true)}
+                  className="bg-emerald-500 hover:bg-emerald-400 text-black p-4 rounded-full shadow-[0_4px_20px_rgba(16,185,129,0.4)] hover:shadow-[0_4px_30px_rgba(16,185,129,0.6)] active:scale-90 hover:scale-[1.05] hover:-translate-y-1 transition-all group flex items-center justify-center relative z-20"
+                >
+                  <Plus size={26} className="transition-transform group-hover:rotate-90 duration-300" />
+                  <span className="absolute left-full ml-4 bg-zinc-800/90 backdrop-blur-md text-white text-sm font-bold px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-xl border border-white/10">
+                    Add Trade
+                  </span>
+                </button>
+              )}
+            </div>
 
-            <div className="flex flex-col gap-8 xl:pt-2">
+            <div className="flex flex-col gap-8">
               
               {/* TOP SECTION: KPI Cards */}
               <div className="w-full">

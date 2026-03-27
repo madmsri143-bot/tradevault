@@ -247,38 +247,43 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
   if (isOpen === false) return null;
 
   const content = (
-    <div className="bg-zinc-900 border border-black/10 dark:border-white/10 fade-slide-up shadow-[0_10px_40px_rgba(0,0,0,0.5)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.8)] p-6 md:p-8 rounded-2xl w-full max-w-lg relative animate-in zoom-in-95 duration-300">
-      {onClose && (
-        <button type="button" onClick={onClose} className="absolute top-6 right-6 p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors z-10">
-          <X size={18} />
-        </button>
-      )}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-emerald-400 tracking-tight">Log New Trade</h2>
-        
-        <input 
-          type="file" 
-          accept="image/*" 
-          ref={fileInputRef} 
-          onChange={handleFileUpload} 
-          className="hidden" 
-        />
-        
-        <button
-          type="button"
-          onClick={() => !isFree && fileInputRef.current?.click()}
-          disabled={scanningTrades || isFree}
-          title={isFree ? "Available in Pro plans" : "Upload MT5 screenshot"}
-          className={`text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
-            isFree ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed' : 'text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d]'
-          }`}
-        >
-          {isFree ? <Lock size={14} /> : scanningTrades ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
-          {isFree ? "Pro Only" : scanningTrades ? "Scanning trades..." : "Upload Screenshot (Auto Fill)"}
-        </button>
+    <div className="bg-zinc-900 border border-black/10 dark:border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.8)] rounded-2xl w-[95vw] max-w-[460px] max-h-[90vh] flex flex-col relative animate-in zoom-in-95 fade-in duration-300">
+      
+      {/* Fixed Header */}
+      <div className="shrink-0 p-6 md:px-8 border-b border-white/5 relative z-10">
+        {onClose && (
+          <button type="button" onClick={onClose} className="absolute top-6 right-6 p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
+            <X size={18} />
+          </button>
+        )}
+        <h2 className="text-xl font-bold text-emerald-400 tracking-tight mb-2">Log New Trade</h2>
+        <div className="w-full">
+          <input 
+            type="file" 
+            accept="image/*" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload} 
+            className="hidden" 
+            id="screenshot-upload"
+          />
+          <button
+            type="button"
+            onClick={() => !isFree && fileInputRef.current?.click()}
+            disabled={scanningTrades || isFree}
+            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload MT5 screenshot"}
+            className={`w-full text-xs font-bold px-3 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+              isFree ? 'bg-zinc-800 text-amber-500/80 cursor-not-allowed border border-amber-500/20' : 'text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d]'
+            }`}
+          >
+            {isFree ? <Lock size={15} /> : scanningTrades ? <Loader2 size={15} className="animate-spin" /> : <Camera size={15} />}
+            {isFree ? "Auto-fill via Screenshot (Pro)" : scanningTrades ? "Scanning trades..." : "Upload Screenshot (Auto Fill)"}
+          </button>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Scrollable Body */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-8 pt-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* Symbol Line */}
         <div className="flex gap-4 items-center">
@@ -500,29 +505,35 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
           </div>
         )}
 
-        <div className="pt-2 flex gap-3">
+        </form>
+      </div>
+
+      {/* Fixed Footer */}
+      <div className="shrink-0 p-6 md:px-8 md:py-5 border-t border-white/5 bg-zinc-900/80 backdrop-blur-md rounded-b-2xl">
+        <div className="flex gap-3">
           {onClose && (
             <button type="button" onClick={onClose} className="px-5 py-3 text-sm font-bold text-zinc-400 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 rounded-xl transition-colors">
               Cancel
             </button>
           )}
           <button
-            type="submit"
+            type="button"
+            onClick={(e) => handleSubmit(e as any)}
             disabled={loading || dailyLimitReached}
             className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:-translate-y-0.5 disabled:opacity-50"
           >
-            {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}
+            {dailyLimitReached ? "Daily Limit Reached (2/2)" : loading ? "Saving..." : "Save Trade"}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 
   return (
     <>
     {isOpen !== undefined ? (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-        <div className="absolute inset-0" onClick={onClose} />
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
         {content}
       </div>
     ) : (

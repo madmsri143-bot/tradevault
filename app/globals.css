@@ -104,3 +104,9 @@
 .animate-blink {
   animation: blink 1.2s ease-in-out infinite;
 }
+
+@layer utilities {
+  .font-brand {
+    font-family: var(--font-outfit), sans-serif;
+  }
+}

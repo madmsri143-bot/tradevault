@@ -36,7 +36,7 @@ export default function LandingPage() {
           <div className="w-10 h-10 bg-[#00FFB2]/10 rounded-xl flex items-center justify-center border border-[#00FFB2]/20 group-hover:scale-110 transition-transform">
             <TrendingUp size={24} className="text-[#00FFB2]" />
           </div>
-          <span className="text-xl font-bold tracking-tight">TradeVault</span>
+          <span className="text-xl font-brand font-black tracking-tight">TradeVault</span>
         </div>
         
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">

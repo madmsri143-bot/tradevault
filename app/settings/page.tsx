@@ -486,7 +486,7 @@ export default function SettingsPage() {
            <div className="p-6">
               <div className="flex items-center justify-between">
                  <div>
-                   <p className="text-base font-black text-white tracking-tight">TradeVault Version</p>
+                   <p className="text-base font-brand font-black text-white tracking-tight">TradeVault Version</p>
                    <p className="text-xs text-zinc-500 mt-1 font-medium">v2.4.0 (Build 9081)</p>
                  </div>
                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">

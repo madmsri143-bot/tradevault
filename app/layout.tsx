@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import AuthWrapper from "@/components/AuthWrapper";
 import { AuthProvider } from "@/lib/AuthContext";
 import { ModalProvider } from "@/lib/ModalContext";
 
 const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["400", "700", "800", "900"], variable: "--font-outfit" });
 
 import CookieBanner from "@/components/CookieBanner";
 import SupportWidget from "@/components/SupportWidget";
@@ -41,7 +42,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-zinc-950 text-zinc-50 min-h-screen selection:bg-emerald-500/30`}>
+      <body className={`${inter.className} ${outfit.variable} bg-zinc-950 text-zinc-50 min-h-screen selection:bg-emerald-500/30`}>
         <ModalProvider>
           <AuthProvider>
             <AuthWrapper>

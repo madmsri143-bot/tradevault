@@ -235,7 +235,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           <div className="w-24 h-24 bg-[#00FFB2]/10 rounded-3xl flex items-center justify-center border border-[#00FFB2]/20 shadow-[0_0_80px_rgba(0,255,178,0.2)]">
             <TrendingUp size={48} className="text-[#00FFB2]" />
           </div>
-          <span className="text-4xl font-black text-white tracking-tight">TradeVault</span>
+          <span className="text-4xl font-brand font-black text-white tracking-tight">TradeVault</span>
         </div>
       </div>
     );
@@ -259,7 +259,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           <div className="w-10 h-10 bg-[#00FFB2]/10 rounded-xl flex items-center justify-center border border-[#00FFB2]/20">
             <TrendingUp size={24} className="text-[#00FFB2]" />
           </div>
-          <span className="text-xl font-bold text-white tracking-tight">TradeVault</span>
+          <span className="text-xl font-brand font-black text-white tracking-tight">TradeVault</span>
         </Link>
 
         <div className="relative z-10 max-w-md space-y-6">
