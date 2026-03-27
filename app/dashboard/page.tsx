@@ -105,10 +105,15 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-10">
       
+      {/* Brand Header */}
+      <div className="mb-2">
+        <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">TradeVault</h1>
+      </div>
+
       {/* Header and Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard Overview</h1>
+          <h2 className="text-2xl font-bold tracking-tight text-[#00FFB2]">Dashboard Overview</h2>
           <p className="text-sm text-zinc-400 mt-1">Track, analyze, and optimize your trading performance.</p>
         </div>
         
@@ -167,16 +172,20 @@ export default function DashboardPage() {
 
       {/* RENDER ACTIVE TAB */}
       {activeTab === "overview" && (
-        <div className="animate-in fade-in duration-300 mt-6">
-          <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
-          
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-6">
-            <div className="xl:col-span-1 border-white/5 order-last xl:order-first">
+        <div className="animate-in fade-in duration-300 mt-6 space-y-6">
+          {/* Top Section: Action & Metrics */}
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <div className="xl:col-span-1 border-white/5">
               <TradeForm />
             </div>
-            <div className="xl:col-span-3 h-full space-y-6">
-              <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
+            <div className="xl:col-span-3">
+              <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
             </div>
+          </div>
+          
+          {/* Bottom Section: Charts */}
+          <div className="w-full">
+            <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
           </div>
         </div>
       )}

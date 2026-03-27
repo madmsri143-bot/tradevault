@@ -116,7 +116,12 @@ export default function CalculatorPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700 max-w-5xl mx-auto pb-20 mt-4 px-4 sm:px-0">
-      <div className="text-center sm:text-left flex flex-col sm:flex-row items-center gap-6 mb-8 group">
+      {/* Brand Header */}
+      <div className="mb-2">
+        <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">TradeVault</h1>
+      </div>
+
+      <div className="text-center sm:text-left flex flex-col sm:flex-row items-center gap-6 mb-8 border-b border-white/5 pb-6 group">
         <div className="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.15)] group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.25)] transition-all duration-500">
           <CalcIcon className="text-emerald-400" size={32} />
         </div>

@@ -266,9 +266,14 @@ export default function JournalPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       
+      {/* Brand Header */}
+      <div className="mb-2">
+        <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">TradeVault</h1>
+      </div>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Journal</h1>
+          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Journal</h2>
           <p className="text-sm text-zinc-400 mt-1">Structured reflections and mistake intelligence framework.</p>
         </div>
         

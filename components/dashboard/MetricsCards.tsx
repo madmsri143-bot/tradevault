@@ -107,7 +107,7 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
       {cards.map((card, i) => (
         <div key={i} className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-4 rounded-xl flex flex-col justify-center">
           <div className="flex items-center justify-between w-full">

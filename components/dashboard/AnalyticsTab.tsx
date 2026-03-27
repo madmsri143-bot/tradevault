@@ -78,11 +78,17 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
   const buyWins = buys.filter(t => t.pnl > 0).length;
   const buyLosses = buys.filter(t => t.pnl < 0).length;
   const buyWinRate = (buyWins + buyLosses) > 0 ? (buyWins / (buyWins + buyLosses)) * 100 : 0;
+  const buyGrossProfit = buys.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
+  const buyGrossLoss = Math.abs(buys.filter(t => t.pnl < 0).reduce((acc, t) => acc + t.pnl, 0));
+  const buyProfitEfficiency = (buyGrossProfit + buyGrossLoss) > 0 ? (buyGrossProfit / (buyGrossProfit + buyGrossLoss)) * 100 : 0;
 
   const sellProfit = sells.reduce((acc, t) => acc + t.pnl, 0);
   const sellWins = sells.filter(t => t.pnl > 0).length;
   const sellLosses = sells.filter(t => t.pnl < 0).length;
   const sellWinRate = (sellWins + sellLosses) > 0 ? (sellWins / (sellWins + sellLosses)) * 100 : 0;
+  const sellGrossProfit = sells.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
+  const sellGrossLoss = Math.abs(sells.filter(t => t.pnl < 0).reduce((acc, t) => acc + t.pnl, 0));
+  const sellProfitEfficiency = (sellGrossProfit + sellGrossLoss) > 0 ? (sellGrossProfit / (sellGrossProfit + sellGrossLoss)) * 100 : 0;
 
   // Behavioral Bias
   let bias = "Neutral";
@@ -260,12 +266,16 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                     <span className={`font-bold ${buyProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(buyProfit, displayCurrency)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400 text-sm">Win Rate</span>
+                    <span className="text-zinc-400 text-sm">Strike Rate</span>
                     <span className="font-bold text-white">{buyWinRate.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
+                    <span className="text-zinc-400 text-sm">Profit Efficiency</span>
+                    <span className="font-bold text-amber-400">{buyProfitEfficiency.toFixed(2)}%</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-zinc-400 text-sm">Wins / Losses</span>
-                    <span className="font-bold text-white"><span className="text-emerald-400">{buyWins}</span> / <span className="text-red-400">{buys.length - buyWins}</span></span>
+                    <span className="font-bold text-white"><span className="text-emerald-400">{buyWins}</span> / <span className="text-red-400">{buyLosses}</span></span>
                   </div>
                 </div>
               </div>
@@ -280,12 +290,16 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                     <span className={`font-bold ${sellProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(sellProfit, displayCurrency)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400 text-sm">Win Rate</span>
+                    <span className="text-zinc-400 text-sm">Strike Rate</span>
                     <span className="font-bold text-white">{sellWinRate.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
+                    <span className="text-zinc-400 text-sm">Profit Efficiency</span>
+                    <span className="font-bold text-amber-400">{sellProfitEfficiency.toFixed(2)}%</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-zinc-400 text-sm">Wins / Losses</span>
-                    <span className="font-bold text-white"><span className="text-emerald-400">{sellWins}</span> / <span className="text-red-400">{sells.length - sellWins}</span></span>
+                    <span className="font-bold text-white"><span className="text-emerald-400">{sellWins}</span> / <span className="text-red-400">{sellLosses}</span></span>
                   </div>
                 </div>
               </div>
