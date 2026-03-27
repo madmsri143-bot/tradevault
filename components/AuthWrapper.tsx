@@ -4,10 +4,16 @@ import { useTrial } from "@/components/TrialGuard";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { Loader2, Mail, RefreshCw, LogOut } from "lucide-react";
+import { Loader2, Mail, RefreshCw, LogOut, ShieldAlert } from "lucide-react";
 import { sendEmailVerification, signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
+
+// List of allowed emails for strict access control
+const ALLOWED_EMAILS = [
+  "sribharathi72@gmail.com",
+  "madhis770@gmail.com"
+];
 
 export default function AuthWrapper({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -143,6 +149,41 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   }
 
   if (!user) return null; // Prevent flash
+
+  // Whitelist check
+  // Best Practice Note: In a production app, verifying access via a Firestore
+  // "roles" collection or via Firebase Custom Claims is safer and more scalable.
+  const userEmail = user.email?.toLowerCase();
+  const isAllowedUser = userEmail && ALLOWED_EMAILS.includes(userEmail);
+
+  if (!isAllowedUser) {
+    return (
+      <div className="min-h-[100dvh] bg-black flex items-center justify-center p-6 selection:bg-red-500/30">
+        <div className="max-w-md w-full bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-8 rounded-2xl shadow-xl text-center space-y-6 animate-in slide-in-from-bottom-4 fade-in duration-700">
+          <div className="mx-auto w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center shadow-inner border border-red-500/20">
+            <ShieldAlert className="text-red-500" size={32} />
+          </div>
+          
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-white mb-3">Access Denied</h2>
+            <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl text-red-500 text-sm leading-relaxed mb-4 text-left">
+              Your account <strong>{user.email || "Unknown"}</strong> does not have permission to access TradeVault. Please contact the administrator.
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-white/5">
+            <button 
+              onClick={handleLogout}
+              className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-semibold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md"
+            >
+              <LogOut size={18} />
+              Sign out safely
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Ensure email verification for dashboard access
   if (!user.emailVerified) {
