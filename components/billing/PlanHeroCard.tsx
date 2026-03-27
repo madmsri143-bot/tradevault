@@ -14,13 +14,19 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
   const isYearly = plan === "pro_yearly";
 
   const getStatus = () => {
-    if (!isPro) return { text: "Trial / Free", color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/20", icon: Clock };
+    if (plan === "trial") {
+      const isExpired = expiryDate ? new Date(expiryDate).getTime() < Date.now() : false;
+      if (isExpired) return { text: "Trial Expired", color: "text-amber-500", bg: "bg-amber-500/10", border: "border-amber-500/20", icon: AlertCircle };
+      return { text: "Active Trial", color: "text-[#00FFB2]", bg: "bg-[#00FFB2]/10", border: "border-[#00FFB2]/20", icon: Clock };
+    }
+    
+    if (!isPro) return { text: "Standard Free", color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/20", icon: Clock };
     
     // Check if expired
     const isExpired = expiryDate ? new Date(expiryDate).getTime() < Date.now() : false;
     if (isExpired) return { text: "Expired", color: "text-red-400", bg: "bg-red-400/10", border: "border-red-400/20", icon: AlertCircle };
 
-    return { text: "Active", color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/20", icon: CheckCircle2 };
+    return { text: "Active Pro", color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/20", icon: CheckCircle2 };
   };
 
   const status = getStatus();
@@ -60,29 +66,29 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
         {/* Left: Plan Info */}
         <div>
           <h3 className="text-3xl font-bold text-white mb-2">
-            {isYearly ? "Pro Elite" : isMonthly ? "Pro Starter" : "Professional Trial"}
+            {isYearly ? "Pro Elite" : isMonthly ? "Pro Starter" : plan === "trial" ? "Professional Trial" : "Standard Free"}
           </h3>
           <div className="text-[#00FFB2] font-semibold text-lg mb-2">
-            {isYearly ? "$21 / year" : isMonthly ? "$3 / month" : "$0 / forever"}
+            {isYearly ? "$21 / year" : isMonthly ? "$3 / month" : plan === "trial" ? "$0 for 7 Days" : "$0 / forever"}
           </div>
           <p className="text-sm text-zinc-400 max-w-sm">
-            Full analytics, pacing targets, and artificial intelligence psychological mistake detection.
+            {plan === "free" ? "Limited logging, basic analytics, and no data export functions." : "Full analytics, pacing targets, file exports, and artificial intelligence psychological mistake detection."}
           </p>
         </div>
 
         {/* Right: Expiry Info */}
         <div className="md:text-right flex flex-col items-start md:items-end">
-          {isPro && !isExpired && (
+          {(isPro || plan === "trial") && !isExpired && (
             <>
               <div className="text-5xl font-black text-white tracking-tighter mb-1">
                 {daysLeft} <span className="text-lg font-medium text-zinc-500 tracking-normal">days left</span>
               </div>
               <div className="text-sm text-zinc-400 mt-2">
-                Renews on <span className="text-white font-medium">{expiryDate ? format(new Date(expiryDate), "MMM dd, yyyy") : "N/A"}</span>
+                {plan === "trial" ? "Trial ends on" : "Renews on"} <span className="text-white font-medium">{expiryDate ? format(new Date(expiryDate), "MMM dd, yyyy") : "N/A"}</span>
               </div>
             </>
           )}
-          {isPro && isExpired && (
+          {(isPro || plan === "trial") && isExpired && (
             <>
               <div className="text-5xl font-black text-red-500 tracking-tighter mb-1">
                 0 <span className="text-lg font-medium text-red-500/50 tracking-normal">days left</span>
@@ -92,10 +98,10 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
               </div>
             </>
           )}
-          {!isPro && (
+          {!isPro && plan !== "trial" && (
             <>
                <div className="text-3xl font-black text-amber-500 tracking-tighter mb-1">
-                Waiting for Upgrade
+                Upgrade Ready
               </div>
               <div className="text-sm text-amber-400/70 mt-2">
                 Unlock full access today.

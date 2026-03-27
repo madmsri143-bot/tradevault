@@ -4,7 +4,7 @@ import { auth, googleProvider, db } from "@/lib/firebase";
 import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, setPersistence, browserLocalPersistence, browserSessionPersistence } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { TrendingUp, Loader2, Mail, Lock, User as UserIcon, Eye, EyeOff, CheckCircle2, ChevronLeft, Globe, Shield, Target } from "lucide-react";
+import { TrendingUp, Loader2, Mail, Lock, User as UserIcon, Eye, EyeOff, CheckCircle2, ChevronLeft, Globe, Shield, Target, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import Link from "next/link";
 
@@ -30,7 +30,7 @@ const getAuthErrorMessage = (errCode: string): string => {
 
 export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
   const router = useRouter();
-  const [mode, setMode] = useState<"login" | "signup" | "setup-username" | "forgot-password">(forceSignup ? "signup" : "login");
+  const [mode, setMode] = useState<"login" | "signup" | "setup-username" | "forgot-password" | "verification-sent">(forceSignup ? "signup" : "login");
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -148,8 +148,8 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           photoUrl: ""
         });
         await sendEmailVerification(res.user);
-        setSuccessMsg("Verification link sent! Check your inbox.");
-        setTimeout(() => router.push(redirectPath), 3000);
+        setMode("verification-sent");
+        setLoading(false);
       } else {
         await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
@@ -296,77 +296,97 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         </Link>
 
         <div className="w-full max-w-sm space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="text-center md:text-left space-y-2">
-             <h2 className="text-3xl font-bold text-white tracking-tight">
-               {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : mode === "forgot-password" ? "Reset Password" : "Profile Setup"}
-             </h2>
-             <p className="text-zinc-500 text-sm">
-               {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : mode === "forgot-password" ? "Enter your email to receive a reset link" : "Please enter your details."}
-             </p>
-          </div>
+          {mode !== "verification-sent" && (
+            <div className="text-center md:text-left space-y-2">
+               <h2 className="text-3xl font-bold text-white tracking-tight">
+                 {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : mode === "forgot-password" ? "Reset Password" : "Profile Setup"}
+               </h2>
+               <p className="text-zinc-500 text-sm">
+                 {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : mode === "forgot-password" ? "Enter your email to receive a reset link" : "Please enter your details."}
+               </p>
+            </div>
+          )}
 
           {successMsg && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
           {fieldErrors.general && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-bold text-center animate-in zoom-in-95">{fieldErrors.general}</div>}
 
-          <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4" autoComplete="off">
-            {mode === "signup" && (
-              <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
-                <Input label="Name" value={name} onChange={setName} type="text" placeholder="John" autoComplete="off" />
-                <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="trader1" autoComplete="off" />
-              </div>
-            )}
-            
-            {mode === "setup-username" ? (
-              <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="pick_a_name" autofocus autoComplete="off" />
-            ) : mode === "forgot-password" ? (
-              <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autofocus autoComplete="off" />
-            ) : (
-              <>
-                <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autoComplete="new-email" />
-                <Input 
-                  label="Password" value={password} onChange={setPassword} 
-                  type="password" placeholder="••••••••" 
-                  error={fieldErrors.password}
-                  autoComplete="new-password"
-                />
-                
-                {mode === "login" && (
-                  <div className="flex items-center justify-between mt-1 px-1">
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                      <div className="relative flex items-center justify-center">
-                        <input 
-                          type="checkbox" 
-                          checked={rememberMe} 
-                          onChange={(e) => setRememberMe(e.target.checked)} 
-                          className="peer appearance-none w-4 h-4 border border-zinc-700 rounded bg-zinc-900 checked:bg-[#00FFB2] checked:border-[#00FFB2] transition-colors cursor-pointer"
-                        />
-                        <CheckCircle2 size={12} className="absolute text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
-                      </div>
-                      <span className="text-xs text-zinc-400 group-hover:text-white transition-colors select-none font-medium">Remember me</span>
-                    </label>
-                    <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-zinc-400 hover:text-[#00FFB2] transition-colors font-medium">
-                      Forgot Password?
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
+          {mode === "verification-sent" ? (
+            <div className="text-center space-y-6 animate-in zoom-in-95 duration-500">
+               <div className="w-20 h-20 mx-auto bg-[#00FFB2]/10 flex items-center justify-center rounded-3xl border border-[#00FFB2]/20 shadow-[0_0_30px_rgba(0,255,178,0.15)]">
+                 <Mail size={32} className="text-[#00FFB2]" />
+               </div>
+               <div>
+                 <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Check your inbox</h2>
+                 <p className="text-zinc-400 text-sm max-w-sm mx-auto leading-relaxed">
+                   We've sent a verification link to <br/>
+                   <span className="text-[#00FFB2] font-bold">{email}</span>
+                 </p>
+               </div>
+               <button onClick={() => setMode("login")} className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 border border-white/5 mt-4">
+                 <ArrowLeft size={18} /> Back to Login
+               </button>
+            </div>
+          ) : (
+            <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4" autoComplete="off">
+              {mode === "signup" && (
+                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
+                  <Input label="Name" value={name} onChange={setName} type="text" placeholder="John" autoComplete="off" />
+                  <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="trader1" autoComplete="off" />
+                </div>
+              )}
+              
+              {mode === "setup-username" ? (
+                <Input label="Username" value={username} onChange={setUsername} type="text" placeholder="pick_a_name" autofocus autoComplete="off" />
+              ) : mode === "forgot-password" ? (
+                <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autofocus autoComplete="off" />
+              ) : (
+                <>
+                  <Input label="Email" value={email} onChange={setEmail} type="email" placeholder="you@example.com" error={fieldErrors.email} autoComplete="new-email" />
+                  <Input 
+                    label="Password" value={password} onChange={setPassword} 
+                    type="password" placeholder="••••••••" 
+                    error={fieldErrors.password}
+                    autoComplete="new-password"
+                  />
+                  
+                  {mode === "login" && (
+                    <div className="flex items-center justify-between mt-1 px-1">
+                      <label className="flex items-center gap-2 cursor-pointer group">
+                        <div className="relative flex items-center justify-center">
+                          <input 
+                            type="checkbox" 
+                            checked={rememberMe} 
+                            onChange={(e) => setRememberMe(e.target.checked)} 
+                            className="peer appearance-none w-4 h-4 border border-zinc-700 rounded bg-zinc-900 checked:bg-[#00FFB2] checked:border-[#00FFB2] transition-colors cursor-pointer"
+                          />
+                          <CheckCircle2 size={12} className="absolute text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                        </div>
+                        <span className="text-xs text-zinc-400 group-hover:text-white transition-colors select-none font-medium">Remember me</span>
+                      </label>
+                      <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-zinc-400 hover:text-[#00FFB2] transition-colors font-medium">
+                        Forgot Password?
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
 
-            {mode === "signup" && (
-              <Input label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} type="password" placeholder="••••••••" error={fieldErrors.confirmPassword} autoComplete="new-password" />
-            )}
+              {mode === "signup" && (
+                <Input label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} type="password" placeholder="••••••••" error={fieldErrors.confirmPassword} autoComplete="new-password" />
+              )}
 
-            <button disabled={loading} type="submit" className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
-              {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? (plan === "free" ? "Get Started Free" : "Start 7-Day Trial") : mode === "forgot-password" ? "Send Reset Link" : "Finish Setup"}
-            </button>
-            {mode === "signup" && (
-               <p className="text-center text-xs text-zinc-500 font-medium mt-3">
-                 {plan === "free" ? "No credit card required. Always free." : "No credit card required. Trial starts instantly."}
-               </p>
-            )}
-          </form>
+              <button disabled={loading} type="submit" className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
+                {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? "Sign Up" : mode === "forgot-password" ? "Send Reset Link" : "Finish Setup"}
+              </button>
+              {mode === "signup" && (
+                 <p className="text-center text-xs text-zinc-500 font-medium mt-3">
+                   {plan === "free" ? "No credit card required. Always free." : "No credit card required. Trial starts instantly upon verification."}
+                 </p>
+              )}
+            </form>
+          )}
 
-          {mode !== "setup-username" && mode !== "forgot-password" && (
+          {mode !== "setup-username" && mode !== "forgot-password" && mode !== "verification-sent" && (
             <>
               <div className="relative flex items-center py-2">
                 <div className="flex-grow border-t border-white/5"></div>
@@ -386,7 +406,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
               <div className="text-center flex flex-col gap-3 group mt-2">
                  <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-500 font-medium hover:text-white transition-colors">
-                   {mode === "login" ? <>New to TradeVault? <span className="text-[#00FFB2] font-black underline underline-offset-4">Start Trial</span></> : <>Already have an account? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign In</span></>}
+                   {mode === "login" ? <>New to TradeVault? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
             </>

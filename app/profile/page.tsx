@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
-import { User, Check, X, Loader2 } from "lucide-react";
+import { User, Check, X, Loader2, Camera } from "lucide-react";
 import { updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { auth, db, storage } from "@/lib/firebase";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -46,6 +47,36 @@ export default function ProfilePage() {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.[0] || !auth.currentUser) return;
+    const file = e.target.files[0];
+    
+    // Validate image format
+    if (!file.type.startsWith("image/")) {
+      alert("Please upload a valid image file.");
+      return;
+    }
+
+    setIsSaving(true);
+    const storageRef = ref(storage, `users/${auth.currentUser.uid}/avatar`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.error("Upload failed", error);
+        alert("Upload failed. Please try again.");
+        setIsSaving(false);
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setNewPhotoUrl(downloadURL);
+        setIsSaving(false);
+      }
+    );
+  };
+
   const currentDisplayPhoto = isEditing ? newPhotoUrl : user?.photoURL;
   const currentDisplayName = isEditing ? newName : (user?.displayName || "Trader");
 
@@ -69,11 +100,28 @@ export default function ProfilePage() {
          </div>
          <div className="p-6 md:p-10 space-y-6">
             <div className="flex items-center gap-6">
-               <div className="w-24 h-24 rounded-[2rem] bg-zinc-800 border-2 border-white/10 flex items-center justify-center text-4xl font-black text-white uppercase shadow-inner overflow-hidden">
-                 {currentDisplayPhoto ? (
-                   <img src={currentDisplayPhoto} alt="Profile" className="w-full h-full object-cover" />
-                 ) : (
-                   user?.email?.[0] || "?"
+               <div className="relative group">
+                 <div className="w-24 h-24 rounded-[2rem] bg-zinc-800 border-2 border-white/10 flex items-center justify-center text-4xl font-black text-white uppercase shadow-inner overflow-hidden">
+                   {currentDisplayPhoto ? (
+                     // eslint-disable-next-line @next/next/no-img-element
+                     <img src={currentDisplayPhoto} alt="Profile" className="w-full h-full object-cover" />
+                   ) : (
+                     user?.email?.[0] || "?"
+                   )}
+                 </div>
+                 
+                 {isEditing && (
+                   <label className="absolute inset-0 bg-black/50 hover:bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center text-white rounded-[2rem] cursor-pointer transition-colors border border-white/10 group-hover:border-emerald-500/50">
+                     <Camera size={24} className="mb-1" />
+                     <span className="text-[10px] font-bold uppercase tracking-wider">Change</span>
+                     <input 
+                       type="file" 
+                       accept="image/*" 
+                       className="hidden" 
+                       onChange={handleImageUpload}
+                       disabled={isSaving}
+                     />
+                   </label>
                  )}
                </div>
                <div>
@@ -106,19 +154,6 @@ export default function ProfilePage() {
                  />
                  <p className="text-[10px] text-zinc-600 mt-1.5">* Email cannot be changed directly for security reasons.</p>
                </div>
-               
-               {isEditing && (
-                 <div className="md:col-span-2">
-                   <label className="block text-xs uppercase font-bold text-zinc-500 mb-2">Profile Picture URL (Optional)</label>
-                   <input 
-                     type="text" 
-                     value={newPhotoUrl}
-                     onChange={(e) => setNewPhotoUrl(e.target.value)}
-                     placeholder="https://example.com/my-avatar.png"
-                     className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-[#00FFB2] transition-colors"
-                   />
-                 </div>
-               )}
             </div>
             
             <div className="flex justify-start pt-4 mt-2 border-t border-white/5">

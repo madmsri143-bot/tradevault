@@ -172,9 +172,7 @@ export default function DashboardPage() {
               
               {/* Left Side: Fixed Panel (Log New Trade) */}
               <div className="w-full xl:w-[380px] shrink-0">
-                <div className="sticky top-6">
-                  <TradeForm />
-                </div>
+                <TradeForm />
               </div>
 
               {/* Right Side: PnL Cards & Charts */}

@@ -80,7 +80,7 @@ export default function Topbar() {
   return (
     <div className="w-full h-16 shrink-0 bg-transparent flex items-center justify-between px-4 md:px-8 relative z-50">
       {/* Brand Logo - Left Aligned */}
-      <h1 className="text-2xl md:text-3xl font-black text-[#00FFB2] tracking-tight drop-shadow-[0_0_8px_rgba(0,255,178,0.4)]">
+      <h1 className="text-2xl md:text-3xl font-black text-zinc-950 dark:text-[#00FFB2] tracking-tight dark:drop-shadow-[0_0_8px_rgba(0,255,178,0.4)]">
         TradeVault
       </h1>
 

@@ -1,12 +1,16 @@
 "use client";
 
 import { useAuth } from "@/lib/AuthContext";
-import { Settings as SettingsIcon, Shield, Palette, LogOut, Info, ExternalLink, Moon, Check, X, Loader2 } from "lucide-react";
-import { signOut, updatePassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { Settings as SettingsIcon, Shield, Palette, LogOut, Info, ExternalLink, Moon, Check, X, Loader2, Mail, Download, FileText, Presentation } from "lucide-react";
+import { signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "firebase/auth";
+import { auth, db } from "@/lib/firebase";
+import { collection, getDocs } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/lib/ModalContext";
 import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -18,8 +22,11 @@ export default function SettingsPage() {
   
   // Password State
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [isResettingEmail, setIsResettingEmail] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Initialize theme from HTML tag which is managed by layout script
   useEffect(() => {
@@ -57,22 +64,157 @@ export default function SettingsPage() {
   };
 
   const handleChangePassword = async () => {
-    if (!auth.currentUser || !newPassword) return;
+    if (!auth.currentUser || !newPassword || !oldPassword) return;
     setIsSavingPassword(true);
     try {
+      if (auth.currentUser.email) {
+        const credential = EmailAuthProvider.credential(auth.currentUser.email, oldPassword);
+        await reauthenticateWithCredential(auth.currentUser, credential);
+      }
+      
       await updatePassword(auth.currentUser, newPassword);
       alert("Password updated successfully!");
       setIsChangingPassword(false);
+      setOldPassword("");
       setNewPassword("");
     } catch (err: any) {
       console.error(err);
-      if (err.code === 'auth/requires-recent-login') {
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+         alert("Incorrect current password.");
+      } else if (err.code === 'auth/requires-recent-login') {
          alert("Please log out and log back in to change your password for security reasons.");
       } else {
-         alert("Failed to update password. Ensure it's strong enough.");
+         alert("Failed to update password. Ensure your new password is at least 6 characters.");
       }
     } finally {
       setIsSavingPassword(false);
+    }
+  };
+
+  const handlePasswordResetRequest = async () => {
+    if (!user?.email) return;
+    setIsResettingEmail(true);
+    try {
+      await sendPasswordResetEmail(auth, user.email);
+      alert(`Password reset link sent to ${user.email}`);
+      setIsChangingPassword(false);
+    } catch (err) {
+      alert("Failed to send reset link.");
+    } finally {
+      setIsResettingEmail(false);
+    }
+  };
+
+  const getTradeData = async () => {
+    if (!user) return [];
+    const querySnapshot = await getDocs(collection(db, "users", user.uid, "trades"));
+    const trades = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return trades.sort((a: any, b: any) => parseFloat(b.date) - parseFloat(a.date));
+  };
+
+  const handleExportCSV = async () => {
+    setIsExporting(true);
+    try {
+      const trades = await getTradeData();
+      if (trades.length === 0) return alert("No trades found to export.");
+      
+      const headers = ["Date", "Pair", "Direction", "Entry", "Exit", "PnL", "Result", "Tags"];
+      const csvContent = [
+        headers.join(","),
+        ...trades.map((t: any) => [
+          format(new Date(parseFloat(t.date)), "yyyy-MM-dd"),
+          t.pair,
+          t.direction,
+          t.entryPrice || 0,
+          t.exitPrice || 0,
+          t.pnl || 0,
+          t.result,
+          (t.tags || []).join(";")
+        ].join(","))
+      ].join("\n");
+      
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `TradeVault_Export_${format(new Date(), "MMM_dd_yyyy")}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch(err) {
+      console.error(err);
+      alert("Failed to export trades.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    try {
+      const trades = await getTradeData();
+      if (trades.length === 0) return alert("No trades found to export.");
+      
+      const doc = new jsPDF();
+      doc.setFontSize(22);
+      doc.setFont("helvetica", "bold");
+      doc.text("TRADEVAULT", 14, 20);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Trade History Report - ${format(new Date(), "PP")}`, 14, 30);
+      
+      const bodyData = trades.map((t: any) => [
+        format(new Date(parseFloat(t.date)), "MM/dd/yy"),
+        t.pair,
+        t.direction,
+        `$${t.pnl?.toFixed(2) || "0.00"}`,
+        t.result
+      ]);
+
+      autoTable(doc, {
+        startY: 40,
+        head: [["Date", "Asset", "Direction", "PnL", "Status"]],
+        body: bodyData,
+        theme: "striped",
+        headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] }
+      });
+      
+      doc.save(`TradeVault_History_${format(new Date(), "MMM_dd_yyyy")}.pdf`);
+    } catch(err) {
+      console.error(err);
+      alert("Failed to export PDF.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportPPT = async () => {
+    setIsExporting(true);
+    try {
+      const trades = await getTradeData();
+      if (trades.length === 0) return alert("No trades found to export.");
+      
+      const PptxGenJS = (await import("pptxgenjs")).default;
+      const pptx = new PptxGenJS();
+      
+      pptx.layout = "LAYOUT_16x9";
+      
+      const slide = pptx.addSlide();
+      slide.addText("TradeVault Performance Report", { x: 1.5, y: 1.5, w: "80%", h: 1, fontSize: 36, bold: true, color: "00FFB2" });
+      slide.addText(`Generated on ${format(new Date(), "PP")}`, { x: 1.5, y: 2.5, w: "80%", h: 1, fontSize: 18, color: "888888" });
+      
+      const winningTrades = trades.filter((t:any) => t.result === "WIN").length;
+      const totalTrades = trades.length;
+      const winRate = totalTrades > 0 ? ((winningTrades / totalTrades) * 100).toFixed(1) : "0.0";
+      
+      slide.addText(`Total Trades: ${totalTrades}\nWin Rate: ${winRate}%\n`, { x: 1.5, y: 4, w: "80%", h: 2, fontSize: 24, align: "left" });
+      
+      await pptx.writeFile({ fileName: `TradeVault_Presentation_${format(new Date(), "MMM_dd_yyyy")}.pptx` });
+    } catch(err) {
+      console.error(err);
+      alert("Failed to export PPT.");
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -125,6 +267,48 @@ export default function SettingsPage() {
            </div>
         </div>
 
+         {/* Section: Export Engine */}
+         <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm">
+            <div className="p-5 border-b border-white/5 bg-zinc-900/50 flex items-center gap-2">
+               <Download className="text-[#00FFB2]" size={18} />
+               <h3 className="text-sm font-bold uppercase tracking-wider text-white">Export Data</h3>
+            </div>
+            <div className="p-6">
+               <p className="text-xs text-zinc-400 max-w-lg leading-relaxed mb-6">
+                 Download your entire trading history for external accounting, presentations, or offline analytics. All exports include your full historical dataset.
+               </p>
+               
+               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                 <button 
+                   onClick={handleExportCSV}
+                   disabled={isExporting}
+                   className="p-5 bg-zinc-950 border border-zinc-800 rounded-xl hover:border-[#00FFB2]/50 hover:bg-zinc-950/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                 >
+                   <FileText size={28} className="text-zinc-500 group-hover:text-[#00FFB2] transition-colors" />
+                   <span className="text-sm font-bold text-white tracking-tight">Export CSV</span>
+                 </button>
+                 
+                 <button 
+                   onClick={handleExportPDF}
+                   disabled={isExporting}
+                   className="p-5 bg-zinc-950 border border-zinc-800 rounded-xl hover:border-red-500/50 hover:bg-zinc-950/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                 >
+                   <Download size={28} className="text-zinc-500 group-hover:text-red-400 transition-colors" />
+                   <span className="text-sm font-bold text-white tracking-tight">Export PDF</span>
+                 </button>
+                 
+                 <button 
+                   onClick={handleExportPPT}
+                   disabled={isExporting}
+                   className="p-5 bg-zinc-950 border border-zinc-800 rounded-xl hover:border-orange-500/50 hover:bg-zinc-950/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                 >
+                   <Presentation size={28} className="text-zinc-500 group-hover:text-orange-400 transition-colors" />
+                   <span className="text-sm font-bold text-white tracking-tight">Export PPTX</span>
+                 </button>
+               </div>
+            </div>
+         </div>
+
         {/* Section: Security */}
         <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm">
            <div className="p-5 border-b border-white/5 bg-zinc-900/50 flex items-center gap-2">
@@ -156,28 +340,51 @@ export default function SettingsPage() {
                  
                  {isChangingPassword && !isGoogleAuth && (
                    <div className="mt-4 p-5 bg-zinc-950 border border-zinc-800 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-                     <p className="text-sm font-bold text-white">Create New Password</p>
-                     <input 
-                       type="password" 
-                       value={newPassword}
-                       onChange={(e) => setNewPassword(e.target.value)}
-                       placeholder="Enter new strong password"
-                       className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500"
-                     />
-                     <div className="flex gap-3">
+                     <p className="text-sm font-bold text-white">Update Password</p>
+                     
+                     <div className="space-y-3">
+                       <input 
+                         type="password" 
+                         value={oldPassword}
+                         onChange={(e) => setOldPassword(e.target.value)}
+                         placeholder="Current Password"
+                         className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                       />
+                       <input 
+                         type="password" 
+                         value={newPassword}
+                         onChange={(e) => setNewPassword(e.target.value)}
+                         placeholder="New Strong Password"
+                         className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                       />
+                     </div>
+
+                     <div className="flex gap-3 mt-1">
                        <button 
                          onClick={handleChangePassword}
-                         disabled={isSavingPassword || !newPassword}
+                         disabled={isSavingPassword || !newPassword || !oldPassword}
                          className="px-5 py-2.5 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
                        >
-                         {isSavingPassword ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Save Password
+                         {isSavingPassword ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Update Password
                        </button>
                        <button 
-                         onClick={() => { setIsChangingPassword(false); setNewPassword(""); }}
+                         onClick={() => { setIsChangingPassword(false); setNewPassword(""); setOldPassword(""); }}
                          disabled={isSavingPassword}
                          className="px-5 py-2.5 text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg transition-colors"
                        >
                          Cancel
+                       </button>
+                     </div>
+                     
+                     <div className="pt-3 border-t border-white/5 mt-1 flex flex-col gap-1 items-start">
+                       <p className="text-xs text-zinc-500">Forgot your current password?</p>
+                       <button 
+                         onClick={handlePasswordResetRequest} 
+                         disabled={isResettingEmail}
+                         className="text-xs text-emerald-500 hover:text-emerald-400 font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                       >
+                         {isResettingEmail ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
+                         Change via Email Link
                        </button>
                      </div>
                    </div>

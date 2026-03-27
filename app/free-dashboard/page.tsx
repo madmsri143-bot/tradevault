@@ -64,9 +64,7 @@ export default function FreeDashboardPage() {
         
         {/* Left Side: Fixed Form Panel */}
         <div className="w-full xl:w-[380px] shrink-0">
-          <div className="sticky top-6">
-            <TradeForm />
-          </div>
+          <TradeForm />
         </div>
         
         {/* Right Side: Metrics, Graphics, and Lists */}

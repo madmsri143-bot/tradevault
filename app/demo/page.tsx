@@ -98,9 +98,9 @@ export default function DemoPage() {
         {activeTab === "overview" && (
           <div className="animate-in fade-in duration-300 pointer-events-none">
             
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <div className="flex flex-col xl:flex-row gap-6">
               {/* Form Side - Locked for Demo */}
-              <div className="xl:col-span-1 border-white/5 relative">
+              <div className="w-full xl:w-[380px] shrink-0 relative">
                 <div className="absolute inset-0 z-10 bg-black/60 backdrop-blur-[2px] rounded-2xl border border-white/10 flex flex-col items-center justify-center p-6 text-center">
                    <Lock className="text-zinc-500 mb-3" size={32} />
                    <h3 className="text-zinc-300 font-bold">Input Disabled</h3>
@@ -116,14 +116,14 @@ export default function DemoPage() {
                 </div>
               </div>
               
-              {/* Metrics Side */}
-              <div className="xl:col-span-3">
+              {/* Metrics & Charts Side */}
+              <div className="flex-1 min-w-0 flex flex-col gap-6">
                 <MetricsCards trades={mockTrades} displayCurrency={displayCurrency} />
+                
+                <div className="w-full">
+                  <Charts trades={mockTrades} displayCurrency={displayCurrency} />
+                </div>
               </div>
-            </div>
-
-            <div className="w-full mt-6">
-              <Charts trades={mockTrades} displayCurrency={displayCurrency} />
             </div>
 
           </div>

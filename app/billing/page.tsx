@@ -58,6 +58,32 @@ export default function BillingPage() {
     });
   };
 
+  const handleCancelTrial = async () => {
+    if (!user) return;
+    const confirmed = await useModal().confirm({
+      title: "Switch to Standard Free?",
+      message: "You will lose access to premium analytics and exports. Once switched, you cannot reactivate your 7-day free trial.",
+      confirmLabel: "Yes, Downgrade Now",
+      cancelLabel: "Keep Trial",
+    });
+    
+    if (confirmed) {
+       setLoading(true);
+       try {
+         const { updateDoc } = await import("firebase/firestore");
+         await updateDoc(doc(db, "users", user.uid, "settings", "profile"), {
+           plan: "free",
+           isPro: false,
+           trial_end_date: null
+         });
+       } catch(err) {
+         console.error("Downgrade failed", err);
+       } finally {
+         setLoading(false);
+       }
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -66,8 +92,10 @@ export default function BillingPage() {
     );
   }
 
-  const { plan = "free", isPro = false, plan_expiry_date = null, payment_history = [] } = profile || {};
+  const { plan = "free", isPro = false, plan_expiry_date = null, payment_history = [], trial_end_date = null } = profile || {};
   
+  const effectiveExpiry = plan === "trial" ? trial_end_date : plan_expiry_date;
+
   // Extract the most recent payment ID for the meta details
   const lastPaymentId = payment_history && payment_history.length > 0 
     ? [...payment_history].sort((a, b) => b.date - a.date)[0]?.payment_id 
@@ -78,23 +106,24 @@ export default function BillingPage() {
       
       {/* 1. Header & Hero Section */}
       <section className="fade-slide-up" style={{ animationDelay: "100ms" }}>
-        <PlanHeroCard plan={plan} isPro={isPro} expiryDate={plan_expiry_date} />
+        <PlanHeroCard plan={plan} isPro={isPro} expiryDate={effectiveExpiry} />
         
         <div className="px-8 pb-8 -mt-6 bg-[#0B0F14] border-x border-b border-white/5 rounded-b-2xl shadow-xl">
-          <PlanProgressBar plan={plan} isPro={isPro} expiryDate={plan_expiry_date} />
+          <PlanProgressBar plan={plan} isPro={isPro} expiryDate={effectiveExpiry} />
           <PlanActions 
             plan={plan} 
             isPro={isPro} 
-            expiryDate={plan_expiry_date} 
+            expiryDate={effectiveExpiry} 
             onUpgradeClick={() => handleUpgradeClick(plan === "pro_monthly" ? "yearly" : "yearly")} 
             onManageClick={handleManageClick} 
+            onCancelTrial={handleCancelTrial}
           />
         </div>
       </section>
 
       {/* 2. Subscription Meta Data */}
       <section className="fade-slide-up" style={{ animationDelay: "200ms" }}>
-        <SubscriptionDetails isPro={isPro} expiryDate={plan_expiry_date} lastPaymentId={lastPaymentId} />
+        <SubscriptionDetails isPro={isPro} expiryDate={effectiveExpiry} lastPaymentId={lastPaymentId} />
       </section>
 
       {/* 3. Upsell / Plan Highlights */}

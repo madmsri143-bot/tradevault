@@ -1,6 +1,7 @@
 "use client";
 
 import { differenceInDays } from "date-fns";
+import { AlertCircle } from "lucide-react";
 
 interface PlanActionsProps {
   plan: string;
@@ -8,9 +9,10 @@ interface PlanActionsProps {
   expiryDate: string | number | null;
   onUpgradeClick: () => void;
   onManageClick: () => void;
+  onCancelTrial?: () => void;
 }
 
-export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, onManageClick }: PlanActionsProps) {
+export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, onManageClick, onCancelTrial }: PlanActionsProps) {
   const isMonthly = plan === "pro_monthly";
   const daysLeft = expiryDate ? differenceInDays(new Date(expiryDate), new Date()) : 0;
   const isExpired = isPro && daysLeft < 0;
@@ -18,16 +20,29 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
   return (
     <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 pt-8 border-t border-white/5">
       
-      {!isPro ? (
-        <>
-          <button 
-            onClick={onUpgradeClick}
-            className="w-full sm:w-auto px-8 py-3.5 bg-[#00FFB2] text-black font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all text-sm"
-          >
-            Upgrade to Pro
-          </button>
-        </>
-      ) : isExpired ? (
+      {plan === "trial" ? (
+        <div className="flex flex-col gap-3 w-full sm:w-auto">
+          {daysLeft === 1 && (
+            <div className="p-3 mb-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold w-full flex items-center gap-2">
+              <AlertCircle size={14} /> Your free trial is ending. Upgrade to Pro or continue with Standard Free plan.
+            </div>
+          )}
+          <div className="flex flex-col sm:flex-row gap-3">
+             <button 
+               onClick={onUpgradeClick}
+               className="w-full sm:w-auto px-8 py-3.5 bg-[#00FFB2] text-black font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all text-sm"
+             >
+               Upgrade to Pro
+             </button>
+             <button 
+               onClick={onCancelTrial}
+               className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-zinc-800 text-zinc-300 font-medium rounded-xl hover:bg-zinc-800 hover:text-white transition-all text-sm"
+             >
+               Switch to Standard Free
+             </button>
+          </div>
+        </div>
+      ) : !isPro ? (
         <>
           <button 
             onClick={onUpgradeClick}
