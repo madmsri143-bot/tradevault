@@ -39,8 +39,8 @@ export default function SupportWidget() {
     e.preventDefault();
     setErrorMsg("");
 
-    if (formData.message.trim().length < 10) {
-      setErrorMsg("Message must be at least 10 characters.");
+    if (formData.message.trim().length > 1000) {
+      setErrorMsg("Message must be under 1000 characters.");
       return;
     }
     if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim()) {
@@ -163,8 +163,8 @@ export default function SupportWidget() {
             <div>
               <div className="flex justify-between items-end mb-1.5 ml-1 pr-1">
                 <label className="block text-xs font-bold uppercase tracking-widest text-[#00FFB2]">Message</label>
-                <span className={`text-[10px] font-bold ${formData.message.length < 10 ? 'text-red-400' : 'text-zinc-500'}`}>
-                  {formData.message.length} / 10 min
+                <span className={`text-[10px] font-bold ${formData.message.length > 1000 ? 'text-red-400' : 'text-zinc-500'}`}>
+                  {formData.message.length} / 1000
                 </span>
               </div>
               <textarea 
@@ -172,7 +172,7 @@ export default function SupportWidget() {
                 rows={4}
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
-                placeholder="Describe your issue in detail (minimum 10 characters)..."
+                placeholder="Describe your issue in detail..."
                 className="w-full bg-zinc-950/50 border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00FFB2]/50 focus:bg-zinc-950 transition-all resize-none font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#00FFB2]/20"
               />
             </div>
@@ -181,7 +181,7 @@ export default function SupportWidget() {
             
             <button 
               type="submit" 
-              disabled={loading || formData.message.length < 10}
+              disabled={loading || formData.message.length === 0 || formData.message.length > 1000}
               className="w-full mt-2 bg-[#00FFB2] text-black font-black py-3.5 rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : <><Send size={18} /> Send Support Request</>}

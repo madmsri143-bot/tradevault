@@ -10,12 +10,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
     
-    if (message.length < 10) {
-      return NextResponse.json({ error: "Message must be at least 10 characters long" }, { status: 400 });
+    if (message.length > 1000) {
+      return NextResponse.json({ error: "Message must be under 1000 characters" }, { status: 400 });
+    }
+
+    // Validate env vars before attempting to create transporter
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error("GMAIL_USER or GMAIL_APP_PASSWORD environment variable is not set.");
+      return NextResponse.json({ error: "Server email configuration is missing" }, { status: 500 });
     }
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
@@ -45,7 +53,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, message: "Message sent successfully" });
   } catch (error: any) {
-    console.error("Support API Error:", error);
-    return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
+    console.error("Support API Error:", error.message || error);
+    console.error("Error Code:", error.code);
+    console.error("Error Response:", error.response);
+    return NextResponse.json({ error: "Failed to send message. Please try again later." }, { status: 500 });
   }
 }
