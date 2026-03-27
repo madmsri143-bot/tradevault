@@ -13,7 +13,7 @@ import { useTrial, FeatureBlockOverlay } from "@/components/TrialGuard";
 
 import AnalyticsTab from "@/components/dashboard/AnalyticsTab";
 import HistoryTab from "@/components/dashboard/HistoryTab";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Plus } from "lucide-react";
 
 const Charts = dynamic(() => import("@/components/dashboard/Charts"), {
   ssr: false,
@@ -37,6 +37,7 @@ export default function DashboardPage() {
   // Tab & Date State
   const [activeTab, setActiveTab] = useState<"overview" | "calendar" | "analytics" | "history">("overview");
   const [dateRange, setDateRange] = useState<{from: string, to: string}>({from: "", to: ""});
+  const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
 
   // Fetch Exchange Rates
   useEffect(() => {
@@ -170,30 +171,43 @@ export default function DashboardPage() {
 
       {/* RENDER ACTIVE TAB */}
         {activeTab === "overview" && (
-          <div className="animate-in fade-in zoom-in-95 duration-300">
-            <div className="flex flex-col xl:flex-row gap-6">
+          <div className="animate-in fade-in zoom-in-95 duration-300 relative">
+            
+            {/* Floating Action Button */}
+            {!isTradeModalOpen && (
+              <button 
+                onClick={() => setIsTradeModalOpen(true)}
+                className="absolute -top-14 right-0 xl:top-0 xl:-right-4 z-20 bg-emerald-500 hover:bg-emerald-400 text-black p-3.5 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] hover:scale-110 transition-all group flex items-center justify-center pointer-events-auto"
+              >
+                <Plus size={24} />
+                <span className="absolute right-full mr-4 bg-zinc-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 group-hover:-translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-lg border border-white/5">
+                  Add Trade
+                </span>
+              </button>
+            )}
+
+            <div className="flex flex-col gap-8 xl:pt-2">
               
-              {/* Left Side: Fixed Panel (Log New Trade) */}
-              <div className="w-full xl:w-[380px] shrink-0">
-                <TradeForm />
+              {/* TOP SECTION: KPI Cards */}
+              <div className="w-full">
+                <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
               </div>
 
-              {/* Right Side: PnL Cards & Charts */}
-              <div className="flex-1 min-w-0 flex flex-col gap-6">
-                <MetricsCards trades={filteredTrades} displayCurrency={displayCurrency} />
-                
-                <div className="w-full">
-                  <FeatureBlockOverlay
-                    show={isFree}
-                    title="Feature Disabled"
-                    subtitle="Upgrade to unlock advanced analytics"
-                  >
-                    <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
-                  </FeatureBlockOverlay>
-                </div>
+              {/* MIDDLE & BOTTOM SECTION: Charts */}
+              <div className="w-full">
+                <FeatureBlockOverlay
+                  show={isFree}
+                  title="Feature Disabled"
+                  subtitle="Upgrade to unlock advanced analytics"
+                >
+                  <Charts trades={filteredTrades} displayCurrency={displayCurrency} />
+                </FeatureBlockOverlay>
               </div>
 
             </div>
+
+            {/* Trade Modal Mount */}
+            <TradeForm isOpen={isTradeModalOpen} onClose={() => setIsTradeModalOpen(false)} />
           </div>
         )}
 

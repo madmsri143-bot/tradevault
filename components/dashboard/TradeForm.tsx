@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
-import { Flame, Camera, Loader2, Lock } from "lucide-react";
+import { Flame, Camera, Loader2, Lock, X } from "lucide-react";
 import BulkPreviewModal from "./BulkPreviewModal";
 import { useTrial } from "@/components/TrialGuard";
 
@@ -15,7 +15,12 @@ const getLocalDateString = () => {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
 };
 
-export default function TradeForm() {
+interface TradeFormProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
   const { user } = useAuth();
   const { alert } = useModal();
   const { access } = useTrial();
@@ -187,6 +192,8 @@ export default function TradeForm() {
         });
       }
       
+      if (onClose) onClose();
+      
     } catch (error) {
       console.error("Error processing trade:", error);
       console.error("Error processing trade:", error);
@@ -237,11 +244,17 @@ export default function TradeForm() {
     }
   };
 
-  return (
-    <>
-    <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-6 rounded-xl">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-emerald-400">Log New Trade</h2>
+  if (isOpen === false) return null;
+
+  const content = (
+    <div className="bg-zinc-900 border border-black/10 dark:border-white/10 fade-slide-up shadow-[0_10px_40px_rgba(0,0,0,0.5)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.8)] p-6 md:p-8 rounded-2xl w-full max-w-lg relative animate-in zoom-in-95 duration-300">
+      {onClose && (
+        <button type="button" onClick={onClose} className="absolute top-6 right-6 p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors z-10">
+          <X size={18} />
+        </button>
+      )}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-emerald-400 tracking-tight">Log New Trade</h2>
         
         <input 
           type="file" 
@@ -487,15 +500,34 @@ export default function TradeForm() {
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading || dailyLimitReached}
-          className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2 rounded transition-colors disabled:opacity-50"
-        >
-          {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}
-        </button>
+        <div className="pt-2 flex gap-3">
+          {onClose && (
+            <button type="button" onClick={onClose} className="px-5 py-3 text-sm font-bold text-zinc-400 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 rounded-xl transition-colors">
+              Cancel
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={loading || dailyLimitReached}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:-translate-y-0.5 disabled:opacity-50"
+          >
+            {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}
+          </button>
+        </div>
       </form>
     </div>
+  );
+
+  return (
+    <>
+    {isOpen !== undefined ? (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="absolute inset-0" onClick={onClose} />
+        {content}
+      </div>
+    ) : (
+      content
+    )}
 
     {showBulkModal && (
       <BulkPreviewModal 

@@ -57,14 +57,14 @@ export default function Charts({ trades, displayCurrency = "USD" }: { trades: Tr
   });
 
   return (
-    <div className="flex flex-col gap-6 mb-6">
+    <div className="flex flex-col gap-8 mb-4">
       
       {/* Top Row: Two Equal Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Win vs Loss Pie Chart */}
-        <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-xl flex flex-col items-center min-h-[320px]">
-          <h3 className="text-sm font-semibold text-zinc-300 w-full mb-2">Win vs Loss</h3>
+        <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_4px_20px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] p-6 md:p-8 rounded-2xl flex flex-col items-center min-h-[360px] cursor-default hover:border-white/10 transition-colors">
+          <h3 className="text-[13px] font-bold tracking-wide uppercase text-zinc-400 w-full mb-4">Win vs Loss</h3>
         {trades.length === 0 ? (
           <div className="flex-1 flex items-center justify-center text-zinc-500 text-sm">No data</div>
         ) : (
@@ -102,8 +102,8 @@ export default function Charts({ trades, displayCurrency = "USD" }: { trades: Tr
       </div>
 
       {/* Consistency Tracking */}
-      <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-xl flex flex-col items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-300 w-full mb-4">Consistency Tracking</h3>
+      <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_4px_20px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] p-6 md:p-8 rounded-2xl flex flex-col items-center justify-between min-h-[360px] cursor-default hover:border-white/10 transition-colors">
+        <h3 className="text-[13px] font-bold tracking-wide uppercase text-zinc-400 w-full mb-6">Consistency Tracking</h3>
         
         {trades.length === 0 ? (
           <div className="flex-1 flex items-center justify-center text-zinc-500 text-sm italic text-center px-4 leading-relaxed">
@@ -143,8 +143,8 @@ export default function Charts({ trades, displayCurrency = "USD" }: { trades: Tr
       </div> {/* End Top Row */}
 
       {/* Bottom Row: Full Width Cumulative PnL Line Chart */}
-      <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-xl flex flex-col items-center min-h-[400px] w-full">
-        <h3 className="text-sm font-semibold text-zinc-300 w-full mb-4">Cumulative PnL</h3>
+      <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_4px_20px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] p-6 md:p-10 rounded-2xl flex flex-col items-center min-h-[460px] w-full cursor-default hover:border-white/10 transition-colors">
+        <h3 className="text-[13px] font-bold tracking-wide uppercase text-zinc-400 w-full mb-6">Cumulative PnL Performance</h3>
         {trades.length === 0 ? (
           <div className="flex-1 flex items-center justify-center text-zinc-500 text-sm">No data</div>
         ) : (
