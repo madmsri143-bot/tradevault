@@ -53,10 +53,11 @@ export function useTrial() {
         const isVIP = user.email ? allVipEmails.includes(user.email.toLowerCase()) : false;
         
         // Trial Calculations (Bug #3 fix: normalize dual timestamp fields)
-        const trialStart = data.trial_started_at || data.trialStartedAt || now;
-        const trialEnd = data.trial_end_date || (trialStart + (7 * 24 * 60 * 60 * 1000));
-        const trialLeft = Math.max(0, Math.floor((trialEnd - now) / (1000 * 60 * 60 * 24)));
-        const isTrialActive = now <= trialEnd;
+        const trialStart = data.trial_started_at || data.trialStartedAt || null;
+        const trialEnd = data.trial_end_date || (trialStart ? trialStart + (7 * 24 * 60 * 60 * 1000) : null);
+        const trialLeft = trialEnd ? Math.max(0, Math.floor((trialEnd - now) / (1000 * 60 * 60 * 24))) : 0;
+        // CRITICAL: Trial is active ONLY if the Firestore plan field says "trial" AND the dates are valid
+        const isTrialActive = data.plan === "trial" && trialEnd !== null && now <= trialEnd;
 
         // Subscription Calculations
         const hasPaidPlan = data.plan === "pro_monthly" || data.plan === "pro_yearly" || data.isPro;
@@ -70,7 +71,7 @@ export function useTrial() {
            subDaysLeft = 999; // Legacy handling
         }
 
-        let planName = data.plan === "pro_monthly" ? "Pro Monthly" : data.plan === "pro_yearly" ? "Pro Yearly" : "Professional Trial";
+        let planName = data.plan === "pro_monthly" ? "Pro Monthly" : data.plan === "pro_yearly" ? "Pro Yearly" : data.plan === "trial" ? "Professional Trial" : "Free";
         if (isVIP && !hasPaidPlan) planName = "Pro (VIP Access)";
 
         // Auto-Downgrade Logic (VIP users are exempt)
