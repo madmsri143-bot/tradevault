@@ -45,6 +45,13 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
       {/* Header / Status */}
       <div className="flex items-center justify-between mb-8">
         <div>
+          {plan === "trial" && !isExpired && (
+            <p className="text-xs text-zinc-500 mb-2 font-medium">
+              <span className="text-emerald-400 font-bold">Professional Trial</span>
+              {" — "}
+              {daysLeft === 1 ? "ends tomorrow" : daysLeft === 0 ? "ends today" : `${daysLeft} days remaining`}
+            </p>
+          )}
           <h2 className="text-xl font-medium text-white flex items-center gap-2">
             <Zap size={20} className="text-[#00FFB2]" />
             Current Plan
@@ -66,7 +73,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
         {/* Left: Plan Info */}
         <div>
           <h3 className="text-3xl font-bold text-white mb-2">
-            {isYearly ? "Pro Elite" : isMonthly ? "Pro Starter" : plan === "trial" ? "Professional Trial" : "Standard Free"}
+            {isYearly ? "Pro Yearly" : isMonthly ? "Pro Monthly" : plan === "trial" ? "Professional Trial" : "Standard Free"}
           </h3>
           <div className="text-[#00FFB2] font-semibold text-lg mb-2">
             {isYearly ? "$21 / year" : isMonthly ? "$3 / month" : plan === "trial" ? "$0 for 7 Days" : "$0 / forever"}

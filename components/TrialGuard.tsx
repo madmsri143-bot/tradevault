@@ -70,7 +70,7 @@ export function useTrial() {
            subDaysLeft = 999; // Legacy handling
         }
 
-        let planName = data.plan === "pro_monthly" ? "Pro Starter" : data.plan === "pro_yearly" ? "Pro Elite" : "Trial";
+        let planName = data.plan === "pro_monthly" ? "Pro Monthly" : data.plan === "pro_yearly" ? "Pro Yearly" : "Professional Trial";
         if (isVIP && !hasPaidPlan) planName = "Pro (VIP Access)";
 
         // Auto-Downgrade Logic (VIP users are exempt)
@@ -176,6 +176,7 @@ export function TrialBanner() {
   const daysLeft = plan === "pro" ? subscription_days_left : trial_days_left;
 
   return (
+    <>
     <div className={`bg-zinc-900 border ${currStyle.cardBorder} shadow-[0_1px_2px_rgba(0,0,0,0.05)] p-5 rounded-xl mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-500`}>
       <div className="flex items-center gap-4">
         <div className={`w-12 h-12 rounded-full ${currStyle.iconBg} flex items-center justify-center border ${currStyle.iconBorder} shrink-0`}>
@@ -209,6 +210,16 @@ export function TrialBanner() {
 
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
     </div>
+    
+    {plan === "trial" && trial_days_left <= 1 && (
+      <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl mb-6 flex items-center gap-3 animate-in fade-in">
+        <ShieldAlert size={18} className="text-amber-500 shrink-0" />
+        <p className="text-sm text-amber-400 font-medium">
+          Your free trial {trial_days_left === 0 ? "ends today" : "ends tomorrow"}. <span className="text-white font-bold">Upgrade to continue Pro features.</span>
+        </p>
+      </div>
+    )}
+    </>
   );
 }
 

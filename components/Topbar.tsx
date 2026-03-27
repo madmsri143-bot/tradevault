@@ -31,6 +31,7 @@ export default function Topbar() {
 
   const isExpired = plan === "free"; // free means standard/expired trial conceptually, or active if pro
   const isActive = plan !== "free";
+  const isTrial = plan === "trial";
 
   useEffect(() => {
     if (!user) return;
@@ -110,12 +111,14 @@ export default function Topbar() {
             <span className="text-sm font-bold text-white leading-tight">{profile.name}</span>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-[11px] font-semibold text-zinc-400 capitalize">{planName}</span>
-              <span className={cn(
-                "text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full",
-                isActive ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"
-              )}>
-                {isActive ? "Active" : "Expired"}
-              </span>
+              {isActive && (
+                <span className={cn(
+                  "text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full",
+                  "bg-emerald-500/10 text-emerald-400"
+                )}>
+                  Active
+                </span>
+              )}
             </div>
           </div>
 

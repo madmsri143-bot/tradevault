@@ -32,7 +32,7 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
                onClick={onUpgradeClick}
                className="w-full sm:w-auto px-8 py-3.5 bg-[#00FFB2] text-black font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all text-sm"
              >
-               Upgrade to Pro
+               Upgrade Now
              </button>
              <button 
                onClick={onCancelTrial}
@@ -46,10 +46,9 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
         <>
           <button 
             onClick={onUpgradeClick}
-            className="w-full sm:w-auto px-8 py-3.5 bg-red-500 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 bg-[#00FFB2] text-black font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2"
           >
-            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-            Renew Subscription
+            Upgrade to Pro
           </button>
           <button 
             onClick={onManageClick}
@@ -75,7 +74,7 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
             onClick={onManageClick}
             className="w-full sm:w-auto px-6 py-3.5 bg-transparent text-zinc-400 font-medium rounded-xl hover:text-white transition-all text-sm underline decoration-white/20 underline-offset-4"
           >
-            Cancel Subscription
+            Manage Subscription
           </button>
         </>
       )}
