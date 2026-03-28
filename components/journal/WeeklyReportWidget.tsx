@@ -48,11 +48,25 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
     const loadCached = async () => {
       try {
         const weekKey = getWeekKey();
+        const localCacheKey = `tradevault_weekly_report_${user.uid}_${weekKey}`;
+        
+        // Instant load from localStorage if exists
+        const localData = localStorage.getItem(localCacheKey);
+        if (localData) {
+          setReportData(JSON.parse(localData));
+          setIsCached(true);
+          setLoadingCache(false);
+          return;
+        }
+
+        // Fallback to Firestore
         const cachedRef = doc(db, "users", user.uid, "weeklyReports", weekKey);
         const cachedSnap = await getDoc(cachedRef);
         if (cachedSnap.exists()) {
-          setReportData(cachedSnap.data() as ReportData);
+          const data = cachedSnap.data() as ReportData;
+          setReportData(data);
           setIsCached(true);
+          localStorage.setItem(localCacheKey, JSON.stringify(data));
         }
       } catch (err) {
         console.error("Failed to load cached report:", err);
@@ -81,6 +95,8 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
         } else {
           setReportData(data);
           setIsCached(!!data.cached);
+          const weekKey = getWeekKey();
+          localStorage.setItem(`tradevault_weekly_report_${user.uid}_${weekKey}`, JSON.stringify(data));
         }
       } else {
         const errData = await res.json().catch(() => ({ error: "Unknown error" }));
@@ -236,9 +252,23 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           </div>
 
           {reportData.generatedAt && (
-            <p className="text-[10px] text-zinc-600 text-center mt-2">
-              Generated {new Date(reportData.generatedAt).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} • Week {reportData.weekKey}
-            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-between mt-4 p-3 bg-zinc-950/50 rounded-xl border border-white/5 shadow-inner">
+               <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5">
+                 <RefreshCw size={10} className="text-zinc-600" /> 
+                 Last Updated: {new Date(reportData.generatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+               </p>
+               <p className="text-[10px] text-[#00FFB2] max-sm:mt-2 uppercase font-black tracking-widest bg-[#00FFB2]/10 border border-[#00FFB2]/20 px-2 py-1 rounded">
+                 Next update in: {(() => {
+                    const generated = new Date(reportData.generatedAt!).getTime();
+                    const availableAt = generated + (7 * 24 * 60 * 60 * 1000);
+                    const diff = availableAt - Date.now();
+                    if (diff <= 0) return "Available Now";
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    return `${days}d ${hours}h`;
+                 })()}
+               </p>
+            </div>
           )}
         </div>
       )}

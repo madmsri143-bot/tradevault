@@ -326,7 +326,8 @@ export default function JournalPage() {
   const streakCount = recent7Days.filter(d => daysLedger.includes(d)).length;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
+    <div className="h-screen overflow-y-auto custom-scrollbar w-full">
+      <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10 p-4 lg:p-6 lg:pt-8 w-full cursor-default">
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -349,7 +350,7 @@ export default function JournalPage() {
         
         {/* LEFT PANEL: Elite Form */}
         <div className="xl:col-span-1">
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl sticky top-6 shadow-sm">
+          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-sm font-bold tracking-wider uppercase text-emerald-400">New Reflection</h2>
               <span className="text-[11px] font-bold text-zinc-500 bg-zinc-950 border border-white/5 px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
@@ -582,112 +583,126 @@ export default function JournalPage() {
             </div>
           </div>
 
-          {/* Detailed View Panel */}
-          {selectedDate && (
-            <div className="bg-zinc-900 border border-emerald-500/20 shadow-[0_0_40px_rgba(16,185,129,0.05)] p-6 rounded-2xl relative overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300">
-               <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-10">
-                 <div className="flex items-center gap-3">
-                   <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                     <CalendarIcon className="text-emerald-500" size={16} />
-                   </div>
-                   <h3 className="text-xl font-bold text-white tracking-tight">
-                     {format(new Date(selectedDate), "EEEE, MMM dd, yyyy")}
-                   </h3>
-                 </div>
-                 <button onClick={() => setSelectedDate(null)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
-               </div>
-               
+          </div>
+        </div>
+      </div>
+
+      {/* Selected Date Modal */}
+      {selectedDate && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setSelectedDate(null)}>
+          <div 
+            className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+            
+            <div className="flex items-center justify-between p-5 border-b border-white/5 bg-zinc-900 shrink-0 rounded-t-2xl relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                  <CalendarIcon className="text-emerald-500" size={16} />
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight">
+                  {format(new Date(selectedDate), "EEEE, MMM dd, yyyy")}
+                </h3>
+              </div>
+              <button onClick={() => setSelectedDate(null)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto custom-scrollbar relative z-10 space-y-8">
                {(!groupedEntries[selectedDate] || groupedEntries[selectedDate].length === 0) ? (
-                  <div className="py-12 flex flex-col items-center justify-center text-center relative z-10">
+                  <div className="py-12 flex flex-col items-center justify-center text-center">
                     <div className="w-16 h-16 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
                       <BookText size={24} className="text-zinc-600" />
                     </div>
                     <p className="text-white font-bold mb-1">No Journal Entries</p>
                     <p className="text-sm text-zinc-500">You haven't logged any reflections for this day.</p>
                   </div>
-               ) : (
-                  <div className="space-y-6 relative z-10">
-                    <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">
-                      {groupedEntries[selectedDate].map((entry) => {
-                        const hasRuleViolation = entry.mistakes && entry.mistakes.length > 0;
-                        const isProfit = entry.pnl && entry.pnl > 0;
-                        const isLoss = entry.pnl && entry.pnl < 0;
-                        
-                        let borderColorClass = "border-black/10 dark:border-white/5";
-                        if (hasRuleViolation) borderColorClass = "border-amber-500/50";
-                        else if (isProfit) borderColorClass = "border-emerald-500/50";
-                        else if (isLoss) borderColorClass = "border-red-500/50";
-    
-                        return (
-                          <div 
-                            key={entry.id} 
-                            onClick={() => setViewingEntry(entry)}
-                            className={`bg-zinc-950 border shadow-inner p-5 rounded-2xl hover:bg-zinc-900 transition-all cursor-pointer flex flex-col h-full group relative ${borderColorClass}`}
-                          >
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex flex-col gap-1">
-                                {entry.pnl !== undefined && entry.pnl !== null && (
-                                   <span className={`text-[15px] font-bold ${entry.pnl > 0 ? 'text-emerald-400' : entry.pnl < 0 ? 'text-red-400' : 'text-zinc-400'}`}>
-                                     {entry.pnl > 0 ? '+' : ''}${entry.pnl}
-                                   </span>
-                                )}
-                              </div>
-                              
-                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={14} /></button>
-                                <button onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
-                              </div>
-                            </div>
-    
-                            <div className="flex flex-wrap gap-1.5 mb-3">
-                              {entry.qualityScore && (
-                               <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${entry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : entry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : entry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
-                                 Grade {entry.qualityScore}
-                               </span>
-                              )}
-                              {entry.moodBefore && (
-                                <span className="text-[10px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-900 px-2 py-0.5 rounded shadow-sm">
-                                  {entry.moodBefore.replace(/[^a-zA-Z]/g, '').trim() || entry.moodBefore}
+               ) : (() => {
+                 const dayEntries = groupedEntries[selectedDate];
+                 const dayTrades = trades.filter(t => format(getValidDate(t.date), "yyyy-MM-dd") === selectedDate);
+                 
+                 const totalTrades = dayTrades.length;
+                 const nonBreakeven = dayTrades.filter(t => t.pnl !== 0);
+                 const dayWinRate = nonBreakeven.length > 0 ? (dayTrades.filter(t => t.pnl > 0).length / nonBreakeven.length) * 100 : 0;
+                 const netPnl = dayEntries.reduce((sum, e) => sum + (e.pnl || 0), 0);
+                 
+                 return (
+                   <>
+                     {/* Daily Summary */}
+                     <div className="grid grid-cols-3 gap-3">
+                       <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
+                         <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Total Trades</span>
+                         <span className="text-xl font-bold text-white">{totalTrades}</span>
+                       </div>
+                       <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
+                         <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Win Rate</span>
+                         <span className="text-xl font-bold text-emerald-400">{dayWinRate.toFixed(0)}%</span>
+                       </div>
+                       <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
+                         <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Net PnL</span>
+                         <span className={`text-xl font-bold ${netPnl > 0 ? 'text-emerald-400' : netPnl < 0 ? 'text-red-400' : 'text-zinc-300'}`}>
+                           {netPnl > 0 ? '+' : ''}${netPnl}
+                         </span>
+                       </div>
+                     </div>
+
+                     {/* Entries Grouped List */}
+                     <div className="space-y-6">
+                       {dayEntries.map((e, idx) => (
+                         <div key={e.id} className="bg-zinc-950/80 border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-inner">
+                           <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
+                             <div className="flex flex-wrap gap-2 items-center">
+                               <span className="text-[10px] uppercase font-black text-zinc-500 bg-white/5 px-2 py-0.5 rounded tracking-widest">Entry {idx + 1}</span>
+                               {e.qualityScore && (
+                                <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${e.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : e.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : e.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
+                                  Grade {e.qualityScore}
                                 </span>
-                              )}
-                            </div>
-                            
-                            <div className="text-zinc-400 text-[13px] whitespace-pre-wrap leading-[1.6] line-clamp-3 font-medium mb-4 flex-grow">
-                              <SmartText text={entry.text} />
-                            </div>
-    
-                            <div className="mt-auto pt-4 border-t border-white/5">
-                              {entry.mistakes && entry.mistakes.length > 0 && (
-                                <div className="flex flex-wrap gap-1.5 mb-3">
-                                  {entry.mistakes.map(m => (
-                                    <span key={m} className="text-[9px] font-black tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 rounded shadow-sm">{m}</span>
-                                  ))}
-                                </div>
-                              )}
-                              
-                              {entry.aiScore !== undefined && (
-                                <div className="flex items-center gap-2">
-                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black shadow-inner border ${entry.aiScore >= 80 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : entry.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
-                                    {entry.aiScore}
-                                  </div>
-                                  <div className="flex-1">
-                                    <span className="text-[9px] text-zinc-500 uppercase font-black tracking-widest block">AI Insight</span>
-                                    <span className="text-[11px] font-medium text-zinc-300 line-clamp-1">{entry.aiInsight || "No insight generated."}</span>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-               )}
+                               )}
+                               {e.slFollowed && (
+                                <span className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border text-emerald-400 border-emerald-500/20 bg-emerald-500/10 flex items-center gap-1">
+                                  <CheckCircle2 size={10} /> Followed SL
+                                </span>
+                               )}
+                             </div>
+                             <div className="flex items-center gap-1">
+                               <button onClick={(ev) => { ev.stopPropagation(); setEditingEntry(e); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={12} /></button>
+                               <button onClick={(ev) => { ev.stopPropagation(); handleDelete(e.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={12} /></button>
+                             </div>
+                           </div>
+
+                           <div className="flex flex-wrap gap-2 mb-4">
+                             {e.moodBefore && <span className="text-[11px] font-bold text-zinc-400 border border-white/5 bg-zinc-900 px-2.5 py-1 rounded-lg">💭 Prep: {e.moodBefore}</span>}
+                             {e.moodAfter && <span className="text-[11px] font-bold text-zinc-400 border border-white/5 bg-zinc-900 px-2.5 py-1 rounded-lg">💭 Post: {e.moodAfter}</span>}
+                             {e.mistakes?.map(m => (
+                               <span key={m} className="text-[11px] font-bold text-red-400 border border-red-500/20 bg-red-500/5 px-2.5 py-1 rounded-lg">🧠 {m}</span>
+                             ))}
+                           </div>
+
+                           <div className="text-[14px] text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                             <SmartText text={e.text} />
+                           </div>
+
+                           {e.aiScore !== undefined && (
+                             <div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-3">
+                               <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shadow-inner border ${e.aiScore >= 80 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : e.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                                 {e.aiScore}
+                               </div>
+                               <div className="flex-1">
+                                 <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block">AI Insight</span>
+                                 <span className="text-xs font-medium text-zinc-300 block">{e.aiInsight || "No insight generated."}</span>
+                               </div>
+                             </div>
+                           )}
+                         </div>
+                       ))}
+                     </div>
+                   </>
+                 );
+               })()}
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* View Modal */}
       {viewingEntry && (
