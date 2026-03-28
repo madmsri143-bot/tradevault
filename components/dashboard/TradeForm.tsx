@@ -269,14 +269,6 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       const data = await response.json();
       
       if (data.trades && Array.isArray(data.trades) && data.trades.length > 0) {
-         
-         // Strict Validation Layer: Reject completely if standard trade elements are missing
-         const isValidTradeFound = data.trades.some((t: any) => t.symbol && t.entry && t.exit);
-         if (!isValidTradeFound) {
-            await alert({ message: "Invalid trading screenshot. Please upload a proper MT4/MT5 screenshot." });
-            return;
-         }
-
          if (data.trades.length === 1) {
            const t = data.trades[0];
            const rawPnl = parseFloat(t.pnl) || 0;
