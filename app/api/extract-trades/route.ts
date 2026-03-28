@@ -4,6 +4,16 @@ import { GoogleGenAI } from "@google/genai";
 export const maxDuration = 60; // Allow enough time for AI processing on Vercel
 export const dynamic = "force-dynamic";
 
+// Timeout utility for vision tasks
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { image } = await req.json();
@@ -49,38 +59,81 @@ Rules:
 - "symbol" must be the pair string without trailing micro dots like ecd or pro.
 - Output ONLY the raw JSON array. Start with [ and end with ].`;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
-        prompt,
-        {
-          inlineData: {
-            data: base64Data,
-            mimeType: mimeType,
-          },
+    const contents = [
+      prompt,
+      {
+        inlineData: {
+          data: base64Data,
+          mimeType: mimeType,
         },
-      ],
-      config: {
-        responseMimeType: "application/json",
-      }
-    });
+      },
+    ];
 
-    const text = response.text || "";
-    // Clean potential markdown blocks
-    const cleanedJsonStr = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    
-    let trades = [];
-    try {
-        trades = JSON.parse(cleanedJsonStr);
-    } catch(e) {
-        console.error("Failed to parse JSON string:", text);
-        return NextResponse.json({ error: "AI failed to return valid structured JSON configuration." }, { status: 500 });
+    // ━━━ Vision model fallback chain (Gemini-only, 30s timeout) ━━━
+    const VISION_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    let responseText = "";
+    let usedModel = "";
+
+    for (const model of VISION_MODELS) {
+      try {
+        console.log(`🖼️ Trying vision model: ${model}`);
+        const response = await withTimeout(
+          ai.models.generateContent({
+            model,
+            contents,
+            config: {
+              responseMimeType: "application/json",
+            },
+          }),
+          30000,
+          `Gemini/${model}`
+        );
+
+        responseText = response.text || "";
+        usedModel = model;
+
+        if (responseText) {
+          console.log(`✅ Vision extraction succeeded with ${model}`);
+          break;
+        }
+      } catch (err: any) {
+        const status = err?.status || err?.error?.code;
+        console.error(`❌ Vision ${model} failed: ${err.message} (status: ${status})`);
+        // Continue to next model on rate limit or timeout
+        if (status !== 429 && !err.message?.includes("timed out")) {
+          // Non-recoverable error for this model, still try others
+          continue;
+        }
+      }
     }
 
-    return NextResponse.json({ trades });
+    if (!responseText) {
+      return NextResponse.json(
+        { error: "All vision models failed. Please try again." },
+        { status: 500 }
+      );
+    }
 
+    // Clean potential markdown blocks
+    const cleanedJsonStr = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+
+    let trades = [];
+    try {
+      trades = JSON.parse(cleanedJsonStr);
+    } catch (e) {
+      console.error("Failed to parse JSON string:", responseText);
+      return NextResponse.json(
+        { error: "AI failed to return valid structured JSON configuration." },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ trades, model: usedModel });
   } catch (error: any) {
     console.error("Extraction API Route Internal Error:", error);
-    return NextResponse.json({ error: error.message || "Failed to process the screenshot data stream." }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || "Failed to process the screenshot data stream." },
+      { status: 500 }
+    );
   }
 }

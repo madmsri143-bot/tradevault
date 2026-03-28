@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
+import { generateAIResponse } from "@/lib/ai-providers";
 
-const apiKey = process.env.GEMINI_API_KEY;
-const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
-
-// 🔥 Rule-based scoring (FAST + RELIABLE)
+// 🔥 Rule-based scoring (FAST + RELIABLE — always runs first)
 function calculateScore(data: any) {
   let score = 0;
 
@@ -21,10 +18,7 @@ function calculateScore(data: any) {
   else if (data.qualityScore === "B") score += 15;
   else if (data.qualityScore === "C") score += 10;
 
-  // Risk (20) - Assuming we don't have riskAmount, we skip or give default points?
-  // Let's adapt based on the data we have. We don't have `allowedRisk` from the form.
-  // The user prompt said: if (data.riskAmount <= data.allowedRisk) score += 20.
-  // We'll leave it as is if they implement it later.
+  // Risk (20)
   if (data.riskAmount && data.allowedRisk && data.riskAmount <= data.allowedRisk) score += 20;
   else score += 20; // Default if not tracked to not artificially lower score.
 
@@ -38,27 +32,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // 🔍 Debug: verify API key is connected
-    console.log("GEMINI_API_KEY:", apiKey ? "✅ Connected" : "❌ undefined");
-
-    // ⚡ Step 1: Instant score
+    // ⚡ Step 1: Instant rule-based score
     const baseScore = calculateScore(body);
 
-    if (!ai) {
-      console.warn("GEMINI_API_KEY is not set. Skipping AI generation.");
-      return NextResponse.json({
-        score: baseScore,
-        insight: "AI scoring unavailable (missing API key)",
-        mistake: "N/A",
-        suggestion: "Configure GEMINI_API_KEY in environment",
-      });
-    }
-
-    // 🤖 Step 2: Gemini Insight
-    const prompt = `
-You are a strict trading psychology coach.
-
-Analyze this trade:
+    // 🤖 Step 2: AI-powered insight via failover engine
+    const prompt = `Analyze this trade:
 
 Emotion Before: ${body.emotionBefore || "N/A"}
 Emotion After: ${body.emotionAfter || "N/A"}
@@ -72,38 +50,28 @@ Return JSON only:
   "insight": "",
   "mistake": "",
   "suggestion": ""
-}
-`;
+}`;
 
-    const MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
-    let response;
-
-    for (const model of MODELS) {
-      try {
-        response = await ai.models.generateContent({ model, contents: prompt });
-        console.log(`✅ AI Score: success with ${model}`);
-        break;
-      } catch (modelErr: any) {
-        const status = modelErr?.status || modelErr?.error?.code;
-        console.error(`❌ AI Score: ${model} failed (${status})`);
-        if (status === 429) continue;
-        throw modelErr;
-      }
-    }
-
-    let aiText = response?.text || "";
-
-    if (!aiText) {
+    let aiResult;
+    try {
+      aiResult = await generateAIResponse(prompt, {
+        task: "simple", // Fast routing: Groq first
+        timeoutMs: 8000,
+        systemPrompt: "You are a strict trading psychology coach. Return ONLY valid JSON. No markdown, no code blocks.",
+      });
+      console.log(`✅ AI Score insight via ${aiResult.provider}/${aiResult.model} (${aiResult.latencyMs}ms)`);
+    } catch (err: any) {
+      console.error("All AI providers failed for scoring:", err.message);
       return NextResponse.json({
         score: baseScore,
-        insight: "AI not responding",
+        insight: "AI insight unavailable",
         mistake: "N/A",
-        suggestion: "Try again",
+        suggestion: "All AI providers are currently unavailable. Try again later.",
       });
     }
 
-    // 🧹 Clean AI output (IMPORTANT)
-    aiText = aiText.replace(/```json|```/g, "").trim();
+    // 🧹 Clean AI output
+    let aiText = aiResult.text.replace(/```json|```/g, "").trim();
 
     let parsed;
     try {
@@ -122,7 +90,7 @@ Return JSON only:
       ...parsed,
     });
   } catch (error) {
-    console.error(error);
+    console.error("AI score route error:", error);
 
     return NextResponse.json(
       {

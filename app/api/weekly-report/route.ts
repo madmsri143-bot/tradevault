@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
 import { adminDb } from "@/lib/firebase-admin";
+import { generateAIResponse, checkProviderHealth } from "@/lib/ai-providers";
 
 const FALLBACK_REPORT = {
   avgScore: 0,
@@ -21,9 +21,6 @@ function getWeekKey(date: Date = new Date()): string {
 
 export async function POST(req: NextRequest) {
   console.log("=== WEEKLY REPORT API HIT ===");
-
-  const apiKey = process.env.OPENAI_API_KEY;
-  console.log("OPENAI_API_KEY:", apiKey ? "FOUND ✅" : "MISSING ❌");
 
   try {
     const body = await req.json();
@@ -57,14 +54,7 @@ export async function POST(req: NextRequest) {
       console.error("Cache lookup failed (continuing to generate):", cacheErr);
     }
 
-    // ━━━ GENERATE NEW REPORT ━━━
-    if (!apiKey) {
-      console.error("OPENAI_API_KEY not configured");
-      return NextResponse.json(FALLBACK_REPORT);
-    }
-
-    const openai = new OpenAI({ apiKey });
-
+    // ━━━ CLEAN JOURNAL DATA ━━━
     const cleanJournals = journals.map((j: any) => {
       let dateStr = "unknown";
       try {
@@ -84,39 +74,28 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    console.log("Calling OpenAI GPT-4o-mini...");
+    // ━━━ GENERATE NEW REPORT VIA AI ENGINE ━━━
+    const prompt = `Analyze this weekly trading journal data:\n\n${JSON.stringify(cleanJournals)}\n\nReturn ONLY this JSON structure:\n{\n  "avgScore": number 0-100,\n  "topMistake": "most common mistake",\n  "bestDay": "best trading day",\n  "weakness": "key weakness",\n  "advice": "actionable advice"\n}`;
 
-    let completion;
+    let aiResponse;
     try {
-      completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        max_tokens: 500,
-        temperature: 0.7,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a professional trading psychology coach. Analyze trading journal data and return ONLY valid JSON. No markdown, no explanation, no code blocks.",
-          },
-          {
-            role: "user",
-            content: `Analyze this weekly trading journal data:\n\n${JSON.stringify(cleanJournals)}\n\nReturn ONLY this JSON structure:\n{\n  "avgScore": number 0-100,\n  "topMistake": "most common mistake",\n  "bestDay": "best trading day",\n  "weakness": "key weakness",\n  "advice": "actionable advice"\n}`,
-          },
-        ],
+      aiResponse = await generateAIResponse(prompt, {
+        task: "complex",
+        timeoutMs: 8000,
+        systemPrompt:
+          "You are a professional trading psychology coach. Analyze trading journal data and return ONLY valid JSON. No markdown, no explanation, no code blocks.",
       });
-    } catch (openaiErr: any) {
-      console.error("OPENAI API CALL FAILED:", openaiErr?.message || openaiErr);
-      return NextResponse.json(FALLBACK_REPORT);
+      console.log(`✅ Weekly report generated via ${aiResponse.provider}/${aiResponse.model} (${aiResponse.latencyMs}ms)`);
+    } catch (aiErr: any) {
+      console.error("ALL AI PROVIDERS FAILED:", aiErr.message);
+      return NextResponse.json({
+        ...FALLBACK_REPORT,
+        error: "All AI providers are currently unavailable. Please try again in a moment.",
+      });
     }
 
-    const rawText = completion.choices?.[0]?.message?.content || "";
-    console.log("RAW OPENAI RESPONSE:", rawText);
-
-    if (!rawText) {
-      console.error("OpenAI returned empty response");
-      return NextResponse.json(FALLBACK_REPORT);
-    }
-
+    // ━━━ PARSE AI RESPONSE ━━━
+    const rawText = aiResponse.text;
     const cleaned = rawText.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
 
     let parsed;
@@ -135,6 +114,7 @@ export async function POST(req: NextRequest) {
       advice: parsed.advice || "Keep journaling consistently.",
       generatedAt: new Date().toISOString(),
       weekKey,
+      provider: `${aiResponse.provider}/${aiResponse.model}`,
     };
 
     // ━━━ STORE IN FIRESTORE ━━━
@@ -160,9 +140,11 @@ export async function POST(req: NextRequest) {
 
 // Debug endpoint — visit /api/weekly-report in browser to check config
 export async function GET() {
-  const openaiKey = process.env.OPENAI_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY;
-  
+  const groqKey = process.env.GROQ_API_KEY;
+  const mistralKey = process.env.MISTRAL_API_KEY;
+  const hfKey = process.env.HF_API_KEY;
+
   let firebaseStatus = "unknown";
   try {
     await adminDb.collection("_health").doc("ping").set({ ts: Date.now() });
@@ -171,26 +153,23 @@ export async function GET() {
     firebaseStatus = `error: ${e?.message}`;
   }
 
-  let openaiStatus = "not tested";
-  if (openaiKey) {
-    try {
-      const openai = new OpenAI({ apiKey: openaiKey });
-      const test = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        max_tokens: 10,
-        messages: [{ role: "user", content: "Say OK" }],
-      });
-      openaiStatus = test.choices?.[0]?.message?.content || "empty response";
-    } catch (e: any) {
-      openaiStatus = `error: ${e?.message}`;
-    }
+  // Check all provider health
+  let providerHealth: any[] = [];
+  try {
+    providerHealth = await checkProviderHealth();
+  } catch (e: any) {
+    providerHealth = [{ error: e?.message }];
   }
 
   return NextResponse.json({
-    openaiKey: openaiKey ? `set (${openaiKey.slice(0, 8)}...${openaiKey.slice(-4)})` : "MISSING",
-    geminiKey: geminiKey ? `set (${geminiKey.slice(0, 8)}...${geminiKey.slice(-4)})` : "MISSING",
+    providers: {
+      gemini: geminiKey ? `set (${geminiKey.slice(0, 8)}...)` : "MISSING",
+      groq: groqKey ? `set (${groqKey.slice(0, 8)}...)` : "MISSING",
+      mistral: mistralKey ? `set (${mistralKey.slice(0, 8)}...)` : "MISSING",
+      huggingface: hfKey ? `set (${hfKey.slice(0, 8)}...)` : "MISSING",
+    },
+    providerHealth,
     firebaseAdmin: firebaseStatus,
-    openaiTest: openaiStatus,
     timestamp: new Date().toISOString(),
   });
 }

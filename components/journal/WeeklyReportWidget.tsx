@@ -192,7 +192,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
              <>
                <BrainCircuit size={24} className="mb-2 opacity-50" />
                <p className="text-sm font-medium">Click Generate to synthesize your performance.</p>
-               <p className="text-[10px] text-zinc-600 mt-1">1 report per week • Powered by GPT</p>
+               <p className="text-[10px] text-zinc-600 mt-1">1 report per week • Powered by AI</p>
              </>
            )}
         </div>
