@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/AuthContext";
+import { useTrial } from "@/components/TrialGuard";
 import { Settings as SettingsIcon, Shield, Palette, LogOut, Info, ExternalLink, Moon, Check, X, Loader2, Mail, Download, FileText, Presentation } from "lucide-react";
 import { signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
@@ -16,6 +17,8 @@ export default function SettingsPage() {
   const { user } = useAuth();
   const router = useRouter();
   const { confirm } = useModal();
+  const { access } = useTrial();
+  const isFree = access === "free";
   
   // Theme State
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -145,7 +148,20 @@ export default function SettingsPage() {
     return filtered;
   };
 
+  const handleExportGated = async () => {
+    await confirm({
+      title: "Pro Feature",
+      message: "Export is available on the Professional Plan. Upgrade to unlock PDF, CSV, and PPTX exports.",
+      confirmLabel: "Upgrade to Pro",
+      cancelLabel: "Maybe Later",
+      variant: "safe"
+    }).then((confirmed) => {
+      if (confirmed) router.push("/billing");
+    });
+  };
+
   const handleExportCSV = async () => {
+    if (isFree) { handleExportGated(); return; }
     const trades = await fetchAndFilterTrades();
     if (!trades) return;
     setIsExporting(true);
@@ -182,6 +198,7 @@ export default function SettingsPage() {
   };
 
   const handleExportPDF = async () => {
+    if (isFree) { handleExportGated(); return; }
     const trades = await fetchAndFilterTrades();
     if (!trades) return;
     setIsExporting(true);
@@ -220,6 +237,7 @@ export default function SettingsPage() {
   };
 
   const handleExportPPT = async () => {
+    if (isFree) { handleExportGated(); return; }
     const trades = await fetchAndFilterTrades();
     if (!trades) return;
     setIsExporting(true);

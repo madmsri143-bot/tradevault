@@ -430,7 +430,12 @@ export default function LandingPage() {
               <PricingTier feature="Standard Journal View" />
               <PricingTier feature="Basic Statistics" />
               <PricingTier feature="Mistake Intelligence Tracking" />
-              <PricingTier feature="Export (PDF, CSV, PPTX)" />
+              <li className="flex items-center gap-3 opacity-30 select-none">
+                <div className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center shrink-0">
+                  <span className="text-[10px]">✕</span>
+                </div>
+                <span className="text-xs text-zinc-500 line-through">Export (PDF, CSV, PPTX)</span>
+              </li>
               <li className="flex items-center gap-3 opacity-30 select-none">
                 <div className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center shrink-0">
                   <span className="text-[10px]">✕</span>
