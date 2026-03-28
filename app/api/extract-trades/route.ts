@@ -38,8 +38,12 @@ export async function POST(req: NextRequest) {
     const base64Data = matches[2];
 
     const prompt = `You are a strict financial data extraction tool.
-Analyze the provided screenshot (MT4, MT5, or similar broker platform history) and extract all visible trading data rows.
-Requirement: Only extract rows where Symbol (or Pair), Order Type (Buy/Sell), Lot Size, and Profit/Loss (PnL) are clearly visible.
+Analyze the provided screenshot OR PDF statement (MT4, MT5, prop firm, or broker history) and extract all valid trading data rows. 
+If the document contains multiple pages, scan all pages entirely and combine all extracted rows into a single JSON array output. 
+If the document natively contains no text layer, rely completely on your OCR / vision to read the data from the scanned PDF.
+If the entire document contains absolutely no trading data, return an empty array [].
+
+Requirement: Only extract rows where Symbol (or Pair), Order Type (Buy/Sell), Lot Size, and Profit/Loss (PnL) are clearly visible or implicitly deducible.
 
 You MUST output ONLY a pure JSON array containing the structured data.
 Adhere EXACTLY to this JSON format and do not include any markdown, backticks, or conversational text:

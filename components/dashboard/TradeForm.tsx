@@ -50,6 +50,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [scanningTrades, setScanningTrades] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [extractedTrades, setExtractedTrades] = useState<any[]>([]);
 
@@ -118,10 +119,10 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       if (!items) return;
 
       for (const item of items) {
-        if (item.type.startsWith("image/")) {
+        if (item.type.startsWith("image/") || item.type === "application/pdf") {
           const file = item.getAsFile();
-          if (file) handleImageInput(file);
-          break; // Stop after finding the first image
+          if (file) handleMediaInput(file);
+          break; // Stop after finding the first media
         }
       }
     };
@@ -238,14 +239,14 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
     }
   };
 
-  const handleImageInput = async (file: File) => {
-    if (!file || !file.type.startsWith("image/")) {
-      await alert({ message: "Only image files are allowed" });
+  const handleMediaInput = async (file: File) => {
+    if (!file || (!file.type.startsWith("image/") && file.type !== "application/pdf")) {
+      await alert({ message: "Only generic image files and PDFs are allowed" });
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      await alert({ message: "Image size should be less than 5MB" });
+    if (file.size > 10 * 1024 * 1024) {
+      await alert({ message: "Image or PDF size should be less than 10MB" });
       return;
     }
 
@@ -320,7 +321,17 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
   if (isOpen === false) return null;
 
   const content = (
-    <div className="bg-zinc-900 border border-black/10 dark:border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.8)] rounded-2xl w-[95vw] max-w-[460px] max-h-[90vh] flex flex-col relative animate-in zoom-in-95 fade-in duration-300">
+    <div 
+      className={`shadow-[0_10px_40px_rgba(0,0,0,0.5)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.8)] rounded-2xl w-[95vw] max-w-[460px] max-h-[90vh] flex flex-col relative animate-in zoom-in-95 fade-in duration-300 transition-colors border ${isDragging ? 'border-emerald-500/50 bg-zinc-800 shadow-[0_0_50px_rgba(16,185,129,0.15)]' : 'bg-zinc-900 border-black/10 dark:border-white/10'}`}
+      onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+      onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file) handleMediaInput(file);
+      }}
+    >
       
       {/* Fixed Header */}
       <div className="shrink-0 p-6 md:px-8 border-b border-white/5 relative z-10">
@@ -333,12 +344,12 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
         <div className="w-full relative">
           <input 
             type="file" 
-            accept="image/*" 
+            accept="image/*,application/pdf" 
             ref={fileInputRef} 
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) {
-                 handleImageInput(file);
+                 handleMediaInput(file);
                  e.target.value = ''; // Reset input so same file can be selected again
               }
             }}
@@ -349,13 +360,13 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             type="button"
             onClick={() => !isFree && fileInputRef.current?.click()}
             disabled={scanningTrades || isFree}
-            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload or paste (Ctrl + V) your MT4/MT5 screenshot"}
-            className={`w-full text-xs font-bold px-3 py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload, pdf or paste (Ctrl + V), or drag your Trade history screenshot"}
+            className={`w-full text-[10px] md:text-xs font-bold px-3 py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm break-words disabled:opacity-50 disabled:cursor-not-allowed ${
               isFree ? 'bg-zinc-800 text-amber-500/80 cursor-not-allowed border border-amber-500/20' : 'text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d]'
             }`}
           >
             {isFree ? <Lock size={15} /> : scanningTrades ? <Loader2 size={15} className="animate-spin" /> : <Camera size={15} />}
-            {isFree ? "Auto-fill via Screenshot (Pro)" : scanningTrades ? "Scanning..." : "Upload or paste (Ctrl + V) your MT4/MT5 screenshot"}
+            {isFree ? "Auto-fill via Screenshot (Pro)" : scanningTrades ? "Scanning..." : "Upload, pdf or paste (Ctrl + V), or drag your Trade history screenshot"}
           </button>
           
           <p className="text-[10px] text-zinc-500 text-center mt-2 leading-tight">
