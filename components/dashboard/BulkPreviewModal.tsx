@@ -72,7 +72,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
           symbol: t.symbol.toUpperCase() || "UNKNOWN",
           type: mappedType,
           result: isProfit ? "Profit" : "Loss",
-          pnl: Math.abs(rawPnl),
+          pnl: isProfit ? Math.abs(rawPnl) : -Math.abs(rawPnl),
           lot: parseFloat(t.lot as string) || 0,
           stopLossFollowed: !isProfit, // true if loss (safe default)
           currency: "USD",
