@@ -38,7 +38,9 @@ export async function POST(req: NextRequest) {
     const base64Data = matches[2];
 
     const prompt = `You are a strict financial data extraction tool.
-Analyze this MT5/Trading screenshot and extract all visible trading data rows.
+Analyze the provided screenshot (MT4, MT5, or similar broker platform history) and extract all visible trading data rows.
+Requirement: Only extract rows where Symbol (or Pair), Order Type (Buy/Sell), Lot Size, and Profit/Loss (PnL) are clearly visible.
+
 You MUST output ONLY a pure JSON array containing the structured data.
 Adhere EXACTLY to this JSON format and do not include any markdown, backticks, or conversational text:
 [

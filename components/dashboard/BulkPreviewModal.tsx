@@ -99,7 +99,7 @@ export default function BulkPreviewModal({ isOpen, onClose, extractedTrades }: B
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4">
+    <div className="fixed inset-0 z-[150] flex flex-col items-center justify-center p-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
       

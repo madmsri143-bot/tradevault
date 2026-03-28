@@ -242,9 +242,43 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       if (!response.ok) throw new Error("API parsing failed.");
       const data = await response.json();
       
-      if (data.trades && Array.isArray(data.trades)) {
-         setExtractedTrades(data.trades);
-         setShowBulkModal(true);
+      if (data.trades && Array.isArray(data.trades) && data.trades.length > 0) {
+         if (data.trades.length === 1) {
+           const t = data.trades[0];
+           const rawPnl = parseFloat(t.pnl) || 0;
+           const isProfit = rawPnl >= 0;
+           const finalSymbol = t.symbol ? t.symbol.toUpperCase() : formData.symbol;
+           const isCustom = !commonSymbols.includes(finalSymbol);
+           
+           if (isCustom && t.symbol) {
+             setUseCustomSymbol(true);
+           }
+
+           setFormData(prev => ({
+             ...prev,
+             symbol: isCustom ? prev.symbol : finalSymbol,
+             customSymbol: isCustom ? finalSymbol : prev.customSymbol,
+             type: t.type ? t.type.toLowerCase() : prev.type,
+             result: isProfit ? "Profit" : "Loss",
+             pnl: t.pnl ? Math.abs(rawPnl).toString() : prev.pnl,
+             lot: t.lot ? t.lot.toString() : prev.lot,
+             entryPrice: t.entry ? t.entry.toString() : prev.entryPrice,
+             exitPrice: t.exit ? t.exit.toString() : prev.exitPrice,
+             date: t.date || prev.date,
+             stopLossFollowed: !isProfit, // sensible default
+           }));
+           
+           // If it's a loss and there's a PnL, the 'result' change useEffect will auto-sync risk usually,
+           // but we manually trigger the risk update here just in case, since setState is async.
+           if (!isProfit && rawPnl) {
+             setRiskAutoSynced(true);
+             setRiskManuallyOverridden(false);
+             setFormData(prev => ({ ...prev, risk: Math.abs(rawPnl).toString() }));
+           }
+         } else {
+           setExtractedTrades(data.trades);
+           setShowBulkModal(true);
+         }
       } else {
          throw new Error("Invalid format returned.");
       }
@@ -270,7 +304,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
           </button>
         )}
         <h2 className="text-xl font-bold text-emerald-400 tracking-tight mb-2">Log New Trade</h2>
-        <div className="w-full">
+        <div className="w-full relative">
           <input 
             type="file" 
             accept="image/*" 
@@ -283,7 +317,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             type="button"
             onClick={() => !isFree && fileInputRef.current?.click()}
             disabled={scanningTrades || isFree}
-            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload MT5 screenshot"}
+            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload Screenshot (Auto Fill)"}
             className={`w-full text-xs font-bold px-3 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
               isFree ? 'bg-zinc-800 text-amber-500/80 cursor-not-allowed border border-amber-500/20' : 'text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d]'
             }`}
@@ -291,6 +325,11 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             {isFree ? <Lock size={15} /> : scanningTrades ? <Loader2 size={15} className="animate-spin" /> : <Camera size={15} />}
             {isFree ? "Auto-fill via Screenshot (Pro)" : scanningTrades ? "Scanning trades..." : "Upload Screenshot (Auto Fill)"}
           </button>
+          
+          <p className="text-[10px] text-zinc-500 text-center mt-2 leading-tight">
+            Supports MT4, MT5 or Broker history screenshots.<br/>
+            <span className="opacity-80">Ensure Pair, Buy/Sell, Lot Size, and PnL are visible.</span>
+          </p>
         </div>
       </div>
 
