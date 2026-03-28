@@ -241,9 +241,6 @@ export default function JournalPage() {
 
       const docRef = await addDoc(collection(db, "users", user!.uid, "journal"), dbEntry);
       
-      // Auto-open modal so they see the AIScoreCard right away
-      setViewingEntry({ id: docRef.id, ...dbEntry } as JournalEntry);
-      
       const fileToUpload = imageFile;
       
       // Reset form instantly
