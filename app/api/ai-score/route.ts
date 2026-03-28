@@ -75,14 +75,24 @@ Return JSON only:
 }
 `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt,
-    });
+    const MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
+    let response;
 
-    let aiText = response.text || "";
+    for (const model of MODELS) {
+      try {
+        response = await ai.models.generateContent({ model, contents: prompt });
+        console.log(`✅ AI Score: success with ${model}`);
+        break;
+      } catch (modelErr: any) {
+        const status = modelErr?.status || modelErr?.error?.code;
+        console.error(`❌ AI Score: ${model} failed (${status})`);
+        if (status === 429) continue;
+        throw modelErr;
+      }
+    }
 
-    // ⚠️ Fallback if Gemini returns nothing
+    let aiText = response?.text || "";
+
     if (!aiText) {
       return NextResponse.json({
         score: baseScore,

@@ -79,19 +79,43 @@ Return ONLY valid JSON (no markdown, no code blocks, no explanation):
   "advice": "actionable trading advice"
 }`;
 
-    console.log("Calling Gemini with model gemini-2.0-flash...");
-
+    const MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
     let response;
-    try {
-      response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: prompt,
-      });
-    } catch (geminiErr: any) {
-      console.error("GEMINI API CALL FAILED:", geminiErr?.message || geminiErr);
-      console.error("FULL GEMINI ERROR:", JSON.stringify(geminiErr, null, 2));
-      return NextResponse.json(FALLBACK_REPORT);
+    let usedModel = "";
+
+    for (const model of MODELS) {
+      try {
+        console.log(`Trying model: ${model}...`);
+        response = await ai.models.generateContent({
+          model,
+          contents: prompt,
+        });
+        usedModel = model;
+        console.log(`✅ Success with model: ${model}`);
+        break;
+      } catch (modelErr: any) {
+        const status = modelErr?.status || modelErr?.error?.code;
+        console.error(`❌ ${model} failed (status ${status}):`, modelErr?.message?.slice(0, 200) || modelErr);
+        if (status === 429) {
+          console.log(`Rate limited on ${model}, trying next model...`);
+          continue;
+        }
+        // Non-rate-limit error — don't try other models
+        console.error("FULL ERROR:", JSON.stringify(modelErr, null, 2));
+        return NextResponse.json(FALLBACK_REPORT);
+      }
     }
+
+    if (!response) {
+      console.error("All models rate limited");
+      return NextResponse.json({
+        ...FALLBACK_REPORT,
+        topMistake: "Rate limit exceeded. Please try again in a few minutes.",
+        advice: "Your free tier quota is temporarily exhausted. Wait a minute and retry.",
+      });
+    }
+
+    console.log(`Used model: ${usedModel}`);
 
     const rawText = response?.text;
     console.log("RAW GEMINI RESPONSE:", rawText);
