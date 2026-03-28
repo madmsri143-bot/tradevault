@@ -37,28 +37,36 @@ function useReveal() {
    ═══════════════════════════════════════════════ */
 function HeroVisual() {
   return (
-    <div className="relative flex items-center justify-center w-[300px] h-[300px] md:w-[450px] md:h-[450px] animate-hero-lift pointer-events-none mt-10 md:mt-0">
+    <div 
+      className="relative flex items-center justify-center w-full max-w-[420px] aspect-square mx-auto animate-hero-lift pointer-events-none mt-10 md:mt-0"
+      style={{
+        background: "radial-gradient(circle at center, rgba(0,255,200,0.15), transparent 70%)",
+        borderRadius: "50%",
+        overflow: "hidden",
+        filter: "blur(0.3px)"
+      }}
+    >
       {/* Background Glow */}
-      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#00FFB2]/5 to-[#00FFB2]/20 blur-[60px] rounded-full animate-hero-glow z-0" />
+      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#00FFB2]/5 to-[#00FFB2]/10 blur-[60px] rounded-full animate-hero-glow z-0" />
       
       {/* Rising Particles */}
       <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden z-10 [mask-image:linear-gradient(to_bottom,transparent,black_40%,transparent_90%)]">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(9)].map((_, i) => (
           <div 
             key={i} 
-            className="absolute bottom-0 w-1 rounded-full bg-[#00FFB2] opacity-0 animate-hero-particles"
+            className="absolute bottom-0 w-[2px] rounded-full bg-[#00FFB2] opacity-0 animate-hero-particles"
             style={{ 
-              left: `${15 + Math.random() * 70}%`, 
-              height: `${2 + Math.random() * 4}px`,
-              animationDelay: `${i * 0.4}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
+               left: `${15 + Math.random() * 70}%`, 
+               height: `${2 + Math.random() * 3}px`,
+               animationDelay: `${i * 0.7}s`,
+               animationDuration: `${5 + Math.random() * 4}s`
             }}
           />
         ))}
       </div>
 
       {/* Hero Image */}
-      <div className="relative w-full h-full animate-hero-glow z-20 mix-blend-screen opacity-90 drop-shadow-[0_0_35px_rgba(0,255,178,0.3)]">
+      <div className="relative w-full h-[90%] animate-hero-glow z-20 mix-blend-screen opacity-90 drop-shadow-[0_0_20px_rgba(0,255,178,0.2)]">
         <Image 
           src="/hero-lift.png" 
           alt="AI Companion Lifting Trader" 
@@ -134,10 +142,22 @@ function ChatBubble({ sender, message, delay = "0ms", variant = "default" }: {
    ═══════════════════════════════════════════════ */
 function FloatingTip({ text, position, delay }: { text: string; position: string; delay: string }) {
   return (
-    <div className={`absolute ${position} animate-insight-float z-20 pointer-events-none`}
-      style={{ animationDelay: delay }}>
-      <div className="bg-[#0B0F14]/90 backdrop-blur-xl border border-[#00FFB2]/20 rounded-xl px-3 py-2 text-[11px] text-[#00FFB2] font-medium shadow-lg whitespace-nowrap">
-        <BrainCircuit size={10} className="inline mr-1.5 opacity-60" />
+    <div className={`absolute ${position} z-20 pointer-events-none transition-transform duration-500 hover-scale-target`}
+      style={{ animationDelay: delay, animation: "floatSmooth 4s ease-in-out infinite" }}>
+      <div 
+        className="flex items-center whitespace-nowrap"
+        style={{
+          background: "rgba(0, 255, 200, 0.08)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(0,255,200,0.2)",
+          borderRadius: "999px",
+          padding: "6px 12px",
+          fontSize: "12px",
+          color: "#00FFB2",
+          fontWeight: 600
+        }}
+      >
+        <BrainCircuit size={12} className="inline mr-1.5 opacity-60" />
         {text}
       </div>
     </div>
@@ -225,15 +245,27 @@ export default function LandingPage() {
           <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
             Login
           </Link>
-          <Link href="/demo" className="hidden sm:flex text-sm font-medium text-zinc-400 hover:text-[#00FFB2] transition-colors items-center gap-1.5">
-            <Play size={14} className="text-[#00FFB2]" /> Demo
-          </Link>
           <Link href={ctaHref}
             className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_25px_rgba(0,255,178,0.4)] transition-all duration-300">
             Get Started
           </Link>
         </div>
       </nav>
+
+      <style jsx global>{`
+        @keyframes floatSmooth {
+          0% { transform: translateY(0px); opacity: 0.8; }
+          50% { transform: translateY(-8px); opacity: 1; }
+          100% { transform: translateY(0px); opacity: 0.8; }
+        }
+        @keyframes pulseLine {
+          0% { opacity: 0.2; }
+          50% { opacity: 1; }
+          100% { opacity: 0.2; }
+        }
+        .animate-pulse-line { animation: pulseLine 4s ease-in-out infinite; }
+        .hero-container:hover .hover-scale-target { transform: scale(1.05); }
+      `}</style>
 
       {/* ═══════════════════════════════════════
           1. HERO — "YOU TRADE. YOUR BUDDY UNDERSTANDS."
@@ -285,11 +317,19 @@ export default function LandingPage() {
           </div>
 
           {/* Right: Living AI Orb + Status Feed */}
-          <div className="relative fade-slide-up flex items-center justify-center min-h-[420px]" style={{ animationDelay: "200ms" }}>
+          <div className="relative fade-slide-up flex flex-col items-center justify-center min-h-[420px] hero-container" style={{ animationDelay: "200ms" }}>
+            
+            {/* Connection SVG */}
+            <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none animate-pulse-line hidden md:block" style={{ top: '-10px' }}>
+              <line x1="50%" y1="18%" x2="50%" y2="40%" stroke="#00FFB2" strokeWidth="1" opacity="0.4" />
+              <line x1="88%" y1="42%" x2="68%" y2="48%" stroke="#00FFB2" strokeWidth="1" opacity="0.4" />
+              <line x1="42%" y1="88%" x2="48%" y2="68%" stroke="#00FFB2" strokeWidth="1" opacity="0.4" />
+            </svg>
+
             {/* Floating insight tips around orb */}
-            <FloatingTip text="You trade better after 2PM" position="top-4 -left-4 md:top-8 md:left-0" delay="0s" />
-            <FloatingTip text="Avoid trading after 2 losses" position="top-16 -right-2 md:top-12 md:right-4" delay="2s" />
-            <FloatingTip text="Confidence improving ↑" position="bottom-20 -left-2 md:bottom-24 md:left-4" delay="4s" />
+            <FloatingTip text="You trade better after 2PM" position="top-[10%] left-1/2 -translate-x-1/2" delay="0s" />
+            <FloatingTip text="Avoid trading after 2 losses" position="top-[40%] right-[2%] md:right-[5%]" delay="1.3s" />
+            <FloatingTip text="Fear pattern declining ↓ 🟩" position="bottom-[10%] left-[25%] md:left-[40%]" delay="2.6s" />
 
             {/* Cinematic Hero Visual */}
             <HeroVisual />
@@ -319,7 +359,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           2. "YOUR BUD IS WATCHING" — Chat Insights
          ═══════════════════════════════════════ */}
-      <section className="py-28 px-6 relative z-10 border-t border-white/5">
+      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="reveal text-center mb-20">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/8 border border-purple-500/15 text-purple-400 text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
@@ -373,7 +413,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           3. MAGIC INPUT — "Just Drop Your Trades"
          ═══════════════════════════════════════ */}
-      <section id="how-it-works" className="py-28 px-6 relative z-10 bg-gradient-to-b from-[#0B0F14] via-[#0D1117] to-[#0B0F14] border-t border-white/5">
+      <section id="how-it-works" className="py-16 md:py-20 px-6 relative z-10 bg-gradient-to-b from-[#0B0F14] via-[#0D1117] to-[#0B0F14] border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="reveal text-center mb-20">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/8 border border-blue-500/15 text-blue-400 text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
@@ -490,7 +530,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           4. DATA → INTELLIGENCE TRANSFORMATION
          ═══════════════════════════════════════ */}
-      <section id="features" className="py-28 px-6 relative z-10 border-t border-white/5">
+      <section id="features" className="py-16 md:py-20 px-6 relative z-10 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="reveal text-center mb-20">
             <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
@@ -571,7 +611,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           5. WEEKLY AI REPORT
          ═══════════════════════════════════════ */}
-      <section className="py-28 px-6 relative z-10 border-t border-white/5">
+      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-white/5">
         <div className="max-w-5xl mx-auto">
           <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left: Copy */}
@@ -654,7 +694,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           6. GOALS ENGINE
          ═══════════════════════════════════════ */}
-      <section className="py-28 px-6 relative z-10 border-t border-white/5">
+      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-white/5">
         <div className="max-w-5xl mx-auto">
           <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left: Goals mockup */}
@@ -710,7 +750,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           7. PRICING
          ═══════════════════════════════════════ */}
-      <section id="pricing" className="py-28 px-6 relative z-10 overflow-hidden border-t border-white/5">
+      <section id="pricing" className="py-16 md:py-20 px-6 relative z-10 overflow-hidden border-t border-white/5">
         <div className="max-w-4xl mx-auto">
           <div className="reveal text-center space-y-4 mb-16">
             <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
@@ -765,10 +805,15 @@ export default function LandingPage() {
                 <PricingTier feature="Elite Target Engine" pro />
                 <PricingTier feature="Weekly AI Trading Report" pro />
               </ul>
-              <Link href={ctaHref}
-                className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_25px_rgba(0,255,178,0.4)] transition-all block text-center">
-                {user && hasUsedTrial ? "Upgrade to Pro" : "Start 7-Day Free Trial"}
-              </Link>
+              <div className="space-y-3">
+                <Link href={ctaHref}
+                  className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_25px_rgba(0,255,178,0.4)] transition-all block text-center">
+                  {user && hasUsedTrial ? "Upgrade to Pro" : "Start 7-Day Free Trial"}
+                </Link>
+                <Link href="/demo" className="w-full py-3 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                  <Play size={14} className="text-[#00FFB2]" /> View Live Demo
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -777,7 +822,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           8. BUDDY EFFECT — Floating personality
          ═══════════════════════════════════════ */}
-      <section className="py-20 px-6 relative z-10 border-t border-white/5">
+      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-white/5">
         <div className="max-w-4xl mx-auto">
           <div className="reveal text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
@@ -814,7 +859,7 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           9. FINAL CTA
          ═══════════════════════════════════════ */}
-      <section className="py-28 px-6 relative z-10">
+      <section className="py-16 md:py-20 px-6 relative z-10">
         <div className="reveal max-w-4xl mx-auto relative">
           {/* Background glow */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#00FFB2]/5 via-[#3B82F6]/5 to-[#00FFB2]/5 rounded-[3rem] blur-2xl" />
