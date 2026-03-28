@@ -6,9 +6,10 @@ import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
-import { Flame, Camera, Loader2, Lock, X, BookText, Sparkles, Cpu, Upload, FileText } from "lucide-react";
+import { Flame, Camera, Loader2, Lock, X, BookText, Sparkles, Cpu, Upload, FileText, Table2 } from "lucide-react";
 import BulkPreviewModal from "./BulkPreviewModal";
-import { useTrial } from "@/components/TrialGuard";
+import { useTrial, useTrialWindow } from "@/components/TrialGuard";
+import Papa from "papaparse";
 
 const getLocalDateString = () => {
   const d = new Date();
@@ -24,6 +25,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
   const { user } = useAuth();
   const { alert } = useModal();
   const { access } = useTrial();
+  const { trialStart, trialEnd, isFree: isTrialFree } = useTrialWindow();
   const isFree = access === "free";
   const [loading, setLoading] = useState(false);
   const [dailyTradeCount, setDailyTradeCount] = useState(0);
@@ -155,11 +157,30 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
   };
 
 
+  // Helper: check if a date falls within the trial window
+  const isDateInTrialWindow = (dateStr: string): boolean => {
+    if (!isTrialFree || !trialStart || !trialEnd) return true; // premium or no window = allowed
+    const d = new Date(dateStr);
+    d.setHours(12, 0, 0, 0); // normalize to noon to avoid timezone edge cases
+    return d >= trialStart && d <= trialEnd;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (dailyLimitReached) {
       return;
     }
+
+    // 🔒 Trial Date Guard: Block trades outside 7-day window
+    if (isTrialFree && trialStart && trialEnd && !isDateInTrialWindow(formData.date)) {
+      await alert({
+        title: "Trial Period Restriction",
+        message: `Trades outside your trial period (${trialStart.toLocaleDateString()} – ${trialEnd.toLocaleDateString()}) are locked. Upgrade to Premium for full access.`,
+        variant: "danger"
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -239,14 +260,143 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
     }
   };
 
+  // ═══ CSV PARSER ═══
+  const handleCSVFile = async (file: File) => {
+    setScanningTrades(true);
+    try {
+      const text = await file.text();
+      const result = Papa.parse(text, { header: true, skipEmptyLines: true });
+      
+      if (!result.data || result.data.length === 0) {
+        throw new Error("CSV file is empty or invalid.");
+      }
+
+      // Map CSV rows to trade format
+      const trades = (result.data as any[]).map(row => {
+        // Try common header variations
+        const symbol = row.Symbol || row.symbol || row.Asset || row.asset || row.Pair || row.pair || "";
+        const type = row.Type || row.type || row.Direction || row.direction || "";
+        const pnl = parseFloat(row.PnL || row.pnl || row['P&L'] || row.Profit || row.profit || row['Profit/Loss'] || "0");
+        const lot = parseFloat(row.Lot || row.lot || row.Volume || row.volume || row.Size || row.size || "0.1");
+        const entry = parseFloat(row.Entry || row.entry || row['Entry Price'] || row.Open || row.open || "0");
+        const exit = parseFloat(row.Exit || row.exit || row['Exit Price'] || row.Close || row.close || "0");
+        const date = row.Date || row.date || row['Trade Date'] || "";
+
+        return {
+          symbol: symbol.toUpperCase(),
+          type: type.toUpperCase(),
+          pnl,
+          lot,
+          entry: entry || "",
+          exit: exit || "",
+          date
+        };
+      }).filter(t => t.symbol && t.pnl !== 0);
+
+      if (trades.length === 0) {
+        throw new Error("No valid trades found in CSV.");
+      }
+
+      // Apply trial window filter
+      const { validTrades, skippedCount } = filterTradesByTrialWindow(trades);
+
+      if (validTrades.length === 0 && skippedCount > 0) {
+        await alert({
+          title: "No Trades Imported",
+          message: "No trades fall within your trial period. Upgrade to import full history.",
+          variant: "danger"
+        });
+        return;
+      }
+
+      if (skippedCount > 0) {
+        await alert({
+          title: "Partial Import",
+          message: `Imported: ${validTrades.length} trades. Skipped: ${skippedCount} trades (outside trial period).`,
+          variant: "info"
+        });
+      }
+
+      if (validTrades.length === 1) {
+        populateSingleTrade(validTrades[0]);
+      } else {
+        setExtractedTrades(validTrades);
+        setShowBulkModal(true);
+      }
+    } catch (err: any) {
+      console.error(err);
+      await alert({ message: err.message || "Failed to parse CSV file." });
+    } finally {
+      setScanningTrades(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  // ═══ TRIAL WINDOW FILTER for bulk imports ═══
+  const filterTradesByTrialWindow = (trades: any[]): { validTrades: any[]; skippedCount: number } => {
+    if (!isTrialFree || !trialStart || !trialEnd) {
+      return { validTrades: trades, skippedCount: 0 };
+    }
+
+    const valid: any[] = [];
+    let skipped = 0;
+
+    trades.forEach(t => {
+      if (t.date && !isDateInTrialWindow(t.date)) {
+        skipped++;
+      } else {
+        valid.push(t);
+      }
+    });
+
+    return { validTrades: valid, skippedCount: skipped };
+  };
+
+  // ═══ POPULATE SINGLE TRADE HELPER ═══
+  const populateSingleTrade = (t: any) => {
+    const rawPnl = parseFloat(t.pnl) || 0;
+    const isProfit = rawPnl >= 0;
+    const finalSymbol = t.symbol ? t.symbol.toUpperCase() : formData.symbol;
+    const isCustom = !commonSymbols.includes(finalSymbol);
+    
+    if (isCustom && t.symbol) {
+      setUseCustomSymbol(true);
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      symbol: isCustom ? prev.symbol : finalSymbol,
+      customSymbol: isCustom ? finalSymbol : prev.customSymbol,
+      type: t.type ? t.type.toLowerCase() : prev.type,
+      result: isProfit ? "Profit" : "Loss",
+      pnl: t.pnl ? Math.abs(rawPnl).toString() : prev.pnl,
+      lot: t.lot ? t.lot.toString() : prev.lot,
+      entryPrice: t.entry ? t.entry.toString() : prev.entryPrice,
+      exitPrice: t.exit ? t.exit.toString() : prev.exitPrice,
+      date: t.date || prev.date,
+      stopLossFollowed: !isProfit,
+    }));
+    
+    if (!isProfit && rawPnl) {
+      setRiskAutoSynced(true);
+      setRiskManuallyOverridden(false);
+      setFormData(prev => ({ ...prev, risk: Math.abs(rawPnl).toString() }));
+    }
+  };
+
   const handleMediaInput = async (file: File) => {
+    // Handle CSV files separately
+    if (file.name.endsWith('.csv') || file.type === 'text/csv') {
+      return handleCSVFile(file);
+    }
+
     if (!file || (!file.type.startsWith("image/") && file.type !== "application/pdf")) {
-      await alert({ message: "Only generic image files and PDFs are allowed" });
+      await alert({ message: "Only image files, PDFs, and CSVs are allowed" });
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      await alert({ message: "Image or PDF size should be less than 10MB" });
+      await alert({ message: "File size should be less than 10MB" });
       return;
     }
 
@@ -270,40 +420,30 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       const data = await response.json();
       
       if (data.trades && Array.isArray(data.trades) && data.trades.length > 0) {
-         if (data.trades.length === 1) {
-           const t = data.trades[0];
-           const rawPnl = parseFloat(t.pnl) || 0;
-           const isProfit = rawPnl >= 0;
-           const finalSymbol = t.symbol ? t.symbol.toUpperCase() : formData.symbol;
-           const isCustom = !commonSymbols.includes(finalSymbol);
-           
-           if (isCustom && t.symbol) {
-             setUseCustomSymbol(true);
-           }
+         // 🔒 Apply trial window filter to extracted trades
+         const { validTrades, skippedCount } = filterTradesByTrialWindow(data.trades);
 
-           setFormData(prev => ({
-             ...prev,
-             symbol: isCustom ? prev.symbol : finalSymbol,
-             customSymbol: isCustom ? finalSymbol : prev.customSymbol,
-             type: t.type ? t.type.toLowerCase() : prev.type,
-             result: isProfit ? "Profit" : "Loss",
-             pnl: t.pnl ? Math.abs(rawPnl).toString() : prev.pnl,
-             lot: t.lot ? t.lot.toString() : prev.lot,
-             entryPrice: t.entry ? t.entry.toString() : prev.entryPrice,
-             exitPrice: t.exit ? t.exit.toString() : prev.exitPrice,
-             date: t.date || prev.date,
-             stopLossFollowed: !isProfit, // sensible default
-           }));
-           
-           // If it's a loss and there's a PnL, the 'result' change useEffect will auto-sync risk usually,
-           // but we manually trigger the risk update here just in case, since setState is async.
-           if (!isProfit && rawPnl) {
-             setRiskAutoSynced(true);
-             setRiskManuallyOverridden(false);
-             setFormData(prev => ({ ...prev, risk: Math.abs(rawPnl).toString() }));
-           }
+         if (validTrades.length === 0 && skippedCount > 0) {
+           await alert({
+             title: "No Trades Imported",
+             message: "No trades fall within your trial period. Upgrade to import full history.",
+             variant: "danger"
+           });
+           return;
+         }
+
+         if (skippedCount > 0) {
+           await alert({
+             title: "Partial Import",
+             message: `Imported: ${validTrades.length} trades. Skipped: ${skippedCount} trades (outside trial period).`,
+             variant: "info"
+           });
+         }
+
+         if (validTrades.length === 1) {
+           populateSingleTrade(validTrades[0]);
          } else {
-           setExtractedTrades(data.trades);
+           setExtractedTrades(validTrades);
            setShowBulkModal(true);
          }
       } else {
@@ -350,7 +490,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
           
           <input 
             type="file" 
-            accept="image/*,application/pdf" 
+            accept="image/*,application/pdf,.csv,text/csv" 
             ref={fileInputRef} 
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -368,6 +508,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             {[
               { icon: Camera, label: "Screenshot", onClick: () => !isFree && fileInputRef.current?.click() },
               { icon: FileText, label: "PDF", onClick: () => !isFree && fileInputRef.current?.click() },
+              { icon: Table2, label: "CSV", onClick: () => !isFree && fileInputRef.current?.click() },
               { icon: Cpu, label: "Paste", onClick: () => !isFree && alert({message: "Just press Ctrl + V anywhere in this window"}) }
             ].map((f, i) => (
               <div key={i} className="flex flex-col items-center gap-2.5">

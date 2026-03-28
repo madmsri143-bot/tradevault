@@ -133,6 +133,44 @@ export function useTrial() {
   return status;
 }
 
+/**
+ * Returns the 7-day trial date window for the current user.
+ * trialStartDate = Firestore trial_started_at (or account creation)
+ * trialEndDate = trialStartDate + 7 days
+ * Returns null dates if user is premium (no restrictions).
+ */
+export function useTrialWindow() {
+  const { user } = useAuth();
+  const { access } = useTrial();
+  const [window, setWindow] = useState<{ start: Date | null; end: Date | null }>({ start: null, end: null });
+
+  useEffect(() => {
+    if (!user || access === "premium") {
+      setWindow({ start: null, end: null });
+      return;
+    }
+
+    // Listen for the profile to get trial_started_at
+    const unsub = onSnapshot(doc(db, "users", user.uid, "settings", "profile"), (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        const trialStart = data.trial_started_at || data.trialStartedAt || null;
+        if (trialStart) {
+          const startDate = new Date(trialStart);
+          startDate.setHours(0, 0, 0, 0);
+          const endDate = new Date(trialStart + (7 * 24 * 60 * 60 * 1000));
+          endDate.setHours(23, 59, 59, 999);
+          setWindow({ start: startDate, end: endDate });
+        }
+      }
+    });
+
+    return () => unsub();
+  }, [user, access]);
+
+  return { trialStart: window.start, trialEnd: window.end, isFree: access === "free" };
+}
+
 export function TrialBanner() {
   const { access, plan, planName, expiryDate, trial_days_left, subscription_days_left, loading } = useTrial();
   const [showUpgrade, setShowUpgrade] = useState(false);

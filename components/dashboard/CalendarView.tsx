@@ -22,7 +22,7 @@ import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, LayoutGrid, Loc
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatCurrency } from "@/lib/utils";
-import { FeatureBlockOverlay } from "@/components/TrialGuard";
+import { FeatureBlockOverlay, useTrialWindow } from "@/components/TrialGuard";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -68,6 +68,15 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
   const [viewMode, setViewMode] = useState<ViewMode>("monthly");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const { trialStart, trialEnd } = useTrialWindow();
+
+  // Helper: check if a day is within the trial window
+  const isDayLocked = (day: Date): boolean => {
+    if (!isFree || !trialStart || !trialEnd) return false;
+    const d = new Date(day);
+    d.setHours(12, 0, 0, 0);
+    return d < trialStart || d > trialEnd;
+  };
 
   // Free users are locked to monthly view
   const effectiveViewMode = isFree ? "monthly" : viewMode;
@@ -292,9 +301,12 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
                     const pnl = getDayPnL(dayTrades);
                     const hasTrades = dayTrades.length > 0;
                     const isProfit = pnl >= 0;
+                    const locked = isDayLocked(day);
 
                     let bgColor = "bg-zinc-950 hover:bg-zinc-900";
-                    if (hasTrades) {
+                    if (locked) {
+                      bgColor = "bg-zinc-950/30 opacity-40 cursor-not-allowed";
+                    } else if (hasTrades) {
                       bgColor = isProfit ? "bg-[#00FFB2]/10 border-[#00FFB2]/20 hover:bg-[#00FFB2]/20" : "bg-red-500/10 border-red-500/20 hover:bg-red-500/20";
                     }
                     const isSelected = selectedDate && isSameDay(selectedDate, day);
@@ -302,18 +314,22 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
                     return (
                       <div
                         key={day.toISOString()}
-                        onClick={() => !isFree && setSelectedDate(day)}
+                        onClick={() => !locked && setSelectedDate(day)}
+                        title={locked ? "Upgrade to access this date" : undefined}
                         className={cn(
                           "h-20 flex flex-col items-center justify-center rounded-xl border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none transition-all relative",
-                          isFree ? bgColor : `${bgColor} cursor-pointer`,
-                          !isFree && isSelected && "ring-2 ring-emerald-500 z-10 scale-105 shadow-xl",
+                          locked ? bgColor : `${bgColor} cursor-pointer`,
+                          !locked && isSelected && "ring-2 ring-emerald-500 z-10 scale-105 shadow-xl",
                           !isSameMonth(day, currentDate) && "opacity-40"
                         )}
                       >
-                        <span className={cn("text-[13px] mb-1", isToday(day) ? "font-black text-emerald-400" : "text-zinc-400 font-bold")}>
+                        {locked && (
+                          <Lock size={10} className="absolute top-1.5 right-1.5 text-zinc-600" />
+                        )}
+                        <span className={cn("text-[13px] mb-1", isToday(day) ? "font-black text-emerald-400" : locked ? "text-zinc-600 font-bold" : "text-zinc-400 font-bold")}>
                           {format(day, "d")}
                         </span>
-                        {hasTrades && (
+                        {hasTrades && !locked && (
                           <span className={cn("text-[11px] font-bold px-1.5 py-0.5 rounded", isProfit ? "text-[#00FFB2] bg-[#00FFB2]/10" : "text-red-400 bg-red-500/10")}>
                             {formatCurrency(Math.abs(pnl), displayCurrency)}
                           </span>
@@ -338,14 +354,15 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
                 </div>
                 
                 <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                  {isFree ? (
-                    <div className="h-full flex flex-col items-center justify-center text-center gap-3 py-8">
-                      <Lock size={28} className="text-zinc-600" />
-                      <p className="text-zinc-500 text-sm font-medium">Upgrade to view performance insights</p>
-                    </div>
-                  ) : !selectedDate ? (
+                  {!selectedDate ? (
                     <div className="h-full flex items-center justify-center text-zinc-500 text-sm font-medium italic">
                       Click any date to inspect trades.
+                    </div>
+                  ) : selectedDate && isDayLocked(selectedDate) ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center gap-3 py-8">
+                      <Lock size={28} className="text-zinc-600" />
+                      <p className="text-zinc-500 text-sm font-medium">This date is outside your trial period.</p>
+                      <p className="text-zinc-600 text-xs">Upgrade to view performance insights</p>
                     </div>
                   ) : selectedTrades.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center">

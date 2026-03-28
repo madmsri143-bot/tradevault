@@ -216,12 +216,19 @@ export default function SettingsPage() {
     setIsExporting(true);
     try {
       const doc = new jsPDF("landscape");
-      doc.setFontSize(22);
+
+      // Professional header
+      doc.setFillColor(17, 17, 17);
+      doc.rect(0, 0, doc.internal.pageSize.getWidth(), 35, "F");
+      doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
-      doc.text("JOURNALBUD", 14, 20);
-      doc.setFontSize(12);
+      doc.setTextColor(255, 255, 255);
+      doc.text("JOURNALBUD", 14, 18);
+      doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
-      doc.text(`Trade History Report - ${format(new Date(), "PP")}`, 14, 30);
+      doc.setTextColor(180, 180, 180);
+      doc.text(`Trade History Report  |  ${format(new Date(), "PP")}`, 14, 28);
+      doc.setTextColor(0, 0, 0); // reset
       
       let totalPnl = 0;
       const bodyData = trades.map((t: any) => {
@@ -236,45 +243,73 @@ export default function SettingsPage() {
           format(new Date(parseFloat(t.date)), "MM/dd/yy"),
           t.pair || t.symbol || "-",
           typeText,
-          t.entryPrice || "-",
-          t.exitPrice || "-",
+          t.entryPrice ? String(t.entryPrice) : "-",
+          t.exitPrice ? String(t.exitPrice) : "-",
           resultText,
           `${isProfit ? '+' : '-'}${Math.abs(actualPnl).toFixed(2)}`,
-          t.lot || "-",
+          t.lot ? String(t.lot) : "-",
           t.note || "-"
         ];
       });
 
       autoTable(doc, {
-        startY: 40,
+        startY: 42,
         head: [["Date", "Asset", "Direction", "Entry", "Exit", "Status", "PnL", "Lot", "Notes"]],
         body: bodyData,
-        theme: "striped",
-        headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] },
+        theme: "plain",
+        headStyles: {
+          fillColor: [17, 17, 17],
+          textColor: [255, 255, 255],
+          fontStyle: "bold",
+          fontSize: 9,
+          halign: "center",
+          cellPadding: 4,
+        },
+        bodyStyles: {
+          fontSize: 9,
+          textColor: [50, 50, 50],
+          cellPadding: 3.5,
+          halign: "center",
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245],
+        },
+        styles: {
+          lineWidth: 0.1,
+          lineColor: [220, 220, 220],
+        },
         didParseCell: function(data: any) {
           if (data.section === 'body') {
             const colIndex = data.column.index;
             const text = data.cell.text[0];
+            // Direction: BUY green, SELL red
             if (colIndex === 2) {
-               if (text === 'BUY') data.cell.styles.textColor = [16, 185, 129];
-               if (text === 'SELL') data.cell.styles.textColor = [239, 68, 68];
+               if (text === 'BUY') { data.cell.styles.textColor = [16, 185, 129]; data.cell.styles.fontStyle = 'bold'; }
+               if (text === 'SELL') { data.cell.styles.textColor = [220, 38, 38]; data.cell.styles.fontStyle = 'bold'; }
             }
+            // Status: PROFIT green, LOSS red
             if (colIndex === 5) {
-               if (text === 'PROFIT') data.cell.styles.textColor = [16, 185, 129];
-               if (text === 'LOSS') data.cell.styles.textColor = [239, 68, 68];
+               if (text === 'PROFIT') { data.cell.styles.textColor = [16, 185, 129]; data.cell.styles.fontStyle = 'bold'; }
+               if (text === 'LOSS') { data.cell.styles.textColor = [220, 38, 38]; data.cell.styles.fontStyle = 'bold'; }
             }
+            // PnL: + green, - red
             if (colIndex === 6) {
+               data.cell.styles.fontStyle = 'bold';
                if (text.startsWith('+')) data.cell.styles.textColor = [16, 185, 129];
-               if (text.startsWith('-') && text !== '-') data.cell.styles.textColor = [239, 68, 68];
+               if (text.startsWith('-') && text !== '-') data.cell.styles.textColor = [220, 38, 38];
             }
           }
         }
       });
       
-      const finalY = (doc as any).lastAutoTable.finalY || 40;
-      doc.setFontSize(14);
+      const finalY = (doc as any).lastAutoTable.finalY || 42;
+      const totalSign = totalPnl >= 0 ? "+" : "";
+      doc.setFillColor(17, 17, 17);
+      doc.roundedRect(14, finalY + 8, 80, 14, 2, 2, "F");
+      doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
-      doc.text(`Total PnL: ₹${totalPnl.toFixed(2)}`, 14, finalY + 15);
+      doc.setTextColor(255, 255, 255);
+      doc.text(`Total P&L: ${totalSign}${totalPnl.toFixed(2)}`, 20, finalY + 17);
       
       doc.save(`JournalBud_History_${format(new Date(), "MMM_dd_yyyy")}.pdf`);
     } catch(err) {
