@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck, BrainCircuit, Sparkles, AlertTriangle, HeartPulse, Star, Camera, Upload, ScanLine, X, Lock } from "lucide-react";
+import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck, BrainCircuit, Sparkles, AlertTriangle, HeartPulse, Star, Camera, Upload, ScanLine, X, Lock, ArrowRight, Cpu } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
 import { useRouter } from "next/navigation";
