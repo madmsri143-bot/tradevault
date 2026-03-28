@@ -325,7 +325,7 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
               </div>
 
               {/* Selected Day Details Panel */}
-              <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 flex flex-col rounded-xl h-[450px] xl:h-auto overflow-hidden">
+              <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 flex flex-col rounded-xl h-[450px] xl:h-[500px] overflow-hidden">
                 <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4 shrink-0">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2 tracking-wide">
                     {isFree ? "Day Review" : selectedDate ? format(selectedDate, "MMM do, yyyy") : "Day Review"}
