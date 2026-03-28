@@ -137,16 +137,20 @@ export function useTrial() {
  * Returns the 7-day trial date window for the current user.
  * trialStartDate = Firestore trial_started_at (or account creation)
  * trialEndDate = trialStartDate + 7 days
- * Returns null dates if user is premium (no restrictions).
+ * Returns null dates if user is paid pro (no restrictions).
+ * ACTIVE trial users (plan === "trial") ARE restricted to their 7-day window.
  */
 export function useTrialWindow() {
   const { user } = useAuth();
-  const { access } = useTrial();
-  const [window, setWindow] = useState<{ start: Date | null; end: Date | null }>({ start: null, end: null });
+  const { plan } = useTrial();
+  const [trialWindow, setTrialWindow] = useState<{ start: Date | null; end: Date | null }>({ start: null, end: null });
+
+  // Trial restrictions apply when plan is "trial" OR "free" (expired trial)
+  const isTrialRestricted = plan === "trial" || plan === "free";
 
   useEffect(() => {
-    if (!user || access === "premium") {
-      setWindow({ start: null, end: null });
+    if (!user || !isTrialRestricted) {
+      setTrialWindow({ start: null, end: null });
       return;
     }
 
@@ -160,15 +164,15 @@ export function useTrialWindow() {
           startDate.setHours(0, 0, 0, 0);
           const endDate = new Date(trialStart + (7 * 24 * 60 * 60 * 1000));
           endDate.setHours(23, 59, 59, 999);
-          setWindow({ start: startDate, end: endDate });
+          setTrialWindow({ start: startDate, end: endDate });
         }
       }
     });
 
     return () => unsub();
-  }, [user, access]);
+  }, [user, isTrialRestricted]);
 
-  return { trialStart: window.start, trialEnd: window.end, isFree: access === "free" };
+  return { trialStart: trialWindow.start, trialEnd: trialWindow.end, isTrialRestricted };
 }
 
 export function TrialBanner() {

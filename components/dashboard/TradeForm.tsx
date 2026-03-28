@@ -25,7 +25,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
   const { user } = useAuth();
   const { alert } = useModal();
   const { access } = useTrial();
-  const { trialStart, trialEnd, isFree: isTrialFree } = useTrialWindow();
+  const { trialStart, trialEnd, isTrialRestricted } = useTrialWindow();
   const isFree = access === "free";
   const [loading, setLoading] = useState(false);
   const [dailyTradeCount, setDailyTradeCount] = useState(0);
@@ -159,7 +159,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
 
   // Helper: check if a date falls within the trial window
   const isDateInTrialWindow = (dateStr: string): boolean => {
-    if (!isTrialFree || !trialStart || !trialEnd) return true; // premium or no window = allowed
+    if (!isTrialRestricted || !trialStart || !trialEnd) return true; // paid pro = allowed
     const d = new Date(dateStr);
     d.setHours(12, 0, 0, 0); // normalize to noon to avoid timezone edge cases
     return d >= trialStart && d <= trialEnd;
@@ -172,7 +172,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
     }
 
     // 🔒 Trial Date Guard: Block trades outside 7-day window
-    if (isTrialFree && trialStart && trialEnd && !isDateInTrialWindow(formData.date)) {
+    if (isTrialRestricted && trialStart && trialEnd && !isDateInTrialWindow(formData.date)) {
       await alert({
         title: "Trial Period Restriction",
         message: `Trades outside your trial period (${trialStart.toLocaleDateString()} – ${trialEnd.toLocaleDateString()}) are locked. Upgrade to Premium for full access.`,
@@ -334,7 +334,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
 
   // ═══ TRIAL WINDOW FILTER for bulk imports ═══
   const filterTradesByTrialWindow = (trades: any[]): { validTrades: any[]; skippedCount: number } => {
-    if (!isTrialFree || !trialStart || !trialEnd) {
+    if (!isTrialRestricted || !trialStart || !trialEnd) {
       return { validTrades: trades, skippedCount: 0 };
     }
 

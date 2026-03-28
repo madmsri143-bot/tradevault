@@ -68,11 +68,11 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
   const [viewMode, setViewMode] = useState<ViewMode>("monthly");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const { trialStart, trialEnd } = useTrialWindow();
+  const { trialStart, trialEnd, isTrialRestricted } = useTrialWindow();
 
   // Helper: check if a day is within the trial window
   const isDayLocked = (day: Date): boolean => {
-    if (!isFree || !trialStart || !trialEnd) return false;
+    if (!isTrialRestricted || !trialStart || !trialEnd) return false;
     const d = new Date(day);
     d.setHours(12, 0, 0, 0);
     return d < trialStart || d > trialEnd;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/AuthContext";
-import { useTrial } from "@/components/TrialGuard";
+import { useTrial, useTrialWindow } from "@/components/TrialGuard";
 import { Settings as SettingsIcon, Shield, Palette, LogOut, Info, ExternalLink, Moon, Check, X, Loader2, Mail, Download, FileText, Presentation } from "lucide-react";
 import { signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
@@ -18,6 +18,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const { confirm, alert } = useModal();
   const { access } = useTrial();
+  const { trialStart, trialEnd, isTrialRestricted } = useTrialWindow();
   const isFree = access === "free";
   
   // Theme State
@@ -141,8 +142,23 @@ export default function SettingsPage() {
       });
     }
 
+    // 🔒 Trial window filter: restrict export to trial-period trades only
+    if (isTrialRestricted && trialStart && trialEnd) {
+      const trialStartMs = trialStart.getTime();
+      const trialEndMs = trialEnd.getTime();
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter((t: any) => {
+        const d = new Date(t.date).getTime();
+        return d >= trialStartMs && d <= trialEndMs;
+      });
+      const skipped = beforeFilter - filtered.length;
+      if (skipped > 0 && filtered.length > 0) {
+        await alert({ title: "Trial Export", message: `Exporting ${filtered.length} trades within your trial period. ${skipped} trades outside the window were excluded. Upgrade for full history exports.`, variant: "info" });
+      }
+    }
+
     if (filtered.length === 0) {
-      await alert({ title: "No Trades Found", message: "No trades available for selected range.", variant: "info" });
+      await alert({ title: "No Trades Found", message: isTrialRestricted ? "No trades found within your trial period. Upgrade for full history exports." : "No trades available for selected range.", variant: "info" });
       return null;
     }
     return filtered;
