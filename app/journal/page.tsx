@@ -541,7 +541,10 @@ export default function JournalPage() {
             </div>
           </div>
 
-          <WeeklyReportWidget recentEntries={entries.filter(e => new Date(e.date) >= subDays(new Date(), 7))} />
+          <WeeklyReportWidget recentEntries={entries.filter(e => {
+            const d = getValidDate(e.date);
+            return d >= subDays(new Date(), 7);
+          })} />
 
           {displayDates.length === 0 ? (
             <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-12 rounded-2xl flex flex-col items-center justify-center text-center">

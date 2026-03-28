@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { JournalEntry } from "@/types";
-import { BrainCircuit, Lock, ExternalLink, Loader2, Target, CalendarDays, Flame, AlertCircle } from "lucide-react";
+import { BrainCircuit, Lock, ExternalLink, Loader2, Target, CalendarDays, Flame, AlertCircle, RefreshCw } from "lucide-react";
 import { useTrial } from "@/components/TrialGuard";
 import Link from "next/link";
 
@@ -19,22 +19,37 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
   const isFree = access === "free";
   const [loading, setLoading] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const generateReport = async () => {
     if (isFree || recentEntries.length === 0) return;
     setLoading(true);
+    setError(null);
     try {
+      console.log("Sending weekly report request:", { journalCount: recentEntries.length });
+      
       const res = await fetch("/api/weekly-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ journals: recentEntries })
       });
+      
       if (res.ok) {
         const data = await res.json();
-        setReportData(data);
+        console.log("Weekly report response:", data);
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setReportData(data);
+        }
+      } else {
+        const errData = await res.json().catch(() => ({ error: "Unknown error" }));
+        console.error("Weekly report API error:", res.status, errData);
+        setError(errData.error || `API returned ${res.status}`);
       }
     } catch (err) {
       console.error("Failed to generate weekly report:", err);
+      setError("Network error — check your connection and try again.");
     }
     setLoading(false);
   };
@@ -99,9 +114,31 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
             {loading ? <><Loader2 size={12} className="animate-spin" /> Analyzing...</> : "Generate"}
           </button>
         )}
+        {reportData && (
+          <button 
+            onClick={() => { setReportData(null); setError(null); }}
+            className="text-zinc-500 hover:text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 hover:bg-white/10"
+          >
+            <RefreshCw size={12} /> New Report
+          </button>
+        )}
       </div>
 
-      {!reportData && !loading ? (
+      {/* Error State */}
+      {error && !loading && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-5 text-center space-y-3 animate-in fade-in duration-300">
+          <AlertCircle size={24} className="text-red-400 mx-auto" />
+          <p className="text-sm font-bold text-red-300">{error}</p>
+          <button 
+            onClick={generateReport}
+            className="text-xs font-bold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-lg transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      )}
+
+      {!reportData && !loading && !error ? (
         <div className="bg-zinc-950/50 rounded-2xl border border-dashed border-white/10 p-8 text-center text-zinc-500 flex flex-col items-center">
            {recentEntries.length === 0 ? (
              <>
