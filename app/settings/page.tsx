@@ -16,7 +16,7 @@ import autoTable from "jspdf-autotable";
 export default function SettingsPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const { confirm } = useModal();
+  const { confirm, alert } = useModal();
   const { access } = useTrial();
   const isFree = access === "free";
   
@@ -79,18 +79,18 @@ export default function SettingsPage() {
       }
       
       await updatePassword(auth.currentUser, newPassword);
-      alert("Password updated successfully!");
+      await alert({ title: "Success", message: "Password updated successfully!", variant: "safe" });
       setIsChangingPassword(false);
       setOldPassword("");
       setNewPassword("");
     } catch (err: any) {
       console.error(err);
       if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-         alert("Incorrect current password.");
+         await alert({ title: "Error", message: "Incorrect current password.", variant: "danger" });
       } else if (err.code === 'auth/requires-recent-login') {
-         alert("Please log out and log back in to change your password for security reasons.");
+         await alert({ title: "Security Required", message: "Please log out and log back in to change your password for security reasons.", variant: "info" });
       } else {
-         alert("Failed to update password. Ensure your new password is at least 6 characters.");
+         await alert({ title: "Error", message: "Failed to update password. Ensure your new password is at least 6 characters.", variant: "danger" });
       }
     } finally {
       setIsSavingPassword(false);
@@ -102,10 +102,10 @@ export default function SettingsPage() {
     setIsResettingEmail(true);
     try {
       await sendPasswordResetEmail(auth, user.email);
-      alert(`Password reset link sent to ${user.email}`);
+      await alert({ title: "Email Sent", message: `Password reset link sent to ${user.email}`, variant: "info" });
       setIsChangingPassword(false);
     } catch (err) {
-      alert("Failed to send reset link.");
+      await alert({ title: "Error", message: "Failed to send reset link.", variant: "danger" });
     } finally {
       setIsResettingEmail(false);
     }
@@ -120,12 +120,12 @@ export default function SettingsPage() {
 
   const fetchAndFilterTrades = async () => {
     if (!exportMode) {
-      alert("Please select Entire History or Specific Date Range.");
+      await alert({ title: "Selection Required", message: "Please select Entire History or Specific Date Range.", variant: "info" });
       return null;
     }
     
     if (exportMode === "range" && (!exportFrom || !exportTo)) {
-      alert("Please select both From and To dates for the Specific Date Range.");
+      await alert({ title: "Date Range Required", message: "Please select both From and To dates for the Specific Date Range.", variant: "info" });
       return null;
     }
 
@@ -142,7 +142,7 @@ export default function SettingsPage() {
     }
 
     if (filtered.length === 0) {
-      alert("No trades available for selected range.");
+      await alert({ title: "No Trades Found", message: "No trades available for selected range.", variant: "info" });
       return null;
     }
     return filtered;
@@ -191,7 +191,7 @@ export default function SettingsPage() {
       document.body.removeChild(link);
     } catch(err) {
       console.error(err);
-      alert("Failed to export trades.");
+      await alert({ title: "Export Failed", message: "Failed to export trades.", variant: "danger" });
     } finally {
       setIsExporting(false);
     }
@@ -230,7 +230,7 @@ export default function SettingsPage() {
       doc.save(`TradeVault_History_${format(new Date(), "MMM_dd_yyyy")}.pdf`);
     } catch(err) {
       console.error(err);
-      alert("Failed to export PDF.");
+      await alert({ title: "Export Failed", message: "Failed to export PDF.", variant: "danger" });
     } finally {
       setIsExporting(false);
     }
@@ -260,7 +260,7 @@ export default function SettingsPage() {
       await pptx.writeFile({ fileName: `TradeVault_Presentation_${format(new Date(), "MMM_dd_yyyy")}.pptx` });
     } catch(err) {
       console.error(err);
-      alert("Failed to export PPT.");
+      await alert({ title: "Export Failed", message: "Failed to export PPT.", variant: "danger" });
     } finally {
       setIsExporting(false);
     }
