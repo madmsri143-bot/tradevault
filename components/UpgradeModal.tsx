@@ -157,7 +157,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
             <div className="space-y-4">
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-white">Pro Starter</h3>
-                <p className="text-3xl font-black text-white">$3 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
+                <p className="text-3xl font-black text-white">$2.99 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
               </div>
               <ul className="space-y-3 pt-4 border-t border-white/5">
                 <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#00FFB2]" : "text-zinc-500"} /> <span className="text-sm text-zinc-300">Full Analytics</span></li>
@@ -180,7 +180,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
             <div className="space-y-4">
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-[#00FFB2]">Pro Elite (Best Value)</h3>
-                <p className="text-3xl font-black text-white">$21 <span className="text-sm text-zinc-500 font-medium">/ year</span></p>
+                <p className="text-3xl font-black text-white">$20.99 <span className="text-sm text-zinc-500 font-medium">/ year</span></p>
                 <p className="text-xs text-[#00FFB2] font-semibold mt-1">Breaks down to $1.75/month</p>
               </div>
               <ul className="space-y-3 pt-4 border-t border-[#00FFB2]/10">

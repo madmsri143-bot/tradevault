@@ -448,8 +448,8 @@ export default function LandingPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-[#00FFB2]">Professional Access</h3>
-              <p className="text-3xl font-black">$3 <span className="text-sm text-zinc-500 font-medium font-bold">/ month</span></p>
-              <p className="text-sm font-bold text-zinc-400">or <span className="text-white">$21</span> / year</p>
+              <p className="text-3xl font-black">$2.99 <span className="text-sm text-zinc-500 font-medium font-bold">/ month</span></p>
+              <p className="text-sm font-bold text-zinc-400">or <span className="text-white">$20.99</span> / year</p>
             </div>
             <ul className="space-y-4 flex-1">
               <PricingTier feature="Elite Target Engine (Daily/Weekly)" pro />

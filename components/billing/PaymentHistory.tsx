@@ -55,7 +55,7 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
       startY: 70,
       head: [["Description", "Amount"]],
       body: [
-        [`TradeVault ${payment.plan.replace("pro_", "").toUpperCase()} Subscription`, payment.plan === "pro_yearly" ? "$21.00" : "$3.00"]
+        [`TradeVault ${payment.plan.replace("pro_", "").toUpperCase()} Subscription`, payment.plan === "pro_yearly" ? "$20.99" : "$2.99"]
       ],
       theme: "striped",
       headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] }
@@ -90,7 +90,7 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
                     {format(new Date(payment.date), "MMM dd, yyyy")}
                   </td>
                   <td className="px-6 py-4 text-white font-bold">
-                    {payment.plan === "pro_yearly" ? "$21" : "$3"}
+                    {payment.plan === "pro_yearly" ? "$20.99" : "$2.99"}
                   </td>
                   <td className="px-6 py-4 text-zinc-400 capitalize">
                     {payment.plan.replace("pro_", "")}

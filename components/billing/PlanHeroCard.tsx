@@ -76,7 +76,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
             {isYearly ? "Pro Yearly" : isMonthly ? "Pro Monthly" : plan === "trial" ? "Professional Trial" : "Standard Free"}
           </h3>
           <div className="text-[#00FFB2] font-semibold text-lg mb-2">
-            {isYearly ? "$21 / year" : isMonthly ? "$3 / month" : plan === "trial" ? "$0 for 7 Days" : "$0 / forever"}
+            {isYearly ? "$20.99 / year" : isMonthly ? "$2.99 / month" : plan === "trial" ? "$0 for 7 Days" : "$0 / forever"}
           </div>
           <p className="text-sm text-zinc-400 max-w-sm">
             {plan === "free" ? "Limited logging, basic analytics, and no data export functions." : "Full analytics, pacing targets, file exports, and artificial intelligence psychological mistake detection."}
