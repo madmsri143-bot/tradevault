@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
+import { adminDb } from "@/lib/firebase-admin";
 
 const FALLBACK_REPORT = {
   avgScore: 0,
@@ -9,41 +10,61 @@ const FALLBACK_REPORT = {
   advice: "AI service is temporarily unavailable. Please retry in a moment.",
 };
 
+// Get ISO week key like "2026-W13"
+function getWeekKey(date: Date = new Date()): string {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
+}
+
 export async function POST(req: NextRequest) {
   console.log("=== WEEKLY REPORT API HIT ===");
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  console.log("API KEY:", apiKey ? "FOUND ✅" : "MISSING ❌");
-
-  if (!apiKey) {
-    console.error("GEMINI_API_KEY is not set in environment variables");
-    return NextResponse.json(FALLBACK_REPORT);
-  }
-
-  let ai: GoogleGenAI;
-  try {
-    ai = new GoogleGenAI({ apiKey });
-    console.log("GoogleGenAI client initialized ✅");
-  } catch (initErr) {
-    console.error("FAILED to initialize GoogleGenAI client:", initErr);
-    return NextResponse.json(FALLBACK_REPORT);
-  }
+  const apiKey = process.env.OPENAI_API_KEY;
+  console.log("OPENAI_API_KEY:", apiKey ? "FOUND ✅" : "MISSING ❌");
 
   try {
     const body = await req.json();
-    const { journals } = body;
-    console.log("Incoming body keys:", Object.keys(body));
-    console.log("Journal entries count:", journals?.length ?? 0);
+    const { journals, userId } = body;
 
-    if (!journals || !Array.isArray(journals) || journals.length === 0) {
-      console.warn("No journal data provided in request body");
-      return NextResponse.json(
-        { error: "No journal data provided." },
-        { status: 400 }
-      );
+    if (!userId) {
+      return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
 
-    // Strip heavy fields to save tokens
+    if (!journals || !Array.isArray(journals) || journals.length === 0) {
+      return NextResponse.json({ error: "No journal data provided." }, { status: 400 });
+    }
+
+    // ━━━ CHECK CACHED REPORT ━━━
+    const weekKey = getWeekKey();
+    console.log(`Checking cache for user ${userId}, week ${weekKey}`);
+
+    try {
+      const cachedDoc = await adminDb
+        .collection("users")
+        .doc(userId)
+        .collection("weeklyReports")
+        .doc(weekKey)
+        .get();
+
+      if (cachedDoc.exists) {
+        console.log("✅ Returning cached weekly report");
+        return NextResponse.json({ ...cachedDoc.data(), cached: true });
+      }
+    } catch (cacheErr) {
+      console.error("Cache lookup failed (continuing to generate):", cacheErr);
+    }
+
+    // ━━━ GENERATE NEW REPORT ━━━
+    if (!apiKey) {
+      console.error("OPENAI_API_KEY not configured");
+      return NextResponse.json(FALLBACK_REPORT);
+    }
+
+    const openai = new OpenAI({ apiKey });
+
     const cleanJournals = journals.map((j: any) => {
       let dateStr = "unknown";
       try {
@@ -63,96 +84,76 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    console.log("Clean journals payload:", JSON.stringify(cleanJournals));
+    console.log("Calling OpenAI GPT-4o-mini...");
 
-    const prompt = `Analyze this weekly trading journal data and provide a performance report.
-
-Data:
-${JSON.stringify(cleanJournals)}
-
-Return ONLY valid JSON (no markdown, no code blocks, no explanation):
-{
-  "avgScore": number between 0-100,
-  "topMistake": "most common mistake string",
-  "bestDay": "best performing day string",
-  "weakness": "key weakness identified",
-  "advice": "actionable trading advice"
-}`;
-
-    const MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
-    let response;
-    let usedModel = "";
-
-    for (const model of MODELS) {
-      try {
-        console.log(`Trying model: ${model}...`);
-        response = await ai.models.generateContent({
-          model,
-          contents: prompt,
-        });
-        usedModel = model;
-        console.log(`✅ Success with model: ${model}`);
-        break;
-      } catch (modelErr: any) {
-        const status = modelErr?.status || modelErr?.error?.code;
-        console.error(`❌ ${model} failed (status ${status}):`, modelErr?.message?.slice(0, 200) || modelErr);
-        if (status === 429) {
-          console.log(`Rate limited on ${model}, trying next model...`);
-          continue;
-        }
-        // Non-rate-limit error — don't try other models
-        console.error("FULL ERROR:", JSON.stringify(modelErr, null, 2));
-        return NextResponse.json(FALLBACK_REPORT);
-      }
-    }
-
-    if (!response) {
-      console.error("All models rate limited");
-      return NextResponse.json({
-        ...FALLBACK_REPORT,
-        topMistake: "Rate limit exceeded. Please try again in a few minutes.",
-        advice: "Your free tier quota is temporarily exhausted. Wait a minute and retry.",
+    let completion;
+    try {
+      completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        max_tokens: 500,
+        temperature: 0.7,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a professional trading psychology coach. Analyze trading journal data and return ONLY valid JSON. No markdown, no explanation, no code blocks.",
+          },
+          {
+            role: "user",
+            content: `Analyze this weekly trading journal data:\n\n${JSON.stringify(cleanJournals)}\n\nReturn ONLY this JSON structure:\n{\n  "avgScore": number 0-100,\n  "topMistake": "most common mistake",\n  "bestDay": "best trading day",\n  "weakness": "key weakness",\n  "advice": "actionable advice"\n}`,
+          },
+        ],
       });
-    }
-
-    console.log(`Used model: ${usedModel}`);
-
-    const rawText = response?.text;
-    console.log("RAW GEMINI RESPONSE:", rawText);
-
-    if (!rawText) {
-      console.error("Gemini returned empty/null response");
+    } catch (openaiErr: any) {
+      console.error("OPENAI API CALL FAILED:", openaiErr?.message || openaiErr);
       return NextResponse.json(FALLBACK_REPORT);
     }
 
-    // Clean markdown code blocks if present
+    const rawText = completion.choices?.[0]?.message?.content || "";
+    console.log("RAW OPENAI RESPONSE:", rawText);
+
+    if (!rawText) {
+      console.error("OpenAI returned empty response");
+      return NextResponse.json(FALLBACK_REPORT);
+    }
+
     const cleaned = rawText.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
-    console.log("CLEANED TEXT:", cleaned);
 
     let parsed;
     try {
       parsed = JSON.parse(cleaned);
-      console.log("PARSED JSON:", JSON.stringify(parsed));
     } catch (parseErr) {
-      console.error("JSON PARSE ERROR. Raw cleaned text:", cleaned);
-      console.error("Parse error:", parseErr);
+      console.error("JSON PARSE ERROR:", cleaned);
       return NextResponse.json(FALLBACK_REPORT);
     }
 
-    // Validate required fields exist
     const result = {
       avgScore: typeof parsed.avgScore === "number" ? parsed.avgScore : 0,
       topMistake: parsed.topMistake || "None identified",
       bestDay: parsed.bestDay || "N/A",
       weakness: parsed.weakness || "N/A",
       advice: parsed.advice || "Keep journaling consistently.",
+      generatedAt: new Date().toISOString(),
+      weekKey,
     };
 
-    console.log("✅ Weekly report generated successfully:", JSON.stringify(result));
+    // ━━━ STORE IN FIRESTORE ━━━
+    try {
+      await adminDb
+        .collection("users")
+        .doc(userId)
+        .collection("weeklyReports")
+        .doc(weekKey)
+        .set(result);
+      console.log(`✅ Report cached for week ${weekKey}`);
+    } catch (storeErr) {
+      console.error("Failed to cache report (still returning result):", storeErr);
+    }
+
+    console.log("✅ Weekly report generated and stored");
     return NextResponse.json(result);
   } catch (error: any) {
     console.error("FULL UNHANDLED ERROR:", error?.message || error);
-    console.error("ERROR STACK:", error?.stack);
     return NextResponse.json(FALLBACK_REPORT);
   }
 }

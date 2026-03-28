@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { JournalEntry } from "@/types";
-import { BrainCircuit, Lock, ExternalLink, Loader2, Target, CalendarDays, Flame, AlertCircle, RefreshCw } from "lucide-react";
+import { BrainCircuit, Lock, Loader2, Target, CalendarDays, Flame, AlertCircle, RefreshCw, CheckCircle2 } from "lucide-react";
 import { useTrial } from "@/components/TrialGuard";
+import { useAuth } from "@/lib/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import Link from "next/link";
 
 interface ReportData {
@@ -12,39 +15,75 @@ interface ReportData {
   bestDay: string;
   weakness: string;
   advice: string;
+  generatedAt?: string;
+  weekKey?: string;
+  cached?: boolean;
+}
+
+function getWeekKey(date: Date = new Date()): string {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
 }
 
 export default function WeeklyReportWidget({ recentEntries }: { recentEntries: JournalEntry[] }) {
   const { access } = useTrial();
+  const { user } = useAuth();
   const isFree = access === "free";
   const [loading, setLoading] = useState(false);
+  const [loadingCache, setLoadingCache] = useState(true);
   const [reportData, setReportData] = useState<ReportData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isCached, setIsCached] = useState(false);
+
+  // Load cached report on mount
+  useEffect(() => {
+    if (!user || isFree) {
+      setLoadingCache(false);
+      return;
+    }
+
+    const loadCached = async () => {
+      try {
+        const weekKey = getWeekKey();
+        const cachedRef = doc(db, "users", user.uid, "weeklyReports", weekKey);
+        const cachedSnap = await getDoc(cachedRef);
+        if (cachedSnap.exists()) {
+          setReportData(cachedSnap.data() as ReportData);
+          setIsCached(true);
+        }
+      } catch (err) {
+        console.error("Failed to load cached report:", err);
+      }
+      setLoadingCache(false);
+    };
+
+    loadCached();
+  }, [user, isFree]);
 
   const generateReport = async () => {
-    if (isFree || recentEntries.length === 0) return;
+    if (isFree || recentEntries.length === 0 || !user) return;
     setLoading(true);
     setError(null);
     try {
-      console.log("Sending weekly report request:", { journalCount: recentEntries.length });
-      
       const res = await fetch("/api/weekly-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ journals: recentEntries })
+        body: JSON.stringify({ journals: recentEntries, userId: user.uid }),
       });
-      
+
       if (res.ok) {
         const data = await res.json();
-        console.log("Weekly report response:", data);
         if (data.error) {
           setError(data.error);
         } else {
           setReportData(data);
+          setIsCached(!!data.cached);
         }
       } else {
         const errData = await res.json().catch(() => ({ error: "Unknown error" }));
-        console.error("Weekly report API error:", res.status, errData);
         setError(errData.error || `API returned ${res.status}`);
       }
     } catch (err) {
@@ -66,7 +105,6 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           <span className="text-[10px] uppercase font-black tracking-widest bg-zinc-800 text-zinc-400 px-2 py-1 rounded">Pro Only</span>
         </div>
 
-        {/* Blurred Content */}
         <div className="relative pointer-events-none select-none filter blur-sm opacity-50 space-y-4">
           <div className="flex gap-4">
             <div className="bg-zinc-900 p-4 rounded-xl flex-1 border border-white/5">
@@ -84,7 +122,6 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           </div>
         </div>
 
-        {/* Upgrade Overlay */}
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
            <Lock size={32} className="text-zinc-500 mb-3" />
            <p className="text-sm font-bold text-white mb-4">Unlock Weekly Behavior Analytics</p>
@@ -105,7 +142,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           </h3>
           <p className="text-[11px] text-zinc-500 mt-1 uppercase tracking-widest font-bold">Past 7 Days AI Synthesis</p>
         </div>
-        {!reportData && (
+        {!reportData && !loadingCache && (
           <button 
             onClick={generateReport}
             disabled={loading || recentEntries.length === 0}
@@ -115,12 +152,13 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           </button>
         )}
         {reportData && (
-          <button 
-            onClick={() => { setReportData(null); setError(null); }}
-            className="text-zinc-500 hover:text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 hover:bg-white/10"
-          >
-            <RefreshCw size={12} /> New Report
-          </button>
+          <div className="flex items-center gap-2">
+            {isCached && (
+              <span className="text-[9px] uppercase tracking-widest font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg flex items-center gap-1">
+                <CheckCircle2 size={10} /> This Week
+              </span>
+            )}
+          </div>
         )}
       </div>
 
@@ -138,7 +176,12 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
         </div>
       )}
 
-      {!reportData && !loading && !error ? (
+      {loadingCache ? (
+        <div className="bg-zinc-950/50 rounded-2xl border border-white/5 p-6 flex items-center justify-center gap-3">
+          <Loader2 size={16} className="animate-spin text-zinc-500" />
+          <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Loading report...</p>
+        </div>
+      ) : !reportData && !loading && !error ? (
         <div className="bg-zinc-950/50 rounded-2xl border border-dashed border-white/10 p-8 text-center text-zinc-500 flex flex-col items-center">
            {recentEntries.length === 0 ? (
              <>
@@ -149,6 +192,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
              <>
                <BrainCircuit size={24} className="mb-2 opacity-50" />
                <p className="text-sm font-medium">Click Generate to synthesize your performance.</p>
+               <p className="text-[10px] text-zinc-600 mt-1">1 report per week • Powered by GPT</p>
              </>
            )}
         </div>
@@ -190,6 +234,12 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
              <span className="text-[10px] text-blue-400 uppercase tracking-widest font-black block mb-2 flex items-center gap-1.5"><Target size={12} /> Advice</span>
              <p className="text-sm font-medium text-blue-200 leading-relaxed">{reportData.advice}</p>
           </div>
+
+          {reportData.generatedAt && (
+            <p className="text-[10px] text-zinc-600 text-center mt-2">
+              Generated {new Date(reportData.generatedAt).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} • Week {reportData.weekKey}
+            </p>
+          )}
         </div>
       )}
     </div>
