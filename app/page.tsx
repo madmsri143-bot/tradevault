@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap,
   ShieldCheck, BrainCircuit, Sparkles, AlertTriangle, HeartPulse, Star,
@@ -32,36 +33,39 @@ function useReveal() {
 }
 
 /* ═══════════════════════════════════════════════
-   AI ORB — Living Presence
+   HERO VISUAL — Companion Lift
    ═══════════════════════════════════════════════ */
-function AIOrb({ className = "", size = "lg" }: { className?: string; size?: "sm" | "md" | "lg" }) {
-  const dims = size === "lg" ? "w-44 h-44" : size === "md" ? "w-28 h-28" : "w-16 h-16";
+function HeroVisual() {
   return (
-    <div className={`relative flex items-center justify-center ${className}`}>
-      {/* Outer glow ring 1 */}
-      <div className={`absolute ${dims} rounded-full animate-neural-ring`}
-        style={{ border: "1px solid rgba(0,255,178,0.2)" }} />
-      {/* Outer glow ring 2 */}
-      <div className={`absolute ${dims} rounded-full animate-neural-ring`}
-        style={{ border: "1px solid rgba(59,130,246,0.15)", animationDelay: "0.8s" }} />
-      {/* Outer glow ring 3 */}
-      <div className={`absolute ${dims} rounded-full animate-neural-ring`}
-        style={{ border: "1px solid rgba(0,255,178,0.1)", animationDelay: "1.6s" }} />
-      {/* Core */}
-      <div className={`${dims} rounded-full animate-orb-float`}>
-        <div className="w-full h-full rounded-full animate-orb-glow relative overflow-hidden"
-          style={{
-            background: "radial-gradient(circle at 40% 35%, rgba(0,255,178,0.5), rgba(59,130,246,0.3) 50%, rgba(0,255,178,0.1) 80%, transparent)"
-          }}>
-          <div className="absolute inset-0 rounded-full animate-orb-pulse"
-            style={{
-              background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 60%)"
-            }} />
-          {/* Inner sparkle */}
-          <div className="absolute top-[30%] left-[35%] w-2 h-2 bg-white rounded-full opacity-60 animate-pulse" />
-          <div className="absolute top-[55%] left-[60%] w-1.5 h-1.5 bg-[#00FFB2] rounded-full opacity-40 animate-pulse"
-            style={{ animationDelay: "0.5s" }} />
-        </div>
+    <div className="relative flex items-center justify-center w-[300px] h-[300px] md:w-[450px] md:h-[450px] animate-hero-lift pointer-events-none mt-10 md:mt-0">
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#00FFB2]/5 to-[#00FFB2]/20 blur-[60px] rounded-full animate-hero-glow z-0" />
+      
+      {/* Rising Particles */}
+      <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden z-10 [mask-image:linear-gradient(to_bottom,transparent,black_40%,transparent_90%)]">
+        {[...Array(15)].map((_, i) => (
+          <div 
+            key={i} 
+            className="absolute bottom-0 w-1 rounded-full bg-[#00FFB2] opacity-0 animate-hero-particles"
+            style={{ 
+              left: `${15 + Math.random() * 70}%`, 
+              height: `${2 + Math.random() * 4}px`,
+              animationDelay: `${i * 0.4}s`,
+              animationDuration: `${3 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Hero Image */}
+      <div className="relative w-full h-full animate-hero-glow z-20 mix-blend-screen opacity-90 drop-shadow-[0_0_35px_rgba(0,255,178,0.3)]">
+        <Image 
+          src="/hero-lift.png" 
+          alt="AI Companion Lifting Trader" 
+          fill
+          className="object-contain"
+          priority
+        />
       </div>
     </div>
   );
@@ -287,8 +291,8 @@ export default function LandingPage() {
             <FloatingTip text="Avoid trading after 2 losses" position="top-16 -right-2 md:top-12 md:right-4" delay="2s" />
             <FloatingTip text="Confidence improving ↑" position="bottom-20 -left-2 md:bottom-24 md:left-4" delay="4s" />
 
-            {/* Orb */}
-            <AIOrb size="lg" />
+            {/* Cinematic Hero Visual */}
+            <HeroVisual />
 
             {/* Status Feed under orb */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-72 md:w-80">
@@ -598,9 +602,7 @@ export default function LandingPage() {
                     <h4 className="font-bold text-white text-sm">Weekly AI Report</h4>
                     <p className="text-[11px] text-zinc-500 mt-0.5">Mar 17 — Mar 23, 2026</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <AIOrb size="sm" />
-                  </div>
+                    <BrainCircuit size={18} className="text-[#00FFB2] animate-pulse" />
                 </div>
 
                 {/* Report items */}
@@ -818,9 +820,8 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#00FFB2]/5 via-[#3B82F6]/5 to-[#00FFB2]/5 rounded-[3rem] blur-2xl" />
 
           <div className="relative bg-[#11161D]/60 backdrop-blur-xl border border-white/8 rounded-[3rem] p-12 md:p-20 text-center space-y-8 overflow-hidden">
-            {/* Decorative orb */}
-            <div className="absolute -top-16 left-1/2 -translate-x-1/2 pointer-events-none opacity-40">
-              <AIOrb size="md" />
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none opacity-40">
+              <BrainCircuit size={64} className="text-[#00FFB2] animate-pulse opacity-50" />
             </div>
 
             <div className="relative z-10 space-y-6 pt-8">
