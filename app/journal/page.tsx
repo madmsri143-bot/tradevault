@@ -489,22 +489,13 @@ export default function JournalPage() {
                 </div>
               )}
 
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => { setText(DEFAULT_PROMPT); setMoodBefore(""); setMoodAfter(""); setMistakes([]); setQualityScore(""); setPnl(""); setSlFollowed(false); setImageFile(null); setPreviewUrl(null); }}
-                  className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-3.5 rounded-xl transition-all text-sm"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting || !text.trim() || (isFree && dailyJournalLimitReached)}
-                  className="flex-[2] bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5"
-                >
-                  {isFree && dailyJournalLimitReached ? "Limit Reached" : submitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : "Save Journal"}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={submitting || !text.trim() || (isFree && dailyJournalLimitReached)}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 active:scale-[0.98]"
+              >
+                {isFree && dailyJournalLimitReached ? "Limit Reached" : submitting ? <><Loader2 size={16} className="animate-spin" /> Logging...</> : "Log Journal Entry"}
+              </button>
             </form>
           </div>
         </div>
