@@ -40,10 +40,11 @@ function HeroVisual() {
     <div 
       className="relative flex items-center justify-center w-full max-w-[420px] aspect-square mx-auto animate-hero-lift pointer-events-none mt-10 md:mt-0"
       style={{
-        background: "radial-gradient(circle at center, rgba(0,255,200,0.15), transparent 70%)",
+        background: "radial-gradient(closest-side, rgba(0,255,178,0.15), transparent 100%)",
         borderRadius: "50%",
         overflow: "hidden",
-        filter: "blur(0.3px)"
+        maskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
       }}
     >
       {/* Background Glow */}
@@ -66,7 +67,7 @@ function HeroVisual() {
       </div>
 
       {/* Hero Image */}
-      <div className="relative w-full h-[90%] animate-hero-glow z-20 mix-blend-screen opacity-90 drop-shadow-[0_0_20px_rgba(0,255,178,0.2)]">
+      <div className="relative w-full h-full animate-hero-glow z-20 mix-blend-screen opacity-90">
         <Image 
           src="/hero-lift.png" 
           alt="AI Companion Lifting Trader" 
@@ -137,32 +138,7 @@ function ChatBubble({ sender, message, delay = "0ms", variant = "default" }: {
   );
 }
 
-/* ═══════════════════════════════════════════════
-   FLOATING INSIGHT TIP
-   ═══════════════════════════════════════════════ */
-function FloatingTip({ text, position, delay }: { text: string; position: string; delay: string }) {
-  return (
-    <div className={`absolute ${position} z-20 pointer-events-none transition-transform duration-500 hover-scale-target`}
-      style={{ animationDelay: delay, animation: "floatSmooth 4s ease-in-out infinite" }}>
-      <div 
-        className="flex items-center whitespace-nowrap"
-        style={{
-          background: "rgba(0, 255, 200, 0.08)",
-          backdropFilter: "blur(10px)",
-          border: "1px solid rgba(0,255,200,0.2)",
-          borderRadius: "999px",
-          padding: "6px 12px",
-          fontSize: "12px",
-          color: "#00FFB2",
-          fontWeight: 600
-        }}
-      >
-        <BrainCircuit size={12} className="inline mr-1.5 opacity-60" />
-        {text}
-      </div>
-    </div>
-  );
-}
+/* Removed FloatingTip as per user request */
 
 /* ═══════════════════════════════════════════════
    MAIN LANDING PAGE
@@ -239,6 +215,9 @@ export default function LandingPage() {
           <a href="#how-it-works" className="hover:text-white transition-colors duration-300">How It Works</a>
           <a href="#features" className="hover:text-white transition-colors duration-300">Features</a>
           <a href="#pricing" className="hover:text-white transition-colors duration-300">Pricing</a>
+          <Link href="/demo" className="hidden sm:flex text-sm font-medium text-zinc-400 hover:text-[#00FFB2] transition-colors items-center gap-1.5">
+            <Play size={14} className="text-[#00FFB2]" /> Demo
+          </Link>
         </div>
 
         <div className="flex items-center gap-4">
@@ -319,17 +298,6 @@ export default function LandingPage() {
           {/* Right: Living AI Orb + Status Feed */}
           <div className="relative fade-slide-up flex flex-col items-center justify-center min-h-[420px] hero-container" style={{ animationDelay: "200ms" }}>
             
-            {/* Connection SVG */}
-            <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none animate-pulse-line hidden md:block" style={{ top: '-10px' }}>
-              <line x1="50%" y1="18%" x2="50%" y2="40%" stroke="#00FFB2" strokeWidth="1" opacity="0.4" />
-              <line x1="88%" y1="42%" x2="68%" y2="48%" stroke="#00FFB2" strokeWidth="1" opacity="0.4" />
-              <line x1="42%" y1="88%" x2="48%" y2="68%" stroke="#00FFB2" strokeWidth="1" opacity="0.4" />
-            </svg>
-
-            {/* Floating insight tips around orb */}
-            <FloatingTip text="You trade better after 2PM" position="top-[10%] left-1/2 -translate-x-1/2" delay="0s" />
-            <FloatingTip text="Avoid trading after 2 losses" position="top-[40%] right-[2%] md:right-[5%]" delay="1.3s" />
-            <FloatingTip text="Fear pattern declining ↓ 🟩" position="bottom-[10%] left-[25%] md:left-[40%]" delay="2.6s" />
 
             {/* Cinematic Hero Visual */}
             <HeroVisual />
