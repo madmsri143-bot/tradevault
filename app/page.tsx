@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck, BrainCircuit } from "lucide-react";
+import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck, BrainCircuit, Sparkles, AlertTriangle, HeartPulse, Star } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
 import { useRouter } from "next/navigation";
@@ -221,54 +221,149 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Feature 2: Journal System */}
+        {/* Feature 2: AI-Powered Trading Journal */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
-            <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-              <BrainCircuit className="text-amber-500" size={24} />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold uppercase tracking-widest">
+              <Sparkles size={14} /> Premium Feature
             </div>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">AI-Powered Trading Psychology Engine</h2>
-            <p className="text-zinc-400 text-lg leading-relaxed">TradeVault analyzes your trading behavior, scores your discipline, and identifies exactly what's costing you money using AI-driven insights.</p>
-            <ul className="space-y-3 pt-4">
-              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> AI Trade Scoring (0–100 based on discipline)</li>
-              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> Automatic mistake detection (Overtrading, FOMO, etc.)</li>
-              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> Personalized insights after every trade</li>
-              <li className="flex items-center gap-3 text-zinc-300"><Check size={18} className="text-amber-500" /> Weekly AI performance reports and behavior analysis</li>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+              AI-Powered <br />Trading Journal
+            </h2>
+            <p className="text-lg text-zinc-400 italic font-medium">&ldquo;Turn your trades into insights, not regrets.&rdquo;</p>
+            <p className="text-zinc-400 text-base leading-relaxed">
+              Track your emotions, mistakes, and decisions with precision. Our AI analyzes your journal entries to uncover hidden patterns, improve discipline, and elevate your trading performance.
+            </p>
+            <ul className="space-y-4 pt-2">
+              <li className="flex items-start gap-3 text-zinc-300">
+                <div className="w-6 h-6 rounded-lg bg-purple-500/15 border border-purple-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <HeartPulse size={14} className="text-purple-400" />
+                </div>
+                <span className="text-[15px]">Pre & Post Trade Emotional Tracking</span>
+              </li>
+              <li className="flex items-start gap-3 text-zinc-300">
+                <div className="w-6 h-6 rounded-lg bg-amber-500/15 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <AlertTriangle size={14} className="text-amber-400" />
+                </div>
+                <span className="text-[15px]">Mistake Detection (FOMO, Revenge Trading, Overtrading)</span>
+              </li>
+              <li className="flex items-start gap-3 text-zinc-300">
+                <div className="w-6 h-6 rounded-lg bg-[#00FFB2]/15 border border-[#00FFB2]/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <BrainCircuit size={14} className="text-[#00FFB2]" />
+                </div>
+                <span className="text-[15px]">AI Weekly Performance Review & Strategy Suggestions</span>
+              </li>
+              <li className="flex items-start gap-3 text-zinc-300">
+                <div className="w-6 h-6 rounded-lg bg-blue-500/15 border border-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <Star size={14} className="text-blue-400" />
+                </div>
+                <span className="text-[15px]">Execution Scoring (A/B/C/D with smart feedback)</span>
+              </li>
             </ul>
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <Link href={user ? (hasUsedTrial ? "/billing" : "/journal") : "/signup?plan=trial"} className="px-6 py-3.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:-translate-y-0.5 transition-all text-sm">
+                Start Journaling Smarter <ChevronRight size={16} />
+              </Link>
+              <Link href={user ? "/billing" : "/signup?plan=trial"} className="px-6 py-3.5 bg-zinc-900 border border-white/10 text-zinc-300 font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 hover:border-purple-500/30 transition-all text-sm">
+                <Sparkles size={14} className="text-purple-400" /> Upgrade for AI Insights
+              </Link>
+            </div>
           </div>
+
+          {/* RIGHT SIDE: Premium Journal UI Mockup */}
           <div className="relative group">
-             <div className="absolute inset-0 bg-amber-500/10 blur-[60px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
-             <div className="relative bg-[#111] border border-[#222] p-6 rounded-[2rem] shadow-2xl space-y-4 transform group-hover:scale-[1.02] transition-transform duration-500 overflow-hidden">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-[50px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
-               <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
-                 <BrainCircuit size={16} className="text-amber-400" /> AI Trade Score
-               </h3>
-               <div className="text-5xl font-black text-amber-400 drop-shadow-lg mb-6 flex items-baseline gap-2 leading-none">
-                 72 <span className="text-xl text-zinc-700 font-bold">/ 100</span>
-               </div>
-               <div className="space-y-4 text-sm text-zinc-300">
-                 <div className="bg-[#1a1a1a] p-3.5 rounded-xl border border-white/5 flex gap-3 shadow-inner">
-                   <div className="mt-0.5"><span className="text-red-400">⚠</span></div>
-                   <div className="flex flex-col">
-                     <span className="text-red-400/80 uppercase font-black tracking-widest text-[10px] mb-0.5">Mistake</span> 
-                     <span className="font-medium text-white">Overtrading</span>
-                   </div>
-                 </div>
-                 <div className="bg-[#1a1a1a] p-3.5 rounded-xl border border-white/5 flex gap-3 shadow-inner">
-                   <div className="mt-0.5"><span className="text-blue-400">💡</span></div>
-                   <div className="flex flex-col">
-                     <span className="text-blue-400/80 uppercase font-black tracking-widest text-[10px] mb-0.5">Insight</span> 
-                     <span className="font-medium text-white">You entered early due to impatience.</span>
-                   </div>
-                 </div>
-                 <div className="bg-[#1a1a1a] p-3.5 rounded-xl border border-white/5 flex gap-3 shadow-inner">
-                   <div className="mt-0.5"><span className="text-emerald-400">🚀</span></div>
-                   <div className="flex flex-col">
-                     <span className="text-emerald-400/80 uppercase font-black tracking-widest text-[10px] mb-0.5">Suggestion</span> 
-                     <span className="font-medium text-white">Wait for confirmation before entry.</span>
-                   </div>
-                 </div>
-               </div>
+             {/* Glow effects */}
+             <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/15 via-blue-500/10 to-[#00FFB2]/15 blur-[80px] rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+             <div className="absolute inset-0 bg-purple-500/5 blur-[40px] rounded-full opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
+             
+             <div className="relative bg-gradient-to-br from-[#111318] to-[#0D1015] border border-white/[0.08] p-5 md:p-6 rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.5)] transform group-hover:scale-[1.02] transition-transform duration-500 overflow-hidden">
+                
+                {/* Top decorative blur */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-[60px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[50px] pointer-events-none translate-y-1/2 -translate-x-1/4" />
+                
+                {/* Window chrome */}
+                <div className="flex items-center justify-between mb-5 relative z-10">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/40" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <BrainCircuit size={14} className="text-purple-400" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Journal Intelligence</span>
+                  </div>
+                </div>
+
+                {/* Emotional Tracking Flow */}
+                <div className="relative z-10 space-y-3">
+                  <div className="bg-[#0B0E13] rounded-2xl border border-white/5 p-4 shadow-inner">
+                    <span className="text-[9px] uppercase font-black tracking-[0.2em] text-zinc-500 block mb-3">Emotional Intelligence</span>
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1.5 rounded-lg">
+                        <span className="text-sm">😎</span>
+                        <span className="text-[11px] font-bold text-blue-400">Confident</span>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <ChevronRight size={14} className="text-zinc-600" />
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-red-500/10 border border-red-500/20 px-2.5 py-1.5 rounded-lg">
+                        <span className="text-sm">😡</span>
+                        <span className="text-[11px] font-bold text-red-400">Frustrated</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mistake Tags */}
+                  <div className="bg-[#0B0E13] rounded-2xl border border-white/5 p-4 shadow-inner">
+                    <span className="text-[9px] uppercase font-black tracking-[0.2em] text-zinc-500 block mb-3">Mistake Intelligence</span>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="text-[10px] font-black tracking-wider uppercase text-amber-400 border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 rounded-lg shadow-[0_0_10px_rgba(245,158,11,0.1)]">FOMO</span>
+                      <span className="text-[10px] font-black tracking-wider uppercase text-red-400 border border-red-500/30 bg-red-500/10 px-3 py-1.5 rounded-lg shadow-[0_0_10px_rgba(239,68,68,0.1)]">Early Exit</span>
+                      <span className="text-[10px] font-black tracking-wider uppercase text-zinc-500 border border-white/10 bg-white/5 px-3 py-1.5 rounded-lg">Overtrading</span>
+                      <span className="text-[10px] font-black tracking-wider uppercase text-zinc-500 border border-white/10 bg-white/5 px-3 py-1.5 rounded-lg">Revenge</span>
+                    </div>
+                  </div>
+
+                  {/* AI Score + Execution Grade Row */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-[#0B0E13] rounded-2xl border border-purple-500/15 p-4 shadow-inner relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-purple-500/10 rounded-full blur-[20px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
+                      <span className="text-[9px] uppercase font-black tracking-[0.2em] text-zinc-500 block mb-2 flex items-center gap-1.5">
+                        <BrainCircuit size={10} className="text-purple-400" /> AI Score
+                      </span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-3xl font-black text-purple-400 leading-none">84</span>
+                        <span className="text-xs text-zinc-600 font-bold">/100</span>
+                      </div>
+                      <p className="text-[10px] text-purple-300/60 font-medium mt-1.5">Strong discipline</p>
+                    </div>
+                    <div className="bg-[#0B0E13] rounded-2xl border border-emerald-500/15 p-4 shadow-inner relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-full blur-[20px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
+                      <span className="text-[9px] uppercase font-black tracking-[0.2em] text-zinc-500 block mb-2 flex items-center gap-1.5">
+                        <Star size={10} className="text-emerald-400" /> Execution
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-3xl font-black text-emerald-400 leading-none">A</span>
+                        <span className="text-[10px] font-bold text-emerald-400/70 bg-emerald-500/10 px-2 py-0.5 rounded">Quality Trade</span>
+                      </div>
+                      <p className="text-[10px] text-emerald-300/60 font-medium mt-1.5">Rules followed</p>
+                    </div>
+                  </div>
+
+                  {/* AI Insight Row */}
+                  <div className="bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-2xl border border-purple-500/10 p-4 shadow-inner">
+                    <div className="flex gap-3 items-start">
+                      <div className="w-8 h-8 bg-purple-500/15 rounded-xl flex items-center justify-center shrink-0 border border-purple-500/20 mt-0.5">
+                        <Sparkles size={14} className="text-purple-400" />
+                      </div>
+                      <div>
+                        <span className="text-[9px] uppercase font-black tracking-[0.2em] text-purple-400/80 block mb-1">AI Insight</span>
+                        <p className="text-[12px] font-medium text-zinc-300 leading-relaxed">&ldquo;Your confidence pre-trade was high, but frustration post-trade suggests poor exit timing. Focus on letting winners run.&rdquo;</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
              </div>
           </div>
         </div>
