@@ -429,11 +429,19 @@ export default function LandingPage() {
               <PricingTier feature="Basic Trade Logging" />
               <PricingTier feature="Standard Journal View" />
               <PricingTier feature="Basic Statistics" />
+              <PricingTier feature="Mistake Intelligence Tracking" />
+              <PricingTier feature="Export (PDF, CSV, PPTX)" />
               <li className="flex items-center gap-3 opacity-30 select-none">
                 <div className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center shrink-0">
                   <span className="text-[10px]">✕</span>
                 </div>
-                <span className="text-xs text-zinc-500 line-through">Advanced Edge Analytics</span>
+                <span className="text-xs text-zinc-500 line-through">Elite Target Engine</span>
+              </li>
+              <li className="flex items-center gap-3 opacity-30 select-none">
+                <div className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center shrink-0">
+                  <span className="text-[10px]">✕</span>
+                </div>
+                <span className="text-xs text-zinc-500 line-through">AI Trade Insights</span>
               </li>
             </ul>
             <Link href="/signup?plan=free" className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-2xl transition-all text-center">
@@ -452,12 +460,13 @@ export default function LandingPage() {
               <p className="text-sm font-bold text-zinc-400">or <span className="text-white">$19.99</span> / year</p>
             </div>
             <ul className="space-y-4 flex-1">
-              <PricingTier feature="Elite Target Engine (Daily/Weekly)" pro />
-              <PricingTier feature="Advanced Analytics Dashboard" pro />
+              <PricingTier feature="Basic Trade Logging" pro />
+              <PricingTier feature="Standard Journal View" pro />
+              <PricingTier feature="Basic Statistics" pro />
               <PricingTier feature="Mistake Intelligence Tracking" pro />
-              <PricingTier feature="Export (PDF, Excel, CSV)" pro />
+              <PricingTier feature="Export (PDF, CSV, PPTX)" pro />
+              <PricingTier feature="Elite Target Engine (Daily/Weekly)" pro />
               <PricingTier feature="AI-Powered Trade Insights" pro />
-              <PricingTier feature="Unlimited Multi-Device Sync" pro />
             </ul>
             <div className="space-y-4">
               <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all block text-center">

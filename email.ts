@@ -1,13 +1,11 @@
 import nodemailer from 'nodemailer';
 
-// Configure SMTP using Brevo
+// Configure SMTP using Gmail
 const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  secure: false, // true for port 465, false for other ports
+  service: 'gmail',
   auth: {
-    user: process.env.BREVO_SMTP_USER || "Madmsri143@gmail.com",
-    pass: process.env.BREVO_SMTP_KEY,
+    user: process.env.SMTP_EMAIL || "tradevaultsupport@gmail.com",
+    pass: process.env.SMTP_PASSWORD,
   },
 });
 
@@ -16,8 +14,8 @@ const transporter = nodemailer.createTransport({
  */
 export async function sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
   try {
-    // Use the verified Brevo email as the sender to avoid sender rejection errors
-    const sender = `"Trade Journal" <madmsri143@gmail.com>`;
+    // Use the verified email as the sender to avoid sender rejection errors
+    const sender = `"Trade Journal" <tradevaultsupport@gmail.com>`;
 
     await transporter.sendMail({
       from: sender,
@@ -38,18 +36,18 @@ export async function sendEmail(to: string, subject: string, htmlContent: string
 
 async function runTest() {
   // 👉 Sending to your own email address
-  const testRecipient = 'madmsri143@gmail.com';
+  const testRecipient = 'tradevaultsupport@gmail.com';
 
   console.log(`Starting test: Sending email to ${testRecipient}...`);
 
-  const dynamicSubject = 'Trade Journal - Brevo SMTP Test';
+  const dynamicSubject = 'Trade Journal - SMTP Setup Test';
 
   // Styled HTML body
   const styledHtmlBody = `
     <div style="font-family: Arial, sans-serif; background-color: #09090b; color: #fafafa; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; border: 1px solid #27272a;">
-      <h2 style="color: #10b981; margin-top: 0;">Brevo SMTP Setup Successful!</h2>
+      <h2 style="color: #10b981; margin-top: 0;">SMTP Setup Successful!</h2>
       <p style="color: #a1a1aa; font-size: 16px; line-height: 1.6;">
-        Hello! This is a test email sent from your Trade Journal application using <strong>TypeScript</strong>, <strong>Nodemailer</strong>, and <strong>Brevo SMTP</strong>.
+        Hello! This is a test email sent from your Trade Journal application using <strong>TypeScript</strong>, <strong>Nodemailer</strong>, and <strong>Gmail SMTP</strong>.
       </p>
       <p style="color: #a1a1aa; font-size: 16px; line-height: 1.6;">
         If you are receiving this, your connection is working perfectly.

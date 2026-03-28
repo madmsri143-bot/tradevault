@@ -96,36 +96,33 @@ export default function DemoPage() {
 
         {/* ACTIVE TAB RENDER */}
         {activeTab === "overview" && (
-          <div className="animate-in fade-in duration-300 pointer-events-none">
+          <div className="animate-in fade-in zoom-in-95 duration-300 relative">
             
-            <div className="flex flex-col xl:flex-row gap-6">
-              {/* Form Side - Locked for Demo */}
-              <div className="w-full xl:w-[380px] shrink-0 relative">
-                <div className="absolute inset-0 z-10 bg-black/60 backdrop-blur-[2px] rounded-2xl border border-white/10 flex flex-col items-center justify-center p-6 text-center">
-                   <Lock className="text-zinc-500 mb-3" size={32} />
-                   <h3 className="text-zinc-300 font-bold">Input Disabled</h3>
-                   <p className="text-zinc-500 text-xs mt-1">Sign up to log your actual trades.</p>
-                </div>
-                <div className="h-[500px] w-full bg-zinc-900 border border-white/5 rounded-2xl p-6 overflow-hidden blur-sm">
-                   <div className="space-y-6 opacity-50">
-                     <div className="h-12 bg-white/5 rounded-xl"/>
-                     <div className="h-12 bg-white/5 rounded-xl"/>
-                     <div className="h-12 bg-white/5 rounded-xl"/>
-                     <div className="h-12 bg-white/5 rounded-xl"/>
-                   </div>
-                </div>
-              </div>
-              
-              {/* Metrics & Charts Side */}
-              <div className="flex-1 min-w-0 flex flex-col gap-6">
-                <MetricsCards trades={mockTrades} displayCurrency={displayCurrency} />
-                
-                <div className="w-full">
-                  <Charts trades={mockTrades} displayCurrency={displayCurrency} />
-                </div>
-              </div>
+            {/* Add Trade Button Line */}
+            <div className="mb-6 w-full flex justify-start">
+                <button 
+                  className="bg-emerald-500 text-black p-4 rounded-full shadow-[0_4px_20px_rgba(16,185,129,0.4)] flex items-center justify-center relative z-20 cursor-not-allowed opacity-80 group hover:scale-[1.02] transition-transform"
+                >
+                  <span className="font-bold text-xl">+</span>
+                  <span className="absolute left-full ml-4 bg-zinc-800/90 backdrop-blur-md text-white text-sm font-bold px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 whitespace-nowrap shadow-xl border border-white/10 transition-opacity">
+                    Add Trade (Demo Mode)
+                  </span>
+                </button>
             </div>
 
+            <div className="flex flex-col gap-8 pointer-events-none">
+              
+              {/* TOP SECTION: KPI Cards */}
+              <div className="w-full focus-within:none">
+                <MetricsCards trades={mockTrades} displayCurrency={displayCurrency} />
+              </div>
+
+              {/* MIDDLE & BOTTOM SECTION: Charts */}
+              <div className="w-full relative">
+                <Charts trades={mockTrades} displayCurrency={displayCurrency} />
+              </div>
+
+            </div>
           </div>
         )}
 

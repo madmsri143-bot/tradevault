@@ -53,7 +53,7 @@ export default function BillingPage() {
   const handleManageClick = async () => {
     await alert({
       title: "Contact Support",
-      message: "Please reach out to support@tradevault.com to manage or cancel your existing subscription.",
+      message: "Please reach out to tradevaultsupport@gmail.com to manage or cancel your existing subscription.",
       variant: "safe"
     });
   };
