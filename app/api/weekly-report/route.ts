@@ -79,12 +79,12 @@ Return ONLY valid JSON (no markdown, no code blocks, no explanation):
   "advice": "actionable trading advice"
 }`;
 
-    console.log("Calling Gemini with model gemini-1.5-flash...");
+    console.log("Calling Gemini with model gemini-2.0-flash...");
 
     let response;
     try {
       response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.0-flash",
         contents: prompt,
       });
     } catch (geminiErr: any) {
