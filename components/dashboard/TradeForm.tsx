@@ -106,6 +106,30 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
     }
   }, [formData.result]);
 
+  // Global Paste Event Listener
+  useEffect(() => {
+    if (isOpen === false) return; // only listen when modal is open
+
+    const handlePaste = (e: ClipboardEvent) => {
+      // Don't intercept if they are actively typing in an input field
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) handleImageInput(file);
+          break; // Stop after finding the first image
+        }
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [isOpen]);
+
   // Auto-sync risk when amount changes (only for Loss trades)
   useEffect(() => {
     if (formData.result === "Loss" && !riskManuallyOverridden && formData.pnl) {
@@ -214,12 +238,14 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageInput = async (file: File) => {
+    if (!file || !file.type.startsWith("image/")) {
+      await alert({ message: "Only image files are allowed" });
+      return;
+    }
 
-    if (!file.type.startsWith("image/")) {
-      await alert({ message: "Please upload a valid image file." });
+    if (file.size > 5 * 1024 * 1024) {
+      await alert({ message: "Image size should be less than 5MB" });
       return;
     }
 
@@ -243,6 +269,14 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       const data = await response.json();
       
       if (data.trades && Array.isArray(data.trades) && data.trades.length > 0) {
+         
+         // Strict Validation Layer: Reject completely if standard trade elements are missing
+         const isValidTradeFound = data.trades.some((t: any) => t.symbol && t.entry && t.exit);
+         if (!isValidTradeFound) {
+            await alert({ message: "Invalid trading screenshot. Please upload a proper MT4/MT5 screenshot." });
+            return;
+         }
+
          if (data.trades.length === 1) {
            const t = data.trades[0];
            const rawPnl = parseFloat(t.pnl) || 0;
@@ -309,7 +343,13 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             type="file" 
             accept="image/*" 
             ref={fileInputRef} 
-            onChange={handleFileUpload} 
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                 handleImageInput(file);
+                 e.target.value = ''; // Reset input so same file can be selected again
+              }
+            }}
             className="hidden" 
             id="screenshot-upload"
           />
@@ -317,13 +357,13 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             type="button"
             onClick={() => !isFree && fileInputRef.current?.click()}
             disabled={scanningTrades || isFree}
-            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload Screenshot (Auto Fill)"}
-            className={`w-full text-xs font-bold px-3 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload or paste (Ctrl + V) your MT4/MT5 screenshot"}
+            className={`w-full text-xs font-bold px-3 py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
               isFree ? 'bg-zinc-800 text-amber-500/80 cursor-not-allowed border border-amber-500/20' : 'text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d]'
             }`}
           >
             {isFree ? <Lock size={15} /> : scanningTrades ? <Loader2 size={15} className="animate-spin" /> : <Camera size={15} />}
-            {isFree ? "Auto-fill via Screenshot (Pro)" : scanningTrades ? "Scanning trades..." : "Upload Screenshot (Auto Fill)"}
+            {isFree ? "Auto-fill via Screenshot (Pro)" : scanningTrades ? "Scanning..." : "Upload or paste (Ctrl + V) your MT4/MT5 screenshot"}
           </button>
           
           <p className="text-[10px] text-zinc-500 text-center mt-2 leading-tight">
