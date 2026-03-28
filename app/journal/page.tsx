@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { JournalEntry, Trade } from "@/types";
-import { format, subDays, startOfDay } from "date-fns";
-import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText, TrendingUp, AlertTriangle, Target, Flame, Activity, Lock, BrainCircuit, HeartPulse, CheckCircle2 } from "lucide-react";
+import { format, subDays, startOfDay, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, addMonths, subMonths, startOfWeek, endOfWeek } from "date-fns";
+import { ImagePlus, Loader2, Calendar as CalendarIcon, Pencil, Trash2, X, Maximize2, BookText, TrendingUp, AlertTriangle, Target, Flame, Activity, Lock, BrainCircuit, HeartPulse, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
 import { useTrial } from "@/components/TrialGuard";
@@ -129,8 +129,9 @@ export default function JournalPage() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   
-  // Filter State
-  const [filterDate, setFilterDate] = useState("");
+  // Calendar State
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   // Daily journal limit for free users (max 1 per day)
   const todayStr = getTodayDate();
@@ -296,26 +297,29 @@ export default function JournalPage() {
     groupedEntries[dateStr].push(entry);
   });
 
-  const sortedDates = Object.keys(groupedEntries).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-  const displayDates = filterDate ? sortedDates.filter(d => d === filterDate) : sortedDates;
+  // Calendar Data
+  const monthStart = startOfMonth(currentMonth);
+  const monthEnd = endOfMonth(monthStart);
+  const startDate = startOfWeek(monthStart);
+  const endDate = endOfWeek(monthEnd);
 
   // Elite System Calculations
-  const relevantTrades = filterDate 
-    ? trades.filter(t => format(new Date(t.date), "yyyy-MM-dd") === filterDate)
-    : trades;
+  const relevantTrades = trades.filter(t => isSameMonth(getValidDate(t.date), currentMonth));
   const totalTradesCount = relevantTrades.length;
   const nonBreakevenTrades = relevantTrades.filter(t => t.pnl !== 0);
   const winRate = nonBreakevenTrades.length > 0 ? (relevantTrades.filter(t => t.pnl > 0).length / nonBreakevenTrades.length) * 100 : 0;
 
   const mistakesCount: Record<string, number> = {};
-  displayDates.forEach(dateStr => {
-    groupedEntries[dateStr].forEach(entry => {
+  entries.forEach(entry => {
+    if (isSameMonth(getValidDate(entry.date), currentMonth)) {
       entry.mistakes?.forEach(m => {
-         mistakesCount[m] = (mistakesCount[m] || 0) + 1;
+        mistakesCount[m] = (mistakesCount[m] || 0) + 1;
       });
-    });
+    }
   });
   const topMistake = Object.keys(mistakesCount).length > 0 ? Object.entries(mistakesCount).sort((a,b)=>b[1]-a[1])[0] : null;
+
+  const calendarDays = eachDayOfInterval({ start: startDate, end: endDate });
 
   const recent7Days = Array.from({ length: 7 }).map((_, i) => format(startOfDay(subDays(new Date(), i)), "yyyy-MM-dd"));
   const daysLedger = [...new Set(entries.map(e => format(new Date(e.date), "yyyy-MM-dd")))];
@@ -330,25 +334,13 @@ export default function JournalPage() {
           <p className="text-sm text-zinc-400 mt-1">Structured reflections and mistake intelligence framework.</p>
         </div>
         
-        {/* Date Filter Bar */}
-        <div className="flex items-center gap-3 bg-zinc-900 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-xl">
-          <label className="text-sm font-medium text-zinc-400 pl-2">Filter:</label>
-          <div className="relative">
-            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
-            <input
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-              className="bg-zinc-950 border border-zinc-800 rounded-lg py-1.5 pr-2 pl-9 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark transition-colors"
-            />
-          </div>
-          {filterDate && (
-            <button
-              onClick={() => setFilterDate("")}
-              className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors"
-            >
-              Clear
-            </button>
+        {/* Month Navigation */}
+        <div className="flex items-center gap-2 bg-zinc-900 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-xl">
+          <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"><ChevronLeft size={18} /></button>
+          <span className="text-sm font-bold text-white min-w-[120px] text-center tracking-wide">{format(currentMonth, "MMM yyyy")}</span>
+          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"><ChevronRight size={18} /></button>
+          {!isSameMonth(currentMonth, new Date()) && (
+            <button onClick={() => setCurrentMonth(new Date())} className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider ml-1 px-2 py-1 bg-zinc-800 rounded hover:text-white transition-colors">Today</button>
           )}
         </div>
       </div>
@@ -534,112 +526,165 @@ export default function JournalPage() {
             return d >= subDays(new Date(), 7);
           })} />
 
-          {displayDates.length === 0 ? (
-            <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-12 rounded-2xl flex flex-col items-center justify-center text-center">
-              <div className="w-20 h-20 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
-                <BookText size={32} className="text-zinc-600" />
-              </div>
-              <h3 className="text-lg font-bold text-white">No Journal Entries Yet</h3>
-              <p className="text-sm text-zinc-500 max-w-sm mt-2">
-                Start structuring your lessons on the left. Transformation happens through disciplined reflection.
-              </p>
+          {/* Calendar Grid */}
+          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl relative overflow-hidden">
+            <div className="grid grid-cols-7 gap-1 mb-3">
+               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                 <div key={day} className="text-center text-[10px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">{day}</div>
+               ))}
             </div>
-          ) : (
-            displayDates.map((dateStr) => (
-              <div key={dateStr} className="relative pl-6 before:absolute before:inset-0 before:left-[11px] before:w-0.5 before:bg-zinc-800 before:z-0">
+            <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+              {calendarDays.map((day) => {
+                const dateStr = format(day, "yyyy-MM-dd");
+                const dayEntries = groupedEntries[dateStr] || [];
+                const isCurrentMonth = isSameMonth(day, currentMonth);
+                const isSelected = selectedDate === dateStr;
                 
-                <div className="relative z-10 flex items-center gap-4 mb-5 -ml-6">
-                  <div className="w-[14px] h-[14px] ml-[5px] rounded-full bg-emerald-500 ring-4 ring-zinc-950 shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                  <h3 className="text-[13px] font-black text-white tracking-widest uppercase bg-zinc-900 border border-white/10 px-3 py-1.5 rounded-lg shadow-sm">
-                    {format(new Date(dateStr), "EEEE, MMM dd, yyyy")}
-                  </h3>
-                </div>
+                let dayPnl = 0;
+                dayEntries.forEach(e => { if (e.pnl) dayPnl += e.pnl });
+                
+                const isProfit = dayPnl > 0;
+                const isLoss = dayPnl < 0;
+                const hasEntries = dayEntries.length > 0;
 
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">
-                  {groupedEntries[dateStr].map((entry) => {
-                    const hasRuleViolation = entry.mistakes && entry.mistakes.length > 0;
-                    const isProfit = entry.pnl && entry.pnl > 0;
-                    const isLoss = entry.pnl && entry.pnl < 0;
-                    
-                    let borderColorClass = "border-black/10 dark:border-white/5";
-                    if (hasRuleViolation) borderColorClass = "border-amber-500/50";
-                    else if (isProfit) borderColorClass = "border-emerald-500/50";
-                    else if (isLoss) borderColorClass = "border-red-500/50";
-
-                    const validDate = getValidDate(entry.date);
-                    
-                    return (
-                      <div 
-                        key={entry.id} 
-                        onClick={() => setViewingEntry(entry)}
-                        className={`bg-zinc-900 border fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl shadow-sm hover:bg-zinc-800/40 transition-all cursor-pointer flex flex-col h-full group relative ${borderColorClass}`}
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[11px] font-black tracking-widest uppercase text-zinc-400">
-                              {validDate.toLocaleDateString()}
-                            </span>
-                            {entry.pnl !== undefined && entry.pnl !== null && (
-                               <span className={`text-[13px] font-bold ${entry.pnl > 0 ? 'text-emerald-400' : entry.pnl < 0 ? 'text-red-400' : 'text-zinc-400'}`}>
-                                 {entry.pnl > 0 ? '+' : ''}${entry.pnl}
-                               </span>
-                            )}
-                          </div>
-                          
-                          {/* Action Buttons */}
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={14} /></button>
-                            <button onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          {entry.qualityScore && (
-                           <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${entry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : entry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : entry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
-                             Grade {entry.qualityScore}
-                           </span>
-                          )}
-                          {entry.moodBefore && (
-                            <span className="text-[10px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-950 px-2 py-0.5 rounded">
-                              {entry.moodBefore.replace(/[^a-zA-Z]/g, '').trim() || entry.moodBefore}
-                            </span>
-                          )}
-                        </div>
-                        
-                        {/* Text Content */}
-                        <div className="text-zinc-300 text-[13px] whitespace-pre-wrap leading-[1.6] line-clamp-3 font-medium opacity-90 mb-4 flex-grow">
-                          <SmartText text={entry.text} />
-                        </div>
-
-                        {/* Mistakes & AI Score */}
-                        <div className="mt-auto pt-4 border-t border-white/5">
-                          {entry.mistakes && entry.mistakes.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5 mb-3">
-                              {entry.mistakes.map(m => (
-                                <span key={m} className="text-[9px] font-black tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 rounded shadow-sm">{m}</span>
-                              ))}
-                            </div>
-                          )}
-                          
-                          {entry.aiScore !== undefined && (
-                            <div className="flex items-center gap-2">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black shadow-inner border ${entry.aiScore >= 80 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : entry.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
-                                {entry.aiScore}
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-[9px] text-zinc-500 uppercase font-black tracking-widest block">AI Insight</span>
-                                <span className="text-[11px] font-medium text-zinc-300 line-clamp-1">{entry.aiInsight || "No insight generated."}</span>
-                              </div>
-                            </div>
-                          )}
+                return (
+                  <button
+                    key={dateStr}
+                    onClick={() => setSelectedDate(isSelected ? null : dateStr)}
+                    className={`relative min-h-[64px] sm:min-h-[84px] p-1.5 sm:p-2 rounded-xl flex flex-col items-center justify-start border transition-all ${
+                      !isCurrentMonth ? 'opacity-30 pointer-events-none border-transparent bg-transparent' :
+                      isSelected ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/50 scale-105 z-10' :
+                      hasEntries ? (isProfit ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' : isLoss ? 'border-red-500/20 bg-red-500/5 hover:border-red-500/50 hover:bg-red-500/10' : 'border-white/5 bg-zinc-900/50 hover:bg-zinc-800') :
+                      'border-transparent bg-zinc-950 hover:bg-zinc-900 border-white/5 hover:border-white/10'
+                    }`}
+                  >
+                    <span className={`text-xs sm:text-sm font-bold ${isToday(day) ? 'text-emerald-400' : isSelected ? 'text-emerald-400' : hasEntries ? 'text-zinc-200' : 'text-zinc-600'}`}>
+                      {format(day, "d")}
+                    </span>
+                    {hasEntries && (
+                      <div className="mt-auto flex flex-col items-center gap-1 w-full">
+                        {dayPnl !== 0 && (
+                          <span className={`hidden sm:block text-[9px] font-black tracking-tighter ${dayPnl > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {dayPnl > 0 ? '+' : ''}${Math.round(dayPnl)}
+                          </span>
+                        )}
+                        <div className="flex gap-0.5">
+                           {dayEntries.slice(0, 3).map((_, i) => (
+                             <div key={i} className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${isSelected ? 'bg-emerald-400' : isProfit ? 'bg-emerald-500/50' : isLoss ? 'bg-red-500/50' : 'bg-zinc-500'}`} />
+                           ))}
+                           {dayEntries.length > 3 && <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-zinc-600" />}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
-              </div>
-            ))
+          {/* Detailed View Panel */}
+          {selectedDate && (
+            <div className="bg-zinc-900 border border-emerald-500/20 shadow-[0_0_40px_rgba(16,185,129,0.05)] p-6 rounded-2xl relative overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300">
+               <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-10">
+                 <div className="flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                     <CalendarIcon className="text-emerald-500" size={16} />
+                   </div>
+                   <h3 className="text-xl font-bold text-white tracking-tight">
+                     {format(new Date(selectedDate), "EEEE, MMM dd, yyyy")}
+                   </h3>
+                 </div>
+                 <button onClick={() => setSelectedDate(null)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
+               </div>
+               
+               {(!groupedEntries[selectedDate] || groupedEntries[selectedDate].length === 0) ? (
+                  <div className="py-12 flex flex-col items-center justify-center text-center relative z-10">
+                    <div className="w-16 h-16 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
+                      <BookText size={24} className="text-zinc-600" />
+                    </div>
+                    <p className="text-white font-bold mb-1">No Journal Entries</p>
+                    <p className="text-sm text-zinc-500">You haven't logged any reflections for this day.</p>
+                  </div>
+               ) : (
+                  <div className="space-y-6 relative z-10">
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">
+                      {groupedEntries[selectedDate].map((entry) => {
+                        const hasRuleViolation = entry.mistakes && entry.mistakes.length > 0;
+                        const isProfit = entry.pnl && entry.pnl > 0;
+                        const isLoss = entry.pnl && entry.pnl < 0;
+                        
+                        let borderColorClass = "border-black/10 dark:border-white/5";
+                        if (hasRuleViolation) borderColorClass = "border-amber-500/50";
+                        else if (isProfit) borderColorClass = "border-emerald-500/50";
+                        else if (isLoss) borderColorClass = "border-red-500/50";
+    
+                        return (
+                          <div 
+                            key={entry.id} 
+                            onClick={() => setViewingEntry(entry)}
+                            className={`bg-zinc-950 border shadow-inner p-5 rounded-2xl hover:bg-zinc-900 transition-all cursor-pointer flex flex-col h-full group relative ${borderColorClass}`}
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex flex-col gap-1">
+                                {entry.pnl !== undefined && entry.pnl !== null && (
+                                   <span className={`text-[15px] font-bold ${entry.pnl > 0 ? 'text-emerald-400' : entry.pnl < 0 ? 'text-red-400' : 'text-zinc-400'}`}>
+                                     {entry.pnl > 0 ? '+' : ''}${entry.pnl}
+                                   </span>
+                                )}
+                              </div>
+                              
+                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onClick={(e) => { e.stopPropagation(); setEditingEntry(entry); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={14} /></button>
+                                <button onClick={(e) => { e.stopPropagation(); handleDelete(entry.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
+                              </div>
+                            </div>
+    
+                            <div className="flex flex-wrap gap-1.5 mb-3">
+                              {entry.qualityScore && (
+                               <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${entry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : entry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : entry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
+                                 Grade {entry.qualityScore}
+                               </span>
+                              )}
+                              {entry.moodBefore && (
+                                <span className="text-[10px] font-bold tracking-wider text-zinc-400 border border-white/5 bg-zinc-900 px-2 py-0.5 rounded shadow-sm">
+                                  {entry.moodBefore.replace(/[^a-zA-Z]/g, '').trim() || entry.moodBefore}
+                                </span>
+                              )}
+                            </div>
+                            
+                            <div className="text-zinc-400 text-[13px] whitespace-pre-wrap leading-[1.6] line-clamp-3 font-medium mb-4 flex-grow">
+                              <SmartText text={entry.text} />
+                            </div>
+    
+                            <div className="mt-auto pt-4 border-t border-white/5">
+                              {entry.mistakes && entry.mistakes.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 mb-3">
+                                  {entry.mistakes.map(m => (
+                                    <span key={m} className="text-[9px] font-black tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 rounded shadow-sm">{m}</span>
+                                  ))}
+                                </div>
+                              )}
+                              
+                              {entry.aiScore !== undefined && (
+                                <div className="flex items-center gap-2">
+                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black shadow-inner border ${entry.aiScore >= 80 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : entry.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                                    {entry.aiScore}
+                                  </div>
+                                  <div className="flex-1">
+                                    <span className="text-[9px] text-zinc-500 uppercase font-black tracking-widest block">AI Insight</span>
+                                    <span className="text-[11px] font-medium text-zinc-300 line-clamp-1">{entry.aiInsight || "No insight generated."}</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+               )}
+            </div>
           )}
         </div>
       </div>
