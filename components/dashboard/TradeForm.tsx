@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
-import { Flame, Camera, Loader2, Lock, X, BookText } from "lucide-react";
+import { Flame, Camera, Loader2, Lock, X, BookText, Sparkles, Cpu, Upload, FileText } from "lucide-react";
 import BulkPreviewModal from "./BulkPreviewModal";
 import { useTrial } from "@/components/TrialGuard";
 
@@ -322,7 +322,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
 
   const content = (
     <div 
-      className={`shadow-[0_10px_40px_rgba(0,0,0,0.5)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.8)] rounded-2xl w-[95vw] max-w-[460px] max-h-[90vh] flex flex-col relative animate-in zoom-in-95 fade-in duration-300 transition-colors border ${isDragging ? 'border-emerald-500/50 bg-zinc-800 shadow-[0_0_50px_rgba(16,185,129,0.15)]' : 'bg-zinc-900 border-black/10 dark:border-white/10'}`}
+      className={`shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-2xl w-[95vw] max-w-[850px] max-h-[90vh] flex flex-col md:flex-row relative animate-in zoom-in-95 fade-in duration-300 overflow-hidden border ${isDragging ? 'border-[#00FFB2]/50 bg-[#11161D]/90 shadow-[0_0_50px_rgba(0,255,178,0.15)]' : 'bg-[#11161D] border-white/5'}`}
       onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
       onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
       onDrop={(e) => {
@@ -333,15 +333,21 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       }}
     >
       
-      {/* Fixed Header */}
-      <div className="shrink-0 p-6 md:px-8 border-b border-white/5 relative z-10">
-        {onClose && (
-          <button type="button" onClick={onClose} className="absolute top-6 right-6 p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
-            <X size={18} />
-          </button>
-        )}
-        <h2 className="text-xl font-bold text-emerald-400 tracking-tight mb-2">Log New Trade</h2>
-        <div className="w-full relative">
+      {/* Left side: Upload Zone */}
+      <div className="md:w-1/2 flex flex-col relative border-b md:border-b-0 md:border-r border-white/5 bg-[#0B0F14]">
+        
+        {/* Mock OS Bar */}
+        <div className="flex items-center gap-2 px-6 py-4 absolute top-0 w-full z-10 hidden md:flex">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+          </div>
+          <span className="ml-4 text-[11px] font-mono text-zinc-500 font-medium tracking-wide">JournalBud — Trade Extraction</span>
+        </div>
+
+        <div className="flex-1 flex flex-col items-center justify-center p-8 mt-12 md:mt-20">
+          
           <input 
             type="file" 
             accept="image/*,application/pdf" 
@@ -350,296 +356,203 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
               const file = e.target.files?.[0];
               if (file) {
                  handleMediaInput(file);
-                 e.target.value = ''; // Reset input so same file can be selected again
+                 e.target.value = ''; // Reset input
               }
             }}
             className="hidden" 
             id="screenshot-upload"
           />
+
+          {/* Icons Row */}
+          <div className="flex gap-5 mb-8">
+            {[
+              { icon: Camera, label: "Screenshot", onClick: () => !isFree && fileInputRef.current?.click() },
+              { icon: FileText, label: "PDF", onClick: () => !isFree && fileInputRef.current?.click() },
+              { icon: Cpu, label: "Paste", onClick: () => !isFree && alert({message: "Just press Ctrl + V anywhere in this window"}) }
+            ].map((f, i) => (
+              <div key={i} className="flex flex-col items-center gap-2.5">
+                <button type="button" onClick={f.onClick} disabled={isFree || scanningTrades} className="w-[52px] h-[52px] rounded-2xl flex items-center justify-center bg-transparent border border-white/5 hover:border-white/10 hover:bg-white/5 transition-all disabled:opacity-50 text-zinc-400">
+                   <f.icon size={20} strokeWidth={1.5} />
+                </button>
+                <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{f.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Drag & Drop Zone */}
           <button
             type="button"
             onClick={() => !isFree && fileInputRef.current?.click()}
             disabled={scanningTrades || isFree}
-            title={isFree ? "Upload screenshots to auto-fill trades — available in Pro plans" : "Upload, pdf or paste (Ctrl + V), or drag your Trade history screenshot"}
-            className={`w-full text-[10px] md:text-xs font-bold px-3 py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm break-words disabled:opacity-50 disabled:cursor-not-allowed ${
-              isFree ? 'bg-zinc-800 text-amber-500/80 cursor-not-allowed border border-amber-500/20' : 'text-zinc-950 bg-[#00FFB2] hover:bg-[#00e09d]'
-            }`}
+            className={`w-[140px] h-[140px] rounded-[2rem] flex flex-col items-center justify-center transition-all ${isFree ? 'border-amber-500/20 bg-zinc-800/20 cursor-not-allowed' : scanningTrades ? 'border-[#00FFB2]/40 bg-[#00FFB2]/5 animate-pulse border-2' : 'border-2 border-dashed border-white/5 hover:border-white/10 bg-transparent'}`}
           >
-            {isFree ? <Lock size={15} /> : scanningTrades ? <Loader2 size={15} className="animate-spin" /> : <Camera size={15} />}
-            {isFree ? "Auto-fill via Screenshot (Pro)" : scanningTrades ? "Scanning..." : "Upload, pdf or paste (Ctrl + V), or drag your Trade history screenshot"}
+             {isFree ? <Lock size={32} className="text-amber-500/50" /> : scanningTrades ? <Loader2 size={32} className="text-[#00FFB2] animate-spin" /> : <Upload size={32} className="text-zinc-500" strokeWidth={1.5} />}
           </button>
           
-          <p className="text-[10px] text-zinc-500 text-center mt-2 leading-tight">
-            Supports MT4, MT5 or Broker history screenshots.<br/>
-            <span className="opacity-80">Ensure Pair, Buy/Sell, Lot Size, and PnL are visible.</span>
-          </p>
+          <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 mt-8">
+            {isFree ? "Upgrade to Auto-fill" : scanningTrades ? "Scanning Image..." : "Drop Your Trade History"}
+          </h3>
+          
+          {isFree && (
+            <p className="text-[10px] text-amber-500/80 text-center mt-3 max-w-[220px]">
+              Available on Pro plans. Extracts Pair, Lot, PnL & Type instantly.
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Scrollable Body */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-8 pt-4">
-        <form onSubmit={handleSubmit} className="space-y-4">
-        
-        {/* Symbol Line */}
-        <div className="flex gap-4 items-center">
-          <div className="flex-1">
-            <label className="block text-xs text-zinc-400 mb-1">Symbol</label>
+      {/* Right side: Form Fields */}
+      <div className="md:w-1/2 flex flex-col p-6 md:p-8 overflow-y-auto custom-scrollbar">
+        <div className="flex items-center justify-between mb-8 shrink-0">
+          <h3 className="font-bold text-lg text-[#00FFB2] flex items-center gap-2">
+            <Sparkles size={18} className="text-[#00FFB2]" /> 
+            Log New Trade
+          </h3>
+          {onClose && (
+            <button type="button" onClick={onClose} className="p-1 px-1.5 text-zinc-500 hover:text-white transition-colors">
+              <X size={16} />
+            </button>
+          )}
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 flex-1">
+          
+          {/* Symbol */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between items-center px-1">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em]">Symbol</label>
+              <button type="button" onClick={() => setUseCustomSymbol(!useCustomSymbol)} className="text-[9px] text-[#00FFB2] hover:text-[#00FFB2]/80 font-medium">
+                {useCustomSymbol ? "USE LIST" : "CUSTOM"}
+              </button>
+            </div>
             {!useCustomSymbol ? (
-              <select
-                name="symbol"
-                value={formData.symbol}
-                onChange={handleChange}
-                className={`w-full bg-zinc-950 border rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${formData.symbol === "XAUUSD" ? "border-emerald-500/30 text-emerald-400 font-medium" : "border-zinc-800"}`}
-                required
-              >
+              <select name="symbol" value={formData.symbol} onChange={handleChange} required className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none appearance-none transition-colors ${formData.symbol === 'XAUUSD' ? 'border-white/5 text-[#00FFB2]' : 'border-white/5 text-zinc-300'}`}>
                 <option value="" disabled>Select pair</option>
                 {commonSymbols.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             ) : (
-              <input
-                type="text"
-                name="customSymbol"
-                value={formData.customSymbol}
-                onChange={handleChange}
-                placeholder="e.g. AAPL"
-                className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none uppercase"
-                required
-              />
+              <input type="text" name="customSymbol" value={formData.customSymbol} onChange={handleChange} required placeholder="e.g. AAPL" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none uppercase text-zinc-300 transition-colors" />
             )}
-
           </div>
-          <div className="pt-5">
-            <button
-              type="button"
-              onClick={() => setUseCustomSymbol(!useCustomSymbol)}
-              className="text-xs text-emerald-500 hover:text-emerald-400 underline"
-            >
-              {useCustomSymbol ? "Use List" : "Custom"}
-            </button>
-          </div>
-        </div>
 
-        {/* Row: Type, Lot sizes */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Type</label>
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
-            >
+          {/* Type */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Type</label>
+            <select name="type" value={formData.type} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none appearance-none text-zinc-300 uppercase transition-colors">
               <option value="buy">Buy</option>
               <option value="sell">Sell</option>
             </select>
           </div>
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Lot Size</label>
-            <input
-              type="number"
-              step="0.01"
-              name="lot"
-              value={formData.lot}
-              onChange={handleChange}
-              placeholder="0.1"
-              required
-              className={`w-full bg-zinc-950 border rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${formData.lot === "0.1" ? "border-emerald-500/30 text-emerald-400 font-medium" : "border-zinc-800"}`}
-            />
-          </div>
-        </div>
 
-        {/* Row: Result, PnL */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Result</label>
-            <select
-              name="result"
-              value={formData.result}
-              onChange={handleChange}
-              className={`w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:outline-none focus:border-emerald-500 font-medium ${formData.result === "Profit" ? "text-emerald-500" : "text-red-500"}`}
-            >
-              <option value="Profit" className="text-emerald-500">Profit</option>
-              <option value="Loss" className="text-red-500">Loss</option>
-            </select>
+          {/* Lot Size */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Lot Size</label>
+            <input type="number" step="0.01" name="lot" value={formData.lot} onChange={handleChange} required placeholder="0.1" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
           </div>
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Amount</label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              name="pnl"
-              value={formData.pnl}
-              onChange={handleChange}
-              placeholder="50.00"
-              required
-              className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
-        </div>
 
-        {/* Row: Risk, SL Followed */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Risk Amount</label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              name="risk"
-              value={formData.risk}
-              onChange={handleChange}
-              placeholder="e.g. 20.00"
-              required={formData.stopLossFollowed}
-              disabled={!formData.stopLossFollowed}
-              className={`w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${!formData.stopLossFollowed ? 'opacity-40 cursor-not-allowed' : ''} ${riskAutoSynced ? 'border-amber-500/30' : ''}`}
-            />
-            {!formData.stopLossFollowed && (
-               <p className="text-[10px] text-zinc-500 mt-1.5 font-medium">Risk not required when SL is not used</p>
-            )}
-          </div>
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">SL Followed?</label>
-            <div className="flex items-center gap-4 mt-2.5">
-              <label className="flex items-center gap-1.5 cursor-pointer text-sm font-medium">
-                <input 
-                  type="radio" 
-                  name="slGroup"
-                  checked={formData.stopLossFollowed === true} 
-                  onChange={() => setFormData(p => ({...p, stopLossFollowed: true}))} 
-                  className="accent-emerald-500 w-4 h-4 cursor-pointer"
-                />
-                <span className="text-emerald-400">Yes</span>
-              </label>
-              <label className="flex items-center gap-1.5 cursor-pointer text-sm font-medium">
-                <input 
-                  type="radio" 
-                  name="slGroup"
-                  checked={formData.stopLossFollowed === false} 
-                  onChange={() => setFormData(p => ({...p, stopLossFollowed: false}))} 
-                  className="accent-red-500 w-4 h-4 cursor-pointer"
-                />
-                <span className="text-red-400">No</span>
-              </label>
+          <div className="grid grid-cols-2 gap-4">
+             {/* Result */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Result</label>
+              <select name="result" value={formData.result} onChange={handleChange} className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none appearance-none transition-colors ${formData.result === 'Profit' ? 'border-[#00FFB2]/20 text-[#00FFB2]' : 'border-red-500/20 text-red-500'}`}>
+                <option value="Profit" className="text-[#00FFB2]">Profit</option>
+                <option value="Loss" className="text-red-500">Loss</option>
+              </select>
+            </div>
+             {/* PnL */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">P&L Amount</label>
+              <input type="number" min="0" step="0.01" name="pnl" value={formData.pnl} onChange={handleChange} required placeholder="50.00" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
             </div>
           </div>
-        </div>
 
-        {/* Row: Currency, Date */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Currency</label>
-            <select
-              name="currency"
-              value={formData.currency}
-              onChange={handleChange}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="INR">INR</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-              className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark"
-            />
-          </div>
-        </div>
-
-        {/* Row: Entry, Exit (Optional) */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Entry Price (Optional)</label>
-            <input
-              type="number"
-              step="any"
-              name="entryPrice"
-              value={formData.entryPrice}
-              onChange={handleChange}
-              placeholder="e.g. 1.0520"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-zinc-400 mb-1">Exit Price (Optional)</label>
-            <input
-              type="number"
-              step="any"
-              name="exitPrice"
-              value={formData.exitPrice}
-              onChange={handleChange}
-              placeholder="e.g. 1.0560"
-              className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Notes */}
-        <div>
-          <label className="block text-xs text-zinc-400 mb-1">Notes</label>
-          <textarea
-            name="note"
-            value={formData.note}
-            onChange={handleChange}
-            placeholder="Why did you take this trade?"
-            rows={2}
-            className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none resize-none"
-          />
-        </div>
-
-        {/* Free Plan Daily Limit Tracker */}
-        {isFree && (
-          <div className={`p-3 rounded-xl border flex items-center justify-between transition-colors ${
-            dailyLimitReached ? "bg-amber-500/10 border-amber-500/20 text-amber-400" : "bg-zinc-800/50 border-white/5 text-zinc-400"
-          }`}>
-            <div className="flex items-center gap-2 text-xs font-bold">
-              {dailyLimitReached ? <Lock size={14} /> : <BookText size={14} className="text-emerald-400" />}
-              <span>{dailyLimitReached ? `Daily limit reached (${dailyTradeCount}/2)` : `${dailyTradeCount}/2 trades used today`}</span>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Risk Amount</label>
+              <input type="number" min="0" step="0.01" name="risk" value={formData.risk} onChange={handleChange} disabled={!formData.stopLossFollowed} placeholder="20.00" className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors ${!formData.stopLossFollowed ? 'border-transparent opacity-40' : riskAutoSynced ? 'border-amber-500/30' : 'border-white/5'}`} />
             </div>
-            {dailyLimitReached && (
-              <button 
-                type="button" 
-                onClick={() => window.dispatchEvent(new Event("openPricingModal"))}
-                className="text-[10px] bg-amber-500 text-black px-2 py-1 flex items-center rounded font-black uppercase tracking-widest hover:bg-amber-400 transition-colors"
-              >
-                Upgrade
-              </button>
-            )}
+            <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">SL Followed?</label>
+              <div className="flex items-center gap-4 h-11 px-2">
+                  <label className="flex items-center gap-1.5 cursor-pointer text-sm">
+                    <input type="radio" name="slGroup" checked={formData.stopLossFollowed === true} onChange={() => setFormData(p => ({...p, stopLossFollowed: true}))} className="accent-[#00FFB2] w-3.5 h-3.5" />
+                    <span className="text-zinc-500">Yes</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer text-sm">
+                    <input type="radio" name="slGroup" checked={formData.stopLossFollowed === false} onChange={() => setFormData(p => ({...p, stopLossFollowed: false}))} className="accent-red-500 w-3.5 h-3.5" />
+                    <span className="text-zinc-500">No</span>
+                  </label>
+              </div>
+            </div>
           </div>
-        )}
 
+          <div className="grid grid-cols-2 gap-4">
+             <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Entry (Opt)</label>
+               <input type="number" step="any" name="entryPrice" value={formData.entryPrice} onChange={handleChange} placeholder="Optional" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
+             </div>
+             <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Exit (Opt)</label>
+               <input type="number" step="any" name="exitPrice" value={formData.exitPrice} onChange={handleChange} placeholder="Optional" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
+             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+             <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Currency</label>
+               <select name="currency" value={formData.currency} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 appearance-none uppercase transition-colors">
+                 <option value="USD">USD</option>
+                 <option value="EUR">EUR</option>
+                 <option value="INR">INR</option>
+               </select>
+             </div>
+             <div className="space-y-1.5">
+              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Date</label>
+               <input type="date" name="date" value={formData.date} onChange={handleChange} required className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 color-scheme-dark transition-colors" />
+             </div>
+          </div>
+          
+          <div className="space-y-1.5 pt-1">
+            <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Notes</label>
+            <textarea name="note" value={formData.note} onChange={handleChange} placeholder="Why did you take this trade?" rows={2} className="w-full bg-[#0A0D11] border border-white/5 rounded-xl p-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none resize-none text-zinc-300 transition-colors" />
+          </div>
+
+          {isFree && (
+            <div className={`mt-2 p-3 rounded-xl border flex items-center justify-between transition-colors ${dailyLimitReached ? "bg-amber-500/10 border-amber-500/20 text-amber-400" : "bg-zinc-800/10 border-white/5 text-zinc-500"}`}>
+              <div className="flex items-center gap-2 text-[11px] font-bold">
+                {dailyLimitReached ? <Lock size={14} /> : <BookText size={14} className="text-[#00FFB2]" />}
+                <span>{dailyLimitReached ? `Limit reached (${dailyTradeCount}/2)` : `${dailyTradeCount}/2 trades logged`}</span>
+              </div>
+              {dailyLimitReached && (
+                <button type="button" onClick={() => window.dispatchEvent(new Event("openPricingModal"))} className="text-[9px] bg-amber-500 text-black px-2 py-1 flex items-center rounded font-black uppercase tracking-widest hover:bg-amber-400 transition-colors">
+                  Upgrade
+                </button>
+              )}
+            </div>
+          )}
+
+          <div className="pt-2 mt-auto">
+            <button
+              type="submit"
+              disabled={loading || dailyLimitReached}
+              className={`w-full h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 ${
+                dailyLimitReached 
+                  ? 'bg-[#151921] text-zinc-700 cursor-not-allowed' 
+                  : loading 
+                    ? 'bg-[#151921] text-zinc-500 cursor-not-allowed' 
+                    : 'bg-[#191D24] hover:bg-[#20252D] text-zinc-400 shadow-[0_4px_20px_rgba(0,0,0,0.5)]'
+              }`}
+            >
+              {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}
+            </button>
+          </div>
+          
         </form>
       </div>
 
-      {/* Fixed Footer */}
-      <div className="shrink-0 p-6 md:px-8 md:py-5 border-t border-white/5 bg-zinc-900/80 backdrop-blur-md rounded-b-2xl">
-        <div className="flex gap-3">
-          {onClose && (
-            <button type="button" onClick={onClose} className="px-5 py-3 text-sm font-bold text-zinc-400 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 rounded-xl transition-colors">
-              Cancel
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={(e) => handleSubmit(e as any)}
-            disabled={loading || dailyLimitReached}
-            className={`flex-1 font-bold py-3 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none ${
-              dailyLimitReached ? "bg-zinc-800 text-zinc-500 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-500 text-white"
-            }`}
-          >
-            {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}
-          </button>
-        </div>
-      </div>
     </div>
   );
+
 
   return (
     <>
