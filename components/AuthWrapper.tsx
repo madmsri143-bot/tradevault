@@ -109,7 +109,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
     return (
       <div className="flex h-[100dvh] items-center justify-center bg-background">
         <div className="text-[32px] md:text-[40px] font-bold text-black dark:text-white animate-blink tracking-tight">
-          TradeVault
+          JournalBud
         </div>
       </div>
     );

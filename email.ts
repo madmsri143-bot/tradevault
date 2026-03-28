@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.SMTP_EMAIL || "tradevaultsupport@gmail.com",
+    user: process.env.SMTP_EMAIL || "journalbudsupport@gmail.com",
     pass: process.env.SMTP_PASSWORD,
   },
 });
@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 export async function sendEmail(to: string, subject: string, htmlContent: string): Promise<void> {
   try {
     // Use the verified email as the sender to avoid sender rejection errors
-    const sender = `"Trade Journal" <tradevaultsupport@gmail.com>`;
+    const sender = `"JournalBud" <journalbudsupport@gmail.com>`;
 
     await transporter.sendMail({
       from: sender,
@@ -36,7 +36,7 @@ export async function sendEmail(to: string, subject: string, htmlContent: string
 
 async function runTest() {
   // 👉 Sending to your own email address
-  const testRecipient = 'tradevaultsupport@gmail.com';
+  const testRecipient = 'journalbudsupport@gmail.com';
 
   console.log(`Starting test: Sending email to ${testRecipient}...`);
 

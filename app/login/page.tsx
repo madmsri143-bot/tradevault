@@ -239,7 +239,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           <div className="w-24 h-24 bg-[#00FFB2]/10 rounded-3xl flex items-center justify-center border border-[#00FFB2]/20 shadow-[0_0_80px_rgba(0,255,178,0.2)]">
             <TrendingUp size={48} className="text-[#00FFB2]" />
           </div>
-          <span className="text-4xl font-brand font-black text-white tracking-tight">TradeVault</span>
+          <span className="text-4xl font-brand font-black text-white tracking-tight">JournalBud</span>
         </div>
       </div>
     );
@@ -263,7 +263,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
           <div className="w-10 h-10 bg-[#00FFB2]/10 rounded-xl flex items-center justify-center border border-[#00FFB2]/20">
             <TrendingUp size={24} className="text-[#00FFB2]" />
           </div>
-          <span className="text-xl font-brand font-black text-white tracking-tight">TradeVault</span>
+          <span className="text-xl font-brand font-black text-white tracking-tight">JournalBud</span>
         </Link>
 
         <div className="relative z-10 max-w-md space-y-6">
@@ -289,7 +289,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         </div>
 
         <div className="relative z-10 text-zinc-500 text-sm font-medium">
-          © 2026 TradeVault Inc. All rights reserved.
+          © 2026 JournalBud Inc. All rights reserved.
         </div>
       </div>
 
@@ -390,7 +390,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
               <div className="text-center flex flex-col gap-3 group mt-2">
                  <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-500 font-medium hover:text-white transition-colors">
-                   {mode === "login" ? <>New to TradeVault? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign In</span></>}
+                   {mode === "login" ? <>New to JournalBud? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
             </>

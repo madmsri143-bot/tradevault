@@ -32,9 +32,9 @@ export async function POST(req: Request) {
 
     const mailOptions = {
       from: `"${name}" <${process.env.GMAIL_USER}>`,
-      to: "tradevaultsupport@gmail.com",
+      to: "journalbudsupport@gmail.com",
       replyTo: email,
-      subject: `[TradeVault Support] ${subject} - ${plan?.toUpperCase() || "UNKNOWN"}`,
+      subject: `[JournalBud Support] ${subject} - ${plan?.toUpperCase() || "UNKNOWN"}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #00FFB2; background-color: #11161D; padding: 15px; border-radius: 8px;">New Support Request</h2>

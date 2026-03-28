@@ -48,7 +48,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
     const loadCached = async () => {
       try {
         const weekKey = getWeekKey();
-        const localCacheKey = `tradevault_weekly_report_${user.uid}_${weekKey}`;
+        const localCacheKey = `journalbud_weekly_report_${user.uid}_${weekKey}`;
         
         // Instant load from localStorage if exists
         const localData = localStorage.getItem(localCacheKey);
@@ -96,7 +96,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           setReportData(data);
           setIsCached(!!data.cached);
           const weekKey = getWeekKey();
-          localStorage.setItem(`tradevault_weekly_report_${user.uid}_${weekKey}`, JSON.stringify(data));
+          localStorage.setItem(`journalbud_weekly_report_${user.uid}_${weekKey}`, JSON.stringify(data));
         }
       } else {
         const errData = await res.json().catch(() => ({ error: "Unknown error" }));

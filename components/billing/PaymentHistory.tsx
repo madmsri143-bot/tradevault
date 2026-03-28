@@ -38,7 +38,7 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
     // Header
     doc.setFontSize(22);
     doc.setFont("helvetica", "bold");
-    doc.text("TRADEVAULT", 20, 20);
+    doc.text("JOURNALBUD", 20, 20);
     
     // SubHeader
     doc.setFontSize(14);
@@ -55,13 +55,13 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
       startY: 70,
       head: [["Description", "Amount"]],
       body: [
-        [`TradeVault ${payment.plan.replace("pro_", "").toUpperCase()} Subscription`, payment.plan === "pro_yearly" ? "$19.99" : "$2.99"]
+        [`JournalBud ${payment.plan.replace("pro_", "").toUpperCase()} Subscription`, payment.plan === "pro_yearly" ? "$19.99" : "$2.99"]
       ],
       theme: "striped",
       headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] }
     });
     
-    doc.save(`TradeVault_Receipt_${payment.payment_id}.pdf`);
+    doc.save(`JournalBud_Receipt_${payment.payment_id}.pdf`);
   };
 
   // Sort history newest first

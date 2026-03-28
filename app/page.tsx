@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck, BrainCircuit, Sparkles, AlertTriangle, HeartPulse, Star, Camera, Upload, ScanLine, X, Lock, ArrowRight, Cpu } from "lucide-react";
+import { TrendingUp, BookText, Target, BarChart3, ChevronRight, Check, Play, Zap, ShieldCheck, BrainCircuit, Sparkles, AlertTriangle, HeartPulse, Star, Camera, Upload, ScanLine, X, Lock, ArrowRight, Cpu, LineChart } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
 import { useRouter } from "next/navigation";
@@ -40,12 +40,12 @@ export default function LandingPage() {
 
       {/* Navbar */}
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="w-10 h-10 bg-[#00FFB2]/10 rounded-xl flex items-center justify-center border border-[#00FFB2]/20 group-hover:scale-110 transition-transform">
-            <TrendingUp size={24} className="text-[#00FFB2]" />
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#00FFB2] to-emerald-400 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,178,0.3)] group-hover:shadow-[0_0_30px_rgba(0,255,178,0.5)] transition-all">
+            <LineChart size={18} className="text-black" />
           </div>
-          <span className="text-xl font-brand font-black tracking-tight">TradeVault</span>
-        </div>
+          <span className="text-xl font-brand font-black tracking-tight">JournalBud</span>
+        </Link>
         
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
           <a href="#features" className="hover:text-white transition-colors">Features</a>
@@ -79,7 +79,7 @@ export default function LandingPage() {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-zinc-400 max-w-md leading-relaxed">
-              Upload your trading screenshot. TradeVault instantly extracts, logs, and analyzes your trades — no typing, no errors.
+              Upload your trading screenshot. JournalBud instantly extracts, logs, and analyzes your trades — no typing, no errors.
             </p>
             <div className="flex flex-col pt-4">
               <div className="flex flex-col sm:flex-row gap-4 mb-3">
@@ -198,9 +198,9 @@ export default function LandingPage() {
       {/* 2. HOW IT WORKS (Core Feature Showcase) */}
       <section className="py-24 px-6 relative z-10 bg-[#0B0F14]/50 border-y border-white/5">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4 fade-slide-up">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight">From Screenshot to Smart Journal in Seconds</h2>
-            <p className="text-zinc-400 text-lg">Stop fighting with spreadsheets. TradeVault’s vision AI does the heavy lifting instantly.</p>
+          <div className="space-y-4 max-w-2xl mx-auto mb-16 relative z-10">
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Why Waste Time Sizing Position Entries?</h2>
+            <p className="text-zinc-400 text-lg">Stop fighting with spreadsheets. JournalBud’s vision AI does the heavy lifting instantly.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
@@ -265,12 +265,10 @@ export default function LandingPage() {
 
            {/* AI Log */}
            <div className="bg-gradient-to-b from-[#11161D] to-[#0A0D11] border border-[#00FFB2]/30 p-8 rounded-3xl flex flex-col shadow-[0_0_40px_rgba(0,255,178,0.05)] transform md:-translate-y-4 hover:border-[#00FFB2]/60 transition-colors">
-              <div className="flex items-center gap-3 mb-8">
-                 <div className="w-10 h-10 rounded-full bg-[#00FFB2]/20 flex items-center justify-center border border-[#00FFB2]/40 shadow-[0_0_15px_rgba(0,255,178,0.2)]">
-                    <Check size={20} className="text-[#00FFB2]" strokeWidth={3} />
-                 </div>
-                 <h3 className="text-2xl font-bold text-white">TradeVault AI <Sparkles size={16} className="inline ml-1 text-[#00FFB2] mb-1" /></h3>
-              </div>
+              <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
+                 <h3 className="text-2xl font-bold text-white">JournalBud AI <Sparkles size={16} className="inline ml-1 text-[#00FFB2] mb-1" /></h3>
+                 <span className="text-xs font-bold px-2 py-1 bg-white/5 text-zinc-400 rounded-lg uppercase tracking-wider">Done in 2s</span>
+               </div>
               <ul className="space-y-6 flex-1 text-zinc-200 text-sm md:text-base font-bold">
                  <li className="flex gap-4 items-start"><span className="text-[#00FFB2] mt-0.5">✅</span> Processed in exactly 2 seconds</li>
                  <li className="flex gap-4 items-start"><span className="text-[#00FFB2] mt-0.5">✅</span> Mathematical AI accuracy</li>
@@ -305,7 +303,7 @@ export default function LandingPage() {
           </div>
           <div className="pt-2 flex flex-col items-center">
             <p className="text-lg text-white font-medium bg-black/50 px-6 py-2 rounded-xl inline-block border border-white/5">
-              TradeVault fixes this in seconds with <strong className="text-[#00FFB2]">AI automation.</strong>
+              JournalBud fixes this in seconds with <strong className="text-[#00FFB2]">AI automation.</strong>
             </p>
           </div>
         </div>
@@ -485,13 +483,15 @@ export default function LandingPage() {
 
       {/* 8. FOOTER CTA */}
       <section className="py-24 px-6 text-center">
-         <div className="max-w-4xl mx-auto bg-gradient-to-r from-[#0B0E13] to-[#11161D] border border-white/5 rounded-[40px] p-12 md:p-20 space-y-8 relative overflow-hidden">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight">Stop Typing. <br /> Start Trading.</h2>
-            <p className="text-zinc-400 max-w-xl mx-auto text-lg">Join the intelligent traders who let TradeVault's AI engine handle their data entry.</p>
-            <Link href="/signup" className="inline-flex items-center gap-2 px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-[#00FFB2] transition-colors relative z-10 text-lg">
+         <div className="max-w-4xl mx-auto bg-gradient-to-r from-[#0B0E13] to-[#11161D] border border-white/5 rounded-[40px] p-12 md:p-20 space-y-8">
+            <div className="space-y-6 pt-10">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-tight">Trade Smarter, Not Harder.</h2>
+            <p className="text-zinc-400 max-w-xl mx-auto text-lg">Join the intelligent traders who let JournalBud's AI engine handle their data entry.</p>
+            <Link href="/signup" className="mt-8 px-10 py-5 bg-[#00FFB2] text-black font-black rounded-3xl hover:shadow-[0_0_40px_rgba(0,255,178,0.5)] hover:-translate-y-1 transition-all inline-flex items-center gap-2 text-lg">
                Upload Your First Screenshot <Upload size={20}/>
             </Link>
             <p className="text-zinc-500 text-sm mt-4 font-medium relative z-10 flex border border-zinc-900 justify-center">100% Secure. In-Memory Processing.</p>
+         </div>
          </div>
       </section>
       

@@ -13,7 +13,7 @@ import SupportWidget from "@/components/SupportWidget";
 import GlobalLoader from "@/components/ui/GlobalLoader";
 
 export const metadata: Metadata = {
-  title: "TradeVault",
+  title: "JournalBud",
   description: "Smart trading journal and analytics platform",
 };
 

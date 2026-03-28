@@ -32,7 +32,9 @@ export default function GlobalLoader() {
         
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-3xl font-black text-white tracking-tighter flex items-center gap-0.5">
-            TradeVault
+            <span className="text-3xl font-brand font-black tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+              JournalBud
+            </span>
             <span className="w-2 h-2 bg-[#00FFB2] rounded-full animate-pulse mt-3 ml-1" />
           </h1>
           <div className="flex items-center gap-2">

@@ -185,7 +185,7 @@ export default function SettingsPage() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `TradeVault_Export_${format(new Date(), "MMM_dd_yyyy")}.csv`);
+      link.setAttribute("download", `JournalBud_Export_${format(new Date(), "MMM_dd_yyyy")}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -206,7 +206,7 @@ export default function SettingsPage() {
       const doc = new jsPDF();
       doc.setFontSize(22);
       doc.setFont("helvetica", "bold");
-      doc.text("TRADEVAULT", 14, 20);
+      doc.text("JOURNALBUD", 14, 20);
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
       doc.text(`Trade History Report - ${format(new Date(), "PP")}`, 14, 30);
@@ -227,7 +227,7 @@ export default function SettingsPage() {
         headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] }
       });
       
-      doc.save(`TradeVault_History_${format(new Date(), "MMM_dd_yyyy")}.pdf`);
+      doc.save(`JournalBud_History_${format(new Date(), "MMM_dd_yyyy")}.pdf`);
     } catch(err) {
       console.error(err);
       await alert({ title: "Export Failed", message: "Failed to export PDF.", variant: "danger" });
@@ -248,7 +248,7 @@ export default function SettingsPage() {
       pptx.layout = "LAYOUT_16x9";
       
       const slide = pptx.addSlide();
-      slide.addText("TradeVault Performance Report", { x: 1.5, y: 1.5, w: "80%", h: 1, fontSize: 36, bold: true, color: "00FFB2" });
+      slide.addText("JournalBud Performance Report", { x: 1.5, y: 1.5, w: "80%", h: 1, fontSize: 36, bold: true, color: "00FFB2" });
       slide.addText(`Generated on ${format(new Date(), "PP")}`, { x: 1.5, y: 2.5, w: "80%", h: 1, fontSize: 18, color: "888888" });
       
       const winningTrades = trades.filter((t:any) => t.result === "Profit" || t.result === "WIN").length;
@@ -257,7 +257,7 @@ export default function SettingsPage() {
       
       slide.addText(`Total Trades: ${totalTrades}\nWin Rate: ${winRate}%\n`, { x: 1.5, y: 4, w: "80%", h: 2, fontSize: 24, align: "left" });
       
-      await pptx.writeFile({ fileName: `TradeVault_Presentation_${format(new Date(), "MMM_dd_yyyy")}.pptx` });
+      await pptx.writeFile({ fileName: `JournalBud_Presentation_${format(new Date(), "MMM_dd_yyyy")}.pptx` });
     } catch(err) {
       console.error(err);
       await alert({ title: "Export Failed", message: "Failed to export PPT.", variant: "danger" });
@@ -504,7 +504,7 @@ export default function SettingsPage() {
            <div className="p-6">
               <div className="flex items-center justify-between">
                  <div>
-                   <p className="text-base font-brand font-black text-white tracking-tight">TradeVault Version</p>
+                   <p className="text-base font-brand font-black text-white tracking-tight">JournalBud Version</p>
                    <p className="text-xs text-zinc-500 mt-1 font-medium">v2.4.0 (Build 9081)</p>
                  </div>
                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">

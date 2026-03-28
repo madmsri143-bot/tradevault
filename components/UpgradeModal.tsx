@@ -65,8 +65,8 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
         amount: orderData.amount, 
         currency: orderData.currency,
         order_id: orderData.id,
-        name: "TradeVault",
-        description: selectedPlan === "yearly" ? "TradeVault Pro Elite" : "TradeVault Pro Starter",
+        name: "JournalBud",
+        description: selectedPlan === "yearly" ? "JournalBud Pro Elite" : "JournalBud Pro Starter",
         handler: async function (response: any) {
           try {
              setPaymentStatus("verifying");
@@ -138,7 +138,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
             </div>
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">Upgrade to Professional</h2>
-              <p className="text-xs text-zinc-400">Unlock the full power of TradeVault.</p>
+              <p className="text-xs text-zinc-400">Unlock the full power of JournalBud.</p>
             </div>
           </div>
           <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-white bg-white/5 rounded-full hover:bg-white/10 transition-colors">
