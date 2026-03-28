@@ -613,6 +613,10 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       <BulkPreviewModal 
         isOpen={showBulkModal} 
         onClose={() => setShowBulkModal(false)} 
+        onSuccess={() => {
+          setShowBulkModal(false);
+          if (onClose) onClose();
+        }}
         extractedTrades={extractedTrades} 
       />
     )}

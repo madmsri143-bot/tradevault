@@ -59,6 +59,7 @@ Rules:
 - If a field is missing, attempt to infer it based on context or leave it as an empty string. Make sure numbers are strictly numbers.
 - "type" must be exactly "BUY" or "SELL".
 - "symbol" must be the pair string without trailing micro dots like ecd or pro.
+- PnL SIGN: Loss trades MUST have a negative pnl value (e.g., -114.65). Profit trades MUST be positive. Preserve the sign!
 - Output ONLY the raw JSON array. Start with [ and end with ].`;
 
     const contents = [

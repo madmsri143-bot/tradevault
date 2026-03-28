@@ -20,10 +20,11 @@ interface ExtractedTrade {
 interface BulkPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   extractedTrades: ExtractedTrade[];
 }
 
-export default function BulkPreviewModal({ isOpen, onClose, extractedTrades }: BulkPreviewModalProps) {
+export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extractedTrades }: BulkPreviewModalProps) {
   const { user } = useAuth();
   const [trades, setTrades] = useState<ExtractedTrade[]>(extractedTrades);
   const [saving, setSaving] = useState(false);
@@ -83,7 +84,8 @@ export default function BulkPreviewModal({ isOpen, onClose, extractedTrades }: B
       });
 
       await Promise.all(promises);
-      onClose();
+      if (onSuccess) onSuccess();
+      else onClose();
     } catch (err) {
       console.error("Bulk save failed", err);
       alert("Failed to save trades.");
