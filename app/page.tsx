@@ -48,14 +48,16 @@ export default function LandingPage() {
         </div>
         
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
-          <a href="#ai-intelligence" className="hover:text-white transition-colors">AI Logger</a>
           <a href="#features" className="hover:text-white transition-colors">Features</a>
           <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
         </div>
 
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
             Login
+          </Link>
+          <Link href="/demo" className="text-sm font-medium text-zinc-400 hover:text-[#00FFB2] transition-colors flex items-center gap-1.5">
+            <Play size={14} className="text-[#00FFB2]" /> Live Demo
           </Link>
           <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all">
             {user ? (hasUsedTrial ? "Upgrade to Pro" : "Launch App") : "Start 7-Day Trial"}
@@ -79,15 +81,18 @@ export default function LandingPage() {
             <p className="text-lg md:text-xl text-zinc-400 max-w-md leading-relaxed">
               Upload your trading screenshot. TradeVault instantly extracts, logs, and analyzes your trades — no typing, no errors.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
-                Start Free Trial <ChevronRight size={20} />
-              </Link>
-              <Link href="/signup" className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all">
-                <Camera size={18} className="text-zinc-400" /> Try Screenshot Upload
-              </Link>
+            <div className="flex flex-col pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 mb-3">
+                <Link href={user ? (hasUsedTrial ? "/billing" : "/dashboard") : "/signup?plan=trial"} className="px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(0,255,178,0.3)] hover:-translate-y-1 transition-all">
+                  Start Free Trial <ChevronRight size={20} />
+                </Link>
+                <Link href="/signup" className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all">
+                  <Camera size={18} className="text-zinc-400" /> Try Screenshot Upload
+                </Link>
+              </div>
+              <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest pl-2">No card or details required.</p>
             </div>
-            <div className="flex items-center gap-6 pt-6 text-zinc-500">
+            <div className="flex items-center gap-6 pt-4 text-zinc-500">
                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest leading-none">
                  <ShieldCheck size={16} className="text-[#00FFB2]" /> 100% Secure
                </div>
@@ -279,111 +284,29 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. AI FEATURE POSITIONING */}
-      <section id="ai-intelligence" className="py-24 px-6 relative z-10 max-w-7xl mx-auto space-y-32">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="order-2 lg:order-1 relative group bg-gradient-to-tr from-[#11161D] to-[#0D1218] p-[1px] rounded-[2.25rem] shadow-2xl overflow-hidden">
-             {/* Dynamic Border */}
-             <div className="absolute inset-0 bg-gradient-to-b from-[#00FFB2] via-purple-500 to-transparent opacity-30 group-hover:opacity-50 transition-opacity duration-1000" />
-             <div className="relative bg-[#0B0F14] m-[1px] rounded-[2.2rem] p-8 h-full">
-                
-                <div className="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500/40" />
-                    <div className="w-3 h-3 rounded-full bg-amber-500/40" />
-                    <div className="w-3 h-3 rounded-full bg-emerald-500/40" />
-                  </div>
-                  <div className="px-3 py-1 bg-white/5 rounded text-[10px] font-mono text-zinc-500 uppercase">Screenshot Analysis Memory</div>
-                </div>
-                
-                <div className="space-y-5">
-                   {/* Fake scanning logs */}
-                   <div className="font-mono text-xs text-zinc-500 space-y-2">
-                     <p className="flex items-center gap-2"><span className="text-blue-400">[vision-model]</span> Input image processed.</p>
-                     <p className="flex items-center gap-2"><span className="text-[#00FFB2]">[extract_engine]</span> Found Trade #01 (XAUUSD, BUY)</p>
-                     <p className="flex items-center gap-2"><span className="text-[#00FFB2]">[extract_engine]</span> Found Trade #02 (USDJPY, SELL)</p>
-                     <p className="flex items-center gap-2"><span className="text-[#00FFB2]">[extract_engine]</span> Extracted Net PnL securely.</p>
-                     <p className="flex items-center gap-2"><span className="text-zinc-600">cleaning_memory... dumped.</span></p>
-                   </div>
-                   
-                   <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex gap-4 mt-8">
-                     <ShieldCheck className="text-emerald-400 shrink-0" size={24} />
-                     <div>
-                       <h4 className="font-bold text-emerald-400 text-sm mb-1">Zero-Retention Policy</h4>
-                       <p className="text-xs text-zinc-400 leading-relaxed font-medium">Your uploaded broker screenshots are processed securely in temporary server memory and are strictly never stored in any database or cloud storage. Total privacy guaranteed.</p>
-                     </div>
-                   </div>
-                </div>
-             </div>
-          </div>
-
-          <div className="order-1 lg:order-2 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold uppercase tracking-widest">
-              <Cpu size={14} /> Advanced Processing Module
-            </div>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">AI-Powered Screenshot Intelligence</h2>
-            <p className="text-zinc-400 text-lg leading-relaxed">Experience a premium, high-speed extraction engine that parses visual data with flawless precision.</p>
-            <ul className="space-y-4 pt-4 shrink-0">
-              <li className="flex items-start gap-4 text-zinc-300">
-                <div className="w-8 h-8 rounded-lg bg-zinc-800/80 flex items-center justify-center border border-white/5 mt-0.5">
-                  <Check size={16} className="text-[#00FFB2]" />
-                </div>
-                <div>
-                  <span className="font-bold block text-white">Full Schema Detection</span>
-                  <span className="text-sm text-zinc-500">Auto-identifies Symbol, Type, Lot Size, Entry, Exit & Absolute PnL.</span>
-                </div>
-              </li>
-              <li className="flex items-start gap-4 text-zinc-300">
-                <div className="w-8 h-8 rounded-lg bg-zinc-800/80 flex items-center justify-center border border-white/5 mt-0.5">
-                  <Check size={16} className="text-[#00FFB2]" />
-                </div>
-                <div>
-                  <span className="font-bold block text-white">Universal Broker Support</span>
-                  <span className="text-sm text-zinc-500">Trained to understand MT4, MT5, and heavily modified prop firm histories.</span>
-                </div>
-              </li>
-              <li className="flex items-start gap-4 text-zinc-300">
-                <div className="w-8 h-8 rounded-lg bg-zinc-800/80 flex items-center justify-center border border-white/5 mt-0.5">
-                  <Check size={16} className="text-[#00FFB2]" />
-                </div>
-                <div>
-                  <span className="font-bold block text-white">Smart Mapping API</span>
-                  <span className="text-sm text-zinc-500">Correctly sorts negative PnL values identically to your native dashboard calculations.</span>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
       {/* 5. PAIN POINT SECTION (Emotional Hook) */}
-      <section className="py-32 px-6 bg-black relative z-10 border-y border-zinc-900 border-b-0 overflow-hidden">
-        {/* Subtle radial glow to draw eyes */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-500/5 blur-[120px] rounded-[100%] pointer-events-none" />
+      <section className="py-16 px-6 bg-[#0B0F14] relative z-10 border-y border-white/5 overflow-hidden">
         
-        <div className="max-w-4xl mx-auto text-center space-y-10 relative">
-          <h2 className="text-5xl md:text-7xl font-black tracking-tight text-white uppercase leading-[1.1]">
-            <span className="opacity-90">You’re Not <br/>Losing Trades.</span> <br/>
+        <div className="max-w-3xl mx-auto text-center space-y-8 relative">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-[1.1]">
+            <span className="opacity-90">You’re Not Losing Trades.</span> <br/>
             <span className="text-red-500 font-brand">You’re Losing Data.</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 pb-10 border-b border-white/5 max-w-2xl mx-auto">
-             <div className="text-center font-bold text-zinc-400 text-lg sm:text-xl">
-               <span className="block text-3xl mb-2">🤷‍♂️</span> No Tracking <br/><span className="text-zinc-600 text-sm font-medium">No Improvement</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 pb-6 border-b border-white/5 max-w-xl mx-auto">
+             <div className="text-center font-bold text-zinc-400 text-base sm:text-lg">
+               <span className="block text-xl mb-1 mt-2">🤷‍♂️</span> No Tracking <br/><span className="text-zinc-600 text-xs font-medium">No Improvement</span>
              </div>
-             <div className="text-center font-bold text-zinc-400 text-lg sm:text-xl">
-               <span className="block text-3xl mb-2">📉</span> No Data <br/><span className="text-zinc-600 text-sm font-medium">No Strategy</span>
+             <div className="text-center font-bold text-zinc-400 text-base sm:text-lg">
+               <span className="block text-xl mb-1 mt-2">📉</span> No Data <br/><span className="text-zinc-600 text-xs font-medium">No Strategy</span>
              </div>
-             <div className="text-center font-bold text-zinc-400 text-lg sm:text-xl">
-               <span className="block text-3xl mb-2">🎭</span> No Consistency <br/><span className="text-zinc-600 text-sm font-medium">No Growth</span>
+             <div className="text-center font-bold text-zinc-400 text-base sm:text-lg">
+               <span className="block text-xl mb-1 mt-2">🎭</span> No Consistency <br/><span className="text-zinc-600 text-xs font-medium">No Growth</span>
              </div>
           </div>
-          <div className="pt-4 flex flex-col items-center">
-            <p className="text-xl md:text-2xl text-white font-medium bg-black px-6 py-2 rounded-xl inline-block shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
+          <div className="pt-2 flex flex-col items-center">
+            <p className="text-lg text-white font-medium bg-black/50 px-6 py-2 rounded-xl inline-block border border-white/5">
               TradeVault fixes this in seconds with <strong className="text-[#00FFB2]">AI automation.</strong>
             </p>
-            <Link href="/signup" className="mt-8 px-10 py-5 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_30px_rgba(0,255,178,0.4)] hover:-translate-y-1 transition-all md:text-lg">
-              Stop Making Excuses →
-            </Link>
           </div>
         </div>
       </section>
@@ -424,7 +347,7 @@ export default function LandingPage() {
                 <div className="w-6 h-6 rounded-lg bg-[#00FFB2]/15 border border-[#00FFB2]/20 flex items-center justify-center shrink-0 mt-0.5">
                   <BrainCircuit size={14} className="text-[#00FFB2]" />
                 </div>
-                <span className="text-[15px]">Weekly Performance Review generation (Pro)</span>
+                <span className="text-[15px]">Weekly Report by AI (Strategy Generation)</span>
               </li>
               <li className="flex items-start gap-3 text-zinc-300">
                 <div className="w-6 h-6 rounded-lg bg-blue-500/15 border border-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
