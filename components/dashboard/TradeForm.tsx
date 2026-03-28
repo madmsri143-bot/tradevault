@@ -393,6 +393,10 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             {isFree ? "Upgrade to Auto-fill" : scanningTrades ? "Scanning Image..." : "Drop Your Trade History"}
           </h3>
           
+          <p className="text-[10px] text-zinc-500/80 text-center mt-3 max-w-[280px]">
+            Ensure your file includes: Profit/Loss (PnL), Buy/Sell (Direction), Date, and Trade Details.
+          </p>
+          
           {isFree && (
             <p className="text-[10px] text-amber-500/80 text-center mt-3 max-w-[220px]">
               Available on Pro plans. Extracts Pair, Lot, PnL & Type instantly.

@@ -15,6 +15,33 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
   const { user } = useAuth();
   const { confirm, alert } = useModal();
   const [editingTrade, setEditingTrade] = useState<Trade | null>(null);
+  const [selectedTradeIds, setSelectedTradeIds] = useState<string[]>([]);
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) setSelectedTradeIds(trades.map(t => t.id || ""));
+    else setSelectedTradeIds([]);
+  };
+
+  const handleSelect = (id: string) => {
+    setSelectedTradeIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
+
+  const handleDeleteSelected = async () => {
+    const isConfirmed = await confirm({
+      title: "Delete Selected Trades",
+      message: "Are you sure you want to delete selected trades?",
+      confirmLabel: "Delete",
+      variant: "danger"
+    });
+    if (isConfirmed && user) {
+      try {
+        await Promise.all(selectedTradeIds.map(id => deleteDoc(doc(db, "users", user.uid, "trades", id))));
+        setSelectedTradeIds([]);
+      } catch (error) {
+        await alert({ message: "Failed to delete selected trades." });
+      }
+    }
+  };
 
   const handleDelete = async (id: string | undefined) => {
     if (!id || !user) return;
@@ -38,21 +65,30 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
   return (
     <>
       <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-xl overflow-hidden mt-6">
-        <div className="p-4 border-b border-white/5 bg-zinc-900/50">
+        <div className="p-4 border-b border-white/5 bg-zinc-900/50 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-emerald-400">Trade History</h2>
+          {selectedTradeIds.length > 0 && (
+             <button onClick={handleDeleteSelected} className="px-3 py-1.5 bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5">
+               <Trash2 size={14} /> Delete Selected ({selectedTradeIds.length})
+             </button>
+          )}
         </div>
         
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-zinc-400">
             <thead className="bg-zinc-950/50 text-xs text-zinc-500 uppercase border-b border-white/5">
               <tr>
+                <th className="px-4 py-3 font-medium w-10">
+                  <input type="checkbox" checked={trades.length > 0 && selectedTradeIds.length === trades.length} onChange={handleSelectAll} className="accent-[#00FFB2] w-3.5 h-3.5 cursor-pointer" />
+                </th>
                 <th className="px-4 py-3 font-medium">Date</th>
-                <th className="px-4 py-3 font-medium">Symbol</th>
-                <th className="px-4 py-3 font-medium">Type</th>
-                <th className="px-4 py-3 font-medium">Lot</th>
+                <th className="px-4 py-3 font-medium">Asset</th>
+                <th className="px-4 py-3 font-medium">Direction</th>
                 <th className="px-4 py-3 font-medium">Entry</th>
                 <th className="px-4 py-3 font-medium">Exit</th>
-                <th className="px-4 py-3 font-medium">Amount (PnL)</th>
+                <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">PnL</th>
+                <th className="px-4 py-3 font-medium">Lot</th>
                 <th className="px-4 py-3 font-medium">Notes</th>
                 <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
@@ -60,7 +96,7 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
             <tbody className="divide-y divide-white/5">
               {trades.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-zinc-500">
+                  <td colSpan={11} className="px-4 py-8 text-center text-zinc-500">
                     No trades found. Start logging!
                   </td>
                 </tr>
@@ -69,25 +105,35 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
                   const isProfit = (trade.pnl || 0) >= 0;
                   return (
                     <tr key={trade.id} className="hover:bg-zinc-800/30 transition-colors group">
+                      <td className="px-4 py-3">
+                        <input type="checkbox" checked={selectedTradeIds.includes(trade.id || "")} onChange={() => handleSelect(trade.id || "")} className="accent-[#00FFB2] w-3.5 h-3.5 cursor-pointer" />
+                      </td>
                       <td className="px-4 py-3 text-zinc-300">
                         {format(new Date(trade.date), "MMM d, yyyy")}
                       </td>
                       <td className="px-4 py-3 font-bold text-white">
-                        {trade.symbol}
+                        {trade.symbol || "-"}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
                           trade.type === 'buy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'
                         }`}>
-                          {trade.type.toUpperCase()}
+                          {trade.type ? trade.type.toUpperCase() : "-"}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-zinc-300 font-medium">{trade.lot}</td>
                       <td className="px-4 py-3 text-zinc-400 font-mono">{trade.entryPrice || "-"}</td>
                       <td className="px-4 py-3 text-zinc-400 font-mono">{trade.exitPrice || "-"}</td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                          isProfit ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'
+                        }`}>
+                          {trade.result ? trade.result.toUpperCase() : (isProfit ? "PROFIT" : "LOSS")}
+                        </span>
+                      </td>
                       <td className={`px-4 py-3 font-black tabular-nums ${isProfit ? 'text-[#00FFB2]' : 'text-red-500'}`}>
                         {isProfit ? "+" : "-"}{formatCurrency(Math.abs(trade.normalizedPnl || trade.pnl || 0), displayCurrency)}
                       </td>
+                      <td className="px-4 py-3 text-zinc-300 font-medium">{trade.lot || "-"}</td>
                       <td className="px-4 py-3 max-w-[200px] truncate text-zinc-500">
                         {trade.note || "-"}
                       </td>

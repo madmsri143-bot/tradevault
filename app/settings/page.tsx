@@ -166,19 +166,31 @@ export default function SettingsPage() {
     if (!trades) return;
     setIsExporting(true);
     try {
-      const headers = ["Date", "Pair", "Direction", "Entry", "Exit", "PnL", "Result", "Tags"];
+      const headers = ["Date", "Asset", "Direction", "Entry", "Exit", "Status", "PnL", "Lot", "Notes"];
+      let totalPnl = 0;
+      const csvContentRows = trades.map((t: any) => {
+        const pnl = t.pnl || 0;
+        const isProfit = pnl >= 0;
+        const actualPnl = isProfit ? Math.abs(pnl) : -Math.abs(pnl);
+        totalPnl += actualPnl;
+        const resultText = t.result ? t.result.toUpperCase() : (isProfit ? "PROFIT" : "LOSS");
+        return [
+          format(new Date(parseFloat(t.date)), "yyyy-MM-dd"),
+          t.pair || t.symbol || "-",
+          t.direction || t.type || "-",
+          t.entryPrice || "-",
+          t.exitPrice || "-",
+          resultText,
+          actualPnl,
+          t.lot || "-",
+          `"${(t.note || "-").replace(/"/g, '""')}"`
+        ].join(",");
+      });
+
       const csvContent = [
         headers.join(","),
-        ...trades.map((t: any) => [
-          format(new Date(parseFloat(t.date)), "yyyy-MM-dd"),
-          t.pair || t.symbol || "", // Ensure backwards compatibility for symbol naming
-          t.direction || t.type || "",
-          t.entryPrice || 0,
-          t.exitPrice || 0,
-          t.pnl || 0,
-          t.result,
-          (t.tags || []).join(";")
-        ].join(","))
+        ...csvContentRows,
+        `\nTotal PnL: ₹${totalPnl.toFixed(2)}`
       ].join("\n");
       
       const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -203,7 +215,7 @@ export default function SettingsPage() {
     if (!trades) return;
     setIsExporting(true);
     try {
-      const doc = new jsPDF();
+      const doc = new jsPDF("landscape");
       doc.setFontSize(22);
       doc.setFont("helvetica", "bold");
       doc.text("JOURNALBUD", 14, 20);
@@ -211,21 +223,58 @@ export default function SettingsPage() {
       doc.setFont("helvetica", "normal");
       doc.text(`Trade History Report - ${format(new Date(), "PP")}`, 14, 30);
       
-      const bodyData = trades.map((t: any) => [
-        format(new Date(parseFloat(t.date)), "MM/dd/yy"),
-        t.pair || t.symbol || "Unknown",
-        t.direction || t.type || "N/A",
-        `$${t.pnl?.toFixed(2) || "0.00"}`,
-        t.result
-      ]);
+      let totalPnl = 0;
+      const bodyData = trades.map((t: any) => {
+        const pnl = t.pnl || 0;
+        const isProfit = pnl >= 0;
+        const actualPnl = isProfit ? Math.abs(pnl) : -Math.abs(pnl);
+        totalPnl += actualPnl;
+        const resultText = t.result ? t.result.toUpperCase() : (isProfit ? "PROFIT" : "LOSS");
+        const typeText = (t.direction || t.type || "-").toUpperCase();
+        
+        return [
+          format(new Date(parseFloat(t.date)), "MM/dd/yy"),
+          t.pair || t.symbol || "-",
+          typeText,
+          t.entryPrice || "-",
+          t.exitPrice || "-",
+          resultText,
+          `${isProfit ? '+' : '-'}${Math.abs(actualPnl).toFixed(2)}`,
+          t.lot || "-",
+          t.note || "-"
+        ];
+      });
 
       autoTable(doc, {
         startY: 40,
-        head: [["Date", "Asset", "Direction", "PnL", "Status"]],
+        head: [["Date", "Asset", "Direction", "Entry", "Exit", "Status", "PnL", "Lot", "Notes"]],
         body: bodyData,
         theme: "striped",
-        headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] }
+        headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] },
+        didParseCell: function(data: any) {
+          if (data.section === 'body') {
+            const colIndex = data.column.index;
+            const text = data.cell.text[0];
+            if (colIndex === 2) {
+               if (text === 'BUY') data.cell.styles.textColor = [16, 185, 129];
+               if (text === 'SELL') data.cell.styles.textColor = [239, 68, 68];
+            }
+            if (colIndex === 5) {
+               if (text === 'PROFIT') data.cell.styles.textColor = [16, 185, 129];
+               if (text === 'LOSS') data.cell.styles.textColor = [239, 68, 68];
+            }
+            if (colIndex === 6) {
+               if (text.startsWith('+')) data.cell.styles.textColor = [16, 185, 129];
+               if (text.startsWith('-') && text !== '-') data.cell.styles.textColor = [239, 68, 68];
+            }
+          }
+        }
       });
+      
+      const finalY = (doc as any).lastAutoTable.finalY || 40;
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text(`Total PnL: ₹${totalPnl.toFixed(2)}`, 14, finalY + 15);
       
       doc.save(`JournalBud_History_${format(new Date(), "MMM_dd_yyyy")}.pdf`);
     } catch(err) {
@@ -244,18 +293,66 @@ export default function SettingsPage() {
     try {
       const PptxGenJS = (await import("pptxgenjs")).default;
       const pptx = new PptxGenJS();
-      
       pptx.layout = "LAYOUT_16x9";
       
       const slide = pptx.addSlide();
-      slide.addText("JournalBud Performance Report", { x: 1.5, y: 1.5, w: "80%", h: 1, fontSize: 36, bold: true, color: "00FFB2" });
-      slide.addText(`Generated on ${format(new Date(), "PP")}`, { x: 1.5, y: 2.5, w: "80%", h: 1, fontSize: 18, color: "888888" });
+      slide.addText("JournalBud Performance Report", { x: 0.5, y: 0.5, w: "90%", h: 0.5, fontSize: 24, bold: true, color: "00FFB2" });
+      slide.addText(`Generated on ${format(new Date(), "PP")}`, { x: 0.5, y: 1.0, w: "90%", h: 0.5, fontSize: 14, color: "888888" });
+         const headers: any[] = [
+        { text: "Date", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "Asset", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "Direction", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "Entry", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "Exit", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "Status", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "PnL", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "Lot", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } },
+        { text: "Notes", options: { bold: true, fill: { color: "00FFB2" }, color: "000000" } }
+      ];
+
+      let totalPnl = 0;
+      const rows: any[] = [headers];
       
-      const winningTrades = trades.filter((t:any) => t.result === "Profit" || t.result === "WIN").length;
-      const totalTrades = trades.length;
-      const winRate = totalTrades > 0 ? ((winningTrades / totalTrades) * 100).toFixed(1) : "0.0";
+      // Limit to ~15 trades per slide if preferred, but for now we'll let PptxGenJS handle overflow via its master slide logic or just accept it might run off. Better to just put it on the slide for now.
+      trades.slice(0, 15).forEach((t: any) => {
+        const pnl = t.pnl || 0;
+        const isProfit = pnl >= 0;
+        const actualPnl = isProfit ? Math.abs(pnl) : -Math.abs(pnl);
+        totalPnl += actualPnl;
+        const resultText = t.result ? t.result.toUpperCase() : (isProfit ? "PROFIT" : "LOSS");
+        const typeText = (t.direction || t.type || "-").toUpperCase();
+        const pnlText = `${isProfit ? '+' : '-'}${Math.abs(actualPnl).toFixed(2)}`;
+        
+        const typeColor = typeText === 'BUY' ? '10B981' : (typeText === 'SELL' ? 'EF4444' : 'FFFFFF');
+        const statusColor = resultText === 'PROFIT' ? '10B981' : (resultText === 'LOSS' ? 'EF4444' : 'FFFFFF');
+        const pnlColor = isProfit ? '10B981' : 'EF4444';
+
+        rows.push([
+          { text: format(new Date(parseFloat(t.date)), "MM/dd/yy") },
+          { text: t.pair || t.symbol || "-" },
+          { text: typeText, options: { color: typeColor, bold: true } },
+          { text: t.entryPrice ? t.entryPrice.toString() : "-" },
+          { text: t.exitPrice ? t.exitPrice.toString() : "-" },
+          { text: resultText, options: { color: statusColor, bold: true } },
+          { text: pnlText, options: { color: pnlColor, bold: true } },
+          { text: t.lot ? t.lot.toString() : "-" },
+          { text: t.note ? t.note.substring(0, 20) : "-" }
+        ]);
+      });
       
-      slide.addText(`Total Trades: ${totalTrades}\nWin Rate: ${winRate}%\n`, { x: 1.5, y: 4, w: "80%", h: 2, fontSize: 24, align: "left" });
+      slide.addTable(rows, {
+        x: 0.5, y: 1.8, w: 9.0, colW: [1.0, 1.0, 1.0, 0.8, 0.8, 1.0, 1.0, 0.6, 1.8],
+        fontSize: 10, border: { type: "solid", color: "444444", pt: 1 },
+        fill: { color: "111111" }, color: "FFFFFF", align: "center", valign: "middle"
+      });
+
+      // Show total PnL at bottom (using the full trade list for the sum, not just sliced)
+      const exactTotalPnl = trades.reduce((acc: number, t: any) => {
+         const p = t.pnl || 0;
+         return acc + (p >= 0 ? Math.abs(p) : -Math.abs(p));
+      }, 0);
+      
+      slide.addText(`Total PnL: ₹${exactTotalPnl.toFixed(2)}`, { x: 0.5, y: 6.8, w: "90%", h: 0.5, fontSize: 16, bold: true, color: "FFFFFF" });
       
       await pptx.writeFile({ fileName: `JournalBud_Presentation_${format(new Date(), "MMM_dd_yyyy")}.pptx` });
     } catch(err) {
