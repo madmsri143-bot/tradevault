@@ -157,3 +157,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(FALLBACK_REPORT);
   }
 }
+
+// Debug endpoint — visit /api/weekly-report in browser to check config
+export async function GET() {
+  const openaiKey = process.env.OPENAI_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY;
+  
+  let firebaseStatus = "unknown";
+  try {
+    await adminDb.collection("_health").doc("ping").set({ ts: Date.now() });
+    firebaseStatus = "connected";
+  } catch (e: any) {
+    firebaseStatus = `error: ${e?.message}`;
+  }
+
+  let openaiStatus = "not tested";
+  if (openaiKey) {
+    try {
+      const openai = new OpenAI({ apiKey: openaiKey });
+      const test = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        max_tokens: 10,
+        messages: [{ role: "user", content: "Say OK" }],
+      });
+      openaiStatus = test.choices?.[0]?.message?.content || "empty response";
+    } catch (e: any) {
+      openaiStatus = `error: ${e?.message}`;
+    }
+  }
+
+  return NextResponse.json({
+    openaiKey: openaiKey ? `set (${openaiKey.slice(0, 8)}...${openaiKey.slice(-4)})` : "MISSING",
+    geminiKey: geminiKey ? `set (${geminiKey.slice(0, 8)}...${geminiKey.slice(-4)})` : "MISSING",
+    firebaseAdmin: firebaseStatus,
+    openaiTest: openaiStatus,
+    timestamp: new Date().toISOString(),
+  });
+}
