@@ -64,7 +64,7 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
 
           <h4 className="text-white font-semibold tracking-widest text-sm uppercase mb-2">Pro Elite</h4>
           <div className="text-white text-4xl font-black tracking-tighter mb-1 flex items-baseline gap-3">
-            $20.99 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ yr</span>
+            $19.99 <span className="text-lg font-medium text-zinc-500 tracking-normal">/ yr</span>
             <span className="text-sm text-zinc-500 line-through tracking-normal font-normal">$36</span>
           </div>
           <div className="text-[#00FFB2] text-sm font-bold mb-6 pb-6 border-b border-white/5">
