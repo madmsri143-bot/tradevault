@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0B0F14;
-  --color-foreground: #fafafa;
-  --color-accent-green: #00FFB2;
+  --color-background: #0B0B0F;
+  --color-foreground: #E5E7EB;
+  --color-accent-gold: #D4AF37;
+  --color-accent-green: #10B981; /* muted green for profit */
   --color-accent-red: #FF4D6D;
   --color-accent-blue: #3B82F6;
-  --color-surface: #11161D;
-  --color-surface-end: #0D1218;
+  --color-surface: #111827;
+  --color-surface-end: #0B0B0F;
 }
 
 @layer base {
@@ -24,7 +25,7 @@
     --color-zinc-300: #6B7280;
     --color-zinc-400: #6B7280;
     --color-zinc-500: #9CA3AF;
-    --color-background: #FFFFFF;
+    --color-background: #F9FAFB;
     --color-zinc-900: #F9FAFB;
     --color-zinc-950: #FFFFFF;
     --color-zinc-800: #D1D5DB;
@@ -55,16 +56,16 @@
 
   /* ===== GLASS SYSTEM ===== */
   .glass-card {
-    @apply bg-zinc-900/40 backdrop-blur-xl border border-white/10 shadow-2xl;
+    @apply bg-zinc-900/40 backdrop-blur-xl border border-white/5 shadow-2xl;
   }
   .glass-card-hover {
-    @apply hover:bg-zinc-800/50 hover:border-white/20 hover:shadow-emerald-500/5 transition-all duration-300;
+    @apply hover:bg-zinc-800/50 hover:border-[#D4AF37]/30 hover:shadow-[#D4AF37]/10 transition-all duration-300;
   }
-  .text-glow-green {
-    text-shadow: 0 0 20px rgba(0, 255, 178, 0.3);
+  .text-glow-gold {
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
   }
-  .bg-glow-green {
-    box-shadow: 0 0 40px rgba(0, 255, 178, 0.15);
+  .bg-glow-gold {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
   }
 }
 
@@ -88,8 +89,8 @@
   50% { transform: translateY(-12px); }
 }
 @keyframes pulseGlow {
-  0%, 100% { filter: brightness(1) drop-shadow(0 0 15px rgba(0,255,178,0.1)); }
-  50% { filter: brightness(1.2) drop-shadow(0 -15px 40px rgba(0,255,178,0.4)); }
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 15px rgba(212,175,55,0.1)); }
+  50% { filter: brightness(1.2) drop-shadow(0 -15px 40px rgba(212,175,55,0.4)); }
 }
 @keyframes particlesUp {
   0% { transform: translateY(0) scale(1.2); opacity: 0; }

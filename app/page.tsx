@@ -13,6 +13,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
+import JBLogo from "@/components/ui/JBLogo";
 
 /* ═══════════════════════════════════════════════
    UTILITY: Scroll-reveal hook
@@ -33,48 +34,20 @@ function useReveal() {
 }
 
 /* ═══════════════════════════════════════════════
-   HERO VISUAL — Companion Lift
+   HERO VISUAL — Logo Spotlight Vignette
    ═══════════════════════════════════════════════ */
-function HeroVisual() {
+function LogoSpotlight() {
   return (
-    <div 
-      className="relative flex items-center justify-center w-full max-w-[420px] aspect-square mx-auto animate-hero-lift pointer-events-none mt-10 md:mt-0"
-      style={{
-        background: "radial-gradient(closest-side, rgba(0,255,178,0.15), transparent 100%)",
-        borderRadius: "50%",
-        overflow: "hidden",
-        maskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(circle at center, black 60%, transparent 100%)",
-      }}
-    >
-      {/* Background Glow */}
-      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#00FFB2]/5 to-[#00FFB2]/10 blur-[60px] rounded-full animate-hero-glow z-0" />
+    <div className="relative flex items-center justify-center w-full max-w-[280px] aspect-[4/3] mx-auto mb-8 animate-fade-in-up">
+      {/* Background Spotlight */}
+      <div className="absolute inset-0 bg-gradient-radial from-[#D4AF37]/20 via-[#D4AF37]/5 to-transparent blur-[60px] rounded-full z-0 pointer-events-none" />
       
-      {/* Rising Particles */}
-      <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden z-10 [mask-image:linear-gradient(to_bottom,transparent,black_40%,transparent_90%)]">
-        {[...Array(9)].map((_, i) => (
-          <div 
-            key={i} 
-            className="absolute bottom-0 w-[2px] rounded-full bg-[#00FFB2] opacity-0 animate-hero-particles"
-            style={{ 
-               left: `${15 + Math.random() * 70}%`, 
-               height: `${2 + Math.random() * 3}px`,
-               animationDelay: `${i * 0.7}s`,
-               animationDuration: `${5 + Math.random() * 4}s`
-            }}
-          />
-        ))}
-      </div>
+      {/* Glowing vignette edges */}
+      <div className="absolute inset-0 rounded-3xl border border-[#D4AF37]/10 bg-gradient-to-b from-[#D4AF37]/5 to-transparent backdrop-blur-sm z-10" />
 
-      {/* Hero Image */}
-      <div className="relative w-full h-full animate-hero-glow z-20 mix-blend-screen opacity-90">
-        <Image 
-          src="/hero-lift.png" 
-          alt="AI Companion Lifting Trader" 
-          fill
-          className="object-contain"
-          priority
-        />
+      {/* Actual static Image */}
+      <div className="relative z-20 transition-transform duration-700 hover:scale-105">
+        <JBLogo size={200} />
       </div>
     </div>
   );
@@ -189,11 +162,11 @@ export default function LandingPage() {
 
       {/* ── DYNAMIC BACKGROUND ── */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#00FFB2]/8 blur-[150px]"
+        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#D4AF37]/5 blur-[150px]"
           style={{ transform: `translateY(${scrollY * 0.05}px)` }} />
-        <div className="absolute top-[30%] -right-[15%] w-[40%] h-[40%] rounded-full bg-[#3B82F6]/8 blur-[180px]"
+        <div className="absolute top-[30%] -right-[15%] w-[40%] h-[40%] rounded-full bg-[#C9A646]/5 blur-[180px]"
           style={{ transform: `translateY(${scrollY * -0.03}px)` }} />
-        <div className="absolute -bottom-[15%] left-[25%] w-[35%] h-[35%] rounded-full bg-[#A855F7]/5 blur-[120px]" />
+        <div className="absolute -bottom-[15%] left-[25%] w-[35%] h-[35%] rounded-full bg-zinc-500/5 blur-[120px]" />
         {/* Grid pattern */}
         <div className="absolute inset-0 opacity-[0.015]"
           style={{
@@ -205,8 +178,8 @@ export default function LandingPage() {
       {/* ── NAVBAR ── */}
       <nav className="relative z-50 flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00FFB2] to-emerald-400 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,178,0.3)] group-hover:shadow-[0_0_35px_rgba(0,255,178,0.5)] transition-all duration-500">
-            <LineChart size={18} className="text-black" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#11161D] to-[#0D1218] flex items-center justify-center border border-[#D4AF37]/20 shadow-[0_0_20px_rgba(212,175,55,0.15)] group-hover:shadow-[0_0_35px_rgba(212,175,55,0.3)] transition-all duration-500">
+            <JBLogo size={22} />
           </div>
           <span className="text-xl font-brand font-black tracking-tight">JournalBud</span>
         </Link>
@@ -215,8 +188,8 @@ export default function LandingPage() {
           <a href="#how-it-works" className="hover:text-white transition-colors duration-300">How It Works</a>
           <a href="#features" className="hover:text-white transition-colors duration-300">Features</a>
           <a href="#pricing" className="hover:text-white transition-colors duration-300">Pricing</a>
-          <Link href="/demo" className="hidden sm:flex text-sm font-medium text-zinc-400 hover:text-[#00FFB2] transition-colors items-center gap-1.5">
-            <Play size={14} className="text-[#00FFB2]" /> Demo
+          <Link href="/demo" className="hidden sm:flex text-sm font-medium text-zinc-400 hover:text-[#D4AF37] transition-colors items-center gap-1.5">
+            <Play size={14} className="text-[#D4AF37]" /> Demo
           </Link>
         </div>
 
@@ -225,7 +198,7 @@ export default function LandingPage() {
             Login
           </Link>
           <Link href={ctaHref}
-            className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#00FFB2] hover:shadow-[0_0_25px_rgba(0,255,178,0.4)] transition-all duration-300">
+            className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#D4AF37] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all duration-300">
             Get Started
           </Link>
         </div>
@@ -249,77 +222,53 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           1. HERO — "YOU TRADE. YOUR BUDDY UNDERSTANDS."
          ═══════════════════════════════════════ */}
-      <section className="relative z-10 pt-12 md:pt-20 pb-24 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <section className="relative z-10 pt-16 md:pt-24 pb-24 px-6 max-w-5xl mx-auto flex flex-col items-center text-center">
+        
+        {/* Cinematic Logo Spotlight */}
+        <LogoSpotlight />
 
-          {/* Left: Copy */}
-          <div className="space-y-8 fade-slide-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#00FFB2]/8 border border-[#00FFB2]/15 text-[#00FFB2] text-[11px] font-bold uppercase tracking-[0.15em]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00FFB2] animate-pulse" />
-              AI-Powered Trading Companion
-            </div>
-
-            <h1 className="text-5xl md:text-[4.5rem] font-black tracking-tight leading-[1.05]">
-              You Trade.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFB2] via-[#3B82F6] to-[#00FFB2] bg-[length:200%_auto] animate-gradient-x">
-                Your Buddy
-              </span>
-              <br />Understands.
-            </h1>
-
-            <p className="text-lg md:text-xl text-zinc-400 max-w-lg leading-relaxed">
-              JournalBud reads your trades, tracks your behavior, and helps you improve —{" "}
-              <span className="text-zinc-200 font-semibold">automatically.</span>
-            </p>
-
-            <div className="flex flex-col gap-4 pt-2">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href={ctaHref}
-                  className="group px-8 py-4 bg-[#00FFB2] text-black font-black rounded-2xl flex items-center justify-center gap-2.5 hover:shadow-[0_0_40px_rgba(0,255,178,0.35)] hover:-translate-y-1 transition-all duration-300 text-base">
-                  Start With Your Trading Buddy
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-              <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-[0.15em] pl-1">
-                No card. No setup. Just upload and begin.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-6 pt-2">
-              <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-zinc-500">
-                <ShieldCheck size={15} className="text-[#00FFB2]" /> 100% Secure
-              </div>
-              <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-zinc-500">
-                <Zap size={15} className="text-amber-400" /> 2-Second Analysis
-              </div>
-            </div>
+        <div className="space-y-8 fade-slide-up mt-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em] mx-auto">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+            AI-Powered Trading Companion
           </div>
 
-          {/* Right: Living AI Orb + Status Feed */}
-          <div className="relative fade-slide-up flex flex-col items-center justify-center min-h-[420px] hero-container" style={{ animationDelay: "200ms" }}>
-            
+          <h1 className="text-5xl md:text-[5.5rem] font-black tracking-tight leading-[1.05]">
+            You Trade.<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#C9A646] to-[#D4AF37] bg-[length:200%_auto] animate-gradient-x">
+              Your Buddy
+            </span>
+            <br />Understands.
+          </h1>
 
-            {/* Cinematic Hero Visual */}
-            <HeroVisual />
+          <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+            JournalBud reads your trades, tracks your behavior, and helps you improve —{" "}
+            <span className="text-zinc-200 font-semibold">automatically.</span>
+          </p>
 
-            {/* Status Feed under orb */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-72 md:w-80">
-              <div className="bg-[#0B0F14]/80 backdrop-blur-2xl border border-white/8 rounded-2xl px-5 py-4 shadow-2xl">
-                <AIStatusLine lines={[
-                  "Analyzing last 7 trades...",
-                  "Pattern: Early exits detected",
-                  "Confidence improving ↑",
-                  "Suggestion: Stick to 2:1 RR",
-                  "Win rate trending upward...",
-                  "Fear pattern declining ↓",
-                ]} />
-              </div>
+          <div className="flex flex-col items-center gap-4 pt-4">
+            <Link href={ctaHref}
+              className="group px-8 py-4 bg-gradient-to-r from-[#D4AF37] to-[#C9A646] text-[#0B0B0F] font-black rounded-2xl flex items-center justify-center gap-2.5 hover:shadow-[0_0_40px_rgba(212,175,55,0.4)] hover:-translate-y-1 transition-all duration-300 text-lg">
+              Start With Your Trading Buddy
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform border-[#0B0B0F]" />
+            </Link>
+            <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-[0.15em]">
+              No card. No setup. Just upload and begin.
+            </p>
+          </div>
+
+          <div className="flex items-center justify-center gap-8 pt-6">
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+              <ShieldCheck size={15} className="text-[#D4AF37]" /> 100% Secure
+            </div>
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+              <Zap size={15} className="text-[#D4AF37]" /> 2-Second Analysis
             </div>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="flex justify-center pt-12 animate-bounce">
+        <div className="flex justify-center pt-24 animate-bounce">
           <ChevronDown size={24} className="text-zinc-600" />
         </div>
       </section>
@@ -330,12 +279,12 @@ export default function LandingPage() {
       <section className="py-16 md:py-20 px-6 relative z-10 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="reveal text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/8 border border-purple-500/15 text-purple-400 text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/8 border border-[#D4AF37]/15 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
               <Eye size={14} /> Always Observing
             </div>
             <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
               It Watches What<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[#00FFB2]">You Miss</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C9A646] to-[#D4AF37]">You Miss</span>
             </h2>
           </div>
 
@@ -353,10 +302,10 @@ export default function LandingPage() {
             {/* Feature cards */}
             <div className="reveal grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { icon: HeartPulse, color: "purple", title: "Emotional Tracking", desc: "Pre & post trade emotional states logged and analyzed" },
-                { icon: AlertTriangle, color: "amber", title: "Mistake Intelligence", desc: "FOMO, revenge trading, early exits — auto-detected" },
-                { icon: BrainCircuit, color: "emerald", title: "Weekly AI Reports", desc: "Full strategy analysis delivered every Sunday" },
-                { icon: Activity, color: "blue", title: "Behavior Patterns", desc: "Your trading DNA mapped across sessions" },
+                { icon: HeartPulse, color: "gold", title: "Emotional Tracking", desc: "Pre & post trade emotional states logged and analyzed" },
+                { icon: AlertTriangle, color: "muted", title: "Mistake Intelligence", desc: "FOMO, revenge trading, early exits — auto-detected" },
+                { icon: BrainCircuit, color: "gold", title: "Weekly AI Reports", desc: "Full strategy analysis delivered every Sunday" },
+                { icon: Activity, color: "muted", title: "Behavior Patterns", desc: "Your trading DNA mapped across sessions" },
               ].map((f, i) => {
                 const colors: Record<string, string> = {
                   purple: "from-purple-500/10 to-purple-500/5 border-purple-500/15 text-purple-400",
@@ -384,12 +333,12 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-16 md:py-20 px-6 relative z-10 bg-gradient-to-b from-[#0B0F14] via-[#0D1117] to-[#0B0F14] border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="reveal text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/8 border border-blue-500/15 text-blue-400 text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/20 border border-zinc-600/30 text-zinc-300 text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
               <Upload size={14} /> Core Feature
             </div>
             <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
               Just Drop Your<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-[#00FFB2]">Trades</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#C9A646]">Trades</span>
             </h2>
             <p className="text-zinc-400 text-lg mt-4 max-w-lg mx-auto">
               Screenshot, paste, or PDF. JournalBud scans and fills everything for you.
@@ -399,7 +348,7 @@ export default function LandingPage() {
           {/* Upload animation mockup */}
           <div className="reveal max-w-3xl mx-auto">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#00FFB2]/20 via-[#3B82F6]/20 to-[#00FFB2]/20 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#D4AF37]/20 via-[#C9A646]/20 to-[#D4AF37]/20 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
               <div className="relative bg-[#11161D]/80 backdrop-blur-xl border border-white/8 rounded-[2rem] shadow-2xl overflow-hidden">
                 {/* Top bar */}
@@ -667,17 +616,17 @@ export default function LandingPage() {
           <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left: Goals mockup */}
             <div className="order-2 lg:order-1 relative">
-              <div className="absolute -inset-4 bg-[#3B82F6]/5 blur-3xl rounded-full" />
+              <div className="absolute -inset-4 bg-[#D4AF37]/5 blur-3xl rounded-full" />
               <div className="relative bg-[#11161D]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl space-y-4">
                 <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                  <Target size={16} className="text-[#00FFB2]" /> Daily Targets
+                  <Target size={16} className="text-[#D4AF37]" /> Daily Targets
                 </h4>
 
                 {[
-                  { label: "Max 3 trades per day", current: "2/3", pct: 66, status: "On track", color: "#00FFB2" },
-                  { label: "Max drawdown: $200", current: "$85", pct: 42, status: "Safe zone", color: "#3B82F6" },
+                  { label: "Max 3 trades per day", current: "2/3", pct: 66, status: "On track", color: "#D4AF37" },
+                  { label: "Max drawdown: $200", current: "$85", pct: 42, status: "Safe zone", color: "#C9A646" },
                   { label: "Stick to plan", current: "Yes", pct: 100, status: "Perfect", color: "#A855F7" },
-                  { label: "No revenge trading", current: "Clean", pct: 100, status: "✓ Clear", color: "#00FFB2" },
+                  { label: "No revenge trading", current: "Clean", pct: 100, status: "✓ Clear", color: "#D4AF37" },
                 ].map((g, i) => (
                   <div key={i} className="bg-[#0B0E13] border border-white/5 rounded-xl p-4 space-y-2">
                     <div className="flex items-center justify-between">
@@ -694,12 +643,12 @@ export default function LandingPage() {
 
             {/* Right: Copy */}
             <div className="order-1 lg:order-2 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/8 border border-blue-500/15 text-blue-400 text-[11px] font-bold uppercase tracking-[0.15em]">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em]">
                 <Flame size={14} /> Psychology Engine
               </div>
               <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
                 Discipline,<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-cyan-400">Engineered</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#C9A646]">Engineered</span>
               </h2>
               <p className="text-zinc-400 text-base leading-relaxed max-w-md">
                 Set daily targets, drawdown limits, and trading rules. JournalBud enforces them and tracks your compliance automatically.
@@ -707,7 +656,7 @@ export default function LandingPage() {
               <div className="bg-[#0B0E13]/50 border border-white/5 rounded-xl px-5 py-4">
                 <p className="text-sm text-zinc-300 leading-relaxed font-medium italic">
                   "You don&apos;t rise to your goals.<br />
-                  <span className="text-[#00FFB2] font-bold not-italic">You fall to your system."</span>
+                  <span className="text-[#D4AF37] font-bold not-italic">You fall to your system."</span>
                 </p>
               </div>
             </div>
@@ -723,7 +672,7 @@ export default function LandingPage() {
           <div className="reveal text-center space-y-4 mb-16">
             <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
               Professional Tools for<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFB2] to-[#3B82F6]">Profitable Minds</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#C9A646]">Profitable Minds</span>
             </h2>
             <p className="text-zinc-400 text-lg">Choose a path that fits your trading journey.</p>
           </div>
@@ -751,16 +700,16 @@ export default function LandingPage() {
             </div>
 
             {/* Pro Plan */}
-            <div className="bg-gradient-to-b from-[#11161D] to-[#0D1218] border-2 border-[#00FFB2]/20 p-8 rounded-[2rem] space-y-8 relative overflow-hidden flex flex-col shadow-[0_0_60px_rgba(0,255,178,0.05)] transform md:-translate-y-4 hover:border-[#00FFB2]/40 transition-all duration-300">
+            <div className="bg-gradient-to-b from-[#11161D] to-[#0D1218] border-2 border-[#D4AF37]/20 p-8 rounded-[2rem] space-y-8 relative overflow-hidden flex flex-col shadow-[0_0_60px_rgba(212,175,55,0.05)] transform md:-translate-y-4 hover:border-[#D4AF37]/40 transition-all duration-300">
               <div className="absolute top-0 right-0 p-4">
-                <span className="px-3 py-1 bg-[#00FFB2] text-black text-[10px] font-black uppercase rounded-full tracking-widest shadow-[0_0_15px_rgba(0,255,178,0.3)]">
+                <span className="px-3 py-1 bg-gradient-to-r from-[#D4AF37] to-[#C9A646] text-[#0B0B0F] text-[10px] font-black uppercase rounded-full tracking-widest shadow-[0_0_15px_rgba(212,175,55,0.3)]">
                   AI Engine Inside
                 </span>
               </div>
               {/* Subtle glow */}
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#00FFB2]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none" />
               <div className="space-y-2">
-                <h3 className="text-lg font-bold text-[#00FFB2]">Professional Access</h3>
+                <h3 className="text-lg font-bold text-[#D4AF37]">Professional Access</h3>
                 <p className="text-3xl font-black">$2.99 <span className="text-sm text-zinc-500 font-medium">/ month</span></p>
                 <p className="text-sm font-bold text-zinc-400">or <span className="text-white">$19.99</span> / year</p>
               </div>
@@ -775,11 +724,11 @@ export default function LandingPage() {
               </ul>
               <div className="space-y-3">
                 <Link href={ctaHref}
-                  className="w-full py-4 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_25px_rgba(0,255,178,0.4)] transition-all block text-center">
+                  className="w-full py-4 bg-gradient-to-r from-[#D4AF37] to-[#C9A646] text-[#0B0B0F] font-black rounded-2xl hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all block text-center">
                   {user && hasUsedTrial ? "Upgrade to Pro" : "Start 7-Day Free Trial"}
                 </Link>
                 <Link href="/demo" className="w-full py-3 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
-                  <Play size={14} className="text-[#00FFB2]" /> View Live Demo
+                  <Play size={14} className="text-[#D4AF37]" /> View Live Demo
                 </Link>
               </div>
             </div>
@@ -795,7 +744,7 @@ export default function LandingPage() {
           <div className="reveal text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
               More Than a Tool.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFB2] via-teal-300 to-[#3B82F6]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#C9A646] to-[#D4AF37]">
                 A Trading Buddy.
               </span>
             </h2>
@@ -830,11 +779,11 @@ export default function LandingPage() {
       <section className="py-16 md:py-20 px-6 relative z-10">
         <div className="reveal max-w-4xl mx-auto relative">
           {/* Background glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#00FFB2]/5 via-[#3B82F6]/5 to-[#00FFB2]/5 rounded-[3rem] blur-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/5 via-[#C9A646]/5 to-[#D4AF37]/5 rounded-[3rem] blur-2xl" />
 
           <div className="relative bg-[#11161D]/60 backdrop-blur-xl border border-white/8 rounded-[3rem] p-12 md:p-20 text-center space-y-8 overflow-hidden">
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none opacity-40">
-              <BrainCircuit size={64} className="text-[#00FFB2] animate-pulse opacity-50" />
+              <BrainCircuit size={64} className="text-[#D4AF37] animate-pulse opacity-50" />
             </div>
 
             <div className="relative z-10 space-y-6 pt-8">
@@ -845,9 +794,9 @@ export default function LandingPage() {
                 Your buddy is waiting. Upload your first trade and let the AI reveal what you&apos;ve been missing.
               </p>
               <Link href={ctaHref}
-                className="group mt-8 px-10 py-5 bg-[#00FFB2] text-black font-black rounded-2xl hover:shadow-[0_0_50px_rgba(0,255,178,0.4)] hover:-translate-y-1 transition-all inline-flex items-center gap-3 text-lg">
+                className="group mt-8 px-10 py-5 bg-gradient-to-r from-[#D4AF37] to-[#C9A646] text-[#0B0B0F] font-black rounded-2xl hover:shadow-[0_0_50px_rgba(212,175,55,0.4)] hover:-translate-y-1 transition-all inline-flex items-center gap-3 text-lg">
                 Start With Your Trading Buddy
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform border-[#0B0B0F]" />
               </Link>
               <p className="text-zinc-600 text-sm font-medium">
                 No card. No setup. Just upload and begin.

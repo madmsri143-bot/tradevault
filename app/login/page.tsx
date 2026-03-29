@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { TrendingUp, Loader2, Mail, Lock, User as UserIcon, Eye, EyeOff, CheckCircle2, ChevronLeft, Globe, Shield, Target, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import Link from "next/link";
+import JBLogo from "@/components/ui/JBLogo";
 
 // Define strict error mappings for Firebase auth
 const getAuthErrorMessage = (errCode: string): string => {
@@ -237,7 +238,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       <div className="fixed inset-0 z-[100] bg-[#0B0F14] flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-6 animate-in zoom-in-50 fade-in duration-500">
           <div className="w-24 h-24 bg-[#00FFB2]/10 rounded-3xl flex items-center justify-center border border-[#00FFB2]/20 shadow-[0_0_80px_rgba(0,255,178,0.2)]">
-            <TrendingUp size={48} className="text-[#00FFB2]" />
+            <JBLogo size={64} />
           </div>
           <span className="text-4xl font-brand font-black text-white tracking-tight">JournalBud</span>
         </div>
@@ -261,7 +262,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
         <Link href="/" className="relative z-10 flex items-center gap-3 group">
           <div className="w-10 h-10 bg-[#00FFB2]/10 rounded-xl flex items-center justify-center border border-[#00FFB2]/20">
-            <TrendingUp size={24} className="text-[#00FFB2]" />
+            <JBLogo size={24} />
           </div>
           <span className="text-xl font-brand font-black text-white tracking-tight">JournalBud</span>
         </Link>

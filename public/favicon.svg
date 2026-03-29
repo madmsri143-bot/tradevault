@@ -1,8 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="16" fill="#11161D"/>
-  <rect width="64" height="64" rx="16" fill="none" stroke="#00FFB2" stroke-width="2" opacity="0.2"/>
-  <g transform="translate(13, 18)">
-    <path d="M 0 0 H 16 V 5 H 10 V 28 H 5 V 5 H 0 Z" fill="#00FFB2"/>
-    <path d="M 18 0 H 24 L 28 20 L 32 0 H 38 L 31 28 H 25 Z" fill="#00FFB2"/>
-  </g>
+  <rect width="64" height="64" rx="16" fill="none" stroke="#D4AF37" stroke-width="2" opacity="0.3"/>
+  <text x="32" y="44" font-family="sans-serif" font-weight="900" font-size="28" fill="#D4AF37" text-anchor="middle" letter-spacing="-1">JB</text>
 </svg>

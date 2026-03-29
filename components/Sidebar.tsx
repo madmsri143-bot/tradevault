@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, BookText, Menu, X, TrendingUp, Calculator, Crosshair, Lock, Headset, Sun, Moon } from "lucide-react";
+import { LayoutDashboard, BookText, Menu, X, Calculator, Crosshair, Lock, Headset, Sun, Moon } from "lucide-react";
+import JBLogo from "@/components/ui/JBLogo";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { signOut } from "firebase/auth";
@@ -62,7 +63,7 @@ export default function Sidebar() {
       <div className={cn("flex items-center border-b border-white/10 h-16 shrink-0", isExpanded ? "justify-between px-4" : "justify-center")}>
         {isExpanded && (
           <div className="flex items-center gap-3 overflow-hidden transition-all">
-            <TrendingUp className="text-emerald-500 shrink-0" size={24} />
+            <JBLogo size={24} />
           </div>
         )}
         <button

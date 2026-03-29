@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp } from "lucide-react";
+import JBLogo from "@/components/ui/JBLogo";
 
 export default function GlobalLoader() {
   const [loading, setLoading] = useState(true);
@@ -27,7 +27,7 @@ export default function GlobalLoader() {
       
       <div className="relative flex flex-col items-center gap-6">
         <div className="w-20 h-20 bg-gradient-to-br from-[#11161D] to-[#0D1218] rounded-[24px] border border-[#00FFB2]/20 flex items-center justify-center shadow-[0_0_40px_rgba(0,255,178,0.1)] animate-bounce-subtle">
-          <TrendingUp size={40} className="text-[#00FFB2]" />
+          <JBLogo size={40} />
         </div>
         
         <div className="flex flex-col items-center gap-2">
