@@ -18,7 +18,7 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
   const isExpired = isPro && daysLeft < 0;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 pt-8 border-t border-white/5">
+    <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 pt-8 border-t border-[#111827]">
       
       {plan === "trial" ? (
         <div className="flex flex-col gap-3 w-full sm:w-auto">
@@ -30,13 +30,13 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
           <div className="flex flex-col sm:flex-row gap-3">
              <button 
                onClick={onUpgradeClick}
-               className="w-full sm:w-auto px-8 py-3.5 bg-[#00FFB2] text-black font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all text-sm"
+               className="w-full sm:w-auto px-8 py-3.5 bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 font-bold rounded-xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all text-sm"
              >
                Upgrade Now
              </button>
              <button 
                onClick={onCancelTrial}
-               className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-zinc-800 text-zinc-300 font-medium rounded-xl hover:bg-zinc-800 hover:text-white transition-all text-sm"
+               className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-zinc-800 text-[#E5E7EB] font-medium rounded-xl hover:bg-zinc-800 hover:text-[#E5E7EB] transition-all text-sm"
              >
                Switch to Standard Free
              </button>
@@ -46,13 +46,13 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
         <>
           <button 
             onClick={onUpgradeClick}
-            className="w-full sm:w-auto px-8 py-3.5 bg-[#00FFB2] text-black font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 font-bold rounded-xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2"
           >
             Upgrade to Pro
           </button>
           <button 
             onClick={onManageClick}
-            className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-zinc-800 text-zinc-300 font-medium rounded-xl hover:bg-zinc-800 hover:text-white transition-all text-sm"
+            className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-zinc-800 text-[#E5E7EB] font-medium rounded-xl hover:bg-zinc-800 hover:text-[#E5E7EB] transition-all text-sm"
           >
             Contact Support
           </button>
@@ -62,17 +62,17 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
           {isMonthly && (
              <button 
                onClick={onUpgradeClick}
-               className="w-full sm:w-auto px-8 py-3.5 bg-zinc-800 border border-zinc-700 text-white font-bold rounded-xl hover:border-[#00FFB2] hover:bg-zinc-800 transition-all text-sm group relative overflow-hidden"
+               className="w-full sm:w-auto px-8 py-3.5 bg-zinc-800 border border-zinc-700 text-[#E5E7EB] font-bold rounded-xl hover:border-[#C9A646] hover:bg-zinc-800 transition-all text-sm group relative overflow-hidden"
              >
                <span className="relative z-10 flex items-center gap-2">
-                 Switch to Pro Elite <span className="bg-[#00FFB2] text-black px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase">Save 40%</span>
+                 Switch to Pro Elite <span className="bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase">Save 40%</span>
                </span>
-               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00FFB2]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C9A646]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
              </button>
           )}
           <button 
             onClick={onManageClick}
-            className="w-full sm:w-auto px-6 py-3.5 bg-transparent text-zinc-400 font-medium rounded-xl hover:text-white transition-all text-sm underline decoration-white/20 underline-offset-4"
+            className="w-full sm:w-auto px-6 py-3.5 bg-transparent text-[#9CA3AF] font-medium rounded-xl hover:text-[#E5E7EB] transition-all text-sm underline decoration-white/20 underline-offset-4"
           >
             Manage Subscription
           </button>

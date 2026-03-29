@@ -3,20 +3,20 @@ import { ArrowLeft } from "lucide-react";
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-black text-zinc-300 p-8 md:p-16 max-w-4xl mx-auto selection:bg-emerald-500/30 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-black text-[#E5E7EB] p-8 md:p-16 max-w-4xl mx-auto selection:bg-emerald-500/30 animate-in fade-in duration-500">
       <div className="mb-10">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-emerald-500 hover:text-amber-400 pb-2 transition-colors">
           <ArrowLeft size={16} /> Back to App
         </Link>
-        <h1 className="text-4xl md:text-5xl font-bold text-white mt-4 mb-2 tracking-tight">Privacy Policy</h1>
-        <p className="text-zinc-500 font-medium">Last Updated: March 2026</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-[#E5E7EB] mt-4 mb-2 tracking-tight">Privacy Policy</h1>
+        <p className="text-[#9CA3AF] font-medium">Last Updated: March 2026</p>
       </div>
 
       <div className="space-y-10 text-base leading-relaxed">
         <section>
           <h2 className="text-2xl font-semibold text-amber-400 mb-3">1. What We Collect</h2>
           <p>We only collect the absolute minimum data required to keep the application functioning seamlessly for you:</p>
-          <ul className="list-disc pl-6 mt-4 space-y-3 text-zinc-400">
+          <ul className="list-disc pl-6 mt-4 space-y-3 text-[#9CA3AF]">
             <li><strong className="text-zinc-200">Account Data:</strong> Your name, username, email address, and profile picture (via your preferred Authentication method).</li>
             <li><strong className="text-zinc-200">Trading Data:</strong> The trades you meticulously log, personal journal notes, targets, and any visual chart images you upload.</li>
             <li><strong className="text-zinc-200">Technical Data:</strong> Basic functional cookies and local storage items (like theme preference and cookie consent) strictly required to run the app.</li>

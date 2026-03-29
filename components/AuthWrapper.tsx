@@ -108,7 +108,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   if (loading || isCheckingLocals) {
     return (
       <div className="flex h-[100dvh] items-center justify-center bg-background">
-        <div className="text-[32px] md:text-[40px] font-bold text-black dark:text-white animate-blink tracking-tight">
+        <div className="text-[32px] md:text-[40px] font-bold text-black dark:text-[#E5E7EB] animate-blink tracking-tight">
           JournalBud
         </div>
       </div>

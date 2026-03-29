@@ -20,13 +20,13 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
   if (!history || history.length === 0) {
     return (
       <div className="mt-12">
-        <h3 className="text-xl font-bold text-white mb-6">Payment History</h3>
-        <div className="bg-[#0B0F14] border border-white/5 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+        <h3 className="text-xl font-bold text-[#E5E7EB] mb-6">Payment History</h3>
+        <div className="bg-[#0B0F14] border border-[#111827] rounded-2xl p-8 flex flex-col items-center justify-center text-center">
           <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-4">
-            <CreditCard size={20} className="text-zinc-500" />
+            <CreditCard size={20} className="text-[#9CA3AF]" />
           </div>
-          <h4 className="text-white font-medium mb-1">No payment history</h4>
-          <p className="text-sm text-zinc-500">You haven&apos;t made any payments yet. Your trial is currently active.</p>
+          <h4 className="text-[#E5E7EB] font-medium mb-1">No payment history</h4>
+          <p className="text-sm text-[#9CA3AF]">You haven&apos;t made any payments yet. Your trial is currently active.</p>
         </div>
       </div>
     );
@@ -69,12 +69,12 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
 
   return (
     <div className="mt-12">
-      <h3 className="text-xl font-bold text-white mb-6">Payment History</h3>
+      <h3 className="text-xl font-bold text-[#E5E7EB] mb-6">Payment History</h3>
       
-      <div className="bg-[#0B0F14] border border-white/5 rounded-2xl overflow-hidden">
+      <div className="bg-[#0B0F14] border border-[#111827] rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="text-xs text-zinc-500 uppercase bg-black/40 border-b border-white/5">
+            <thead className="text-xs text-[#9CA3AF] uppercase bg-black/40 border-b border-[#111827]">
               <tr>
                 <th scope="col" className="px-6 py-4 font-semibold tracking-widest">Date</th>
                 <th scope="col" className="px-6 py-4 font-semibold tracking-widest">Amount</th>
@@ -86,17 +86,17 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
             <tbody className="divide-y divide-white/5">
               {sortedHistory.map((payment, index) => (
                 <tr key={payment.payment_id || index} className="hover:bg-white/[0.02] transition-colors group cursor-default">
-                  <td className="px-6 py-4 font-medium text-zinc-300">
+                  <td className="px-6 py-4 font-medium text-[#E5E7EB]">
                     {format(new Date(payment.date), "MMM dd, yyyy")}
                   </td>
-                  <td className="px-6 py-4 text-white font-bold">
+                  <td className="px-6 py-4 text-[#E5E7EB] font-bold">
                     {payment.plan === "pro_yearly" ? "$19.99" : "$2.99"}
                   </td>
-                  <td className="px-6 py-4 text-zinc-400 capitalize">
+                  <td className="px-6 py-4 text-[#9CA3AF] capitalize">
                     {payment.plan.replace("pro_", "")}
                   </td>
-                  <td className="px-6 py-4 text-zinc-500 font-mono text-xs flex items-center gap-2 group-hover:text-zinc-300 transition-colors">
-                    <button onClick={() => generateReceiptPDF(payment)} className="flex items-center gap-1 hover:text-[#00FFB2] transition-colors p-1" title="Download Receipt PDF">
+                  <td className="px-6 py-4 text-[#9CA3AF] font-mono text-xs flex items-center gap-2 group-hover:text-[#E5E7EB] transition-colors">
+                    <button onClick={() => generateReceiptPDF(payment)} className="flex items-center gap-1 hover:text-[#C9A646] transition-colors p-1" title="Download Receipt PDF">
                       <Download size={14} />
                       <span className="truncate w-24">{payment.payment_id !== "mock" ? payment.payment_id : "TRIAL_ACTV"}</span>
                     </button>

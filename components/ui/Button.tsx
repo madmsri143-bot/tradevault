@@ -11,11 +11,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", isLoading, children, disabled, ...props }, ref) => {
     
     const variants = {
-      primary: "bg-[#00FFB2] text-black hover:bg-emerald-400 shadow-[0_0_15px_rgba(0,255,178,0.2)] hover:shadow-[0_0_25px_rgba(0,255,178,0.4)] border border-transparent",
-      secondary: "bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700",
-      danger: "bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20",
-      ghost: "bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-800",
-      outline: "bg-transparent border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700"
+      primary: "bg-[#111827] text-[#C9A646] hover:bg-[#C9A646]/10 border border-[#C9A646]/50 shadow-[0_0_10px_rgba(201,166,70,0.1)] hover:border-[#C9A646]",
+      secondary: "bg-zinc-800 text-[#E5E7EB] hover:bg-zinc-700 border border-zinc-700",
+      danger: "bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-[#E5E7EB] border border-red-500/20",
+      ghost: "bg-transparent text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800",
+      outline: "bg-transparent border border-zinc-800 text-[#E5E7EB] hover:text-[#E5E7EB] hover:border-zinc-700"
     };
 
     const sizes = {

@@ -13,8 +13,8 @@ export default function SubscriptionDetails({ isPro, expiryDate, lastPaymentId }
   if (!isPro) return null;
 
   return (
-    <div className="mt-8 pt-8 border-t border-white/5 opacity-80 hover:opacity-100 transition-opacity">
-      <h3 className="text-sm font-bold tracking-widest uppercase text-zinc-500 mb-6">Subscription Meta</h3>
+    <div className="mt-8 pt-8 border-t border-[#111827] opacity-80 hover:opacity-100 transition-opacity">
+      <h3 className="text-sm font-bold tracking-widest uppercase text-[#9CA3AF] mb-6">Subscription Meta</h3>
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="flex items-start gap-4">
@@ -22,8 +22,8 @@ export default function SubscriptionDetails({ isPro, expiryDate, lastPaymentId }
             <ShieldCheck size={18} className="text-blue-400" />
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">Billing Method</div>
-            <div className="text-sm font-medium text-white flex items-center gap-2">
+            <div className="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF] mb-1">Billing Method</div>
+            <div className="text-sm font-medium text-[#E5E7EB] flex items-center gap-2">
               Razorpay SECURE
             </div>
           </div>
@@ -34,8 +34,8 @@ export default function SubscriptionDetails({ isPro, expiryDate, lastPaymentId }
             <Hash size={18} className="text-purple-400" />
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">Last Transaction ID</div>
-            <div className="text-sm font-mono text-zinc-300">
+            <div className="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF] mb-1">Last Transaction ID</div>
+            <div className="text-sm font-mono text-[#E5E7EB]">
               {lastPaymentId !== "mock" ? lastPaymentId : "N/A (Trial)"}
             </div>
           </div>
@@ -46,8 +46,8 @@ export default function SubscriptionDetails({ isPro, expiryDate, lastPaymentId }
             <Calendar size={18} className="text-emerald-400" />
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">Next Billing Date</div>
-            <div className="text-sm font-medium text-zinc-300">
+            <div className="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF] mb-1">Next Billing Date</div>
+            <div className="text-sm font-medium text-[#E5E7EB]">
               {expiryDate ? format(new Date(expiryDate), "MMM dd, yyyy") : "N/A"}
             </div>
           </div>

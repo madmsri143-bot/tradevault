@@ -56,11 +56,11 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "shrink-0 sticky top-0 z-40 h-[100dvh] transition-all duration-300 ease-in-out bg-zinc-950 border-r border-white/10 flex flex-col",
+        "shrink-0 sticky top-0 z-40 h-[100dvh] transition-all duration-300 ease-in-out bg-[#1F2937] border-r border-[#111827] flex flex-col",
         isExpanded ? "w-64 absolute md:relative shadow-2xl md:shadow-none" : "w-16"
       )}
     >
-      <div className={cn("flex items-center border-b border-white/10 h-16 shrink-0", isExpanded ? "justify-between px-4" : "justify-center")}>
+      <div className={cn("flex items-center border-b border-[#111827] h-16 shrink-0", isExpanded ? "justify-between px-4" : "justify-center")}>
         {isExpanded && (
           <div className="flex items-center gap-3 overflow-hidden transition-all">
             <JBLogo size={24} />
@@ -68,7 +68,7 @@ export default function Sidebar() {
         )}
         <button
           onClick={toggleSidebar}
-          className="p-1 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
+          className="p-1 text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded-md transition-colors"
           aria-label="Toggle Sidebar"
         >
           {isExpanded ? <X size={20} /> : <Menu size={20} />}
@@ -87,8 +87,8 @@ export default function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative",
                 isActive
-                  ? "bg-emerald-500/10 text-emerald-400 font-medium"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+                  ? item.href === '/dashboard' ? "bg-[#C9A646]/10 text-[#C9A646] font-medium shadow-[inset_2px_0_0_0_#C9A646]" : "bg-[#111827] text-[#E5E7EB] font-medium shadow-[inset_2px_0_0_0_#E5E7EB]"
+                  : "text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-[#111827]"
               )}
               title={!isExpanded ? item.label : undefined}
             >
@@ -112,7 +112,7 @@ export default function Sidebar() {
               )}
 
               {!isExpanded && (
-                <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+                <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-[#E5E7EB] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
                   {item.label} {hasProHint ? " (Limited)" : ""}
                 </div>
               )}
@@ -121,27 +121,27 @@ export default function Sidebar() {
         })}
       </nav>
       
-      <div className={cn("px-2 py-4 border-t border-white/10 flex items-center gap-2", isExpanded ? "justify-start pl-4" : "justify-center flex-col")}>
+      <div className={cn("px-2 py-4 border-t border-[#111827] flex items-center gap-2", isExpanded ? "justify-start pl-4" : "justify-center flex-col")}>
         <button
           onClick={() => window.dispatchEvent(new Event("openSupportModal"))}
-          className="p-2.5 text-zinc-400 hover:text-[#00FFB2] hover:bg-[#00FFB2]/10 rounded-lg transition-colors relative group"
+          className="p-2.5 text-[#9CA3AF] hover:text-[#C9A646] hover:bg-[#C9A646]/10 rounded-lg transition-colors relative group"
           title="Support Chat"
         >
           <Headset size={20} />
           {!isExpanded && (
-            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-[#E5E7EB] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
               Support
             </div>
           )}
         </button>
         <button
           onClick={toggleTheme}
-          className="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors relative group"
+          className="p-2.5 text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded-lg transition-colors relative group"
           title="Toggle Theme"
         >
           {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           {!isExpanded && (
-            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-[#E5E7EB] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
               Theme
             </div>
           )}

@@ -37,7 +37,7 @@ export async function POST(req: Request) {
       subject: `[JournalBud Support] ${subject} - ${plan?.toUpperCase() || "UNKNOWN"}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #D4AF37; background-color: #11161D; padding: 15px; border-radius: 8px;">New Support Request</h2>
+          <h2 style="color: #C9A646; background-color: #11161D; padding: 15px; border-radius: 8px;">New Support Request</h2>
           <p><strong>Trader Name:</strong> ${name}</p>
           <p><strong>Email Address:</strong> ${email}</p>
           <p><strong>Current Plan:</strong> <span style="text-transform: uppercase;">${plan || "UNKNOWN"}</span></p>

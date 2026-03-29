@@ -17,7 +17,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
     if (plan === "trial") {
       const isExpired = expiryDate ? new Date(expiryDate).getTime() < Date.now() : false;
       if (isExpired) return { text: "Trial Expired", color: "text-amber-500", bg: "bg-amber-500/10", border: "border-amber-500/20", icon: AlertCircle };
-      return { text: "Active Trial", color: "text-[#00FFB2]", bg: "bg-[#00FFB2]/10", border: "border-[#00FFB2]/20", icon: Clock };
+      return { text: "Active Trial", color: "text-[#C9A646]", bg: "bg-[#C9A646]/10", border: "border-[#C9A646]/20", icon: Clock };
     }
     
     if (!isPro) return { text: "Standard Free", color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/20", icon: Clock };
@@ -36,27 +36,27 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
   const isExpired = daysLeft < 0;
 
   return (
-    <div className="relative group overflow-hidden rounded-2xl border border-white/5 bg-[#0B0F14] p-8 shadow-2xl transition-all hover:border-[#00FFB2]/20">
+    <div className="relative group overflow-hidden rounded-2xl border border-[#111827] bg-[#0B0F14] p-8 shadow-2xl transition-all hover:border-[#C9A646]/20">
       {/* Subtle Glow Background */}
       {status.text === "Active" && (
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#00FFB2]/5 blur-3xl rounded-full pointer-events-none transition-all group-hover:bg-[#00FFB2]/10" />
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#C9A646]/5 blur-3xl rounded-full pointer-events-none transition-all group-hover:bg-[#C9A646]/10" />
       )}
 
       {/* Header / Status */}
       <div className="flex items-center justify-between mb-8">
         <div>
           {plan === "trial" && !isExpired && (
-            <p className="text-xs text-zinc-500 mb-2 font-medium">
+            <p className="text-xs text-[#9CA3AF] mb-2 font-medium">
               <span className="text-emerald-400 font-bold">Professional Trial</span>
               {" — "}
               {daysLeft === 1 ? "ends tomorrow" : daysLeft === 0 ? "ends today" : `${daysLeft} days remaining`}
             </p>
           )}
-          <h2 className="text-xl font-medium text-white flex items-center gap-2">
-            <Zap size={20} className="text-[#00FFB2]" />
+          <h2 className="text-xl font-medium text-[#E5E7EB] flex items-center gap-2">
+            <Zap size={20} className="text-[#C9A646]" />
             Current Plan
           </h2>
-          <p className="text-sm text-zinc-400 mt-1">Manage your subscription and billing</p>
+          <p className="text-sm text-[#9CA3AF] mt-1">Manage your subscription and billing</p>
         </div>
         
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${status.bg} ${status.border}`}>
@@ -68,17 +68,17 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
       </div>
 
       {/* Main Hero Content */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-zinc-950/50 p-6 rounded-xl border border-white/5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-[#1F2937]/50 p-6 rounded-xl border border-[#111827]">
         
         {/* Left: Plan Info */}
         <div>
-          <h3 className="text-3xl font-bold text-white mb-2">
+          <h3 className="text-3xl font-bold text-[#E5E7EB] mb-2">
             {isYearly ? "Pro Yearly" : isMonthly ? "Pro Monthly" : plan === "trial" ? "Professional Trial" : "Standard Free"}
           </h3>
-          <div className="text-[#00FFB2] font-semibold text-lg mb-2">
+          <div className="text-[#C9A646] font-semibold text-lg mb-2">
             {isYearly ? "$19.99 / year" : isMonthly ? "$2.99 / month" : plan === "trial" ? "$0 for 7 Days" : "$0 / forever"}
           </div>
-          <p className="text-sm text-zinc-400 max-w-sm">
+          <p className="text-sm text-[#9CA3AF] max-w-sm">
             {plan === "free" ? "Limited logging, basic analytics, and no data export functions." : "Full analytics, pacing targets, file exports, and artificial intelligence psychological mistake detection."}
           </p>
         </div>
@@ -87,11 +87,11 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
         <div className="md:text-right flex flex-col items-start md:items-end">
           {(isPro || plan === "trial") && !isExpired && (
             <>
-              <div className="text-5xl font-black text-white tracking-tighter mb-1">
-                {daysLeft} <span className="text-lg font-medium text-zinc-500 tracking-normal">days left</span>
+              <div className="text-5xl font-black text-[#E5E7EB] tracking-tighter mb-1">
+                {daysLeft} <span className="text-lg font-medium text-[#9CA3AF] tracking-normal">days left</span>
               </div>
-              <div className="text-sm text-zinc-400 mt-2">
-                {plan === "trial" ? "Trial ends on" : "Renews on"} <span className="text-white font-medium">{expiryDate ? format(new Date(expiryDate), "MMM dd, yyyy") : "N/A"}</span>
+              <div className="text-sm text-[#9CA3AF] mt-2">
+                {plan === "trial" ? "Trial ends on" : "Renews on"} <span className="text-[#E5E7EB] font-medium">{expiryDate ? format(new Date(expiryDate), "MMM dd, yyyy") : "N/A"}</span>
               </div>
             </>
           )}
@@ -101,7 +101,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
                 0 <span className="text-lg font-medium text-red-500/50 tracking-normal">days left</span>
               </div>
               <div className="text-sm text-red-400 mt-2">
-                Expired on <span className="text-white font-medium">{expiryDate ? format(new Date(expiryDate), "MMM dd, yyyy") : "N/A"}</span>
+                Expired on <span className="text-[#E5E7EB] font-medium">{expiryDate ? format(new Date(expiryDate), "MMM dd, yyyy") : "N/A"}</span>
               </div>
             </>
           )}

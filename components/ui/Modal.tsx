@@ -38,22 +38,22 @@ export default function Modal({ isOpen, onClose, title, icon, children, maxWidth
 
   return (
     <div className="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className={`bg-zinc-900 border border-white/10 w-full ${maxWidthClasses[maxWidth]} rounded-2xl shadow-2xl relative flex flex-col max-h-[90vh] ${className}`}>
+      <div className={`bg-[#111827] border border-[#111827] w-full ${maxWidthClasses[maxWidth]} rounded-2xl shadow-2xl relative flex flex-col max-h-[90vh] ${className}`}>
         
         {/* Header - Optional */}
         {(title || icon) && (
-          <div className="p-5 border-b border-white/5 flex items-center justify-between bg-zinc-900/50 shrink-0 rounded-t-2xl">
+          <div className="p-5 border-b border-[#111827] flex items-center justify-between bg-[#111827]/50 shrink-0 rounded-t-2xl">
             <div className="flex items-center gap-3">
               {icon && (
-                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center border border-[#111827]">
                   {icon}
                 </div>
               )}
-              {title && <h2 className="text-xl font-bold text-white tracking-tight">{title}</h2>}
+              {title && <h2 className="text-xl font-bold text-[#E5E7EB] tracking-tight">{title}</h2>}
             </div>
             <button 
               onClick={onClose} 
-              className="w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-white bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0"
+              className="w-10 h-10 flex items-center justify-center text-[#9CA3AF] hover:text-[#E5E7EB] bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0"
               aria-label="Close modal"
             >
               <X size={20} />
@@ -65,7 +65,7 @@ export default function Modal({ isOpen, onClose, title, icon, children, maxWidth
         {!(title || icon) && (
           <button 
             onClick={onClose} 
-            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-white bg-black/20 rounded-full hover:bg-white/10 transition-colors"
+            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-[#9CA3AF] hover:text-[#E5E7EB] bg-black/20 rounded-full hover:bg-white/10 transition-colors"
             aria-label="Close modal"
           >
             <X size={20} />

@@ -462,7 +462,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
 
   const content = (
     <div 
-      className={`shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-2xl w-[95vw] max-w-[850px] max-h-[90vh] flex flex-col md:flex-row relative animate-in zoom-in-95 fade-in duration-300 overflow-hidden border ${isDragging ? 'border-[#00FFB2]/50 bg-[#11161D]/90 shadow-[0_0_50px_rgba(0,255,178,0.15)]' : 'bg-[#11161D] border-white/5'}`}
+      className={`shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-2xl w-[95vw] max-w-[850px] max-h-[90vh] flex flex-col md:flex-row relative animate-in zoom-in-95 fade-in duration-300 overflow-hidden border ${isDragging ? 'border-[#C9A646]/50 bg-[#11161D]/90 shadow-[0_0_50px_rgba(201,166,70,0.15)]' : 'bg-[#11161D] border-[#111827]'}`}
       onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
       onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
       onDrop={(e) => {
@@ -474,7 +474,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
     >
       
       {/* Left side: Upload Zone */}
-      <div className="md:w-1/2 flex flex-col relative border-b md:border-b-0 md:border-r border-white/5 bg-[#0B0F14]">
+      <div className="md:w-1/2 flex flex-col relative border-b md:border-b-0 md:border-r border-[#111827] bg-[#0B0F14]">
         
         {/* Mock OS Bar */}
         <div className="flex items-center gap-2 px-6 py-4 absolute top-0 w-full z-10 hidden md:flex">
@@ -483,7 +483,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
           </div>
-          <span className="ml-4 text-[11px] font-mono text-zinc-500 font-medium tracking-wide">JournalBud — Trade Extraction</span>
+          <span className="ml-4 text-[11px] font-mono text-[#9CA3AF] font-medium tracking-wide">JournalBud — Trade Extraction</span>
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center p-8 mt-12 md:mt-20">
@@ -512,7 +512,7 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
               { icon: Cpu, label: "Paste", onClick: () => !isFree && alert({message: "Just press Ctrl + V anywhere in this window"}) }
             ].map((f, i) => (
               <div key={i} className="flex flex-col items-center gap-2.5">
-                <button type="button" onClick={f.onClick} disabled={isFree || scanningTrades} className="w-[52px] h-[52px] rounded-2xl flex items-center justify-center bg-transparent border border-white/5 hover:border-white/10 hover:bg-white/5 transition-all disabled:opacity-50 text-zinc-400">
+                <button type="button" onClick={f.onClick} disabled={isFree || scanningTrades} className="w-[52px] h-[52px] rounded-2xl flex items-center justify-center bg-transparent border border-[#111827] hover:border-[#111827] hover:bg-white/5 transition-all disabled:opacity-50 text-[#9CA3AF]">
                    <f.icon size={20} strokeWidth={1.5} />
                 </button>
                 <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{f.label}</span>
@@ -525,16 +525,16 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
             type="button"
             onClick={() => !isFree && fileInputRef.current?.click()}
             disabled={scanningTrades || isFree}
-            className={`w-[140px] h-[140px] rounded-[2rem] flex flex-col items-center justify-center transition-all ${isFree ? 'border-amber-500/20 bg-zinc-800/20 cursor-not-allowed' : scanningTrades ? 'border-[#00FFB2]/40 bg-[#00FFB2]/5 animate-pulse border-2' : 'border-2 border-dashed border-white/5 hover:border-white/10 bg-transparent'}`}
+            className={`w-[140px] h-[140px] rounded-[2rem] flex flex-col items-center justify-center transition-all ${isFree ? 'border-amber-500/20 bg-zinc-800/20 cursor-not-allowed' : scanningTrades ? 'border-[#C9A646]/40 bg-[#C9A646]/5 animate-pulse border-2' : 'border-2 border-dashed border-[#111827] hover:border-[#111827] bg-transparent'}`}
           >
-             {isFree ? <Lock size={32} className="text-amber-500/50" /> : scanningTrades ? <Loader2 size={32} className="text-[#00FFB2] animate-spin" /> : <Upload size={32} className="text-zinc-500" strokeWidth={1.5} />}
+             {isFree ? <Lock size={32} className="text-amber-500/50" /> : scanningTrades ? <Loader2 size={32} className="text-[#C9A646] animate-spin" /> : <Upload size={32} className="text-[#9CA3AF]" strokeWidth={1.5} />}
           </button>
           
-          <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 mt-8">
+          <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#9CA3AF] mt-8">
             {isFree ? "Upgrade to Auto-fill" : scanningTrades ? "Scanning Image..." : "Drop Your Trade History"}
           </h3>
           
-          <p className="text-[10px] text-zinc-500/80 text-center mt-3 max-w-[280px]">
+          <p className="text-[10px] text-[#9CA3AF]/80 text-center mt-3 max-w-[280px]">
             Ensure your file includes: Profit/Loss (PnL), Buy/Sell (Direction), Date, and Trade Details.
           </p>
           
@@ -549,12 +549,12 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
       {/* Right side: Form Fields */}
       <div className="md:w-1/2 flex flex-col p-6 md:p-8 overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between mb-8 shrink-0">
-          <h3 className="font-bold text-lg text-[#00FFB2] flex items-center gap-2">
-            <Sparkles size={18} className="text-[#00FFB2]" /> 
+          <h3 className="font-bold text-lg text-[#C9A646] flex items-center gap-2">
+            <Sparkles size={18} className="text-[#C9A646]" /> 
             Log New Trade
           </h3>
           {onClose && (
-            <button type="button" onClick={onClose} className="p-1 px-1.5 text-zinc-500 hover:text-white transition-colors">
+            <button type="button" onClick={onClose} className="p-1 px-1.5 text-[#9CA3AF] hover:text-[#E5E7EB] transition-colors">
               <X size={16} />
             </button>
           )}
@@ -565,25 +565,25 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
           {/* Symbol */}
           <div className="space-y-1.5">
             <div className="flex justify-between items-center px-1">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em]">Symbol</label>
-              <button type="button" onClick={() => setUseCustomSymbol(!useCustomSymbol)} className="text-[9px] text-[#00FFB2] hover:text-[#00FFB2]/80 font-medium">
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em]">Symbol</label>
+              <button type="button" onClick={() => setUseCustomSymbol(!useCustomSymbol)} className="text-[9px] text-[#C9A646] hover:text-[#C9A646]/80 font-medium">
                 {useCustomSymbol ? "USE LIST" : "CUSTOM"}
               </button>
             </div>
             {!useCustomSymbol ? (
-              <select name="symbol" value={formData.symbol} onChange={handleChange} required className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none appearance-none transition-colors ${formData.symbol === 'XAUUSD' ? 'border-white/5 text-[#00FFB2]' : 'border-white/5 text-zinc-300'}`}>
+              <select name="symbol" value={formData.symbol} onChange={handleChange} required className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none appearance-none transition-colors ${formData.symbol === 'XAUUSD' ? 'border-[#111827] text-[#C9A646]' : 'border-[#111827] text-[#E5E7EB]'}`}>
                 <option value="" disabled>Select pair</option>
                 {commonSymbols.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             ) : (
-              <input type="text" name="customSymbol" value={formData.customSymbol} onChange={handleChange} required placeholder="e.g. AAPL" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none uppercase text-zinc-300 transition-colors" />
+              <input type="text" name="customSymbol" value={formData.customSymbol} onChange={handleChange} required placeholder="e.g. AAPL" className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none uppercase text-[#E5E7EB] transition-colors" />
             )}
           </div>
 
           {/* Type */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Type</label>
-            <select name="type" value={formData.type} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none appearance-none text-zinc-300 uppercase transition-colors">
+            <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Type</label>
+            <select name="type" value={formData.type} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none appearance-none text-[#E5E7EB] uppercase transition-colors">
               <option value="buy">Buy</option>
               <option value="sell">Sell</option>
             </select>
@@ -591,41 +591,41 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
 
           {/* Lot Size */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Lot Size</label>
-            <input type="number" step="0.01" name="lot" value={formData.lot} onChange={handleChange} required placeholder="0.1" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
+            <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Lot Size</label>
+            <input type="number" step="0.01" name="lot" value={formData.lot} onChange={handleChange} required placeholder="0.1" className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none text-[#E5E7EB] transition-colors" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
              {/* Result */}
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Result</label>
-              <select name="result" value={formData.result} onChange={handleChange} className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none appearance-none transition-colors ${formData.result === 'Profit' ? 'border-[#00FFB2]/20 text-[#00FFB2]' : 'border-red-500/20 text-red-500'}`}>
-                <option value="Profit" className="text-[#00FFB2]">Profit</option>
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Result</label>
+              <select name="result" value={formData.result} onChange={handleChange} className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none appearance-none transition-colors ${formData.result === 'Profit' ? 'border-[#C9A646]/20 text-[#C9A646]' : 'border-red-500/20 text-red-500'}`}>
+                <option value="Profit" className="text-[#C9A646]">Profit</option>
                 <option value="Loss" className="text-red-500">Loss</option>
               </select>
             </div>
              {/* PnL */}
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">P&L Amount</label>
-              <input type="number" min="0" step="0.01" name="pnl" value={formData.pnl} onChange={handleChange} required placeholder="50.00" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">P&L Amount</label>
+              <input type="number" min="0" step="0.01" name="pnl" value={formData.pnl} onChange={handleChange} required placeholder="50.00" className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none text-[#E5E7EB] transition-colors" />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Risk Amount</label>
-              <input type="number" min="0" step="0.01" name="risk" value={formData.risk} onChange={handleChange} disabled={!formData.stopLossFollowed} placeholder="20.00" className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors ${!formData.stopLossFollowed ? 'border-transparent opacity-40' : riskAutoSynced ? 'border-amber-500/30' : 'border-white/5'}`} />
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Risk Amount</label>
+              <input type="number" min="0" step="0.01" name="risk" value={formData.risk} onChange={handleChange} disabled={!formData.stopLossFollowed} placeholder="20.00" className={`w-full h-11 bg-[#0A0D11] border rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none text-[#E5E7EB] transition-colors ${!formData.stopLossFollowed ? 'border-transparent opacity-40' : riskAutoSynced ? 'border-amber-500/30' : 'border-[#111827]'}`} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">SL Followed?</label>
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">SL Followed?</label>
               <div className="flex items-center gap-4 h-11 px-2">
                   <label className="flex items-center gap-1.5 cursor-pointer text-sm">
-                    <input type="radio" name="slGroup" checked={formData.stopLossFollowed === true} onChange={() => setFormData(p => ({...p, stopLossFollowed: true}))} className="accent-[#00FFB2] w-3.5 h-3.5" />
-                    <span className="text-zinc-500">Yes</span>
+                    <input type="radio" name="slGroup" checked={formData.stopLossFollowed === true} onChange={() => setFormData(p => ({...p, stopLossFollowed: true}))} className="accent-[#C9A646] w-3.5 h-3.5" />
+                    <span className="text-[#9CA3AF]">Yes</span>
                   </label>
                   <label className="flex items-center gap-1.5 cursor-pointer text-sm">
                     <input type="radio" name="slGroup" checked={formData.stopLossFollowed === false} onChange={() => setFormData(p => ({...p, stopLossFollowed: false}))} className="accent-red-500 w-3.5 h-3.5" />
-                    <span className="text-zinc-500">No</span>
+                    <span className="text-[#9CA3AF]">No</span>
                   </label>
               </div>
             </div>
@@ -633,39 +633,39 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
              <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Entry (Opt)</label>
-               <input type="number" step="any" name="entryPrice" value={formData.entryPrice} onChange={handleChange} placeholder="Optional" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Entry (Opt)</label>
+               <input type="number" step="any" name="entryPrice" value={formData.entryPrice} onChange={handleChange} placeholder="Optional" className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none text-[#E5E7EB] transition-colors" />
              </div>
              <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Exit (Opt)</label>
-               <input type="number" step="any" name="exitPrice" value={formData.exitPrice} onChange={handleChange} placeholder="Optional" className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 transition-colors" />
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Exit (Opt)</label>
+               <input type="number" step="any" name="exitPrice" value={formData.exitPrice} onChange={handleChange} placeholder="Optional" className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none text-[#E5E7EB] transition-colors" />
              </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
              <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Currency</label>
-               <select name="currency" value={formData.currency} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 appearance-none uppercase transition-colors">
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Currency</label>
+               <select name="currency" value={formData.currency} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none text-[#E5E7EB] appearance-none uppercase transition-colors">
                  <option value="USD">USD</option>
                  <option value="EUR">EUR</option>
                  <option value="INR">INR</option>
                </select>
              </div>
              <div className="space-y-1.5">
-              <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Date</label>
-               <input type="date" name="date" value={formData.date} onChange={handleChange} required className="w-full h-11 bg-[#0A0D11] border border-white/5 rounded-xl px-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none text-zinc-300 color-scheme-dark transition-colors" />
+              <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Date</label>
+               <input type="date" name="date" value={formData.date} onChange={handleChange} required className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-xl px-4 text-sm focus:border-[#C9A646]/30 focus:outline-none text-[#E5E7EB] color-scheme-dark transition-colors" />
              </div>
           </div>
           
           <div className="space-y-1.5 pt-1">
-            <label className="text-[10px] uppercase text-zinc-500/80 font-bold tracking-[0.15em] px-1 block">Notes</label>
-            <textarea name="note" value={formData.note} onChange={handleChange} placeholder="Why did you take this trade?" rows={2} className="w-full bg-[#0A0D11] border border-white/5 rounded-xl p-4 text-sm focus:border-[#00FFB2]/30 focus:outline-none resize-none text-zinc-300 transition-colors" />
+            <label className="text-[10px] uppercase text-[#9CA3AF]/80 font-bold tracking-[0.15em] px-1 block">Notes</label>
+            <textarea name="note" value={formData.note} onChange={handleChange} placeholder="Why did you take this trade?" rows={2} className="w-full bg-[#0A0D11] border border-[#111827] rounded-xl p-4 text-sm focus:border-[#C9A646]/30 focus:outline-none resize-none text-[#E5E7EB] transition-colors" />
           </div>
 
           {isFree && (
-            <div className={`mt-2 p-3 rounded-xl border flex items-center justify-between transition-colors ${dailyLimitReached ? "bg-amber-500/10 border-amber-500/20 text-amber-400" : "bg-zinc-800/10 border-white/5 text-zinc-500"}`}>
+            <div className={`mt-2 p-3 rounded-xl border flex items-center justify-between transition-colors ${dailyLimitReached ? "bg-amber-500/10 border-amber-500/20 text-amber-400" : "bg-zinc-800/10 border-[#111827] text-[#9CA3AF]"}`}>
               <div className="flex items-center gap-2 text-[11px] font-bold">
-                {dailyLimitReached ? <Lock size={14} /> : <BookText size={14} className="text-[#00FFB2]" />}
+                {dailyLimitReached ? <Lock size={14} /> : <BookText size={14} className="text-[#C9A646]" />}
                 <span>{dailyLimitReached ? `Limit reached (${dailyTradeCount}/2)` : `${dailyTradeCount}/2 trades logged`}</span>
               </div>
               {dailyLimitReached && (
@@ -684,8 +684,8 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
                 dailyLimitReached 
                   ? 'bg-[#151921] text-zinc-700 cursor-not-allowed' 
                   : loading 
-                    ? 'bg-[#151921] text-zinc-500 cursor-not-allowed' 
-                    : 'bg-[#191D24] hover:bg-[#20252D] text-zinc-400 shadow-[0_4px_20px_rgba(0,0,0,0.5)]'
+                    ? 'bg-[#151921] text-[#9CA3AF] cursor-not-allowed' 
+                    : 'bg-[#191D24] hover:bg-[#20252D] text-[#9CA3AF] shadow-md'
               }`}
             >
               {dailyLimitReached ? "Limit Reached" : loading ? "Saving..." : "Save Trade"}

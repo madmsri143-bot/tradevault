@@ -49,17 +49,17 @@ export default function PlanProgressBar({ plan, isPro, expiryDate }: PlanProgres
 
   return (
     <div className="w-full mt-6 animate-in fade-in duration-1000">
-      <div className="flex items-center justify-between text-xs font-medium text-zinc-400 mb-2">
+      <div className="flex items-center justify-between text-xs font-medium text-[#9CA3AF] mb-2">
         <span>Current Cycle Usage</span>
-        <span className={progress >= 90 ? "text-red-400" : "text-[#00FFB2]"}>
+        <span className={progress >= 90 ? "text-red-400" : "text-[#C9A646]"}>
           {Math.round(progress)}% used
         </span>
       </div>
       
       {/* Premium Progress Bar Wrapper */}
-      <div className="h-3 w-full bg-zinc-900 rounded-full overflow-hidden border border-white/5 relative">
+      <div className="h-3 w-full bg-[#111827] rounded-full overflow-hidden border border-[#111827] relative">
         <div 
-          className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-[#00FFB2] rounded-full transition-all duration-1000 ease-out"
+          className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-[#C9A646] rounded-full transition-all duration-1000 ease-out"
           style={{ width: `${progress}%` }}
         />
         {/* Shine effect overlay */}

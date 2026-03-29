@@ -331,17 +331,17 @@ export default function JournalPage() {
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-3"><Target className="text-emerald-500" /> Journal</h2>
-          <p className="text-sm text-zinc-400 mt-1">Structured reflections and mistake intelligence framework.</p>
+          <h2 className="text-2xl font-bold tracking-tight text-[#E5E7EB] flex items-center gap-3"><Target className="text-emerald-500" /> Journal</h2>
+          <p className="text-sm text-[#9CA3AF] mt-1">Structured reflections and mistake intelligence framework.</p>
         </div>
         
         {/* Month Navigation */}
-        <div className="flex items-center gap-2 bg-zinc-900 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-xl">
-          <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"><ChevronLeft size={18} /></button>
-          <span className="text-sm font-bold text-white min-w-[120px] text-center tracking-wide">{format(currentMonth, "MMM yyyy")}</span>
-          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"><ChevronRight size={18} /></button>
+        <div className="flex items-center gap-2 bg-[#111827] border border-black/10 dark:border-[#111827] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-xl">
+          <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded transition-colors"><ChevronLeft size={18} /></button>
+          <span className="text-sm font-bold text-[#E5E7EB] min-w-[120px] text-center tracking-wide">{format(currentMonth, "MMM yyyy")}</span>
+          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded transition-colors"><ChevronRight size={18} /></button>
           {!isSameMonth(currentMonth, new Date()) && (
-            <button onClick={() => setCurrentMonth(new Date())} className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider ml-1 px-2 py-1 bg-zinc-800 rounded hover:text-white transition-colors">Today</button>
+            <button onClick={() => setCurrentMonth(new Date())} className="text-[10px] text-[#9CA3AF] font-bold uppercase tracking-wider ml-1 px-2 py-1 bg-zinc-800 rounded hover:text-[#E5E7EB] transition-colors">Today</button>
           )}
         </div>
       </div>
@@ -350,21 +350,21 @@ export default function JournalPage() {
         
         {/* LEFT PANEL: Elite Form */}
         <div className="xl:col-span-1">
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl shadow-sm">
+          <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-sm font-bold tracking-wider uppercase text-amber-400">New Reflection</h2>
-              <span className="text-[11px] font-bold text-zinc-500 bg-zinc-950 border border-white/5 px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
+              <span className="text-[11px] font-bold text-[#9CA3AF] bg-[#1F2937] border border-[#111827] px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
             </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div className="space-y-2.5">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Emotional Intelligence</label>
-                <div className="bg-zinc-950/50 p-3 rounded-xl border border-white/5 space-y-4 shadow-inner">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">Emotional Intelligence</label>
+                <div className="bg-[#1F2937]/50 p-3 rounded-xl border border-[#111827] space-y-4 shadow-inner">
                   <div>
-                    <span className="text-[10px] text-zinc-400 mb-2 block">Before Trade</span>
+                    <span className="text-[10px] text-[#9CA3AF] mb-2 block">Before Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_BEFORE.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
+                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-[#111827] border-zinc-800 text-[#9CA3AF] hover:border-zinc-700 hover:text-[#E5E7EB]'}`}>
                           {m}
                         </button>
                       ))}
@@ -372,10 +372,10 @@ export default function JournalPage() {
                   </div>
                   <div className="h-px bg-white/5" />
                   <div>
-                    <span className="text-[10px] text-zinc-400 mb-2 block">After Trade</span>
+                    <span className="text-[10px] text-[#9CA3AF] mb-2 block">After Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_AFTER.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300'}`}>
+                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-[#111827] border-zinc-800 text-[#9CA3AF] hover:border-zinc-700 hover:text-[#E5E7EB]'}`}>
                           {m}
                         </button>
                       ))}
@@ -386,12 +386,12 @@ export default function JournalPage() {
 
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Mistake Intelligence</label>
-                  <span className="text-[9px] text-zinc-500 uppercase tracking-widest bg-white/5 px-1.5 rounded">Multi-select</span>
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">Mistake Intelligence</label>
+                  <span className="text-[9px] text-[#9CA3AF] uppercase tracking-widest bg-white/5 px-1.5 rounded">Multi-select</span>
                 </div>
-                <div className="flex flex-wrap gap-2 bg-zinc-950/50 p-3 rounded-xl border border-white/5 shadow-inner">
+                <div className="flex flex-wrap gap-2 bg-[#1F2937]/50 p-3 rounded-xl border border-[#111827] shadow-inner">
                   {MISTAKE_TAGS.map(tag => (
-                    <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-xs px-2.5 py-1 rounded-full border transition-all ${mistakes.includes(tag) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'}`}>
+                    <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-xs px-2.5 py-1 rounded-full border transition-all ${mistakes.includes(tag) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#111827] border-zinc-800 text-[#9CA3AF] hover:border-zinc-700'}`}>
                       {tag}
                     </button>
                   ))}
@@ -399,12 +399,12 @@ export default function JournalPage() {
               </div>
 
               <div className="space-y-2.5">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Execution Score</label>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">Execution Score</label>
                 <div className="grid grid-cols-4 gap-2">
                   {QUALITY_SCORES.map(s => {
                     const activeColor = s === 'A' ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : s === 'B' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : s === 'C' ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-red-500/20 border-red-500/50 text-red-400';
                     return (
-                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300 shadow-inner'}`}>
+                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-[#1F2937] border-zinc-800 text-[#9CA3AF] hover:bg-[#111827] hover:text-[#E5E7EB] shadow-inner'}`}>
                         {s}
                       </button>
                     )
@@ -414,18 +414,18 @@ export default function JournalPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Trade PnL ($)</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">Trade PnL ($)</label>
                   <input
                     type="number"
                     value={pnl}
                     onChange={(e) => setPnl(e.target.value ? Number(e.target.value) : "")}
                     placeholder="e.g. 150 or -50"
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner text-white placeholder:text-zinc-600"
+                    className="w-full bg-[#1F2937] border border-zinc-800 rounded-xl p-3 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner text-[#E5E7EB] placeholder:text-zinc-600"
                   />
                 </div>
                 <div className="space-y-1.5 flex flex-col justify-end">
-                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-zinc-800 rounded-xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : 'bg-zinc-950 text-zinc-400 hover:bg-zinc-900'}`} onClick={() => setSlFollowed(!slFollowed)}>
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${slFollowed ? 'border-emerald-500 bg-emerald-500 text-zinc-950' : 'border-zinc-700 bg-zinc-900 text-transparent'}`}>
+                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-zinc-800 rounded-xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : 'bg-[#1F2937] text-[#9CA3AF] hover:bg-[#111827]'}`} onClick={() => setSlFollowed(!slFollowed)}>
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${slFollowed ? 'border-emerald-500 bg-emerald-500 text-zinc-950' : 'border-zinc-700 bg-[#111827] text-transparent'}`}>
                        <CheckCircle2 size={12} strokeWidth={4} />
                     </div>
                     <span className="font-bold tracking-wide">Followed SL</span>
@@ -434,14 +434,14 @@ export default function JournalPage() {
               </div>
 
               <div className="space-y-2.5 relative group">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Smart Reflection</label>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">Smart Reflection</label>
                 <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none" />
                 <textarea
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   required
                   rows={8}
-                  className="w-full relative bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-sm focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none transition-all resize-none shadow-inner leading-relaxed text-zinc-300"
+                  className="w-full relative bg-[#1F2937] border border-zinc-800 rounded-xl p-4 text-sm focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none transition-all resize-none shadow-inner leading-relaxed text-[#E5E7EB]"
                 />
               </div>
 
@@ -451,20 +451,20 @@ export default function JournalPage() {
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   required
-                  className="w-1/3 bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 text-xs text-zinc-400 focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner transition-colors"
+                  className="w-1/3 bg-[#1F2937] border border-zinc-800 rounded-xl p-2.5 text-xs text-[#9CA3AF] focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner transition-colors"
                 />
                 <div className="flex-1 relative">
                   {previewUrl ? (
-                    <div className="relative rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 h-[42px] group flex items-center shadow-inner">
+                    <div className="relative rounded-xl overflow-hidden border border-zinc-800 bg-[#1F2937] h-[42px] group flex items-center shadow-inner">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-30" />
-                      <span className="relative z-10 text-xs text-zinc-300 px-4 font-medium truncate">Image attached</span>
-                      <button type="button" onClick={() => { setImageFile(null); setPreviewUrl(null); }} className="absolute z-20 inset-y-0 right-0 px-3 bg-red-500/90 text-white text-xs font-bold transition-colors">
+                      <span className="relative z-10 text-xs text-[#E5E7EB] px-4 font-medium truncate">Image attached</span>
+                      <button type="button" onClick={() => { setImageFile(null); setPreviewUrl(null); }} className="absolute z-20 inset-y-0 right-0 px-3 bg-red-500/90 text-[#E5E7EB] text-xs font-bold transition-colors">
                         X
                       </button>
                     </div>
                   ) : (
-                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[42px] border border-dashed border-zinc-700/50 rounded-xl bg-zinc-950/50 hover:bg-zinc-900 hover:border-emerald-500/50 transition-all text-xs text-zinc-400 group shadow-inner">
+                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[42px] border border-dashed border-zinc-700/50 rounded-xl bg-[#1F2937]/50 hover:bg-[#111827] hover:border-emerald-500/50 transition-all text-xs text-[#9CA3AF] group shadow-inner">
                       <ImagePlus size={14} className="group-hover:text-amber-400 transition-colors" />
                       <span className="font-medium group-hover:text-amber-400 transition-colors">Attach Setup</span>
                       <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
@@ -482,7 +482,7 @@ export default function JournalPage() {
               <button
                 type="submit"
                 disabled={submitting || !text.trim() || (isFree && dailyJournalLimitReached)}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 active:scale-[0.98]"
+                className="w-full bg-[#111827] border border-[#C9A646]/50 hover:bg-[#C9A646]/10 text-[#C9A646] font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:border-[#C9A646] active:scale-[0.98]"
               >
                 {isFree && dailyJournalLimitReached ? "Limit Reached" : submitting ? <><Loader2 size={16} className="animate-spin" /> Logging...</> : "Log Journal Entry"}
               </button>
@@ -494,29 +494,29 @@ export default function JournalPage() {
         <div className="xl:col-span-2 space-y-6">
           
           {/* ELITE DAILY SUMMARY BLOCK */}
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4 tracking-tight shadow-sm relative overflow-hidden">
+          <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4 tracking-tight shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
             
-            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
-              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><Activity size={12} className="text-blue-500" /> Trades View</span>
-              <p className="text-2xl font-bold text-white mt-1">{totalTradesCount}</p>
+            <div className="bg-[#1F2937]/50 p-4 rounded-xl border border-[#111827] shadow-inner">
+              <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest flex items-center gap-1.5"><Activity size={12} className="text-blue-500" /> Trades View</span>
+              <p className="text-2xl font-bold text-[#E5E7EB] mt-1">{totalTradesCount}</p>
             </div>
             
-            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
-              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5 cursor-help" title="Win Rate (Winning trades / Total trades)"><TrendingUp size={12} className="text-emerald-500" /> Win Rate</span>
-              <p className="text-2xl font-bold text-white mt-1">{winRate.toFixed(2)}%</p>
+            <div className="bg-[#1F2937]/50 p-4 rounded-xl border border-[#111827] shadow-inner">
+              <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest flex items-center gap-1.5 cursor-help" title="Win Rate (Winning trades / Total trades)"><TrendingUp size={12} className="text-emerald-500" /> Win Rate</span>
+              <p className="text-2xl font-bold text-[#E5E7EB] mt-1">{winRate.toFixed(2)}%</p>
             </div>
             
-            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
-              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><AlertTriangle size={12} className="text-amber-500" /> Top Mistake</span>
+            <div className="bg-[#1F2937]/50 p-4 rounded-xl border border-[#111827] shadow-inner">
+              <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest flex items-center gap-1.5"><AlertTriangle size={12} className="text-amber-500" /> Top Mistake</span>
               <p className="text-base font-bold text-amber-400 mt-2 truncate">
                 {topMistake ? `${topMistake[0]} (${topMistake[1]})` : "None 🎉"}
               </p>
             </div>
 
-            <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner">
-              <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest flex items-center gap-1.5"><Flame size={12} className="text-orange-500" /> Discipline Score</span>
-              <p className="text-sm font-bold text-zinc-300 mt-2">
+            <div className="bg-[#1F2937]/50 p-4 rounded-xl border border-[#111827] shadow-inner">
+              <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest flex items-center gap-1.5"><Flame size={12} className="text-orange-500" /> Discipline Score</span>
+              <p className="text-sm font-bold text-[#E5E7EB] mt-2">
                 <span className="text-orange-400 text-lg mr-1">{streakCount}</span> / 7 Days
               </p>
             </div>
@@ -528,10 +528,10 @@ export default function JournalPage() {
           })} />
 
           {/* Calendar Grid */}
-          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl relative overflow-hidden">
+          <div className="bg-[#111827] border border-black/10 dark:border-[#111827] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl relative overflow-hidden">
             <div className="grid grid-cols-7 gap-1 mb-3">
                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                 <div key={day} className="text-center text-[10px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">{day}</div>
+                 <div key={day} className="text-center text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#9CA3AF]">{day}</div>
                ))}
             </div>
             <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
@@ -555,8 +555,8 @@ export default function JournalPage() {
                     className={`relative min-h-[64px] sm:min-h-[84px] p-1.5 sm:p-2 rounded-xl flex flex-col items-center justify-start border transition-all ${
                       !isCurrentMonth ? 'opacity-30 pointer-events-none border-transparent bg-transparent' :
                       isSelected ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/50 scale-105 z-10' :
-                      hasEntries ? (isProfit ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' : isLoss ? 'border-red-500/20 bg-red-500/5 hover:border-red-500/50 hover:bg-red-500/10' : 'border-white/5 bg-zinc-900/50 hover:bg-zinc-800') :
-                      'border-transparent bg-zinc-950 hover:bg-zinc-900 border-white/5 hover:border-white/10'
+                      hasEntries ? (isProfit ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' : isLoss ? 'border-red-500/20 bg-red-500/5 hover:border-red-500/50 hover:bg-red-500/10' : 'border-[#111827] bg-[#111827]/50 hover:bg-zinc-800') :
+                      'border-transparent bg-[#1F2937] hover:bg-[#111827] border-[#111827] hover:border-[#111827]'
                     }`}
                   >
                     <span className={`text-xs sm:text-sm font-bold ${isToday(day) ? 'text-amber-400' : isSelected ? 'text-amber-400' : hasEntries ? 'text-zinc-200' : 'text-zinc-600'}`}>
@@ -591,31 +591,31 @@ export default function JournalPage() {
       {selectedDate && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setSelectedDate(null)}>
           <div 
-            className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden"
+            className="bg-[#111827] border border-[#111827] rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
             
-            <div className="flex items-center justify-between p-5 border-b border-white/5 bg-zinc-900 shrink-0 rounded-t-2xl relative z-10">
+            <div className="flex items-center justify-between p-5 border-b border-[#111827] bg-[#111827] shrink-0 rounded-t-2xl relative z-10">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                   <CalendarIcon className="text-emerald-500" size={16} />
                 </div>
-                <h3 className="text-xl font-bold text-white tracking-tight">
+                <h3 className="text-xl font-bold text-[#E5E7EB] tracking-tight">
                   {format(new Date(selectedDate), "EEEE, MMM dd, yyyy")}
                 </h3>
               </div>
-              <button onClick={() => setSelectedDate(null)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
+              <button onClick={() => setSelectedDate(null)} className="p-1.5 text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
             </div>
             
             <div className="p-6 overflow-y-auto custom-scrollbar relative z-10 space-y-8">
                {(!groupedEntries[selectedDate] || groupedEntries[selectedDate].length === 0) ? (
                   <div className="py-12 flex flex-col items-center justify-center text-center">
-                    <div className="w-16 h-16 bg-zinc-950/50 rounded-full flex items-center justify-center mb-4 border border-white/5 shadow-inner">
+                    <div className="w-16 h-16 bg-[#1F2937]/50 rounded-full flex items-center justify-center mb-4 border border-[#111827] shadow-inner">
                       <BookText size={24} className="text-zinc-600" />
                     </div>
-                    <p className="text-white font-bold mb-1">No Journal Entries</p>
-                    <p className="text-sm text-zinc-500">You haven't logged any reflections for this day.</p>
+                    <p className="text-[#E5E7EB] font-bold mb-1">No Journal Entries</p>
+                    <p className="text-sm text-[#9CA3AF]">You haven't logged any reflections for this day.</p>
                   </div>
                ) : (() => {
                  const dayEntries = groupedEntries[selectedDate];
@@ -630,17 +630,17 @@ export default function JournalPage() {
                    <>
                      {/* Daily Summary */}
                      <div className="grid grid-cols-3 gap-3">
-                       <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
-                         <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Total Trades</span>
-                         <span className="text-xl font-bold text-white">{totalTrades}</span>
+                       <div className="bg-[#1F2937]/50 p-4 rounded-xl border border-[#111827] shadow-inner text-center">
+                         <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest block mb-1">Total Trades</span>
+                         <span className="text-xl font-bold text-[#E5E7EB]">{totalTrades}</span>
                        </div>
-                       <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
-                         <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Win Rate</span>
+                       <div className="bg-[#1F2937]/50 p-4 rounded-xl border border-[#111827] shadow-inner text-center">
+                         <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest block mb-1">Win Rate</span>
                          <span className="text-xl font-bold text-amber-400">{dayWinRate.toFixed(0)}%</span>
                        </div>
-                       <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
-                         <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Net PnL</span>
-                         <span className={`text-xl font-bold ${netPnl > 0 ? 'text-amber-400' : netPnl < 0 ? 'text-red-400' : 'text-zinc-300'}`}>
+                       <div className="bg-[#1F2937]/50 p-4 rounded-xl border border-[#111827] shadow-inner text-center">
+                         <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest block mb-1">Net PnL</span>
+                         <span className={`text-xl font-bold ${netPnl > 0 ? 'text-amber-400' : netPnl < 0 ? 'text-red-400' : 'text-[#E5E7EB]'}`}>
                            {netPnl > 0 ? '+' : ''}${netPnl}
                          </span>
                        </div>
@@ -649,10 +649,10 @@ export default function JournalPage() {
                      {/* Entries Grouped List */}
                      <div className="space-y-6">
                        {dayEntries.map((e, idx) => (
-                         <div key={e.id} className="bg-zinc-950/80 border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-inner">
-                           <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
+                         <div key={e.id} className="bg-[#1F2937]/80 border border-[#111827] rounded-2xl p-5 relative overflow-hidden shadow-inner">
+                           <div className="flex items-center justify-between mb-4 border-b border-[#111827] pb-3">
                              <div className="flex flex-wrap gap-2 items-center">
-                               <span className="text-[10px] uppercase font-black text-zinc-500 bg-white/5 px-2 py-0.5 rounded tracking-widest">Entry {idx + 1}</span>
+                               <span className="text-[10px] uppercase font-black text-[#9CA3AF] bg-white/5 px-2 py-0.5 rounded tracking-widest">Entry {idx + 1}</span>
                                {e.qualityScore && (
                                 <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${e.qualityScore === 'A' ? 'text-amber-400 border-emerald-500/20 bg-emerald-500/10' : e.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : e.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
                                   Grade {e.qualityScore}
@@ -665,31 +665,31 @@ export default function JournalPage() {
                                )}
                              </div>
                              <div className="flex items-center gap-1">
-                               <button onClick={(ev) => { ev.stopPropagation(); setEditingEntry(e); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={12} /></button>
-                               <button onClick={(ev) => { ev.stopPropagation(); handleDelete(e.id); }} className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={12} /></button>
+                               <button onClick={(ev) => { ev.stopPropagation(); setEditingEntry(e); }} className="p-1.5 text-[#9CA3AF] hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors" title="Edit"><Pencil size={12} /></button>
+                               <button onClick={(ev) => { ev.stopPropagation(); handleDelete(e.id); }} className="p-1.5 text-[#9CA3AF] hover:text-red-400 hover:bg-red-400/10 rounded transition-colors" title="Delete"><Trash2 size={12} /></button>
                              </div>
                            </div>
 
                            <div className="flex flex-wrap gap-2 mb-4">
-                             {e.moodBefore && <span className="text-[11px] font-bold text-zinc-400 border border-white/5 bg-zinc-900 px-2.5 py-1 rounded-lg">💭 Prep: {e.moodBefore}</span>}
-                             {e.moodAfter && <span className="text-[11px] font-bold text-zinc-400 border border-white/5 bg-zinc-900 px-2.5 py-1 rounded-lg">💭 Post: {e.moodAfter}</span>}
+                             {e.moodBefore && <span className="text-[11px] font-bold text-[#9CA3AF] border border-[#111827] bg-[#111827] px-2.5 py-1 rounded-lg">💭 Prep: {e.moodBefore}</span>}
+                             {e.moodAfter && <span className="text-[11px] font-bold text-[#9CA3AF] border border-[#111827] bg-[#111827] px-2.5 py-1 rounded-lg">💭 Post: {e.moodAfter}</span>}
                              {e.mistakes?.map(m => (
                                <span key={m} className="text-[11px] font-bold text-red-400 border border-red-500/20 bg-red-500/5 px-2.5 py-1 rounded-lg">🧠 {m}</span>
                              ))}
                            </div>
 
-                           <div className="text-[14px] text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                           <div className="text-[14px] text-[#E5E7EB] whitespace-pre-wrap leading-relaxed">
                              <SmartText text={e.text} />
                            </div>
 
                            {e.aiScore !== undefined && (
-                             <div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-3">
+                             <div className="mt-5 pt-4 border-t border-[#111827] flex items-center gap-3">
                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shadow-inner border ${e.aiScore >= 80 ? 'bg-emerald-500/20 text-amber-400 border-emerald-500/30' : e.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
                                  {e.aiScore}
                                </div>
                                <div className="flex-1">
-                                 <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block">AI Insight</span>
-                                 <span className="text-xs font-medium text-zinc-300 block">{e.aiInsight || "No insight generated."}</span>
+                                 <span className="text-[10px] text-[#9CA3AF] uppercase font-black tracking-widest block">AI Insight</span>
+                                 <span className="text-xs font-medium text-[#E5E7EB] block">{e.aiInsight || "No insight generated."}</span>
                                </div>
                              </div>
                            )}
@@ -708,13 +708,13 @@ export default function JournalPage() {
       {viewingEntry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setViewingEntry(null)}>
           <div 
-            className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200"
+            className="bg-[#111827] border border-[#111827] rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900 shrink-0 rounded-t-2xl">
+            <div className="flex items-center justify-between p-4 border-b border-[#111827] bg-[#111827] shrink-0 rounded-t-2xl">
               <div className="flex items-center gap-3">
                 <CalendarIcon className="text-emerald-500" size={18} />
-                <h2 className="text-lg font-bold text-white tracking-tight">
+                <h2 className="text-lg font-bold text-[#E5E7EB] tracking-tight">
                   {format(new Date(viewingEntry.date), "EEEE, MMM dd, yyyy")}
                 </h2>
                 {viewingEntry.qualityScore && (
@@ -724,8 +724,8 @@ export default function JournalPage() {
                 )}
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => { setEditingEntry(viewingEntry); setViewingEntry(null); }} className="p-1.5 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors mr-2" title="Edit"><Pencil size={18} /></button>
-                <button onClick={() => setViewingEntry(null)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
+                <button onClick={() => { setEditingEntry(viewingEntry); setViewingEntry(null); }} className="p-1.5 text-[#9CA3AF] hover:text-blue-400 hover:bg-blue-400/10 rounded transition-colors mr-2" title="Edit"><Pencil size={18} /></button>
+                <button onClick={() => setViewingEntry(null)} className="p-1.5 text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
               </div>
             </div>
             
@@ -734,20 +734,20 @@ export default function JournalPage() {
                 
                 <div className="flex flex-wrap gap-2">
                   {viewingEntry.moodBefore && (
-                    <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/10 bg-zinc-950 px-2.5 py-1 rounded-lg shadow-inner">Prep: {viewingEntry.moodBefore}</span>
+                    <span className="text-[11px] font-bold tracking-wider text-[#9CA3AF] border border-[#111827] bg-[#1F2937] px-2.5 py-1 rounded-lg shadow-inner">Prep: {viewingEntry.moodBefore}</span>
                   )}
                   {viewingEntry.moodAfter && (
-                    <span className="text-[11px] font-bold tracking-wider text-zinc-400 border border-white/10 bg-zinc-950 px-2.5 py-1 rounded-lg shadow-inner">Post: {viewingEntry.moodAfter}</span>
+                    <span className="text-[11px] font-bold tracking-wider text-[#9CA3AF] border border-[#111827] bg-[#1F2937] px-2.5 py-1 rounded-lg shadow-inner">Post: {viewingEntry.moodAfter}</span>
                   )}
                 </div>
 
-                <div className="text-zinc-300 whitespace-pre-wrap leading-[1.8] font-medium text-[15px] opacity-90">
+                <div className="text-[#E5E7EB] whitespace-pre-wrap leading-[1.8] font-medium text-[15px] opacity-90">
                   <SmartText text={viewingEntry.text} />
                 </div>
                 
                 {viewingEntry.mistakes && viewingEntry.mistakes.length > 0 && (
-                  <div className="pt-4 border-t border-white/5">
-                    <span className="block text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-3">Identified Mistakes</span>
+                  <div className="pt-4 border-t border-[#111827]">
+                    <span className="block text-[10px] text-[#9CA3AF] uppercase tracking-widest font-black mb-3">Identified Mistakes</span>
                     <div className="flex flex-wrap gap-2">
                        {viewingEntry.mistakes.map(m => (
                          <span key={m} className="text-[11px] font-bold tracking-wider uppercase text-amber-500 border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 rounded-lg shadow-sm">{m}</span>
@@ -765,10 +765,10 @@ export default function JournalPage() {
               </div>
               
               {viewingEntry.imageUrl && (
-                <div className="flex-1 rounded-xl overflow-hidden border border-black/10 dark:border-white/5 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none bg-zinc-950/50 flex flex-col">
+                <div className="flex-1 rounded-xl overflow-hidden border border-black/10 dark:border-[#111827] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none bg-[#1F2937]/50 flex flex-col">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={viewingEntry.imageUrl} alt="Trading Chart Snapshot" className="w-full h-auto object-contain bg-black/40" />
-                  <div className="p-3 bg-zinc-900 border-t border-white/5 flex justify-center">
+                  <div className="p-3 bg-[#111827] border-t border-[#111827] flex justify-center">
                     <a href={viewingEntry.imageUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-2 uppercase tracking-wider">
                       <Maximize2 size={12} /> View Original Full Resolution
                     </a>
@@ -847,45 +847,45 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between p-4 border-b border-white/5 bg-zinc-900 shrink-0">
-          <h2 className="text-lg font-bold text-white">Edit Journal Entry</h2>
-          <button onClick={onClose} className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
+      <div className="bg-[#111827] border border-[#111827] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-4 border-b border-[#111827] bg-[#111827] shrink-0">
+          <h2 className="text-lg font-bold text-[#E5E7EB]">Edit Journal Entry</h2>
+          <button onClick={onClose} className="p-1.5 text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded-md transition-colors"><X size={18} /></button>
         </div>
         
         <div className="p-6 overflow-y-auto custom-scrollbar">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Date</label>
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner" />
+              <label className="block text-[11px] uppercase font-bold text-[#9CA3AF] mb-1">Date</label>
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="w-full bg-[#1F2937] border border-zinc-800 rounded-xl p-2.5 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark shadow-inner" />
             </div>
 
             <div className="space-y-1">
-               <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Grade</label>
+               <label className="block text-[11px] uppercase font-bold text-[#9CA3AF] mb-1">Grade</label>
                <div className="flex gap-2">
                  {QUALITY_SCORES.map(s => (
-                   <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`flex-1 py-1.5 rounded-lg border font-bold text-sm transition-all ${qualityScore === s ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : 'bg-zinc-950 border-zinc-800 text-zinc-500 shadow-inner'}`}>{s}</button>
+                   <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`flex-1 py-1.5 rounded-lg border font-bold text-sm transition-all ${qualityScore === s ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : 'bg-[#1F2937] border-zinc-800 text-[#9CA3AF] shadow-inner'}`}>{s}</button>
                  ))}
                </div>
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Mistakes</label>
+              <label className="block text-[11px] uppercase font-bold text-[#9CA3AF] mb-1">Mistakes</label>
               <div className="flex flex-wrap gap-2">
                 {MISTAKE_TAGS.map(tag => (
-                  <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-[11px] px-2 py-1 rounded-md border transition-all ${mistakes.includes(tag) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-zinc-950 border-zinc-800 text-zinc-500'}`}>{tag}</button>
+                  <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-[11px] px-2 py-1 rounded-md border transition-all ${mistakes.includes(tag) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-[#1F2937] border-zinc-800 text-[#9CA3AF]'}`}>{tag}</button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Notes</label>
-              <textarea value={text} onChange={(e) => setText(e.target.value)} required rows={6} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm focus:border-emerald-500 focus:outline-none resize-none shadow-inner text-zinc-300" />
+              <label className="block text-[11px] uppercase font-bold text-[#9CA3AF] mb-1">Notes</label>
+              <textarea value={text} onChange={(e) => setText(e.target.value)} required rows={6} className="w-full bg-[#1F2937] border border-zinc-800 rounded-xl p-3 text-sm focus:border-emerald-500 focus:outline-none resize-none shadow-inner text-[#E5E7EB]" />
             </div>
 
-            <div className="pt-2 flex justify-end gap-3 border-t border-white/5">
-              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2.5 text-[13px] text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-xl font-bold transition-colors">Cancel</button>
-              <button type="submit" disabled={submitting} className="px-5 py-2.5 text-[13px] bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl flex items-center gap-2 font-bold transition-colors shadow-sm disabled:opacity-50">
+            <div className="pt-2 flex justify-end gap-3 border-t border-[#111827]">
+              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2.5 text-[13px] text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-zinc-800 rounded-xl font-bold transition-colors">Cancel</button>
+              <button type="submit" disabled={submitting} className="px-5 py-2.5 text-[13px] bg-emerald-600 hover:bg-emerald-500 text-[#E5E7EB] rounded-xl flex items-center gap-2 font-bold transition-colors shadow-sm disabled:opacity-50">
                 {submitting && <Loader2 size={14} className="animate-spin" />} Save Updates
               </button>
             </div>
