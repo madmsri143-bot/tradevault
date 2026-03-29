@@ -105,7 +105,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
           }
         },
         prefill: { email: user.email || "" },
-        theme: { color: "#C9A646" },
+        theme: { color: "#D4AF37" },
       };
 
       const razorpayInstance = new (window as any).Razorpay(options);
@@ -128,20 +128,20 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-[#0B0F14] border border-[#111827] w-full max-w-3xl rounded-[32px] overflow-hidden shadow-2xl relative">
+      <div className="bg-[#0B0F14] border border-[rgba(212,175,55,0.15)] w-full max-w-3xl rounded-[32px] overflow-hidden shadow-2xl relative">
         
         {/* Header */}
-        <div className="p-6 border-b border-[#111827] flex items-center justify-between bg-[#111827]/50">
+        <div className="p-6 border-b border-[#111827] flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#C9A646]/10 rounded-xl flex items-center justify-center border border-[#C9A646]/20">
-              <Zap size={20} className="text-[#C9A646]" />
+            <div className="w-10 h-10 bg-[#D4AF37]/10 rounded-2xl flex items-center justify-center border border-[#D4AF37]/20">
+              <Zap size={20} className="text-[#D4AF37]" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-[#E5E7EB] tracking-tight">Upgrade to Professional</h2>
-              <p className="text-xs text-[#9CA3AF]">Unlock the full power of JournalBud.</p>
+              <h2 className="text-xl font-bold text-[#EAEAEA] tracking-tight">Upgrade to Professional</h2>
+              <p className="text-xs text-[#A0A0A0]">Unlock the full power of JournalBud.</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-[#9CA3AF] hover:text-[#E5E7EB] bg-white/5 rounded-full hover:bg-white/10 transition-colors">
+          <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-[#A0A0A0] hover:text-[#EAEAEA] bg-white/5 rounded-full hover:bg-white/10 transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -152,17 +152,17 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
           {/* Monthly Plan */}
           <div 
             onClick={() => setSelectedPlan("monthly")}
-            className={`cursor-pointer rounded-[24px] p-6 border-2 transition-all duration-300 relative overflow-hidden ${selectedPlan === "monthly" ? "border-[#C9A646] bg-[#C9A646]/5 scale-[1.02]" : "border-[#111827] bg-[#11161D] hover:border-white/20"}`}
+            className={`cursor-pointer rounded-[24px] p-6 border-2 transition-all duration-300 relative overflow-hidden ${selectedPlan === "monthly" ? "border-[#D4AF37] bg-[#D4AF37]/5 scale-[1.02]" : "border-[#111827] bg-[#11161D] hover:border-white/20"}`}
           >
             <div className="space-y-4">
               <div className="space-y-1">
-                <h3 className="text-lg font-bold text-[#E5E7EB]">Pro Starter</h3>
-                <p className="text-3xl font-black text-[#E5E7EB]">$2.99 <span className="text-sm text-[#9CA3AF] font-medium">/ month</span></p>
+                <h3 className="text-lg font-bold text-[#EAEAEA]">Pro Starter</h3>
+                <p className="text-3xl font-black text-[#EAEAEA]">$2.99 <span className="text-sm text-[#A0A0A0] font-medium">/ month</span></p>
               </div>
               <ul className="space-y-3 pt-4 border-t border-[#111827]">
-                <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#C9A646]" : "text-[#9CA3AF]"} /> <span className="text-sm text-[#E5E7EB]">Full Analytics</span></li>
-                <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#C9A646]" : "text-[#9CA3AF]"} /> <span className="text-sm text-[#E5E7EB]">Pacing Targets</span></li>
-                <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#C9A646]" : "text-[#9CA3AF]"} /> <span className="text-sm text-[#E5E7EB]">Mistake Intelligence</span></li>
+                <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#D4AF37]" : "text-[#A0A0A0]"} /> <span className="text-sm text-[#EAEAEA]">Full Analytics</span></li>
+                <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#D4AF37]" : "text-[#A0A0A0]"} /> <span className="text-sm text-[#EAEAEA]">Pacing Targets</span></li>
+                <li className="flex items-center gap-3"><Check size={16} className={selectedPlan === "monthly" ? "text-[#D4AF37]" : "text-[#A0A0A0]"} /> <span className="text-sm text-[#EAEAEA]">Mistake Intelligence</span></li>
               </ul>
             </div>
           </div>
@@ -170,23 +170,23 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
           {/* Yearly Plan */}
           <div 
             onClick={() => setSelectedPlan("yearly")}
-            className={`cursor-pointer rounded-[24px] p-6 border-2 transition-all duration-300 relative overflow-hidden shadow-2xl ${selectedPlan === "yearly" ? "border-[#C9A646] bg-[#C9A646]/10 scale-[1.02] shadow-[0_0_10px_rgba(201,166,70,0.1)]" : "border-[#111827] bg-[#11161D] hover:border-white/20"}`}
+            className={`cursor-pointer rounded-[24px] p-6 border-2 transition-all duration-300 relative overflow-hidden shadow-2xl ${selectedPlan === "yearly" ? "border-[#D4AF37] bg-[#D4AF37]/10 scale-[1.02] shadow-[0_0_10px_rgba(201,166,70,0.1)]" : "border-[#111827] bg-[#11161D] hover:border-white/20"}`}
           >
             {/* Save 40% Badge */}
             <div className="absolute top-0 right-0 p-4">
-              <span className="px-3 py-1 bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 text-[10px] font-black uppercase rounded-full">Save 40%</span>
+              <span className="px-3 py-1 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 text-[10px] font-black uppercase rounded-full">Save 40%</span>
             </div>
             
             <div className="space-y-4">
               <div className="space-y-1">
-                <h3 className="text-lg font-bold text-[#C9A646]">Pro Elite (Best Value)</h3>
-                <p className="text-3xl font-black text-[#E5E7EB]">$19.99 <span className="text-sm text-[#9CA3AF] font-medium">/ year</span></p>
-                <p className="text-xs text-[#C9A646] font-semibold mt-1">Breaks down to $1.75/month</p>
+                <h3 className="text-lg font-bold text-[#D4AF37]">Pro Elite (Best Value)</h3>
+                <p className="text-3xl font-black text-[#EAEAEA]">$19.99 <span className="text-sm text-[#A0A0A0] font-medium">/ year</span></p>
+                <p className="text-xs text-[#D4AF37] font-semibold mt-1">Breaks down to $1.75/month</p>
               </div>
-              <ul className="space-y-3 pt-4 border-t border-[#C9A646]/10">
-                <li className="flex items-center gap-3"><Check size={16} className="text-[#C9A646]" /> <span className="text-sm font-medium text-[#E5E7EB]">Full Analytics</span></li>
-                <li className="flex items-center gap-3"><Check size={16} className="text-[#C9A646]" /> <span className="text-sm font-medium text-[#E5E7EB]">Pacing Targets</span></li>
-                <li className="flex items-center gap-3"><Check size={16} className="text-[#C9A646]" /> <span className="text-sm font-medium text-[#E5E7EB]">Mistake Intelligence</span></li>
+              <ul className="space-y-3 pt-4 border-t border-[#D4AF37]/10">
+                <li className="flex items-center gap-3"><Check size={16} className="text-[#D4AF37]" /> <span className="text-sm font-medium text-[#EAEAEA]">Full Analytics</span></li>
+                <li className="flex items-center gap-3"><Check size={16} className="text-[#D4AF37]" /> <span className="text-sm font-medium text-[#EAEAEA]">Pacing Targets</span></li>
+                <li className="flex items-center gap-3"><Check size={16} className="text-[#D4AF37]" /> <span className="text-sm font-medium text-[#EAEAEA]">Mistake Intelligence</span></li>
               </ul>
             </div>
           </div>
@@ -198,19 +198,19 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
            <button 
              onClick={handlePayment}
              disabled={loading || paymentStatus === "success"}
-             className="w-full md:w-auto md:min-w-[300px] bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 font-black py-4 px-8 rounded-2xl hover:shadow-[0_0_25px_rgba(201,166,70,0.4)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center"
+             className="w-full md:w-auto md:min-w-[300px] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-4 px-8 rounded-2xl hover:shadow-[0_0_25px_rgba(201,166,70,0.4)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center"
            >
              {loading && paymentStatus !== "verifying" ? <Loader2 className="animate-spin text-black" size={20} /> : paymentStatus === "success" ? "Unlocked" : "Continue to Payment"}
            </button>
            
            <div className="h-6 mt-3 font-medium flex items-center justify-center">
-             {paymentStatus === "idle" && <p className="text-[#9CA3AF] text-xs">You will only be charged after choosing a plan.</p>}
+             {paymentStatus === "idle" && <p className="text-[#A0A0A0] text-xs">You will only be charged after choosing a plan.</p>}
              {paymentStatus === "verifying" && <p className="text-blue-400 text-sm animate-pulse">Checking payment status...</p>}
-             {paymentStatus === "success" && <p className="text-[#C9A646] text-sm font-bold flex items-center gap-1"><Check size={16} /> Payment successful. You can now start your journey.</p>}
+             {paymentStatus === "success" && <p className="text-[#D4AF37] text-sm font-bold flex items-center gap-1"><Check size={16} /> Payment successful. You can now start your journey.</p>}
              {paymentStatus === "error" && <p className="text-red-400 text-sm">Payment not completed. Please try again.</p>}
            </div>
            
-           <div className="mt-3 flex items-center gap-4 text-[10px] text-[#9CA3AF] font-semibold uppercase tracking-widest">
+           <div className="mt-3 flex items-center gap-4 text-[10px] text-[#A0A0A0] font-semibold uppercase tracking-widest">
              <span className="flex items-center gap-1"><Zap size={12} className="text-emerald-500" /> Secure</span>
              <span className="flex items-center gap-1"><Zap size={12} className="text-emerald-500" /> Encrypted</span>
              <span>Powered by Razorpay</span>

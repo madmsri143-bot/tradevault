@@ -37,12 +37,12 @@ export default function DemoPage() {
       <main className="flex-1 overflow-y-auto p-4 md:p-8 relative">
         
         {/* Sticky Demo Banner */}
-        <div className="bg-[#C9A646]/20 border border-[#C9A646]/40 text-[#C9A646] px-4 py-3 rounded-xl mb-6 flex flex-col sm:flex-row items-center justify-between text-sm font-bold animate-pulse">
+        <div className="bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37] px-4 py-3 rounded-2xl mb-6 flex flex-col sm:flex-row items-center justify-between text-sm font-bold animate-pulse">
            <div className="flex items-center gap-2">
-             <Link href="/" className="px-2 py-1 bg-black/40 hover:bg-black/80 rounded transition-colors text-[#E5E7EB] mr-2"><ArrowLeft size={16}/></Link>
+             <Link href="/" className="px-2 py-1 bg-black/40 hover:bg-black/80 rounded transition-colors text-[#EAEAEA] mr-2"><ArrowLeft size={16}/></Link>
              🚀 Demo Mode - You are viewing read-only sample data.
            </div>
-           <Link href="/signup" className="mt-2 sm:mt-0 px-4 py-1.5 bg-[#C9A646] text-black rounded-lg hover:bg-white transition-colors">
+           <Link href="/signup" className="mt-2 sm:mt-0 px-4 py-1.5 bg-[#D4AF37] text-black rounded-lg hover:bg-white transition-colors">
               Sign up to track your own trades
            </Link>
         </div>
@@ -50,16 +50,16 @@ export default function DemoPage() {
         {/* Header and Controls */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#111827] pb-6">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-[#C9A646]">Dashboard Overview</h2>
-            <p className="text-sm text-[#9CA3AF] mt-1">Track, analyze, and optimize your trading performance.</p>
+            <h2 className="text-2xl font-bold tracking-tight text-[#D4AF37]">Dashboard Overview</h2>
+            <p className="text-sm text-[#A0A0A0] mt-1">Track, analyze, and optimize your trading performance.</p>
           </div>
           
-          <div className="flex items-center gap-2 bg-[#111827] border border-black/10 dark:border-[#111827] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-2 rounded-lg">
-            <span className="text-sm text-[#9CA3AF] font-medium ml-2">Displaying in:</span>
+          <div className="flex items-center gap-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-2 rounded-lg">
+            <span className="text-sm text-[#A0A0A0] font-medium ml-2">Displaying in:</span>
             <select
               value={displayCurrency}
               onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-              className="bg-[#1F2937] border border-zinc-800 text-amber-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
+              className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-amber-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
             >
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -70,13 +70,13 @@ export default function DemoPage() {
 
         {/* TABS & GLOBAL DATE FILTER */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 mt-6">
-          <div className="flex items-center gap-1 bg-[#111827] border border-[#111827] p-1 rounded-xl w-fit">
+          <div className="flex items-center gap-1 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-1 rounded-2xl w-fit">
             {(["overview", "calendar", "analytics", "history"] as TabType[]).map(t => (
               <button 
                 key={t}
                 onClick={() => setActiveTab(t)}
                 className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
-                  activeTab === t ? 'bg-zinc-800 text-[#C9A646] shadow-sm' : 'text-[#9CA3AF] hover:text-[#E5E7EB]'
+                  activeTab === t ? 'bg-zinc-800 text-[#D4AF37] shadow-sm' : 'text-[#A0A0A0] hover:text-[#EAEAEA]'
                 }`}
               >
                 {t === "history" ? "Trade History" : t}
@@ -85,11 +85,11 @@ export default function DemoPage() {
           </div>
 
           {activeTab !== "calendar" && (
-            <div className="flex items-center gap-3 bg-[#111827] border border-[#111827] p-2 rounded-xl pointer-events-none opacity-50">
-              <CalendarIcon size={16} className="text-[#9CA3AF] ml-1" />
-              <input type="date" value="" readOnly className="bg-[#1F2937] border border-zinc-800 text-[#E5E7EB] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
-              <span className="text-[#9CA3AF] text-xs font-medium">to</span>
-              <input type="date" value="" readOnly className="bg-[#1F2937] border border-zinc-800 text-[#E5E7EB] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
+            <div className="flex items-center gap-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-2 rounded-2xl pointer-events-none opacity-50">
+              <CalendarIcon size={16} className="text-[#A0A0A0] ml-1" />
+              <input type="date" value="" readOnly className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
+              <span className="text-[#A0A0A0] text-xs font-medium">to</span>
+              <input type="date" value="" readOnly className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
             </div>
           )}
         </div>
@@ -104,7 +104,7 @@ export default function DemoPage() {
                   className="bg-emerald-500 text-black p-4 rounded-full shadow-[0_4px_20px_rgba(16,185,129,0.4)] flex items-center justify-center relative z-20 cursor-not-allowed opacity-80 group hover:scale-[1.02] transition-transform"
                 >
                   <span className="font-bold text-xl">+</span>
-                  <span className="absolute left-full ml-4 bg-zinc-800/90 backdrop-blur-md text-[#E5E7EB] text-sm font-bold px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 whitespace-nowrap shadow-xl border border-[#111827] transition-opacity">
+                  <span className="absolute left-full ml-4 bg-zinc-800/90 backdrop-blur-md text-[#EAEAEA] text-sm font-bold px-4 py-2 rounded-2xl opacity-0 group-hover:opacity-100 whitespace-nowrap shadow-xl border border-[rgba(212,175,55,0.15)] transition-opacity">
                     Add Trade (Demo Mode)
                   </span>
                 </button>

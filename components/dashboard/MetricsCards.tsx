@@ -84,7 +84,7 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
     {
       title: "Total Trades",
       value: totalTrades,
-      icon: <Hash size={20} className="text-[#9CA3AF]" />,
+      icon: <Hash size={20} className="text-[#A0A0A0]" />,
       colorClass: "text-zinc-100"
     },
     {
@@ -110,11 +110,11 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mb-2">
       {cards.map((card, i) => (
-        <div key={i} className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-sm dark:shadow-md p-6 rounded-2xl flex flex-col justify-center transition-all hover:-translate-y-1 hover:border-emerald-500/20 group">
+        <div key={i} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-6 rounded-2xl flex flex-col justify-center transition-all hover:-translate-y-[2px] hover:border-[rgba(212,175,55,0.25)] hover:shadow-[0_8px_32px_rgba(212,175,55,0.1),inset_0_1px_0_rgba(255,255,255,0.02)] transition-all duration-300 group">
           <div className="flex items-center justify-between w-full">
             <div>
               <p 
-                className="text-[13px] text-[#9CA3AF] mb-1.5 font-medium tracking-wide uppercase cursor-help"
+                className="text-[13px] text-[#A0A0A0] mb-1.5 font-medium tracking-wide uppercase cursor-help"
                 title={(card as any).tooltip || card.title}
               >
                 {card.title}
@@ -123,7 +123,7 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
                 {card.value}
               </p>
             </div>
-            <div className="h-12 w-12 bg-[#1F2937] flex items-center justify-center rounded-xl border border-black/10 dark:border-[#111827] shadow-inner shrink-0 group-hover:scale-110 transition-transform">
+            <div className="h-12 w-12 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center justify-center rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner shrink-0 group-hover:scale-110 transition-transform">
               {card.icon}
             </div>
           </div>

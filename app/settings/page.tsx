@@ -421,40 +421,40 @@ export default function SettingsPage() {
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#111827] pb-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#E5E7EB] flex items-center gap-3">
+          <h2 className="text-2xl font-bold tracking-tight text-[#EAEAEA] flex items-center gap-3">
             <SettingsIcon className="text-emerald-500" /> Account Settings
           </h2>
-          <p className="text-sm text-[#9CA3AF] mt-1">Manage your workspace preferences and application security.</p>
+          <p className="text-sm text-[#A0A0A0] mt-1">Manage your workspace preferences and application security.</p>
         </div>
       </div>
 
       <div className="space-y-8">
         
         {/* Section: Preferences */}
-        <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm">
-           <div className="p-5 border-b border-[#111827] bg-[#111827]/50 flex items-center gap-2">
+        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
+           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
               <Palette className="text-blue-500" size={18} />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#E5E7EB]">Preferences</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Preferences</h3>
            </div>
            <div className="p-0 divide-y divide-white/5">
               <div className="flex items-center justify-between p-6 hover:bg-white/[0.02] transition-colors">
                  <div className="flex items-center gap-4">
-                   <div className="p-2.5 bg-[#1F2937] rounded-xl border border-[#111827] shadow-inner hidden sm:block"><Moon size={20} className="text-[#9CA3AF]" /></div>
+                   <div className="p-2.5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner hidden sm:block"><Moon size={20} className="text-[#A0A0A0]" /></div>
                    <div>
-                     <p className="font-bold text-[#E5E7EB] text-sm">Application Theme</p>
-                     <p className="text-[#9CA3AF] text-xs mt-0.5">Toggle between Dark Mode and Light Mode.</p>
+                     <p className="font-bold text-[#EAEAEA] text-sm">Application Theme</p>
+                     <p className="text-[#A0A0A0] text-xs mt-0.5">Toggle between Dark Mode and Light Mode.</p>
                    </div>
                  </div>
-                 <div className="flex bg-[#1F2937] p-1 rounded-xl shadow-inner border border-[#111827]">
+                 <div className="flex bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-1 rounded-2xl shadow-inner border border-[rgba(212,175,55,0.15)]">
                    <button 
                      onClick={() => handleThemeChange("dark")}
-                     className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${theme === "dark" ? "bg-zinc-800 text-[#E5E7EB] shadow-sm ring-1 ring-white/10" : "text-[#9CA3AF] hover:text-[#E5E7EB]"}`}
+                     className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${theme === "dark" ? "bg-zinc-800 text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-[#A0A0A0] hover:text-[#EAEAEA]"}`}
                    >
                      Dark
                    </button>
                    <button 
                      onClick={() => handleThemeChange("light")}
-                     className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${theme === "light" ? "bg-zinc-800 text-[#E5E7EB] shadow-sm ring-1 ring-white/10" : "text-[#9CA3AF] hover:text-[#E5E7EB]"}`}
+                     className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${theme === "light" ? "bg-zinc-800 text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-[#A0A0A0] hover:text-[#EAEAEA]"}`}
                    >
                      Light
                    </button>
@@ -464,31 +464,31 @@ export default function SettingsPage() {
         </div>
 
          {/* Section: Export Engine */}
-         <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-[#111827] bg-[#111827]/50 flex items-center gap-2">
-               <Download className="text-[#C9A646]" size={18} />
-               <h3 className="text-sm font-bold uppercase tracking-wider text-[#E5E7EB]">Export Data</h3>
+         <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
+            <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
+               <Download className="text-[#D4AF37]" size={18} />
+               <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Export Data</h3>
             </div>
             <div className="p-6">
-               <p className="text-xs text-[#9CA3AF] max-w-lg leading-relaxed mb-6">
+               <p className="text-xs text-[#A0A0A0] max-w-lg leading-relaxed mb-6">
                  Download your entire trading history for external accounting, presentations, or offline analytics. All exports include your full historical dataset.
                </p>
                
                <div className="mb-6 space-y-4">
-                 <div className="flex flex-col gap-3 p-4 bg-black/20 rounded-xl border border-[#111827]">
+                 <div className="flex flex-col gap-3 p-4 bg-black/20 rounded-2xl border border-[rgba(212,175,55,0.15)]">
                    <label className="flex items-center gap-3 cursor-pointer group w-fit">
-                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'all' ? 'border-[#C9A646] bg-[#C9A646]/20' : 'border-zinc-700 bg-[#111827] group-hover:border-zinc-500'}`}>
-                       {exportMode === 'all' && <div className="w-2.5 h-2.5 rounded-full bg-[#C9A646]" />}
+                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'all' ? 'border-[#D4AF37] bg-[#D4AF37]/20' : 'border-zinc-700 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md group-hover:border-zinc-500'}`}>
+                       {exportMode === 'all' && <div className="w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />}
                      </div>
-                     <span className={`text-sm font-bold select-none ${exportMode === 'all' ? 'text-[#E5E7EB]' : 'text-[#9CA3AF]'}`}>Entire History</span>
+                     <span className={`text-sm font-bold select-none ${exportMode === 'all' ? 'text-[#EAEAEA]' : 'text-[#A0A0A0]'}`}>Entire History</span>
                      <input type="radio" className="hidden" checked={exportMode === 'all'} onChange={() => setExportMode('all')} />
                    </label>
                    
                    <label className="flex items-center gap-3 cursor-pointer group w-fit">
-                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'range' ? 'border-orange-500 bg-orange-500/20' : 'border-zinc-700 bg-[#111827] group-hover:border-zinc-500'}`}>
+                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'range' ? 'border-orange-500 bg-orange-500/20' : 'border-zinc-700 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md group-hover:border-zinc-500'}`}>
                        {exportMode === 'range' && <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />}
                      </div>
-                     <span className={`text-sm font-bold select-none ${exportMode === 'range' ? 'text-[#E5E7EB]' : 'text-[#9CA3AF]'}`}>Specific Date Range</span>
+                     <span className={`text-sm font-bold select-none ${exportMode === 'range' ? 'text-[#EAEAEA]' : 'text-[#A0A0A0]'}`}>Specific Date Range</span>
                      <input type="radio" className="hidden" checked={exportMode === 'range'} onChange={() => setExportMode('range')} />
                    </label>
 
@@ -498,14 +498,14 @@ export default function SettingsPage() {
                          type="date"
                          value={exportFrom}
                          onChange={(e) => setExportFrom(e.target.value)} 
-                         className="bg-[#1F2937] border border-zinc-800 rounded p-2 text-xs text-[#E5E7EB] focus:outline-none focus:border-orange-500 color-scheme-dark" 
+                         className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-xs text-[#EAEAEA] focus:outline-none focus:border-orange-500 color-scheme-dark" 
                        />
-                       <span className="text-[#9CA3AF] text-xs font-bold">TO</span>
+                       <span className="text-[#A0A0A0] text-xs font-bold">TO</span>
                        <input 
                          type="date" 
                          value={exportTo}
                          onChange={(e) => setExportTo(e.target.value)} 
-                         className="bg-[#1F2937] border border-zinc-800 rounded p-2 text-xs text-[#E5E7EB] focus:outline-none focus:border-orange-500 color-scheme-dark" 
+                         className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-xs text-[#EAEAEA] focus:outline-none focus:border-orange-500 color-scheme-dark" 
                        />
                      </div>
                    )}
@@ -513,7 +513,7 @@ export default function SettingsPage() {
                </div>
                
                {isExporting && (
-                 <div className="mb-4 flex items-center gap-2 text-xs font-bold text-[#C9A646] bg-[#C9A646]/10 p-3 rounded-lg border border-[#C9A646]/20 shadow-sm animate-pulse">
+                 <div className="mb-4 flex items-center gap-2 text-xs font-bold text-[#D4AF37] bg-[#D4AF37]/10 p-3 rounded-lg border border-[#D4AF37]/20 shadow-sm animate-pulse">
                    <Loader2 size={14} className="animate-spin" /> Exporting trades... Please wait.
                  </div>
                )}
@@ -522,56 +522,56 @@ export default function SettingsPage() {
                  <button 
                    onClick={handleExportCSV}
                    disabled={isExporting}
-                   className="p-5 bg-[#1F2937] border border-zinc-800 rounded-xl hover:border-[#C9A646]/50 hover:bg-[#1F2937]/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-[#D4AF37]/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
-                   <FileText size={28} className="text-[#9CA3AF] group-hover:text-[#C9A646] transition-colors" />
-                   <span className="text-sm font-bold text-[#E5E7EB] tracking-tight">Export CSV</span>
+                   <FileText size={28} className="text-[#A0A0A0] group-hover:text-[#D4AF37] transition-colors" />
+                   <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export CSV</span>
                  </button>
                  
                  <button 
                    onClick={handleExportPDF}
                    disabled={isExporting}
-                   className="p-5 bg-[#1F2937] border border-zinc-800 rounded-xl hover:border-red-500/50 hover:bg-[#1F2937]/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-red-500/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
-                   <Download size={28} className="text-[#9CA3AF] group-hover:text-red-400 transition-colors" />
-                   <span className="text-sm font-bold text-[#E5E7EB] tracking-tight">Export PDF</span>
+                   <Download size={28} className="text-[#A0A0A0] group-hover:text-red-400 transition-colors" />
+                   <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export PDF</span>
                  </button>
                  
                  <button 
                    onClick={handleExportPPT}
                    disabled={isExporting}
-                   className="p-5 bg-[#1F2937] border border-zinc-800 rounded-xl hover:border-orange-500/50 hover:bg-[#1F2937]/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-orange-500/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
-                   <Presentation size={28} className="text-[#9CA3AF] group-hover:text-orange-400 transition-colors" />
-                   <span className="text-sm font-bold text-[#E5E7EB] tracking-tight">Export PPTX</span>
+                   <Presentation size={28} className="text-[#A0A0A0] group-hover:text-orange-400 transition-colors" />
+                   <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export PPTX</span>
                  </button>
                </div>
             </div>
          </div>
 
         {/* Section: Security */}
-        <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm">
-           <div className="p-5 border-b border-[#111827] bg-[#111827]/50 flex items-center gap-2">
+        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
+           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
               <Shield className="text-red-500" size={18} />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#E5E7EB]">Security</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Security</h3>
            </div>
            <div className="p-6 space-y-8">
               <div>
-                 <p className="text-sm font-bold text-[#E5E7EB] mb-4">Login Methods</p>
-                 <div className="bg-[#1F2937] border border-zinc-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                 <p className="text-sm font-bold text-[#EAEAEA] mb-4">Login Methods</p>
+                 <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                    <div className="flex items-center gap-3">
                      <div className="p-2 border border-emerald-500/20 bg-emerald-500/10 rounded-lg">
                        <Shield className="text-emerald-500" size={20} />
                      </div>
                      <div>
-                       <p className="text-sm font-bold text-[#E5E7EB]">{isGoogleAuth ? "Google Authentication" : "Email & Password"}</p>
-                       <p className="text-xs text-[#9CA3AF] mt-0.5 text-emerald-500/70 font-medium">Primary authentication method active.</p>
+                       <p className="text-sm font-bold text-[#EAEAEA]">{isGoogleAuth ? "Google Authentication" : "Email & Password"}</p>
+                       <p className="text-xs text-[#A0A0A0] mt-0.5 text-emerald-500/70 font-medium">Primary authentication method active.</p>
                      </div>
                    </div>
                    {!isGoogleAuth && !isChangingPassword && (
                      <button 
                        onClick={() => setIsChangingPassword(true)}
-                       className="px-5 py-2.5 text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-[#E5E7EB] rounded-lg border border-[#111827] transition-colors shadow-sm"
+                       className="px-5 py-2.5 text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-[#EAEAEA] rounded-lg border border-[rgba(212,175,55,0.15)] transition-colors shadow-sm"
                      >
                        Change Password
                      </button>
@@ -579,8 +579,8 @@ export default function SettingsPage() {
                  </div>
                  
                  {isChangingPassword && !isGoogleAuth && (
-                   <div className="mt-4 p-5 bg-[#1F2937] border border-zinc-800 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-                     <p className="text-sm font-bold text-[#E5E7EB]">Update Password</p>
+                   <div className="mt-4 p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+                     <p className="text-sm font-bold text-[#EAEAEA]">Update Password</p>
                      
                      <div className="space-y-3">
                        <input 
@@ -588,14 +588,14 @@ export default function SettingsPage() {
                          value={oldPassword}
                          onChange={(e) => setOldPassword(e.target.value)}
                          placeholder="Current Password"
-                         className="w-full bg-[#111827] border border-zinc-800 rounded-xl p-3 text-sm text-[#E5E7EB] focus:outline-none focus:border-emerald-500 transition-colors"
+                         className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl p-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-emerald-500 transition-colors"
                        />
                        <input 
                          type="password" 
                          value={newPassword}
                          onChange={(e) => setNewPassword(e.target.value)}
                          placeholder="New Strong Password"
-                         className="w-full bg-[#111827] border border-zinc-800 rounded-xl p-3 text-sm text-[#E5E7EB] focus:outline-none focus:border-emerald-500 transition-colors"
+                         className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl p-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-emerald-500 transition-colors"
                        />
                      </div>
 
@@ -610,14 +610,14 @@ export default function SettingsPage() {
                        <button 
                          onClick={() => { setIsChangingPassword(false); setNewPassword(""); setOldPassword(""); }}
                          disabled={isSavingPassword}
-                         className="px-5 py-2.5 text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-[#E5E7EB] rounded-lg transition-colors"
+                         className="px-5 py-2.5 text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-[#EAEAEA] rounded-lg transition-colors"
                        >
                          Cancel
                        </button>
                      </div>
                      
                      <div className="pt-3 border-t border-[#111827] mt-1 flex flex-col gap-1 items-start">
-                       <p className="text-xs text-[#9CA3AF]">Forgot your current password?</p>
+                       <p className="text-xs text-[#A0A0A0]">Forgot your current password?</p>
                        <button 
                          onClick={handlePasswordResetRequest} 
                          disabled={isResettingEmail}
@@ -632,9 +632,9 @@ export default function SettingsPage() {
               </div>
 
               <div className="pt-6 border-t border-[#111827]">
-                 <p className="text-sm font-bold text-[#E5E7EB] mb-4">Device Sessions</p>
+                 <p className="text-sm font-bold text-[#EAEAEA] mb-4">Device Sessions</p>
                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                   <p className="text-xs text-[#9CA3AF] max-w-md leading-relaxed">Securely log out of your current session on this device.</p>
+                   <p className="text-xs text-[#A0A0A0] max-w-md leading-relaxed">Securely log out of your current session on this device.</p>
                    <button onClick={handleLogout} className="shrink-0 px-4 py-2.5 text-xs font-bold bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-lg flex items-center gap-2 transition-colors shadow">
                      <LogOut size={14} /> Log Out
                    </button>
@@ -644,22 +644,22 @@ export default function SettingsPage() {
         </div>
 
         {/* Section: App Info */}
-        <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm">
-           <div className="p-5 border-b border-[#111827] bg-[#111827]/50 flex items-center gap-2">
+        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
+           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
               <Info className="text-purple-500" size={18} />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#E5E7EB]">App Info</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">App Info</h3>
            </div>
            <div className="p-6">
               <div className="flex items-center justify-between">
                  <div>
-                   <p className="text-base font-brand font-black text-[#E5E7EB] tracking-tight">JournalBud Version</p>
-                   <p className="text-xs text-[#9CA3AF] mt-1 font-medium">v2.4.0 (Build 9081)</p>
+                   <p className="text-base font-brand font-black text-[#EAEAEA] tracking-tight">JournalBud Version</p>
+                   <p className="text-xs text-[#A0A0A0] mt-1 font-medium">v2.4.0 (Build 9081)</p>
                  </div>
                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-[#9CA3AF] hover:text-[#C9A646] transition-colors">
+                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-[#A0A0A0] hover:text-[#D4AF37] transition-colors">
                      Privacy Policy <ExternalLink size={12} />
                    </a>
-                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-[#9CA3AF] hover:text-[#C9A646] transition-colors">
+                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-[#A0A0A0] hover:text-[#D4AF37] transition-colors">
                      Terms of Service <ExternalLink size={12} />
                    </a>
                  </div>

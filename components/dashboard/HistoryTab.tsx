@@ -15,14 +15,14 @@ export default function HistoryTab({ trades, displayCurrency }: HistoryTabProps)
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#E5E7EB] flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-[#EAEAEA] flex items-center gap-3">
             <BookText className="text-emerald-500" /> Trade History
           </h1>
-          <p className="text-sm text-[#9CA3AF] mt-1">Review your filtered trades.</p>
+          <p className="text-sm text-[#A0A0A0] mt-1">Review your filtered trades.</p>
         </div>
       </div>
 
-      <div className="bg-[#111827] border border-black/10 dark:border-[#111827] shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl w-full xl:col-span-3">
+      <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-5 rounded-2xl w-full xl:col-span-3">
         <TradeList trades={trades} displayCurrency={displayCurrency} />
       </div>
 

@@ -17,17 +17,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           placeholder=" "
           className={cn(
-            "peer w-full bg-[#1F2937]/50 border rounded-xl px-4 pt-6 pb-2 text-sm text-[#E5E7EB] focus:outline-none focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-transparent",
+            "peer w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border rounded-2xl px-4 pt-6 pb-2 text-sm text-[#EAEAEA] focus:outline-none focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-transparent",
             error 
               ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20" 
-              : "border-[#111827] focus:border-emerald-500 focus:bg-[#1F2937]",
+              : "border-[#111827] focus:border-emerald-500 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md",
             className
           )}
           {...props}
         />
         <label
           htmlFor={inputId}
-          className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-[#9CA3AF] transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-emerald-500 peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
+          className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-[#A0A0A0] transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-emerald-500 peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
         >
           {label}
         </label>

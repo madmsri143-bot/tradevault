@@ -96,71 +96,71 @@ export default function SupportWidget() {
         isOpen={isOpen} 
         onClose={() => setIsOpen(false)} 
         title="Contact Support" 
-        icon={<Headset size={20} className="text-[#C9A646]" />}
+        icon={<Headset size={20} className="text-[#D4AF37]" />}
         maxWidth="md"
-        className="border-[#C9A646]/20 shadow-[0_0_50px_rgba(201,166,70,0.15)]"
+        className="border-[#D4AF37]/20 shadow-[0_0_50px_rgba(201,166,70,0.15)]"
       >
         {success ? (
           <div className="py-8 flex flex-col items-center justify-center text-center animate-in zoom-in-95">
-            <div className="w-16 h-16 bg-[#C9A646]/10 rounded-full flex items-center justify-center mb-4 border border-[#C9A646]/20">
-              <CheckCircle size={32} className="text-[#C9A646]" />
+            <div className="w-16 h-16 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mb-4 border border-[#D4AF37]/20">
+              <CheckCircle size={32} className="text-[#D4AF37]" />
             </div>
-            <h3 className="text-xl font-bold text-[#E5E7EB] mb-2">Message sent successfully</h3>
-            <p className="text-sm text-[#9CA3AF]">Our support team will get back to your registered email shortly.</p>
+            <h3 className="text-xl font-bold text-[#EAEAEA] mb-2">Message sent successfully</h3>
+            <p className="text-sm text-[#A0A0A0]">Our support team will get back to your registered email shortly.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <p className="text-sm text-[#9CA3AF] mb-6">
+            <p className="text-sm text-[#A0A0A0] mb-6">
               Experiencing issues or have a question? Send us a secure message.
             </p>
 
             {errorMsg && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs font-bold text-center">
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-xs font-bold text-center">
                 {errorMsg}
               </div>
             )}
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#C9A646] mb-1.5 ml-1">Name</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-1.5 ml-1">Name</label>
                 <input 
                   type="text" 
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   placeholder="Your Name"
-                  className="w-full bg-[#1F2937]/50 border border-[#111827] rounded-xl px-4 py-3 text-sm text-[#E5E7EB] focus:outline-none focus:border-[#C9A646]/50 focus:bg-[#1F2937] transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#C9A646]/20"
+                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#C9A646] mb-1.5 ml-1">Email</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-1.5 ml-1">Email</label>
                 <input 
                   type="email" 
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   placeholder="your@email.com"
-                  className="w-full bg-[#1F2937]/50 border border-[#111827] rounded-xl px-4 py-3 text-sm text-[#E5E7EB] focus:outline-none focus:border-[#C9A646]/50 focus:bg-[#1F2937] transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#C9A646]/20"
+                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-[#C9A646] mb-1.5 ml-1">Subject</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-1.5 ml-1">Subject</label>
               <input 
                 type="text" 
                 required
                 value={formData.subject}
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 placeholder="e.g. Need help with integrations"
-                className="w-full bg-[#1F2937]/50 border border-[#111827] rounded-xl px-4 py-3 text-sm text-[#E5E7EB] focus:outline-none focus:border-[#C9A646]/50 focus:bg-[#1F2937] transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#C9A646]/20"
+                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
               />
             </div>
             
             <div>
               <div className="flex justify-between items-end mb-1.5 ml-1 pr-1">
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#C9A646]">Message</label>
-                <span className={`text-[10px] font-bold ${formData.message.length > 1000 ? 'text-red-400' : 'text-[#9CA3AF]'}`}>
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#D4AF37]">Message</label>
+                <span className={`text-[10px] font-bold ${formData.message.length > 1000 ? 'text-red-400' : 'text-[#A0A0A0]'}`}>
                   {formData.message.length} / 1000
                 </span>
               </div>
@@ -170,7 +170,7 @@ export default function SupportWidget() {
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
                 placeholder="Describe your issue in detail..."
-                className="w-full bg-[#1F2937]/50 border border-[#111827] rounded-xl px-4 py-3 text-sm text-[#E5E7EB] focus:outline-none focus:border-[#C9A646]/50 focus:bg-[#1F2937] transition-all resize-none font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#C9A646]/20"
+                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all resize-none font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
               />
             </div>
 
@@ -179,7 +179,7 @@ export default function SupportWidget() {
             <button 
               type="submit" 
               disabled={loading || formData.message.length === 0 || formData.message.length > 1000}
-              className="w-full mt-2 bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 font-black py-3.5 rounded-xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center gap-2"
+              className="w-full mt-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-3.5 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : <><Send size={18} /> Send Support Request</>}
             </button>

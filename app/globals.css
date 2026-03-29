@@ -3,7 +3,7 @@
 @theme {
   --color-background: #0B0B0F;
   --color-foreground: #E5E7EB;
-  --color-accent-gold: #C9A646;
+  --color-accent-gold: #D4AF37;
   --color-accent-green: #10B981; /* muted green for profit */
   --color-accent-red: #FF4D6D;
   --color-accent-blue: #3B82F6;
@@ -46,10 +46,10 @@
 
   /* ===== GLASS SYSTEM ===== */
   .glass-card {
-    @apply bg-[#111827]/40 backdrop-blur-xl border border-[#111827] shadow-2xl;
+    @apply bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/40 backdrop-blur-xl border border-[rgba(212,175,55,0.15)] shadow-2xl;
   }
   .glass-card-hover {
-    @apply hover:bg-zinc-800/50 hover:border-[#C9A646]/30 hover:shadow-[#C9A646]/10 transition-all duration-300;
+    @apply hover:bg-zinc-800/50 hover:border-[#D4AF37]/30 hover:shadow-[#D4AF37]/10 transition-all duration-300;
   }
   .text-glow-gold {
     text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);

@@ -85,10 +85,10 @@ export default function Topbar() {
         onClick={() => window.location.reload()}
         className="text-2xl md:text-3xl font-brand tracking-tight cursor-pointer hover:drop-shadow-[0_0_8px_rgba(201,166,70,0.4)] transition-all select-none flex items-center"
       >
-        <span className="text-[#C9A646] font-black">J</span>
-        <span className="text-zinc-950 dark:text-[#E5E7EB] font-bold">ournal</span>
-        <span className="text-[#C9A646] font-black">B</span>
-        <span className="text-zinc-950 dark:text-[#E5E7EB] font-bold">ud</span>
+        <span className="text-[#D4AF37] font-black">J</span>
+        <span className="text-zinc-950 dark:text-[#EAEAEA] font-bold">ournal</span>
+        <span className="text-[#D4AF37] font-black">B</span>
+        <span className="text-zinc-950 dark:text-[#EAEAEA] font-bold">ud</span>
       </h1>
 
       <div className="relative" ref={dropdownRef}>
@@ -97,20 +97,20 @@ export default function Topbar() {
           className="flex items-center gap-3 p-1.5 pr-3 rounded-full hover:bg-white/5 transition-all group cursor-pointer border border-transparent hover:border-[#111827]"
         >
           {/* Avatar Area */}
-          <div className="w-10 h-10 rounded-full bg-zinc-800 border border-[#111827] flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+          <div className="w-10 h-10 rounded-full bg-zinc-800 border border-[rgba(212,175,55,0.15)] flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
             {profile.photoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={profile.photoUrl} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
-              <span className="text-sm font-bold text-[#E5E7EB]">{getInitials(profile.name)}</span>
+              <span className="text-sm font-bold text-[#EAEAEA]">{getInitials(profile.name)}</span>
             )}
           </div>
           
           {/* User Info Area */}
           <div className="hidden sm:flex flex-col items-start mr-1">
-            <span className="text-sm font-bold text-[#E5E7EB] leading-tight">{profile.name}</span>
+            <span className="text-sm font-bold text-[#EAEAEA] leading-tight">{profile.name}</span>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-[11px] font-semibold text-[#9CA3AF] capitalize">{planName}</span>
+              <span className="text-[11px] font-semibold text-[#A0A0A0] capitalize">{planName}</span>
               {isActive && (
                 <span className={cn(
                   "text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full",
@@ -122,30 +122,30 @@ export default function Topbar() {
             </div>
           </div>
 
-          <ChevronDown size={16} className={cn("text-[#9CA3AF] transition-transform duration-300", isOpen && "rotate-180")} />
+          <ChevronDown size={16} className={cn("text-[#A0A0A0] transition-transform duration-300", isOpen && "rotate-180")} />
         </button>
 
         {/* Dropdown Menu */}
         <div className={cn(
-          "absolute right-0 top-[calc(100%+8px)] w-56 bg-[#111827] border border-[#111827] shadow-2xl rounded-2xl overflow-hidden transition-all duration-200 transform origin-top-right z-50",
+          "absolute right-0 top-[calc(100%+8px)] w-56 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] shadow-2xl rounded-2xl overflow-hidden transition-all duration-200 transform origin-top-right z-50",
           isOpen ? "opacity-100 scale-100 visible" : "opacity-0 scale-95 invisible"
         )}>
           <div className="p-2 space-y-1">
-            <Link onClick={() => setIsOpen(false)} href="/profile" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[#E5E7EB] hover:text-[#E5E7EB] hover:bg-white/5 transition-colors group">
-              <User size={16} className="text-[#9CA3AF] group-hover:text-[#E5E7EB] transition-colors" />
+            <Link onClick={() => setIsOpen(false)} href="/profile" className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#EAEAEA] hover:text-[#EAEAEA] hover:bg-white/5 transition-colors group">
+              <User size={16} className="text-[#A0A0A0] group-hover:text-[#EAEAEA] transition-colors" />
               Profile
             </Link>
-            <Link onClick={() => setIsOpen(false)} href="/billing" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[#E5E7EB] hover:text-[#E5E7EB] hover:bg-white/5 transition-colors group">
-              <CreditCard size={16} className="text-[#9CA3AF] group-hover:text-emerald-400 transition-colors" />
+            <Link onClick={() => setIsOpen(false)} href="/billing" className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#EAEAEA] hover:text-[#EAEAEA] hover:bg-white/5 transition-colors group">
+              <CreditCard size={16} className="text-[#A0A0A0] group-hover:text-emerald-400 transition-colors" />
               Billing
             </Link>
-            <Link onClick={() => setIsOpen(false)} href="/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[#E5E7EB] hover:text-[#E5E7EB] hover:bg-white/5 transition-colors group">
-              <SettingsIcon size={16} className="text-[#9CA3AF] group-hover:text-[#E5E7EB] transition-colors" />
+            <Link onClick={() => setIsOpen(false)} href="/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#EAEAEA] hover:text-[#EAEAEA] hover:bg-white/5 transition-colors group">
+              <SettingsIcon size={16} className="text-[#A0A0A0] group-hover:text-[#EAEAEA] transition-colors" />
               Settings
             </Link>
             <div className="my-1 border-t border-[#111827]" />
-            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[#E5E7EB] hover:text-red-400 hover:bg-red-500/10 transition-colors group">
-              <LogOut size={16} className="text-[#9CA3AF] group-hover:text-red-400 transition-colors" />
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium text-[#EAEAEA] hover:text-red-400 hover:bg-red-500/10 transition-colors group">
+              <LogOut size={16} className="text-[#A0A0A0] group-hover:text-red-400 transition-colors" />
               Logout
             </button>
           </div>

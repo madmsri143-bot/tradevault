@@ -238,7 +238,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       <div className="fixed inset-0 z-[100] bg-[#0B0F14] flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-6 animate-in zoom-in-50 fade-in duration-500">
           <JBLogo size={80} />
-          <span className="text-4xl font-brand font-black text-[#E5E7EB] tracking-tight">JournalBud</span>
+          <span className="text-4xl font-brand font-black text-[#EAEAEA] tracking-tight">JournalBud</span>
         </div>
       </div>
     );
@@ -254,25 +254,25 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       {/* Left Column: Branding / Marketing */}
       <div className="hidden md:flex flex-1 relative bg-gradient-to-br from-[#11161D] to-[#0D1218] border-r border-[#111827] flex-col justify-between p-12 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20">
-           <div className="absolute top-0 -left-20 w-96 h-96 bg-[#C9A646]/20 blur-[120px] rounded-full" />
-           <div className="absolute bottom-0 -right-20 w-80 h-80 bg-[#C9A646]/10 blur-[100px] rounded-full" />
+           <div className="absolute top-0 -left-20 w-96 h-96 bg-[#D4AF37]/20 blur-[120px] rounded-full" />
+           <div className="absolute bottom-0 -right-20 w-80 h-80 bg-[#D4AF37]/10 blur-[100px] rounded-full" />
         </div>
 
         <Link href="/" className="relative z-10 flex items-center gap-3 group">
           <JBLogo size={36} />
-          <span className="text-xl font-brand font-black text-[#E5E7EB] tracking-tight">JournalBud</span>
+          <span className="text-xl font-brand font-black text-[#EAEAEA] tracking-tight">JournalBud</span>
         </Link>
 
         <div className="relative z-10 max-w-md space-y-6">
-           <h1 className="text-4xl lg:text-5xl font-black text-[#E5E7EB] leading-tight">Master your <br/> execution.</h1>
-           <p className="text-[#9CA3AF] text-lg leading-relaxed">
+           <h1 className="text-4xl lg:text-5xl font-black text-[#EAEAEA] leading-tight">Master your <br/> execution.</h1>
+           <p className="text-[#A0A0A0] text-lg leading-relaxed">
              Join thousands of traders building discipline through structured journaling and automated target tracking.
            </p>
            
            {/* Mini App Preview */}
-           <div className="mt-8 bg-[#0B0F14]/50 border border-[#111827] rounded-2xl p-4 shadow-2xl backdrop-blur-md transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+           <div className="mt-8 bg-[#0B0F14]/50 border border-[rgba(212,175,55,0.15)] rounded-2xl p-4 shadow-2xl backdrop-blur-md transform -rotate-2 hover:rotate-0 transition-transform duration-500">
              <div className="flex items-center gap-2 mb-4">
-               <div className="w-8 h-8 rounded-lg bg-[#C9A646]/20 flex items-center justify-center"><Target size={14} className="text-[#C9A646]" /></div>
+               <div className="w-8 h-8 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center"><Target size={14} className="text-[#D4AF37]" /></div>
                <div>
                   <div className="w-16 h-2 bg-zinc-700 rounded-full mb-1" />
                   <div className="w-24 h-2 bg-zinc-800 rounded-full" />
@@ -285,29 +285,29 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
            </div>
         </div>
 
-        <div className="relative z-10 text-[#9CA3AF] text-sm font-medium">
+        <div className="relative z-10 text-[#A0A0A0] text-sm font-medium">
           © 2026 JournalBud Inc. All rights reserved.
         </div>
       </div>
 
       {/* Right Column: Auth Form */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative">
-        <Link href={forceSignup ? "/login" : "/"} className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-[#9CA3AF] hover:text-[#E5E7EB] transition-colors font-bold text-sm">
+        <Link href={forceSignup ? "/login" : "/"} className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm">
           <ChevronLeft size={16} /> Back
         </Link>
 
         <div className="w-full max-w-sm space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="text-center md:text-left space-y-2">
-             <h2 className="text-3xl font-bold text-[#E5E7EB] tracking-tight">
+             <h2 className="text-3xl font-bold text-[#EAEAEA] tracking-tight">
                {mode === "login" ? "Welcome Back" : mode === "signup" ? "Get Started" : mode === "forgot-password" ? "Reset Password" : "Profile Setup"}
              </h2>
-             <p className="text-[#9CA3AF] text-sm">
+             <p className="text-[#A0A0A0] text-sm">
                {mode === "signup" ? (plan === "free" ? "Start your forever free journey" : "7-day free trial included") : mode === "forgot-password" ? "Enter your email to receive a reset link" : "Please enter your details."}
              </p>
           </div>
 
-          {successMsg && <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
-          {fieldErrors.general && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-bold text-center animate-in zoom-in-95">{fieldErrors.general}</div>}
+          {successMsg && <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
+          {fieldErrors.general && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm font-bold text-center animate-in zoom-in-95">{fieldErrors.general}</div>}
 
           <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4" autoComplete="off">
             {mode === "signup" && (
@@ -339,13 +339,13 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                             type="checkbox" 
                             checked={rememberMe} 
                             onChange={(e) => setRememberMe(e.target.checked)} 
-                            className="peer appearance-none w-4 h-4 border border-zinc-700 rounded bg-[#111827] checked:bg-[#C9A646] checked:border-[#C9A646] transition-colors cursor-pointer"
+                            className="peer appearance-none w-4 h-4 border border-zinc-700 rounded bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md checked:bg-[#D4AF37] checked:border-[#D4AF37] transition-colors cursor-pointer"
                           />
                           <CheckCircle2 size={12} className="absolute text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
                         </div>
-                        <span className="text-xs text-[#9CA3AF] group-hover:text-[#E5E7EB] transition-colors select-none font-medium">Remember me</span>
+                        <span className="text-xs text-[#A0A0A0] group-hover:text-[#EAEAEA] transition-colors select-none font-medium">Remember me</span>
                       </label>
-                      <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-[#9CA3AF] hover:text-[#C9A646] transition-colors font-medium">
+                      <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-[#A0A0A0] hover:text-[#D4AF37] transition-colors font-medium">
                         Forgot Password?
                       </button>
                     </div>
@@ -357,11 +357,11 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                 <Input label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} type="password" placeholder="••••••••" error={fieldErrors.confirmPassword} autoComplete="new-password" />
               )}
 
-              <button disabled={loading} type="submit" className="w-full bg-[#C9A646] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
+              <button disabled={loading} type="submit" className="w-full bg-[#D4AF37] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
                 {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? "Sign Up" : mode === "forgot-password" ? "Send Reset Link" : "Finish Setup"}
               </button>
               {mode === "signup" && (
-                 <p className="text-center text-xs text-[#9CA3AF] font-medium mt-3">
+                 <p className="text-center text-xs text-[#A0A0A0] font-medium mt-3">
                    {plan === "free" ? "No credit card required. Always free." : "No credit card required. Trial starts instantly upon verification."}
                  </p>
               )}
@@ -375,7 +375,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                 <div className="flex-grow border-t border-[#111827]"></div>
               </div>
 
-              <button onClick={handleGoogleLogin} className="w-full bg-white/5 border border-[#111827] text-[#E5E7EB] font-bold py-4 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3">
+              <button onClick={handleGoogleLogin} className="w-full bg-white/5 border border-[rgba(212,175,55,0.15)] text-[#EAEAEA] font-bold py-4 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -386,8 +386,8 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
               </button>
 
               <div className="text-center flex flex-col gap-3 group mt-2">
-                 <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-[#9CA3AF] font-medium hover:text-[#E5E7EB] transition-colors">
-                   {mode === "login" ? <>New to JournalBud? <span className="text-[#C9A646] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#C9A646] font-black underline underline-offset-4">Sign In</span></>}
+                 <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-[#A0A0A0] font-medium hover:text-[#EAEAEA] transition-colors">
+                   {mode === "login" ? <>New to JournalBud? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
             </>
@@ -411,11 +411,11 @@ function Input({ label, value, onChange, type, placeholder, error, autofocus = f
           autoFocus={autofocus}
           autoComplete={autoComplete}
           id={`input-${label}`}
-          className={`peer w-full bg-white/5 border rounded-2xl px-4 pt-6 pb-2 text-sm text-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#C9A646]/20 transition-all ${isPassword ? 'pr-12' : ''} ${error ? 'border-red-500/50 focus:border-red-500' : 'border-[#111827] focus:border-[#C9A646]'}`} 
+          className={`peer w-full bg-white/5 border rounded-2xl px-4 pt-6 pb-2 text-sm text-[#EAEAEA] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/20 transition-all ${isPassword ? 'pr-12' : ''} ${error ? 'border-red-500/50 focus:border-red-500' : 'border-[#111827] focus:border-[#D4AF37]'}`} 
         />
         <label 
           htmlFor={`input-${label}`}
-          className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-[#9CA3AF] transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-[#C9A646] peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
+          className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-[#A0A0A0] transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-[#D4AF37] peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
         >
           {label}
         </label>
@@ -423,7 +423,7 @@ function Input({ label, value, onChange, type, placeholder, error, autofocus = f
           <button 
             type="button" 
             onClick={() => setShowPassword(!showPassword)} 
-            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors outline-none focus:outline-none ${error ? 'text-red-500 hover:text-red-400' : 'text-[#9CA3AF] hover:text-[#E5E7EB]'}`}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors outline-none focus:outline-none ${error ? 'text-red-500 hover:text-red-400' : 'text-[#A0A0A0] hover:text-[#EAEAEA]'}`}
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>

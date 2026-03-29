@@ -157,7 +157,7 @@ export default function TargetPage() {
     } else if (now > target.endDate) {
        status = "FAILED_TIME";
        statusLabel = "Expired Missed";
-       colorClass = "text-[#9CA3AF]";
+       colorClass = "text-[#A0A0A0]";
        hexColor = "#71717a";
     } else {
        // Pacing Logic
@@ -220,18 +220,18 @@ export default function TargetPage() {
       {/* Header & Gamification Banner */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#111827] pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#E5E7EB] flex items-center gap-3">
-            <Target className="text-emerald-500" size={32} /> Goals Engine
+          <h1 className="text-3xl font-bold tracking-tight text-[#EAEAEA] flex items-center gap-3">
+            <Target className="text-[#D4AF37]" size={32} /> Goals Engine
           </h1>
-          <p className="text-sm text-[#9CA3AF] mt-1">Where am I? How far am I? Set explicit targets to drive focused behavior.</p>
+          <p className="text-sm text-[#A0A0A0] mt-1">Where am I? How far am I? Set explicit targets to drive focused behavior.</p>
         </div>
         
         {currentStreak > 0 && (
-          <div className="bg-orange-500/10 border border-orange-500/30 px-4 py-2.5 rounded-xl flex items-center gap-3 shadow-[0_0_15px_rgba(249,115,22,0.15)]">
+          <div className="bg-orange-500/10 border border-orange-500/30 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(249,115,22,0.15)]">
              <Medal className="text-orange-400" size={24} />
              <div>
                <p className="text-xs text-orange-400 uppercase font-black tracking-widest">Consistency Badge</p>
-               <p className="text-sm text-[#E5E7EB] font-bold">{currentStreak} Target{currentStreak > 1 ? 's' : ''} Hit String 🔥</p>
+               <p className="text-sm text-[#EAEAEA] font-bold">{currentStreak} Target{currentStreak > 1 ? 's' : ''} Hit String 🔥</p>
              </div>
           </div>
         )}
@@ -241,22 +241,22 @@ export default function TargetPage() {
         
         {/* Left Column: Elite Form */}
         <div className="xl:col-span-1 space-y-6">
-          <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm sticky top-6">
+          <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm sticky top-6">
             
-            <div className="p-5 border-b border-[#111827] bg-[#111827]/50">
+            <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50">
                <h2 className="text-sm font-bold uppercase tracking-wider text-amber-400">Deploy Target</h2>
             </div>
             
             {/* Native Tabs */}
-            <div className="flex bg-[#1F2937] p-1 m-4 rounded-xl shadow-inner mb-0 border border-[#111827]">
+            <div className="flex bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-1 m-4 rounded-2xl shadow-inner mb-0 border border-[rgba(212,175,55,0.15)]">
               {(['daily', 'weekly', 'monthly', 'custom'] as TargetType[]).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`flex-1 py-2 text-xs font-bold transition-all rounded-lg uppercase tracking-wider ${
                     activeTab === tab 
-                      ? 'bg-zinc-800 text-[#E5E7EB] shadow-sm ring-1 ring-white/10' 
-                      : 'text-[#9CA3AF] hover:text-[#E5E7EB]'
+                      ? 'bg-zinc-800 text-[#EAEAEA] shadow-sm ring-1 ring-white/10' 
+                      : 'text-[#A0A0A0] hover:text-[#EAEAEA]'
                   }`}
                 >
                   {tab}
@@ -267,14 +267,14 @@ export default function TargetPage() {
             <form onSubmit={handleCreateTarget} className="p-5 space-y-6">
               
               {activeTab === "custom" && (
-                <div className="space-y-3 p-3 bg-[#1F2937]/50 rounded-xl border border-[#111827] shadow-inner">
+                <div className="space-y-3 p-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
                   <div>
-                    <label className="block text-[10px] uppercase font-bold text-[#9CA3AF] mb-1">Start Date</label>
-                    <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} required className="w-full bg-[#1F2937] border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark" />
+                    <label className="block text-[10px] uppercase font-bold text-[#A0A0A0] mb-1">Start Date</label>
+                    <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} required className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark" />
                   </div>
                   <div>
-                    <label className="block text-[10px] uppercase font-bold text-[#9CA3AF] mb-1">End Date</label>
-                    <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} required className="w-full bg-[#1F2937] border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark" />
+                    <label className="block text-[10px] uppercase font-bold text-[#A0A0A0] mb-1">End Date</label>
+                    <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} required className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark" />
                   </div>
                 </div>
               )}
@@ -286,7 +286,7 @@ export default function TargetPage() {
                   </label>
                   <input 
                     type="number" step="0.01" value={targetValue} onChange={e => setTargetValue(e.target.value)} placeholder="e.g. 500.00" required 
-                    className="w-full bg-[#1F2937] border border-emerald-500/30 rounded-xl p-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none shadow-inner text-amber-400 font-bold placeholder-emerald-900/50"
+                    className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none shadow-inner text-amber-400 font-bold placeholder-emerald-900/50"
                   />
                 </div>
 
@@ -296,13 +296,13 @@ export default function TargetPage() {
                   </label>
                   <input 
                     type="number" step="0.01" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} placeholder="e.g. 150.00 (Optional)" 
-                    className="w-full bg-[#1F2937] border border-red-500/30 rounded-xl p-3 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500/20 focus:outline-none shadow-inner text-red-400 font-bold placeholder-red-900/40"
+                    className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-red-500/30 rounded-2xl p-3 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500/20 focus:outline-none shadow-inner text-red-400 font-bold placeholder-red-900/40"
                   />
-                  <p className="text-[10px] text-[#9CA3AF] mt-1.5 leading-tight">If your actual PnL crosses this negative threshold, the target instantly fails. Prevents revenge trading.</p>
+                  <p className="text-[10px] text-[#A0A0A0] mt-1.5 leading-tight">If your actual PnL crosses this negative threshold, the target instantly fails. Prevents revenge trading.</p>
                 </div>
               </div>
 
-              <button type="submit" disabled={submitting} className="w-full bg-[#111827] border border-[#C9A646]/50 hover:bg-[#C9A646]/10 text-[#C9A646] font-bold tracking-wide py-3.5 rounded-xl transition-all shadow-sm hover:border-[#C9A646] hover:-translate-y-0.5 disabled:opacity-50">
+              <button type="submit" disabled={submitting} className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 text-[#D4AF37] font-bold tracking-wide py-3.5 rounded-2xl transition-all shadow-sm hover:border-[#D4AF37] hover:-translate-y-0.5 disabled:opacity-50">
                 {submitting ? "Engaging..." : "Commit Target"}
               </button>
 
@@ -314,12 +314,12 @@ export default function TargetPage() {
         <div className="xl:col-span-2 space-y-6">
           
           {targets.length === 0 ? (
-            <div className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up p-12 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm h-full min-h-[400px]">
-              <div className="w-20 h-20 bg-[#1F2937]/50 rounded-full flex items-center justify-center mb-4 border border-[#111827] shadow-inner">
+            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up p-12 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm h-full min-h-[400px]">
+              <div className="w-20 h-20 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-full flex items-center justify-center mb-4 border border-[rgba(212,175,55,0.15)] shadow-inner">
                 <Target size={32} className="text-zinc-600" />
               </div>
-              <h3 className="text-lg font-bold text-[#E5E7EB]">No Actionable Targets</h3>
-              <p className="text-sm text-[#9CA3AF] max-w-sm mt-2">
+              <h3 className="text-lg font-bold text-[#EAEAEA]">No Actionable Targets</h3>
+              <p className="text-sm text-[#A0A0A0] max-w-sm mt-2">
                 Targets should drive action. Set a Daily or Weekly goal to the left to activate the behavioral pacing engine.
               </p>
             </div>
@@ -335,10 +335,10 @@ export default function TargetPage() {
                 const circleOffset = circleCircumference - (progressPercentage / 100) * circleCircumference;
 
                 return (
-                  <div key={target.id} className="bg-[#111827] border border-black/10 dark:border-[#111827] fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-6 md:p-8 rounded-3xl relative overflow-hidden group">
-                    <div className="absolute top-4 right-4 bg-[#1F2937]/80 backdrop-blur rounded-lg border border-[#111827] opacity-0 group-hover:opacity-100 transition-opacity flex items-center p-1 z-20">
-                      <button onClick={() => setEditingTarget(target)} className="p-1.5 text-[#9CA3AF] hover:text-blue-400 hover:bg-zinc-800 rounded transition-colors" title="Edit Goal"><Pencil size={14} /></button>
-                      <button onClick={() => handleDelete(target.id)} className="p-1.5 text-[#9CA3AF] hover:text-red-400 hover:bg-zinc-800 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
+                  <div key={target.id} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-6 md:p-8 rounded-3xl relative overflow-hidden group">
+                    <div className="absolute top-4 right-4 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 backdrop-blur rounded-lg border border-[rgba(212,175,55,0.15)] opacity-0 group-hover:opacity-100 transition-opacity flex items-center p-1 z-20">
+                      <button onClick={() => setEditingTarget(target)} className="p-1.5 text-[#A0A0A0] hover:text-blue-400 hover:bg-zinc-800 rounded transition-colors" title="Edit Goal"><Pencil size={14} /></button>
+                      <button onClick={() => handleDelete(target.id)} className="p-1.5 text-[#A0A0A0] hover:text-red-400 hover:bg-zinc-800 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-8 items-center md:items-start relative z-10">
@@ -350,7 +350,7 @@ export default function TargetPage() {
                            <circle cx="70" cy="70" r={circleRadius} stroke={hexColor} strokeWidth="12" fill="transparent" strokeDasharray={circleCircumference} strokeDashoffset={circleOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" style={{ filter: `drop-shadow(0 0 10px ${hexColor}60)` }} />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                           <p className="text-2xl font-black text-[#E5E7EB]">{Math.floor(progressPercentage)}%</p>
+                           <p className="text-2xl font-black text-[#EAEAEA]">{Math.floor(progressPercentage)}%</p>
                            <p className={`text-[10px] font-bold uppercase tracking-widest ${colorClass}`}>{statusLabel}</p>
                         </div>
                       </div>
@@ -360,29 +360,29 @@ export default function TargetPage() {
                          
                          <div>
                            <div className="flex items-center gap-2 mb-1">
-                             <span className="bg-zinc-800 text-[#E5E7EB] text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full">{target.type}</span>
-                             <span className="text-xs text-[#9CA3AF] font-bold flex items-center gap-1"><Clock size={12}/> {timeRemainingStr}</span>
+                             <span className="bg-zinc-800 text-[#EAEAEA] text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full">{target.type}</span>
+                             <span className="text-xs text-[#A0A0A0] font-bold flex items-center gap-1"><Clock size={12}/> {timeRemainingStr}</span>
                            </div>
                            <div className="flex justify-between items-baseline mt-2">
-                             <p className="text-sm text-[#9CA3AF] font-medium">Trajectory Progress</p>
+                             <p className="text-sm text-[#A0A0A0] font-medium">Trajectory Progress</p>
                              <div className="text-right">
-                               <span className={`text-2xl font-bold ${totalPnl >= 0 ? 'text-[#E5E7EB]' : 'text-red-400'}`}>
+                               <span className={`text-2xl font-bold ${totalPnl >= 0 ? 'text-[#EAEAEA]' : 'text-red-400'}`}>
                                  ${totalPnl.toFixed(2)}
                                </span>
-                               <span className="text-[#9CA3AF] font-medium ml-2">/ ${target.targetValue.toFixed(2)}</span>
+                               <span className="text-[#A0A0A0] font-medium ml-2">/ ${target.targetValue.toFixed(2)}</span>
                              </div>
                            </div>
                          </div>
 
                          {target.maxLoss && (
                            <div className="flex items-center justify-between border-t border-[#111827] pt-4">
-                              <span className="text-xs text-[#9CA3AF] font-bold uppercase tracking-wider flex items-center gap-2"><AlertTriangle size={14} className="text-red-500/70" /> Drawdown Limit</span>
+                              <span className="text-xs text-[#A0A0A0] font-bold uppercase tracking-wider flex items-center gap-2"><AlertTriangle size={14} className="text-red-500/70" /> Drawdown Limit</span>
                               <span className="text-sm font-bold text-red-400">-${target.maxLoss.toFixed(2)}</span>
                            </div>
                          )}
                          
                          {/* Intelligent Status Feedback */}
-                         <div className={`p-3 rounded-xl border flex items-center gap-3 ${status === 'PASSED' ? 'bg-emerald-500/10 border-emerald-500/20 text-amber-400' : status === 'AHEAD' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : status === 'BEHIND' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                         <div className={`p-3 rounded-2xl border flex items-center gap-3 ${status === 'PASSED' ? 'bg-emerald-500/10 border-emerald-500/20 text-amber-400' : status === 'AHEAD' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : status === 'BEHIND' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
                             {status === 'PASSED' ? <CheckCircle2 size={18} /> : status === 'AHEAD' ? <TrendingUp size={18} /> : status === 'BEHIND' ? <Hourglass size={18} /> : <XCircle size={18} />}
                             <span className="text-sm font-bold">
                                {status === 'PASSED' ? "Target obliterated! Unstoppable execution." 
@@ -419,21 +419,21 @@ export default function TargetPage() {
               {/* Inactive / History targets */}
               {targets.length > activeTargets.length && (
                 <div className="mt-8 border-t border-[#111827] pt-8">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#9CA3AF] mb-4 px-2">Archived Resolutions</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#A0A0A0] mb-4 px-2">Archived Resolutions</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {targets.filter(t => !activeTargets.includes(t)).map(target => {
                       const { totalPnl, status, hexColor } = evaluateTarget(target);
                       return (
-                        <div key={target.id} className="bg-[#1F2937]/50 border border-[#111827] p-4 rounded-2xl flex justify-between items-center group relative overflow-hidden shadow-inner">
+                        <div key={target.id} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] p-4 rounded-2xl flex justify-between items-center group relative overflow-hidden shadow-inner">
                            <div className="absolute inset-0 flex">
                              <div className="w-1 h-full" style={{ backgroundColor: hexColor }} />
                            </div>
                            <div className="pl-3">
                              <div className="flex items-center gap-2 mb-1">
-                               <span className="text-[10px] font-black uppercase text-[#9CA3AF]">{target.type}</span>
+                               <span className="text-[10px] font-black uppercase text-[#A0A0A0]">{target.type}</span>
                                <span className="text-[10px] text-zinc-600 font-bold">{format(target.startDate, "MMM d")} - {format(target.endDate, "MMM d")}</span>
                              </div>
-                             <p className={`text-sm font-bold ${totalPnl >= 0 ? 'text-[#E5E7EB]' : 'text-red-400/80'}`}>${totalPnl.toFixed(2)} <span className="text-zinc-600 text-xs">/ ${target.targetValue}</span></p>
+                             <p className={`text-sm font-bold ${totalPnl >= 0 ? 'text-[#EAEAEA]' : 'text-red-400/80'}`}>${totalPnl.toFixed(2)} <span className="text-zinc-600 text-xs">/ ${target.targetValue}</span></p>
                            </div>
                            <div className="flex items-center gap-2">
                              <span className="text-[10px] font-bold uppercase py-1 px-2 rounded-lg" style={{ color: hexColor, backgroundColor: `${hexColor}20` }}>{status}</span>
@@ -496,30 +496,30 @@ function EditTargetModal({ target, onClose }: { target: TradingTarget, onClose: 
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
-      <div className="bg-[#111827] border border-[#111827] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between p-4 border-b border-[#111827] bg-[#111827]">
-           <h2 className="text-sm uppercase tracking-widest font-bold text-[#E5E7EB]">Modify Logic</h2>
-           <button onClick={onClose} className="p-1.5 text-[#9CA3AF] hover:text-[#E5E7EB] rounded-md"><X size={18} /></button>
+      <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-4 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md">
+           <h2 className="text-sm uppercase tracking-widest font-bold text-[#EAEAEA]">Modify Logic</h2>
+           <button onClick={onClose} className="p-1.5 text-[#A0A0A0] hover:text-[#EAEAEA] rounded-md"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Target Value ($)</label>
-            <input type="number" step="0.01" value={targetValue} onChange={e => setTargetValue(e.target.value)} required className="w-full bg-[#1F2937] border border-zinc-800 rounded-xl p-2.5 text-sm focus:border-emerald-500 focus:outline-none shadow-inner" />
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#A0A0A0] mb-1">Target Value ($)</label>
+            <input type="number" step="0.01" value={targetValue} onChange={e => setTargetValue(e.target.value)} required className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl p-2.5 text-sm focus:border-emerald-500 focus:outline-none shadow-inner" />
           </div>
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Max Loss Limit ($)</label>
-            <input type="number" step="0.01" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} className="w-full bg-[#1F2937] border border-zinc-800 rounded-xl p-2.5 text-sm focus:border-red-500 focus:outline-none shadow-inner" />
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#A0A0A0] mb-1">Max Loss Limit ($)</label>
+            <input type="number" step="0.01" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl p-2.5 text-sm focus:border-red-500 focus:outline-none shadow-inner" />
           </div>
           <div className="space-y-2 pt-2">
-            <span className="block text-[10px] text-[#9CA3AF] uppercase font-black">Edit Date Bounds</span>
+            <span className="block text-[10px] text-[#A0A0A0] uppercase font-black">Edit Date Bounds</span>
             <div className="flex gap-2">
-              <input type="date" value={startD} onChange={e => setStartD(e.target.value)} required className="w-full bg-[#1F2937] border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 flex-1 color-scheme-dark" />
-              <input type="date" value={endD} onChange={e => setEndD(e.target.value)} required className="w-full bg-[#1F2937] border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 flex-1 color-scheme-dark" />
+              <input type="date" value={startD} onChange={e => setStartD(e.target.value)} required className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 flex-1 color-scheme-dark" />
+              <input type="date" value={endD} onChange={e => setEndD(e.target.value)} required className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 flex-1 color-scheme-dark" />
             </div>
           </div>
           <div className="pt-4 flex justify-end gap-3 mt-4">
-             <button type="button" onClick={onClose} className="px-4 py-2.5 text-xs text-[#9CA3AF] hover:text-[#E5E7EB] rounded-lg font-bold">Abort</button>
-             <button type="submit" disabled={submitting} className="px-5 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-[#E5E7EB] rounded-lg font-bold disabled:opacity-50">Sav{submitting ? "ing..." : "e Params"}</button>
+             <button type="button" onClick={onClose} className="px-4 py-2.5 text-xs text-[#A0A0A0] hover:text-[#EAEAEA] rounded-lg font-bold">Abort</button>
+             <button type="submit" disabled={submitting} className="px-5 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-[#EAEAEA] rounded-lg font-bold disabled:opacity-50">Sav{submitting ? "ing..." : "e Params"}</button>
           </div>
         </form>
       </div>
