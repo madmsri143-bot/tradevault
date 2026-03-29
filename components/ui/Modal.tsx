@@ -42,7 +42,7 @@ export default function Modal({ isOpen, onClose, title, icon, children, maxWidth
         
         {/* Header - Optional */}
         {(title || icon) && (
-          <div className="p-5 border-b border-[#111827] flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 shrink-0 rounded-t-2xl">
+          <div className="p-5 border-b border-[#111827] flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md shrink-0 rounded-t-2xl">
             <div className="flex items-center gap-3">
               {icon && (
                 <div className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center border border-[rgba(212,175,55,0.15)]">

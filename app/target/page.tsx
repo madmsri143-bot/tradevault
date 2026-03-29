@@ -243,7 +243,7 @@ export default function TargetPage() {
         <div className="xl:col-span-1 space-y-6">
           <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm sticky top-6">
             
-            <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50">
+            <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md">
                <h2 className="text-sm font-bold uppercase tracking-wider text-amber-400">Deploy Target</h2>
             </div>
             
@@ -267,7 +267,7 @@ export default function TargetPage() {
             <form onSubmit={handleCreateTarget} className="p-5 space-y-6">
               
               {activeTab === "custom" && (
-                <div className="space-y-3 p-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+                <div className="space-y-3 p-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
                   <div>
                     <label className="block text-[10px] uppercase font-bold text-[#A0A0A0] mb-1">Start Date</label>
                     <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} required className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-lg p-2 text-xs focus:border-emerald-500 focus:outline-none color-scheme-dark" />
@@ -315,7 +315,7 @@ export default function TargetPage() {
           
           {targets.length === 0 ? (
             <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up p-12 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm h-full min-h-[400px]">
-              <div className="w-20 h-20 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-full flex items-center justify-center mb-4 border border-[rgba(212,175,55,0.15)] shadow-inner">
+              <div className="w-20 h-20 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-full flex items-center justify-center mb-4 border border-[rgba(212,175,55,0.15)] shadow-inner">
                 <Target size={32} className="text-zinc-600" />
               </div>
               <h3 className="text-lg font-bold text-[#EAEAEA]">No Actionable Targets</h3>
@@ -336,7 +336,7 @@ export default function TargetPage() {
 
                 return (
                   <div key={target.id} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-6 md:p-8 rounded-3xl relative overflow-hidden group">
-                    <div className="absolute top-4 right-4 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 backdrop-blur rounded-lg border border-[rgba(212,175,55,0.15)] opacity-0 group-hover:opacity-100 transition-opacity flex items-center p-1 z-20">
+                    <div className="absolute top-4 right-4 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md backdrop-blur rounded-lg border border-[rgba(212,175,55,0.15)] opacity-0 group-hover:opacity-100 transition-opacity flex items-center p-1 z-20">
                       <button onClick={() => setEditingTarget(target)} className="p-1.5 text-[#A0A0A0] hover:text-blue-400 hover:bg-zinc-800 rounded transition-colors" title="Edit Goal"><Pencil size={14} /></button>
                       <button onClick={() => handleDelete(target.id)} className="p-1.5 text-[#A0A0A0] hover:text-red-400 hover:bg-zinc-800 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
                     </div>
@@ -424,7 +424,7 @@ export default function TargetPage() {
                     {targets.filter(t => !activeTargets.includes(t)).map(target => {
                       const { totalPnl, status, hexColor } = evaluateTarget(target);
                       return (
-                        <div key={target.id} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] p-4 rounded-2xl flex justify-between items-center group relative overflow-hidden shadow-inner">
+                        <div key={target.id} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-4 rounded-2xl flex justify-between items-center group relative overflow-hidden shadow-inner">
                            <div className="absolute inset-0 flex">
                              <div className="w-1 h-full" style={{ backgroundColor: hexColor }} />
                            </div>

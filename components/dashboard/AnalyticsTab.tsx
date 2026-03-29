@@ -335,25 +335,25 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
             </h2>
             
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
                 <p className="text-xs text-[#A0A0A0] mb-1">Total PnL</p>
                 <p className={`text-xl font-bold ${totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                   {formatCurrency(totalProfit, displayCurrency)}
                 </p>
               </div>
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
                 <p className="text-xs text-[#A0A0A0] mb-1 cursor-help" title="Win Rate (Winning trades / Total trades)">Win Rate</p>
                 <p className="text-xl font-bold text-[#EAEAEA]">{winRate.toFixed(2)}%</p>
               </div>
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
                 <p className="text-xs text-amber-400/80 mb-1">Profit Efficiency</p>
                 <p className="text-xl font-bold text-amber-400">{profitEfficiency.toFixed(2)}%</p>
               </div>
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
                 <p className="text-xs text-[#A0A0A0] mb-1">Total Trades</p>
                 <p className="text-xl font-bold text-[#EAEAEA]">{totalTrades}</p>
               </div>
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] col-span-2">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] col-span-2">
                 <p className="text-xs text-[#A0A0A0] mb-1">Wins / Losses</p>
                 <p className="text-xl font-bold text-[#EAEAEA]">
                   <span className="text-emerald-400">{totalWins}</span>
@@ -469,7 +469,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                 <Flame size={16} className="text-amber-500" /> Consistency Tracking
               </h2>
               <div className="flex flex-col gap-6">
-                <div className="flex justify-between items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+                <div className="flex justify-between items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
                   <span className="text-xs text-[#A0A0A0] font-medium uppercase tracking-wider">Current Streak</span>
                   <div className={`text-2xl font-bold flex items-center gap-2 ${currentStreak > 0 ? "text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]" : "text-[#A0A0A0]"}`}>
                     <span>{currentStreak > 0 ? "🔥" : "❄️"}</span>
@@ -477,7 +477,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] space-y-4">
+                <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-semibold text-[#EAEAEA] flex items-center gap-2.5"><div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"/>Green Days</span>
                     <span className="text-sm font-bold text-emerald-400">{greenDays}</span>
@@ -513,7 +513,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                     const winRateStr = stats.total > 0 ? ((stats.wins / stats.total) * 100).toFixed(0) + '%' : '0%';
 
                     return (
-                      <div key={symbol} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] group transition-colors hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md">
+                      <div key={symbol} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] group transition-colors hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md">
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex flex-col gap-1.5">
                             <div className="flex items-center gap-2">
@@ -565,7 +565,7 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
                <p className="text-xs text-[#A0A0A0] mt-1 font-medium">Tracking your equity curve over time.</p>
             </div>
             
-            <div className="flex items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-1 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+            <div className="flex items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-1 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
                {(["daily", "weekly", "monthly"] as const).map(tf => (
                   <button
                     key={tf}
@@ -581,19 +581,19 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
           {/* Dynamic Summary Stats Panel */}
           {normalizedTrades.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors">
                  <span className="text-[10px] text-[#A0A0A0] font-bold uppercase tracking-wider flex items-center gap-1.5"><TrendingUp size={12}/> Net PnL</span>
                  <span className={`text-xl font-bold ${headerMetrics.totalPnl >= 0 ? "text-emerald-400" : "text-red-400"}`}>{formatCurrency(headerMetrics.totalPnl, displayCurrency)}</span>
               </div>
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 cursor-help hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors" title="Win Rate (Winning trades / Total trades)">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 cursor-help hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors" title="Win Rate (Winning trades / Total trades)">
                  <span className="text-[10px] text-[#A0A0A0] font-bold uppercase tracking-wider flex items-center gap-1.5"><Trophy size={12}/> Win Rate</span>
                  <span className="text-xl font-bold text-[#EAEAEA]">{headerMetrics.winRate.toFixed(1)}%</span>
               </div>
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors">
                  <span className="text-[10px] text-[#A0A0A0] font-bold uppercase tracking-wider flex items-center gap-1.5"><Zap size={12}/> Best Day</span>
                  <span className="text-xl font-bold text-emerald-400">{formatCurrency(headerMetrics.bestDay, displayCurrency)}</span>
               </div>
-              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors">
+              <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] flex flex-col gap-1 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-colors">
                  <span className="text-[10px] text-[#A0A0A0] font-bold uppercase tracking-wider flex items-center gap-1.5"><Calendar size={12}/> Current Streak</span>
                  <span className={`text-xl font-bold ${currentStreak > 0 ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]" : "text-[#A0A0A0]"}`}>{currentStreak} <span className="text-sm font-medium">Day{currentStreak !== 1 ? 's': ''}</span></span>
               </div>

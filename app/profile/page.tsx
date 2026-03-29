@@ -94,7 +94,7 @@ export default function ProfilePage() {
 
       {/* Section: Profile */}
       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
-         <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
+         <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center gap-2">
             <User className="text-blue-500" size={18} />
             <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Public Profile</h3>
          </div>

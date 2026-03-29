@@ -109,7 +109,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
       <div className="relative w-full max-w-5xl bg-[#0B0F14] rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 shrink-0">
+        <div className="flex items-center justify-between p-6 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md shrink-0">
           <div>
             <h2 className="text-xl font-bold text-[#EAEAEA] flex items-center gap-2">
               <Check className="text-emerald-500" /> Detected {trades.length} Trades
@@ -137,7 +137,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
 
             <div className="space-y-3">
               {trades.map((trade, idx) => (
-                <div key={idx} className="grid grid-cols-8 gap-2 items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] p-2 rounded-2xl group hover:border-emerald-500/30 transition-colors">
+                <div key={idx} className="grid grid-cols-8 gap-2 items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-2 rounded-2xl group hover:border-emerald-500/30 transition-colors">
                   
                   <div className="col-span-1">
                     <input 
@@ -232,7 +232,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 shrink-0 flex items-center justify-between">
+        <div className="p-6 border-t border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md shrink-0 flex items-center justify-between">
           <p className="text-xs text-[#A0A0A0] font-medium">* Commission variables are tracked but ignored for net PnL inputs by default.</p>
           <div className="flex gap-3">
             <button 

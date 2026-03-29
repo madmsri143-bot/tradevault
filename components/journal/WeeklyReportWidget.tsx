@@ -150,7 +150,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
   }
 
   return (
-    <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-3xl p-6 relative shadow-inner">
+    <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-3xl p-6 relative shadow-inner">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="font-black text-[#EAEAEA] flex items-center gap-2">
@@ -193,12 +193,12 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
       )}
 
       {loadingCache ? (
-        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-2xl border border-[rgba(212,175,55,0.15)] p-6 flex items-center justify-center gap-3">
+        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] p-6 flex items-center justify-center gap-3">
           <Loader2 size={16} className="animate-spin text-[#A0A0A0]" />
           <p className="text-xs font-bold text-[#A0A0A0] uppercase tracking-widest">Loading report...</p>
         </div>
       ) : !reportData && !loading && !error ? (
-        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-2xl border border-dashed border-[#111827] p-8 text-center text-[#A0A0A0] flex flex-col items-center">
+        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-dashed border-[#111827] p-8 text-center text-[#A0A0A0] flex flex-col items-center">
            {recentEntries.length === 0 ? (
              <>
                <CalendarDays size={24} className="mb-2 opacity-50" />
@@ -213,7 +213,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
            )}
         </div>
       ) : loading ? (
-        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-2xl border border-[rgba(212,175,55,0.15)] p-8 flex flex-col items-center justify-center gap-4 animate-pulse">
+        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] p-8 flex flex-col items-center justify-center gap-4 animate-pulse">
            <div className="relative flex items-center justify-center">
              <div className="w-12 h-12 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
              <BrainCircuit size={20} className="text-[#D4AF37] absolute" />
@@ -252,7 +252,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           </div>
 
           {reportData.generatedAt && (
-            <div className="flex flex-col sm:flex-row items-center justify-between mt-4 p-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+            <div className="flex flex-col sm:flex-row items-center justify-between mt-4 p-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
                <p className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5">
                  <RefreshCw size={10} className="text-zinc-600" /> 
                  Last Updated: {new Date(reportData.generatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}

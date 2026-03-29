@@ -65,7 +65,7 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
   return (
     <>
       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden mt-6">
-        <div className="p-4 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex justify-between items-center">
+        <div className="p-4 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex justify-between items-center">
           <h2 className="text-xl font-semibold text-emerald-400">Trade History</h2>
           {selectedTradeIds.length > 0 && (
              <button onClick={handleDeleteSelected} className="px-3 py-1.5 bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5">
@@ -76,7 +76,7 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
         
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-[#A0A0A0]">
-            <thead className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 text-xs text-[#A0A0A0] uppercase border-b border-[#111827]">
+            <thead className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md text-xs text-[#A0A0A0] uppercase border-b border-[#111827]">
               <tr>
                 <th className="px-4 py-3 font-medium w-10">
                   <input type="checkbox" checked={trades.length > 0 && selectedTradeIds.length === trades.length} onChange={handleSelectAll} className="accent-[#D4AF37] w-3.5 h-3.5 cursor-pointer" />

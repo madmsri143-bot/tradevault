@@ -131,7 +131,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
       <div className="bg-[#0B0F14] border border-[rgba(212,175,55,0.15)] w-full max-w-3xl rounded-[32px] overflow-hidden shadow-2xl relative">
         
         {/* Header */}
-        <div className="p-6 border-b border-[#111827] flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50">
+        <div className="p-6 border-b border-[#111827] flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#D4AF37]/10 rounded-2xl flex items-center justify-center border border-[#D4AF37]/20">
               <Zap size={20} className="text-[#D4AF37]" />

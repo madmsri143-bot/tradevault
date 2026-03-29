@@ -432,7 +432,7 @@ export default function SettingsPage() {
         
         {/* Section: Preferences */}
         <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
-           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
+           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center gap-2">
               <Palette className="text-blue-500" size={18} />
               <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Preferences</h3>
            </div>
@@ -465,7 +465,7 @@ export default function SettingsPage() {
 
          {/* Section: Export Engine */}
          <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
+            <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center gap-2">
                <Download className="text-[#D4AF37]" size={18} />
                <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Export Data</h3>
             </div>
@@ -522,7 +522,7 @@ export default function SettingsPage() {
                  <button 
                    onClick={handleExportCSV}
                    disabled={isExporting}
-                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-[#D4AF37]/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-[#D4AF37]/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
                    <FileText size={28} className="text-[#A0A0A0] group-hover:text-[#D4AF37] transition-colors" />
                    <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export CSV</span>
@@ -531,7 +531,7 @@ export default function SettingsPage() {
                  <button 
                    onClick={handleExportPDF}
                    disabled={isExporting}
-                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-red-500/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-red-500/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
                    <Download size={28} className="text-[#A0A0A0] group-hover:text-red-400 transition-colors" />
                    <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export PDF</span>
@@ -540,7 +540,7 @@ export default function SettingsPage() {
                  <button 
                    onClick={handleExportPPT}
                    disabled={isExporting}
-                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-orange-500/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded-2xl hover:border-orange-500/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
                    <Presentation size={28} className="text-[#A0A0A0] group-hover:text-orange-400 transition-colors" />
                    <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export PPTX</span>
@@ -551,7 +551,7 @@ export default function SettingsPage() {
 
         {/* Section: Security */}
         <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
-           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
+           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center gap-2">
               <Shield className="text-red-500" size={18} />
               <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Security</h3>
            </div>
@@ -645,7 +645,7 @@ export default function SettingsPage() {
 
         {/* Section: App Info */}
         <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
-           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex items-center gap-2">
+           <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center gap-2">
               <Info className="text-purple-500" size={18} />
               <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">App Info</h3>
            </div>

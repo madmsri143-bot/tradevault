@@ -181,7 +181,7 @@ export default function Charts({ trades, displayCurrency = "USD" }: { trades: Tr
           </h3>
           
           {/* View Toggle */}
-          <div className="flex items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-1 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+          <div className="flex items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-1 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
             {(Object.keys(modeLabels) as ChartMode[]).map(mode => {
               const { label, Icon } = modeLabels[mode];
               return (
@@ -203,7 +203,7 @@ export default function Charts({ trades, displayCurrency = "USD" }: { trades: Tr
         </div>
         
         {trades.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center text-[#A0A0A0] text-sm h-[250px] italic bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
+          <div className="flex-1 flex items-center justify-center text-[#A0A0A0] text-sm h-[250px] italic bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-lg border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">
             No data available yet. Start trading to see weekly performance.
           </div>
         ) : (

@@ -129,7 +129,7 @@ export default function SupportWidget() {
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   placeholder="Your Name"
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
                 />
               </div>
               <div>
@@ -140,7 +140,7 @@ export default function SupportWidget() {
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   placeholder="your@email.com"
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
                 />
               </div>
             </div>
@@ -153,7 +153,7 @@ export default function SupportWidget() {
                 value={formData.subject}
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 placeholder="e.g. Need help with integrations"
-                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
               />
             </div>
             
@@ -170,7 +170,7 @@ export default function SupportWidget() {
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
                 placeholder="Describe your issue in detail..."
-                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all resize-none font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all resize-none font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
               />
             </div>
 

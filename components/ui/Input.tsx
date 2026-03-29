@@ -17,7 +17,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           placeholder=" "
           className={cn(
-            "peer w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 border rounded-2xl px-4 pt-6 pb-2 text-sm text-[#EAEAEA] focus:outline-none focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-transparent",
+            "peer w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border rounded-2xl px-4 pt-6 pb-2 text-sm text-[#EAEAEA] focus:outline-none focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-transparent",
             error 
               ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20" 
               : "border-[#111827] focus:border-emerald-500 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md",

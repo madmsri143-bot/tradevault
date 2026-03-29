@@ -359,7 +359,7 @@ export default function JournalPage() {
               
               <div className="space-y-2.5">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-[#A0A0A0]">Emotional Intelligence</label>
-                <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-3 rounded-2xl border border-[rgba(212,175,55,0.15)] space-y-4 shadow-inner">
+                <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-3 rounded-2xl border border-[rgba(212,175,55,0.15)] space-y-4 shadow-inner">
                   <div>
                     <span className="text-[10px] text-[#A0A0A0] mb-2 block">Before Trade</span>
                     <div className="flex flex-wrap gap-2">
@@ -389,7 +389,7 @@ export default function JournalPage() {
                   <label className="text-[11px] font-bold uppercase tracking-wider text-[#A0A0A0]">Mistake Intelligence</label>
                   <span className="text-[9px] text-[#A0A0A0] uppercase tracking-widest bg-white/5 px-1.5 rounded">Multi-select</span>
                 </div>
-                <div className="flex flex-wrap gap-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-3 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+                <div className="flex flex-wrap gap-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-3 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
                   {MISTAKE_TAGS.map(tag => (
                     <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-xs px-2.5 py-1 rounded-full border transition-all ${mistakes.includes(tag) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border-zinc-800 text-[#A0A0A0] hover:border-zinc-700'}`}>
                       {tag}
@@ -464,7 +464,7 @@ export default function JournalPage() {
                       </button>
                     </div>
                   ) : (
-                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[42px] border border-dashed border-zinc-700/50 rounded-2xl bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md hover:border-emerald-500/50 transition-all text-xs text-[#A0A0A0] group shadow-inner">
+                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[42px] border border-dashed border-zinc-700/50 rounded-2xl bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md hover:border-emerald-500/50 transition-all text-xs text-[#A0A0A0] group shadow-inner">
                       <ImagePlus size={14} className="group-hover:text-amber-400 transition-colors" />
                       <span className="font-medium group-hover:text-amber-400 transition-colors">Attach Setup</span>
                       <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
@@ -497,24 +497,24 @@ export default function JournalPage() {
           <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-5 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4 tracking-tight shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
             
-            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
               <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><Activity size={12} className="text-blue-500" /> Trades View</span>
               <p className="text-2xl font-bold text-[#EAEAEA] mt-1">{totalTradesCount}</p>
             </div>
             
-            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
               <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5 cursor-help" title="Win Rate (Winning trades / Total trades)"><TrendingUp size={12} className="text-emerald-500" /> Win Rate</span>
               <p className="text-2xl font-bold text-[#EAEAEA] mt-1">{winRate.toFixed(2)}%</p>
             </div>
             
-            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
               <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><AlertTriangle size={12} className="text-amber-500" /> Top Mistake</span>
               <p className="text-base font-bold text-amber-400 mt-2 truncate">
                 {topMistake ? `${topMistake[0]} (${topMistake[1]})` : "None 🎉"}
               </p>
             </div>
 
-            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
               <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><Flame size={12} className="text-orange-500" /> Discipline Score</span>
               <p className="text-sm font-bold text-[#EAEAEA] mt-2">
                 <span className="text-orange-400 text-lg mr-1">{streakCount}</span> / 7 Days
@@ -555,7 +555,7 @@ export default function JournalPage() {
                     className={`relative min-h-[64px] sm:min-h-[84px] p-1.5 sm:p-2 rounded-2xl flex flex-col items-center justify-start border transition-all ${
                       !isCurrentMonth ? 'opacity-30 pointer-events-none border-transparent bg-transparent' :
                       isSelected ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/50 scale-105 z-10' :
-                      hasEntries ? (isProfit ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' : isLoss ? 'border-red-500/20 bg-red-500/5 hover:border-red-500/50 hover:bg-red-500/10' : 'border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 hover:bg-zinc-800') :
+                      hasEntries ? (isProfit ? 'border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/50 hover:bg-emerald-500/10' : isLoss ? 'border-red-500/20 bg-red-500/5 hover:border-red-500/50 hover:bg-red-500/10' : 'border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md hover:bg-zinc-800') :
                       'border-transparent bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md hover:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border-[#111827] hover:border-[#111827]'
                     }`}
                   >
@@ -611,7 +611,7 @@ export default function JournalPage() {
             <div className="p-6 overflow-y-auto custom-scrollbar relative z-10 space-y-8">
                {(!groupedEntries[selectedDate] || groupedEntries[selectedDate].length === 0) ? (
                   <div className="py-12 flex flex-col items-center justify-center text-center">
-                    <div className="w-16 h-16 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 rounded-full flex items-center justify-center mb-4 border border-[rgba(212,175,55,0.15)] shadow-inner">
+                    <div className="w-16 h-16 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-full flex items-center justify-center mb-4 border border-[rgba(212,175,55,0.15)] shadow-inner">
                       <BookText size={24} className="text-zinc-600" />
                     </div>
                     <p className="text-[#EAEAEA] font-bold mb-1">No Journal Entries</p>
@@ -630,15 +630,15 @@ export default function JournalPage() {
                    <>
                      {/* Daily Summary */}
                      <div className="grid grid-cols-3 gap-3">
-                       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
+                       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
                          <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Total Trades</span>
                          <span className="text-xl font-bold text-[#EAEAEA]">{totalTrades}</span>
                        </div>
-                       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
+                       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
                          <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Win Rate</span>
                          <span className="text-xl font-bold text-amber-400">{dayWinRate.toFixed(0)}%</span>
                        </div>
-                       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
+                       <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
                          <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Net PnL</span>
                          <span className={`text-xl font-bold ${netPnl > 0 ? 'text-amber-400' : netPnl < 0 ? 'text-red-400' : 'text-[#EAEAEA]'}`}>
                            {netPnl > 0 ? '+' : ''}${netPnl}
@@ -649,7 +649,7 @@ export default function JournalPage() {
                      {/* Entries Grouped List */}
                      <div className="space-y-6">
                        {dayEntries.map((e, idx) => (
-                         <div key={e.id} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/80 border border-[rgba(212,175,55,0.15)] rounded-2xl p-5 relative overflow-hidden shadow-inner">
+                         <div key={e.id} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl p-5 relative overflow-hidden shadow-inner">
                            <div className="flex items-center justify-between mb-4 border-b border-[#111827] pb-3">
                              <div className="flex flex-wrap gap-2 items-center">
                                <span className="text-[10px] uppercase font-black text-[#A0A0A0] bg-white/5 px-2 py-0.5 rounded tracking-widest">Entry {idx + 1}</span>
@@ -765,7 +765,7 @@ export default function JournalPage() {
               </div>
               
               {viewingEntry.imageUrl && (
-                <div className="flex-1 rounded-2xl overflow-hidden border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md/50 flex flex-col">
+                <div className="flex-1 rounded-2xl overflow-hidden border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex flex-col">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={viewingEntry.imageUrl} alt="Trading Chart Snapshot" className="w-full h-auto object-contain bg-black/40" />
                   <div className="p-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border-t border-[#111827] flex justify-center">
