@@ -127,7 +127,7 @@ export default function ProfilePage() {
                <div>
                  <p className="text-2xl font-black text-white mb-1 tracking-tight">{currentDisplayName}</p>
                  <p className="text-zinc-500 font-medium">{user?.email}</p>
-                 <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#00FFB2]/10 text-[#00FFB2] text-xs font-bold uppercase tracking-widest">
+                 <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-bold uppercase tracking-widest">
                    Verified
                  </div>
                </div>
@@ -141,7 +141,7 @@ export default function ProfilePage() {
                    value={isEditing ? newName : (user?.displayName || "Trader")}
                    onChange={(e) => setNewName(e.target.value)}
                    readOnly={!isEditing} 
-                   className={`w-full bg-zinc-950 border rounded-xl p-3.5 text-sm transition-colors focus:outline-none ${isEditing ? 'border-zinc-700 text-white focus:border-[#00FFB2]' : 'border-zinc-800 text-zinc-400 cursor-not-allowed'}`}
+                   className={`w-full bg-zinc-950 border rounded-xl p-3.5 text-sm transition-colors focus:outline-none ${isEditing ? 'border-zinc-700 text-white focus:border-[#D4AF37]' : 'border-zinc-800 text-zinc-400 cursor-not-allowed'}`}
                  />
                </div>
                <div>
@@ -162,7 +162,7 @@ export default function ProfilePage() {
                    <button 
                      onClick={handleSave} 
                      disabled={isSaving}
-                     className="px-6 py-2.5 bg-[#00FFB2] hover:bg-[#00e09d] text-zinc-950 text-sm font-bold rounded-xl transition-all shadow hover:shadow-lg flex items-center gap-2 disabled:opacity-50"
+                     className="px-6 py-2.5 bg-[#D4AF37] hover:bg-[#00e09d] text-zinc-950 text-sm font-bold rounded-xl transition-all shadow hover:shadow-lg flex items-center gap-2 disabled:opacity-50"
                    >
                      {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
                      Save Changes

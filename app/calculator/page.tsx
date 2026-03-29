@@ -67,7 +67,7 @@ function FloatingInput({ label, value, onChange, type = "number", placeholder = 
       />
       <label 
         htmlFor={`input-${label.replace(/[\s/()]+/g, '-')}`}
-        className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-emerald-400 peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
+        className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-amber-400 peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
       >
         {label}
       </label>
@@ -89,11 +89,11 @@ function FloatingSelect({ label, value, onChange, options }: any) {
       </select>
       <label 
         htmlFor={`select-${label.replace(/[\s/()]+/g, '-')}`}
-        className="absolute left-4 top-4 text-[10px] -translate-y-2.5 font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:text-emerald-400 pointer-events-none"
+        className="absolute left-4 top-4 text-[10px] -translate-y-2.5 font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:text-amber-400 pointer-events-none"
       >
         {label}
       </label>
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500 group-hover:text-emerald-400 transition-colors">
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500 group-hover:text-amber-400 transition-colors">
         <ChevronDown size={14} />
       </div>
     </div>
@@ -118,7 +118,7 @@ export default function CalculatorPage() {
     <div className="space-y-8 animate-in fade-in duration-700 max-w-5xl mx-auto pb-20 mt-4 px-4 sm:px-0">
       <div className="text-center sm:text-left flex flex-col sm:flex-row items-center gap-6 mb-8 border-b border-white/5 pb-6 group">
         <div className="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.15)] group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.25)] transition-all duration-500">
-          <CalcIcon className="text-emerald-400" size={32} />
+          <CalcIcon className="text-amber-400" size={32} />
         </div>
         <div>
           <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-white mb-2">Trading Calculators</h1>
@@ -133,7 +133,7 @@ export default function CalculatorPage() {
             onClick={() => setActiveTab(t.id)}
             className={`relative flex items-center gap-2.5 px-4 sm:px-6 py-4 text-sm font-bold transition-all whitespace-nowrap group ${
               activeTab === t.id
-                ? "text-emerald-400"
+                ? "text-amber-400"
                 : "text-zinc-500 hover:text-white"
             }`}
           >
@@ -243,7 +243,7 @@ function PnLCalculator() {
           <div className="p-6 rounded-2xl bg-black/20 border border-white/5 relative overflow-hidden group hover:border-white/10 transition-colors">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10 text-xs font-black uppercase tracking-widest text-zinc-500 mb-2">{getUnitName(instrument)} Output</div>
-            <div className={`relative z-10 text-3xl font-black flex items-baseline gap-1.5 ${result.diffAmount >= 0 ? "text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.2)]" : "text-red-400 drop-shadow-[0_0_15px_rgba(248,113,113,0.2)]"}`}>
+            <div className={`relative z-10 text-3xl font-black flex items-baseline gap-1.5 ${result.diffAmount >= 0 ? "text-amber-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.2)]" : "text-red-400 drop-shadow-[0_0_15px_rgba(248,113,113,0.2)]"}`}>
               {result.diffAmount >= 0 ? "+" : ""}{result.diffAmount.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 5 })}
               <span className="text-sm opacity-50 font-bold uppercase tracking-widest">{getUnitName(instrument)}</span>
             </div>
@@ -252,7 +252,7 @@ function PnLCalculator() {
           <div className={`p-6 rounded-2xl border flex flex-col justify-center relative overflow-hidden group ${result.pnl >= 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-red-500/10 border-red-500/30"}`}>
             <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${result.pnl >= 0 ? "from-emerald-500/20 to-transparent" : "from-red-500/20 to-transparent"}`} />
             <div className="relative z-10 text-xs font-black uppercase tracking-widest mb-2 opacity-60 text-white">{result.pnl >= 0 ? "Profit" : "Loss"}</div>
-            <div className={`relative z-10 text-4xl lg:text-5xl font-black ${result.pnl >= 0 ? "text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.4)]" : "text-red-400 drop-shadow-[0_0_20px_rgba(248,113,113,0.4)]"}`}>
+            <div className={`relative z-10 text-4xl lg:text-5xl font-black ${result.pnl >= 0 ? "text-amber-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.4)]" : "text-red-400 drop-shadow-[0_0_20px_rgba(248,113,113,0.4)]"}`}>
               {result.pnl >= 0 ? "+" : ""}{formatMoney(result.pnl)}
             </div>
           </div>
@@ -332,7 +332,7 @@ function LotSizeCalculator() {
           <div className="p-6 rounded-2xl border bg-emerald-500/10 border-emerald-500/30 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10 text-xs font-black uppercase tracking-widest text-emerald-500/70 mb-2">Suggested Lot Size</div>
-            <div className="relative z-10 text-4xl lg:text-5xl font-black text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.4)]">
+            <div className="relative z-10 text-4xl lg:text-5xl font-black text-amber-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.4)]">
               {result.lot.toFixed(4)}
             </div>
           </div>
@@ -413,14 +413,14 @@ function PipValueCalculator() {
           <div className="p-6 rounded-2xl bg-black/20 border border-white/5 relative overflow-hidden group hover:border-white/10 transition-colors">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10 text-xs font-black uppercase tracking-widest text-zinc-500 mb-2">{unitName} Movement</div>
-            <div className="relative z-10 text-3xl font-black text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.2)] flex items-baseline gap-1.5">
+            <div className="relative z-10 text-3xl font-black text-amber-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.2)] flex items-baseline gap-1.5">
               {result.pips.toFixed(1)} <span className="text-sm opacity-50 font-bold uppercase tracking-widest">{unitName}</span>
             </div>
           </div>
           <div className="p-6 rounded-2xl border bg-emerald-500/10 border-emerald-500/30 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative z-10 text-xs font-black uppercase tracking-widest text-emerald-500/70 mb-2">Absolute Value ($)</div>
-            <div className="relative z-10 text-4xl lg:text-5xl font-black text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.4)]">
+            <div className="relative z-10 text-4xl lg:text-5xl font-black text-amber-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.4)]">
               {formatMoney(result.profit)}
             </div>
           </div>
@@ -543,13 +543,13 @@ function CombinedCalculator() {
           <div className={`p-5 rounded-2xl border flex flex-col justify-center relative overflow-hidden group md:col-span-2 lg:col-span-1 ${result.pnl >= 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-red-500/10 border-red-500/30"}`}>
              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
              <div className="relative z-10 text-[10px] font-black uppercase tracking-widest text-white/50 mb-1">Est PnL</div>
-             <div className={`relative z-10 text-3xl font-black ${result.pnl >= 0 ? "text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]" : "text-red-400 drop-shadow-[0_0_15px_rgba(248,113,113,0.3)]"}`}>
+             <div className={`relative z-10 text-3xl font-black ${result.pnl >= 0 ? "text-amber-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]" : "text-red-400 drop-shadow-[0_0_15px_rgba(248,113,113,0.3)]"}`}>
                {result.pnl >= 0 ? "+" : ""}{formatMoney(result.pnl)}
              </div>
           </div>
           <div className="p-5 rounded-2xl bg-black/20 border border-white/5 relative overflow-hidden group hover:border-white/10 transition-colors">
              <div className="relative z-10 text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">{getUnitName(instrument)} Gained</div>
-             <div className={`relative z-10 text-2xl font-black flex items-baseline gap-1 ${result.unitGained >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+             <div className={`relative z-10 text-2xl font-black flex items-baseline gap-1 ${result.unitGained >= 0 ? "text-amber-400" : "text-red-400"}`}>
                {result.unitGained.toFixed(2)}
                <span className="text-[10px] opacity-50 font-bold uppercase">{getUnitName(instrument)}</span>
              </div>

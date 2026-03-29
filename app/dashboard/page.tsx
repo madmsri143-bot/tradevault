@@ -121,7 +121,7 @@ export default function DashboardPage() {
           <select
             value={displayCurrency}
             onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-            className="bg-zinc-950 border border-zinc-800 text-emerald-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
+            className="bg-zinc-950 border border-zinc-800 text-amber-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
           >
             <option value="USD">USD ($)</option>
             <option value="EUR">EUR (€)</option>
@@ -138,7 +138,7 @@ export default function DashboardPage() {
               key={t}
               onClick={() => setActiveTab(t as any)}
               className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
-                activeTab === t ? 'bg-zinc-800 text-[#00FFB2] shadow-sm' : 'text-zinc-500 hover:text-white'
+                activeTab === t ? 'bg-zinc-800 text-[#D4AF37] shadow-sm' : 'text-zinc-500 hover:text-white'
               }`}
             >
               {t === "history" ? "Trade History" : t}
@@ -153,14 +153,14 @@ export default function DashboardPage() {
               type="date" 
               value={dateRange.from} 
               onChange={e => setDateRange({...dateRange, from: e.target.value})} 
-              className="bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#00FFB2]" 
+              className="bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37]" 
             />
             <span className="text-zinc-500 text-xs font-medium">to</span>
             <input 
               type="date" 
               value={dateRange.to} 
               onChange={e => setDateRange({...dateRange, to: e.target.value})} 
-              className="bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#00FFB2]" 
+              className="bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37]" 
             />
             {(dateRange.from || dateRange.to) && (
               <button onClick={() => setDateRange({from: "", to: ""})} className="text-xs text-zinc-400 hover:text-white px-2">Clear</button>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
               {!isTradeModalOpen && (
                 <button 
                   onClick={() => setIsTradeModalOpen(true)}
-                  className="bg-emerald-500 hover:bg-emerald-400 text-black p-4 rounded-full shadow-[0_4px_20px_rgba(16,185,129,0.4)] hover:shadow-[0_4px_30px_rgba(16,185,129,0.6)] active:scale-90 hover:scale-[1.05] hover:-translate-y-1 transition-all group flex items-center justify-center relative z-20"
+                  className="bg-emerald-500 hover:bg-amber-400 text-black p-4 rounded-full shadow-[0_4px_20px_rgba(16,185,129,0.4)] hover:shadow-[0_4px_30px_rgba(16,185,129,0.6)] active:scale-90 hover:scale-[1.05] hover:-translate-y-1 transition-all group flex items-center justify-center relative z-20"
                 >
                   <Plus size={26} className="transition-transform group-hover:rotate-90 duration-300" />
                   <span className="absolute left-full ml-4 bg-zinc-800/90 backdrop-blur-md text-white text-sm font-bold px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-xl border border-white/10">
@@ -234,13 +234,13 @@ export default function DashboardPage() {
               </div>
               {/* Center overlay */}
               <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#00FFB2]/15 p-10 rounded-[28px] max-w-md text-center space-y-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] animate-in zoom-in-95 duration-300">
+                <div className="bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#D4AF37]/15 p-10 rounded-[28px] max-w-md text-center space-y-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] animate-in zoom-in-95 duration-300">
                   <div className="text-4xl">🔒</div>
                   <div className="space-y-2">
                     <h3 className="text-xl font-bold text-white tracking-tight">Analytics Disabled</h3>
                     <p className="text-zinc-500 text-sm leading-relaxed">Upgrade to access advanced trading insights</p>
                   </div>
-                  <button onClick={() => window.location.href = '/billing'} className="w-full bg-[#00FFB2] text-black font-black py-3.5 rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all text-sm">
+                  <button onClick={() => window.location.href = '/billing'} className="w-full bg-[#D4AF37] text-black font-black py-3.5 rounded-2xl hover:shadow-[0_0_20px_rgba(0,255,178,0.4)] transition-all text-sm">
                     Upgrade to Professional
                   </button>
                 </div>

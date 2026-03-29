@@ -141,7 +141,7 @@ export default function TargetPage() {
 
     let status = "IN PROGRESS";
     let statusLabel = "On Track";
-    let colorClass = "text-emerald-400";
+    let colorClass = "text-amber-400";
     let hexColor = "#34d399";
     
     if (target.maxLoss && totalPnl <= -target.maxLoss) {
@@ -244,7 +244,7 @@ export default function TargetPage() {
           <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm sticky top-6">
             
             <div className="p-5 border-b border-white/5 bg-zinc-900/50">
-               <h2 className="text-sm font-bold uppercase tracking-wider text-emerald-400">Deploy Target</h2>
+               <h2 className="text-sm font-bold uppercase tracking-wider text-amber-400">Deploy Target</h2>
             </div>
             
             {/* Native Tabs */}
@@ -286,7 +286,7 @@ export default function TargetPage() {
                   </label>
                   <input 
                     type="number" step="0.01" value={targetValue} onChange={e => setTargetValue(e.target.value)} placeholder="e.g. 500.00" required 
-                    className="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none shadow-inner text-emerald-400 font-bold placeholder-emerald-900/50"
+                    className="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 focus:outline-none shadow-inner text-amber-400 font-bold placeholder-emerald-900/50"
                   />
                 </div>
 
@@ -382,7 +382,7 @@ export default function TargetPage() {
                          )}
                          
                          {/* Intelligent Status Feedback */}
-                         <div className={`p-3 rounded-xl border flex items-center gap-3 ${status === 'PASSED' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : status === 'AHEAD' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : status === 'BEHIND' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                         <div className={`p-3 rounded-xl border flex items-center gap-3 ${status === 'PASSED' ? 'bg-emerald-500/10 border-emerald-500/20 text-amber-400' : status === 'AHEAD' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : status === 'BEHIND' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
                             {status === 'PASSED' ? <CheckCircle2 size={18} /> : status === 'AHEAD' ? <TrendingUp size={18} /> : status === 'BEHIND' ? <Hourglass size={18} /> : <XCircle size={18} />}
                             <span className="text-sm font-bold">
                                {status === 'PASSED' ? "Target obliterated! Unstoppable execution." 

@@ -82,10 +82,10 @@ function AIStatusLine({ lines }: { lines: string[] }) {
   }, [text, typing, idx, lines]);
 
   return (
-    <div className="flex items-center gap-2 font-mono text-xs md:text-sm text-[#00FFB2]/80 min-h-[1.5em]">
-      <span className="w-1.5 h-1.5 rounded-full bg-[#00FFB2] animate-pulse shrink-0" />
+    <div className="flex items-center gap-2 font-mono text-xs md:text-sm text-[#D4AF37]/80 min-h-[1.5em]">
+      <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse shrink-0" />
       <span>{text}</span>
-      <span className="animate-blink text-[#00FFB2]">▊</span>
+      <span className="animate-blink text-[#D4AF37]">▊</span>
     </div>
   );
 }
@@ -99,11 +99,11 @@ function ChatBubble({ sender, message, delay = "0ms", variant = "default" }: {
   const isAI = variant === "ai";
   return (
     <div className="animate-chat-bubble" style={{ animationDelay: delay }}>
-      <p className={`text-[10px] uppercase tracking-widest font-bold mb-1.5 ${isAI ? "text-[#00FFB2]" : "text-zinc-500"}`}>
+      <p className={`text-[10px] uppercase tracking-widest font-bold mb-1.5 ${isAI ? "text-[#D4AF37]" : "text-zinc-500"}`}>
         {sender}
       </p>
       <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed max-w-xs ${isAI
-        ? "bg-[#00FFB2]/10 border border-[#00FFB2]/20 text-zinc-200"
+        ? "bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-zinc-200"
         : "bg-white/5 border border-white/10 text-zinc-400"}`}>
         {message}
       </div>
@@ -158,7 +158,7 @@ export default function LandingPage() {
   if (loading || user) return <div className="min-h-screen bg-[#0B0F14]" />;
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-white selection:bg-[#00FFB2]/30 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0B0F14] text-white selection:bg-[#D4AF37]/30 overflow-x-hidden">
 
       {/* ── DYNAMIC BACKGROUND ── */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -198,7 +198,7 @@ export default function LandingPage() {
             Login
           </Link>
           <Link href={ctaHref}
-            className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#D4AF37] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all duration-300">
+            className="bg-[#D4AF37] text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#D4AF37] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all duration-300">
             Get Started
           </Link>
         </div>
@@ -310,7 +310,7 @@ export default function LandingPage() {
                 const colors: Record<string, string> = {
                   purple: "from-purple-500/10 to-purple-500/5 border-purple-500/15 text-purple-400",
                   amber: "from-amber-500/10 to-amber-500/5 border-amber-500/15 text-amber-400",
-                  emerald: "from-[#00FFB2]/10 to-[#00FFB2]/5 border-[#00FFB2]/15 text-[#00FFB2]",
+                  emerald: "from-[#D4AF37]/10 to-[#D4AF37]/5 border-[#D4AF37]/15 text-[#D4AF37]",
                   blue: "from-blue-500/10 to-blue-500/5 border-blue-500/15 text-blue-400",
                 };
                 return (
@@ -372,8 +372,8 @@ export default function LandingPage() {
                         { icon: Cpu, label: "Paste" },
                       ].map((f, i) => (
                         <div key={i} className="flex flex-col items-center gap-1.5">
-                          <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-500 ${mockStep >= 1 ? "bg-[#3B82F6]/15 border border-[#3B82F6]/30" : "bg-white/5 border border-white/10"}`}>
-                            <f.icon size={18} className={mockStep >= 1 ? "text-[#3B82F6]" : "text-zinc-500"} />
+                          <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-500 ${mockStep >= 1 ? "bg-[#D4AF37]/15 border border-[#D4AF37]/30" : "bg-white/5 border border-white/10"}`}>
+                            <f.icon size={18} className={mockStep >= 1 ? "text-[#D4AF37]" : "text-zinc-500"} />
                           </div>
                           <span className="text-[9px] font-bold text-zinc-600 uppercase">{f.label}</span>
                         </div>
@@ -382,11 +382,11 @@ export default function LandingPage() {
 
                     {/* Status indicator */}
                     <div className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-700 ${mockStep === 0 ? "bg-white/5 border-2 border-dashed border-white/10" :
-                        mockStep === 1 ? "bg-[#3B82F6]/15 border-2 border-[#3B82F6]/40 animate-pulse" :
-                          "bg-[#00FFB2]/15 border-2 border-[#00FFB2]/40"}`}>
+                        mockStep === 1 ? "bg-[#D4AF37]/15 border-2 border-[#D4AF37]/40 animate-pulse" :
+                          "bg-[#D4AF37]/15 border-2 border-[#D4AF37]/40"}`}>
                       {mockStep === 0 ? <Upload size={32} className="text-zinc-500" /> :
-                        mockStep === 1 ? <ScanLine size={32} className="text-[#3B82F6]" /> :
-                          <Check size={32} className="text-[#00FFB2]" />}
+                        mockStep === 1 ? <ScanLine size={32} className="text-[#D4AF37]" /> :
+                          <Check size={32} className="text-[#D4AF37]" />}
                     </div>
 
                     <p className="text-xs font-bold uppercase tracking-[0.15em] text-zinc-500 mt-4">
@@ -395,14 +395,14 @@ export default function LandingPage() {
 
                     {/* Scan line */}
                     {mockStep === 1 && (
-                      <div className="absolute top-0 left-0 w-full h-[2px] bg-[#3B82F6] shadow-[0_0_20px_#3B82F6] animate-[scan_1.8s_ease-in-out_infinite]" />
+                      <div className="absolute top-0 left-0 w-full h-[2px] bg-[#D4AF37] shadow-[0_0_20px_#D4AF37] animate-[scan_1.8s_ease-in-out_infinite]" />
                     )}
                   </div>
 
                   {/* Right: Auto-filled form */}
                   <div className="md:w-1/2 p-6 md:p-8 flex flex-col">
                     <div className="flex items-center justify-between mb-5">
-                      <h3 className="font-bold text-sm text-[#00FFB2] flex items-center gap-2">
+                      <h3 className="font-bold text-sm text-[#D4AF37] flex items-center gap-2">
                         <Sparkles size={14} /> Log New Trade
                       </h3>
                       <X size={14} className="text-zinc-700" />
@@ -422,7 +422,7 @@ export default function LandingPage() {
                               : "border-white/5"}`}
                             style={{ transitionDelay: `${i * 100}ms` }}>
                             {mockStep >= 2 && (
-                              <span className={`text-xs font-bold ${field.color === "red" ? "text-red-400" : field.color === "emerald" ? "text-emerald-400" : "text-white"}`}>
+                              <span className={`text-xs font-bold ${field.color === "red" ? "text-red-400" : field.color === "emerald" ? "text-amber-400" : "text-white"}`}>
                                 {field.value}
                               </span>
                             )}
@@ -432,7 +432,7 @@ export default function LandingPage() {
                     </div>
 
                     <div className={`mt-5 w-full h-10 rounded-xl flex items-center justify-center font-bold text-xs transition-all duration-500 ${mockStep >= 2
-                        ? "bg-[#00FFB2] text-black shadow-[0_0_20px_rgba(0,255,178,0.2)]"
+                        ? "bg-[#D4AF37] text-black shadow-[0_0_20px_rgba(0,255,178,0.2)]"
                         : "bg-zinc-800/50 text-zinc-600"}`}>
                       {mockStep >= 3 ? "✓ Trade Saved" : "Save Trade"}
                     </div>
@@ -452,7 +452,7 @@ export default function LandingPage() {
           <div className="reveal text-center mb-20">
             <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
               Raw Trades →<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFB2] to-teal-300">Real Awareness</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-300">Real Awareness</span>
             </h2>
             <p className="text-zinc-400 text-lg mt-4 max-w-lg mx-auto">
               Your past becomes insight. Every trade builds a smarter picture.
@@ -462,8 +462,8 @@ export default function LandingPage() {
           {/* Dashboard-like metrics */}
           <div className="reveal grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {[
-              { label: "Win Rate", value: "70.5%", sub: "+5.2% vs last month", color: "#00FFB2" },
-              { label: "Profit Factor", value: "2.41", sub: "Above breakeven", color: "#3B82F6" },
+              { label: "Win Rate", value: "70.5%", sub: "+5.2% vs last month", color: "#D4AF37" },
+              { label: "Profit Factor", value: "2.41", sub: "Above breakeven", color: "#D4AF37" },
               { label: "Avg R:R", value: "1:2.8", sub: "Improving steadily", color: "#A855F7" },
               { label: "Discipline Score", value: "82/100", sub: "Top 15% of traders", color: "#F59E0B" },
             ].map((m, i) => (
@@ -481,7 +481,7 @@ export default function LandingPage() {
             <div className="lg:col-span-2 bg-[#11161D]/60 backdrop-blur-sm border border-white/5 rounded-2xl p-6 relative overflow-hidden group hover:border-white/10 transition-all">
               <div className="flex items-center justify-between mb-6">
                 <h4 className="text-sm font-bold text-zinc-300">PnL Curve</h4>
-                <span className="text-[10px] font-bold text-[#00FFB2] bg-[#00FFB2]/10 px-2 py-1 rounded-lg">+$2,847.30</span>
+                <span className="text-[10px] font-bold text-[#D4AF37] bg-[#D4AF37]/10 px-2 py-1 rounded-lg">+$2,847.30</span>
               </div>
               {/* Simplified chart visualization */}
               <div className="flex items-end gap-1 h-32">
@@ -503,8 +503,8 @@ export default function LandingPage() {
               <h4 className="text-sm font-bold text-zinc-300 mb-5">Emotional States</h4>
               <div className="space-y-4">
                 {[
-                  { emotion: "Confident", pct: 45, color: "#00FFB2" },
-                  { emotion: "Calm", pct: 25, color: "#3B82F6" },
+                  { emotion: "Confident", pct: 45, color: "#D4AF37" },
+                  { emotion: "Calm", pct: 25, color: "#D4AF37" },
                   { emotion: "Anxious", pct: 18, color: "#F59E0B" },
                   { emotion: "Frustrated", pct: 12, color: "#EF4444" },
                 ].map((e, i) => (
@@ -533,33 +533,33 @@ export default function LandingPage() {
           <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left: Copy */}
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#00FFB2]/8 border border-[#00FFB2]/15 text-[#00FFB2] text-[11px] font-bold uppercase tracking-[0.15em]">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/8 border border-[#D4AF37]/15 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em]">
                 <Brain size={14} /> Big Selling Point
               </div>
               <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
                 Your Week,<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FFB2] to-emerald-300">Explained by AI</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-300">Explained by AI</span>
               </h2>
               <p className="text-zinc-400 text-base leading-relaxed max-w-md">
                 Every week, JournalBud generates a comprehensive strategy report analyzing your
                 trades, mistakes, emotional patterns, and gives you a concrete plan to improve.
               </p>
               <Link href={ctaHref}
-                className="inline-flex items-center gap-2 text-sm font-bold text-[#00FFB2] hover:underline group">
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#D4AF37] hover:underline group">
                 See your first report <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
             {/* Right: Report mockup */}
             <div className="reveal relative">
-              <div className="absolute -inset-4 bg-[#00FFB2]/5 blur-3xl rounded-full" />
+              <div className="absolute -inset-4 bg-[#D4AF37]/5 blur-3xl rounded-full" />
               <div className="relative bg-[#11161D]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl space-y-5">
                 <div className="flex items-center justify-between pb-4 border-b border-white/5">
                   <div>
                     <h4 className="font-bold text-white text-sm">Weekly AI Report</h4>
                     <p className="text-[11px] text-zinc-500 mt-0.5">Mar 17 — Mar 23, 2026</p>
                   </div>
-                    <BrainCircuit size={18} className="text-[#00FFB2] animate-pulse" />
+                    <BrainCircuit size={18} className="text-[#D4AF37] animate-pulse" />
                 </div>
 
                 {/* Report items */}
@@ -575,8 +575,8 @@ export default function LandingPage() {
                   </div>
 
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 shrink-0 rounded-lg bg-[#00FFB2]/10 border border-[#00FFB2]/20 flex items-center justify-center">
-                      <Target size={14} className="text-[#00FFB2]" />
+                    <div className="w-8 h-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/20 flex items-center justify-center">
+                      <Target size={14} className="text-[#D4AF37]" />
                     </div>
                     <div>
                       <p className="text-xs font-bold text-white">Advice: Stick to Your Plan</p>
@@ -752,8 +752,8 @@ export default function LandingPage() {
 
           <div className="reveal grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              { text: "You trade better after 2PM. Consider focusing your sessions.", icon: Clock, color: "#00FFB2" },
-              { text: "After 2 consecutive losses, take a 30-minute break. It works.", icon: Shield, color: "#3B82F6" },
+              { text: "You trade better after 2PM. Consider focusing your sessions.", icon: Clock, color: "#D4AF37" },
+              { text: "After 2 consecutive losses, take a 30-minute break. It works.", icon: Shield, color: "#D4AF37" },
               { text: "Your win rate on XAUUSD is 82%. It's your strongest pair.", icon: Star, color: "#F59E0B" },
             ].map((tip, i) => (
               <div key={i}
@@ -810,7 +810,7 @@ export default function LandingPage() {
       <footer className="border-t border-white/5 py-12 px-6 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#00FFB2] to-emerald-400 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#D4AF37] to-amber-400 flex items-center justify-center">
               <LineChart size={14} className="text-black" />
             </div>
             <span className="text-sm font-brand font-bold text-zinc-400">JournalBud</span>
@@ -833,7 +833,7 @@ export default function LandingPage() {
 function PricingTier({ feature, pro = false }: { feature: string; pro?: boolean }) {
   return (
     <li className="flex items-center gap-3">
-      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${pro ? "bg-[#00FFB2]/20 text-[#00FFB2]" : "bg-zinc-800 text-zinc-500"}`}>
+      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${pro ? "bg-[#D4AF37]/20 text-[#D4AF37]" : "bg-zinc-800 text-zinc-500"}`}>
         <Check size={14} strokeWidth={3} />
       </div>
       <span className={`text-sm ${pro ? "text-zinc-200 font-bold" : "text-zinc-400"}`}>{feature}</span>

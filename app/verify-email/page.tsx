@@ -95,7 +95,7 @@ export default function VerifyEmailPage() {
           <h2 className="text-2xl font-black tracking-tight text-white">Check your inbox</h2>
           <p className="text-zinc-400 leading-relaxed text-sm">
             We've sent a verification link to <br/>
-            <span className="font-bold text-emerald-400 mt-1 block">{displayEmail}</span>
+            <span className="font-bold text-amber-400 mt-1 block">{displayEmail}</span>
           </p>
           <div className="space-y-2 text-xs text-zinc-500 pt-2">
             <p>If you don’t see the email, please check your spam or promotions folder.</p>
@@ -107,7 +107,7 @@ export default function VerifyEmailPage() {
           <button 
             onClick={handleCheckVerification}
             disabled={verifyLoading}
-            className="w-full bg-[#00FFB2] hover:bg-[#00FFB2]/90 text-black font-black py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,255,178,0.2)] disabled:opacity-50"
+            className="w-full bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-black font-black py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,255,178,0.2)] disabled:opacity-50"
           >
             {verifyLoading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle size={18} />}
             I've verified, continue

@@ -466,7 +466,7 @@ export default function SettingsPage() {
          {/* Section: Export Engine */}
          <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none rounded-2xl overflow-hidden shadow-sm">
             <div className="p-5 border-b border-white/5 bg-zinc-900/50 flex items-center gap-2">
-               <Download className="text-[#00FFB2]" size={18} />
+               <Download className="text-[#D4AF37]" size={18} />
                <h3 className="text-sm font-bold uppercase tracking-wider text-white">Export Data</h3>
             </div>
             <div className="p-6">
@@ -477,8 +477,8 @@ export default function SettingsPage() {
                <div className="mb-6 space-y-4">
                  <div className="flex flex-col gap-3 p-4 bg-black/20 rounded-xl border border-white/5">
                    <label className="flex items-center gap-3 cursor-pointer group w-fit">
-                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'all' ? 'border-[#00FFB2] bg-[#00FFB2]/20' : 'border-zinc-700 bg-zinc-900 group-hover:border-zinc-500'}`}>
-                       {exportMode === 'all' && <div className="w-2.5 h-2.5 rounded-full bg-[#00FFB2]" />}
+                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'all' ? 'border-[#D4AF37] bg-[#D4AF37]/20' : 'border-zinc-700 bg-zinc-900 group-hover:border-zinc-500'}`}>
+                       {exportMode === 'all' && <div className="w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />}
                      </div>
                      <span className={`text-sm font-bold select-none ${exportMode === 'all' ? 'text-white' : 'text-zinc-400'}`}>Entire History</span>
                      <input type="radio" className="hidden" checked={exportMode === 'all'} onChange={() => setExportMode('all')} />
@@ -513,7 +513,7 @@ export default function SettingsPage() {
                </div>
                
                {isExporting && (
-                 <div className="mb-4 flex items-center gap-2 text-xs font-bold text-[#00FFB2] bg-[#00FFB2]/10 p-3 rounded-lg border border-[#00FFB2]/20 shadow-sm animate-pulse">
+                 <div className="mb-4 flex items-center gap-2 text-xs font-bold text-[#D4AF37] bg-[#D4AF37]/10 p-3 rounded-lg border border-[#D4AF37]/20 shadow-sm animate-pulse">
                    <Loader2 size={14} className="animate-spin" /> Exporting trades... Please wait.
                  </div>
                )}
@@ -522,9 +522,9 @@ export default function SettingsPage() {
                  <button 
                    onClick={handleExportCSV}
                    disabled={isExporting}
-                   className="p-5 bg-zinc-950 border border-zinc-800 rounded-xl hover:border-[#00FFB2]/50 hover:bg-zinc-950/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-zinc-950 border border-zinc-800 rounded-xl hover:border-[#D4AF37]/50 hover:bg-zinc-950/80 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
-                   <FileText size={28} className="text-zinc-500 group-hover:text-[#00FFB2] transition-colors" />
+                   <FileText size={28} className="text-zinc-500 group-hover:text-[#D4AF37] transition-colors" />
                    <span className="text-sm font-bold text-white tracking-tight">Export CSV</span>
                  </button>
                  
@@ -603,7 +603,7 @@ export default function SettingsPage() {
                        <button 
                          onClick={handleChangePassword}
                          disabled={isSavingPassword || !newPassword || !oldPassword}
-                         className="px-5 py-2.5 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
+                         className="px-5 py-2.5 text-xs font-bold bg-emerald-500 hover:bg-amber-400 text-zinc-950 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
                        >
                          {isSavingPassword ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Update Password
                        </button>
@@ -621,7 +621,7 @@ export default function SettingsPage() {
                        <button 
                          onClick={handlePasswordResetRequest} 
                          disabled={isResettingEmail}
-                         className="text-xs text-emerald-500 hover:text-emerald-400 font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                         className="text-xs text-emerald-500 hover:text-amber-400 font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50"
                        >
                          {isResettingEmail ? <Loader2 size={12} className="animate-spin" /> : <Mail size={12} />}
                          Change via Email Link
@@ -656,10 +656,10 @@ export default function SettingsPage() {
                    <p className="text-xs text-zinc-500 mt-1 font-medium">v2.4.0 (Build 9081)</p>
                  </div>
                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#00FFB2] transition-colors">
+                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#D4AF37] transition-colors">
                      Privacy Policy <ExternalLink size={12} />
                    </a>
-                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#00FFB2] transition-colors">
+                   <a href="#" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#D4AF37] transition-colors">
                      Terms of Service <ExternalLink size={12} />
                    </a>
                  </div>

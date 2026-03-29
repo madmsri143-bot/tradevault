@@ -20,18 +20,8 @@
   }
 
   :root.light {
-    color-scheme: light;
-    --color-white: #111827;
-    --color-zinc-300: #6B7280;
-    --color-zinc-400: #6B7280;
-    --color-zinc-500: #9CA3AF;
-    --color-background: #F9FAFB;
-    --color-zinc-900: #F9FAFB;
-    --color-zinc-950: #FFFFFF;
-    --color-zinc-800: #D1D5DB;
-    --color-black\/10: #E5E7EB;
-    --color-white\/5: transparent;
-    --color-white\/10: #E5E7EB;
+    /* REMOVED: No light mode permitted */
+    color-scheme: dark;
   }
 
   button {

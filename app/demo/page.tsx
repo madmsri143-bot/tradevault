@@ -37,12 +37,12 @@ export default function DemoPage() {
       <main className="flex-1 overflow-y-auto p-4 md:p-8 relative">
         
         {/* Sticky Demo Banner */}
-        <div className="bg-[#00FFB2]/20 border border-[#00FFB2]/40 text-[#00FFB2] px-4 py-3 rounded-xl mb-6 flex flex-col sm:flex-row items-center justify-between text-sm font-bold animate-pulse">
+        <div className="bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37] px-4 py-3 rounded-xl mb-6 flex flex-col sm:flex-row items-center justify-between text-sm font-bold animate-pulse">
            <div className="flex items-center gap-2">
              <Link href="/" className="px-2 py-1 bg-black/40 hover:bg-black/80 rounded transition-colors text-white mr-2"><ArrowLeft size={16}/></Link>
              🚀 Demo Mode - You are viewing read-only sample data.
            </div>
-           <Link href="/signup" className="mt-2 sm:mt-0 px-4 py-1.5 bg-[#00FFB2] text-black rounded-lg hover:bg-white transition-colors">
+           <Link href="/signup" className="mt-2 sm:mt-0 px-4 py-1.5 bg-[#D4AF37] text-black rounded-lg hover:bg-white transition-colors">
               Sign up to track your own trades
            </Link>
         </div>
@@ -50,7 +50,7 @@ export default function DemoPage() {
         {/* Header and Controls */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-[#00FFB2]">Dashboard Overview</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-[#D4AF37]">Dashboard Overview</h2>
             <p className="text-sm text-zinc-400 mt-1">Track, analyze, and optimize your trading performance.</p>
           </div>
           
@@ -59,7 +59,7 @@ export default function DemoPage() {
             <select
               value={displayCurrency}
               onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-              className="bg-zinc-950 border border-zinc-800 text-emerald-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
+              className="bg-zinc-950 border border-zinc-800 text-amber-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
             >
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -76,7 +76,7 @@ export default function DemoPage() {
                 key={t}
                 onClick={() => setActiveTab(t)}
                 className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
-                  activeTab === t ? 'bg-zinc-800 text-[#00FFB2] shadow-sm' : 'text-zinc-500 hover:text-white'
+                  activeTab === t ? 'bg-zinc-800 text-[#D4AF37] shadow-sm' : 'text-zinc-500 hover:text-white'
                 }`}
               >
                 {t === "history" ? "Trade History" : t}

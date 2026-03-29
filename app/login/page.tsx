@@ -237,7 +237,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     return (
       <div className="fixed inset-0 z-[100] bg-[#0B0F14] flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-6 animate-in zoom-in-50 fade-in duration-500">
-          <div className="w-24 h-24 bg-[#00FFB2]/10 rounded-3xl flex items-center justify-center border border-[#00FFB2]/20 shadow-[0_0_80px_rgba(0,255,178,0.2)]">
+          <div className="w-24 h-24 bg-[#D4AF37]/10 rounded-3xl flex items-center justify-center border border-[#D4AF37]/20 shadow-[0_0_80px_rgba(0,255,178,0.2)]">
             <JBLogo size={64} />
           </div>
           <span className="text-4xl font-brand font-black text-white tracking-tight">JournalBud</span>
@@ -256,12 +256,12 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       {/* Left Column: Branding / Marketing */}
       <div className="hidden md:flex flex-1 relative bg-gradient-to-br from-[#11161D] to-[#0D1218] border-r border-white/5 flex-col justify-between p-12 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20">
-           <div className="absolute top-0 -left-20 w-96 h-96 bg-[#00FFB2]/20 blur-[120px] rounded-full" />
-           <div className="absolute bottom-0 -right-20 w-80 h-80 bg-[#3B82F6]/10 blur-[100px] rounded-full" />
+           <div className="absolute top-0 -left-20 w-96 h-96 bg-[#D4AF37]/20 blur-[120px] rounded-full" />
+           <div className="absolute bottom-0 -right-20 w-80 h-80 bg-[#D4AF37]/10 blur-[100px] rounded-full" />
         </div>
 
         <Link href="/" className="relative z-10 flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-[#00FFB2]/10 rounded-xl flex items-center justify-center border border-[#00FFB2]/20">
+          <div className="w-10 h-10 bg-[#D4AF37]/10 rounded-xl flex items-center justify-center border border-[#D4AF37]/20">
             <JBLogo size={24} />
           </div>
           <span className="text-xl font-brand font-black text-white tracking-tight">JournalBud</span>
@@ -276,15 +276,15 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
            {/* Mini App Preview */}
            <div className="mt-8 bg-[#0B0F14]/50 border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-md transform -rotate-2 hover:rotate-0 transition-transform duration-500">
              <div className="flex items-center gap-2 mb-4">
-               <div className="w-8 h-8 rounded-lg bg-[#00FFB2]/20 flex items-center justify-center"><Target size={14} className="text-[#00FFB2]" /></div>
+               <div className="w-8 h-8 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center"><Target size={14} className="text-[#D4AF37]" /></div>
                <div>
                   <div className="w-16 h-2 bg-zinc-700 rounded-full mb-1" />
                   <div className="w-24 h-2 bg-zinc-800 rounded-full" />
                </div>
              </div>
              <div className="space-y-2">
-               <div className="h-6 w-full bg-gradient-to-r from-emerald-500/20 to-transparent rounded-md" />
-               <div className="h-6 w-3/4 bg-gradient-to-r from-emerald-500/10 to-transparent rounded-md" />
+               <div className="h-6 w-full bg-gradient-to-r from-amber-500/20 to-transparent rounded-md" />
+               <div className="h-6 w-3/4 bg-gradient-to-r from-amber-500/10 to-transparent rounded-md" />
              </div>
            </div>
         </div>
@@ -310,7 +310,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
              </p>
           </div>
 
-          {successMsg && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
+          {successMsg && <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-500 text-sm font-bold text-center animate-in zoom-in-95">{successMsg}</div>}
           {fieldErrors.general && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-bold text-center animate-in zoom-in-95">{fieldErrors.general}</div>}
 
           <form onSubmit={mode === "setup-username" ? handleSetupUsername : mode === "forgot-password" ? handleForgotPassword : handleEmailAuth} className="space-y-4" autoComplete="off">
@@ -343,13 +343,13 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                             type="checkbox" 
                             checked={rememberMe} 
                             onChange={(e) => setRememberMe(e.target.checked)} 
-                            className="peer appearance-none w-4 h-4 border border-zinc-700 rounded bg-zinc-900 checked:bg-[#00FFB2] checked:border-[#00FFB2] transition-colors cursor-pointer"
+                            className="peer appearance-none w-4 h-4 border border-zinc-700 rounded bg-zinc-900 checked:bg-[#D4AF37] checked:border-[#D4AF37] transition-colors cursor-pointer"
                           />
                           <CheckCircle2 size={12} className="absolute text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
                         </div>
                         <span className="text-xs text-zinc-400 group-hover:text-white transition-colors select-none font-medium">Remember me</span>
                       </label>
-                      <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-zinc-400 hover:text-[#00FFB2] transition-colors font-medium">
+                      <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-zinc-400 hover:text-[#D4AF37] transition-colors font-medium">
                         Forgot Password?
                       </button>
                     </div>
@@ -361,7 +361,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                 <Input label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} type="password" placeholder="••••••••" error={fieldErrors.confirmPassword} autoComplete="new-password" />
               )}
 
-              <button disabled={loading} type="submit" className="w-full bg-[#00FFB2] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
+              <button disabled={loading} type="submit" className="w-full bg-[#D4AF37] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
                 {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? "Sign Up" : mode === "forgot-password" ? "Send Reset Link" : "Finish Setup"}
               </button>
               {mode === "signup" && (
@@ -391,7 +391,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
               <div className="text-center flex flex-col gap-3 group mt-2">
                  <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-500 font-medium hover:text-white transition-colors">
-                   {mode === "login" ? <>New to JournalBud? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#00FFB2] font-black underline underline-offset-4">Sign In</span></>}
+                   {mode === "login" ? <>New to JournalBud? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
             </>
@@ -415,11 +415,11 @@ function Input({ label, value, onChange, type, placeholder, error, autofocus = f
           autoFocus={autofocus}
           autoComplete={autoComplete}
           id={`input-${label}`}
-          className={`peer w-full bg-white/5 border rounded-2xl px-4 pt-6 pb-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00FFB2]/20 transition-all ${isPassword ? 'pr-12' : ''} ${error ? 'border-red-500/50 focus:border-red-500' : 'border-white/5 focus:border-[#00FFB2]'}`} 
+          className={`peer w-full bg-white/5 border rounded-2xl px-4 pt-6 pb-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/20 transition-all ${isPassword ? 'pr-12' : ''} ${error ? 'border-red-500/50 focus:border-red-500' : 'border-white/5 focus:border-[#D4AF37]'}`} 
         />
         <label 
           htmlFor={`input-${label}`}
-          className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-[#00FFB2] peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
+          className="absolute left-4 top-4 text-xs font-bold uppercase tracking-widest text-zinc-500 transition-all duration-200 peer-focus:-translate-y-2.5 peer-focus:text-[10px] peer-focus:text-[#D4AF37] peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:text-[10px] pointer-events-none"
         >
           {label}
         </label>

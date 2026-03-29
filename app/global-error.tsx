@@ -30,7 +30,7 @@ export default function GlobalError({
             </ul>
           </div>
 
-          <button onClick={() => reset()} className="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-zinc-200 transition-colors">
+          <button onClick={() => reset()} className="w-full bg-[#D4AF37] text-black font-bold py-3 rounded-lg hover:bg-zinc-200 transition-colors">
             Attempt Recovery Reload
           </button>
         </div>

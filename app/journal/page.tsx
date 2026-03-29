@@ -113,7 +113,7 @@ function SmartText({ text }: { text: string }) {
       {parts.map((part, i) => {
         const lower = part.toLowerCase();
         if (lower === "fomo") return <span key={i} className="text-red-400 bg-red-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
-        if (lower === "discipline") return <span key={i} className="text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
+        if (lower === "discipline") return <span key={i} className="text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
         if (lower.startsWith("mistake")) return <span key={i} className="text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
         return <span key={i}>{part}</span>;
       })}
@@ -352,7 +352,7 @@ export default function JournalPage() {
         <div className="xl:col-span-1">
           <div className="bg-zinc-900 border border-black/10 dark:border-white/5 fade-slide-up shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:shadow-none p-5 rounded-2xl shadow-sm">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-sm font-bold tracking-wider uppercase text-emerald-400">New Reflection</h2>
+              <h2 className="text-sm font-bold tracking-wider uppercase text-amber-400">New Reflection</h2>
               <span className="text-[11px] font-bold text-zinc-500 bg-zinc-950 border border-white/5 px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
             </div>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -402,7 +402,7 @@ export default function JournalPage() {
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500">Execution Score</label>
                 <div className="grid grid-cols-4 gap-2">
                   {QUALITY_SCORES.map(s => {
-                    const activeColor = s === 'A' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : s === 'B' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : s === 'C' ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-red-500/20 border-red-500/50 text-red-400';
+                    const activeColor = s === 'A' ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : s === 'B' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : s === 'C' ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-red-500/20 border-red-500/50 text-red-400';
                     return (
                       <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300 shadow-inner'}`}>
                         {s}
@@ -424,7 +424,7 @@ export default function JournalPage() {
                   />
                 </div>
                 <div className="space-y-1.5 flex flex-col justify-end">
-                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-zinc-800 rounded-xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-zinc-950 text-zinc-400 hover:bg-zinc-900'}`} onClick={() => setSlFollowed(!slFollowed)}>
+                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-zinc-800 rounded-xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : 'bg-zinc-950 text-zinc-400 hover:bg-zinc-900'}`} onClick={() => setSlFollowed(!slFollowed)}>
                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${slFollowed ? 'border-emerald-500 bg-emerald-500 text-zinc-950' : 'border-zinc-700 bg-zinc-900 text-transparent'}`}>
                        <CheckCircle2 size={12} strokeWidth={4} />
                     </div>
@@ -465,8 +465,8 @@ export default function JournalPage() {
                     </div>
                   ) : (
                     <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[42px] border border-dashed border-zinc-700/50 rounded-xl bg-zinc-950/50 hover:bg-zinc-900 hover:border-emerald-500/50 transition-all text-xs text-zinc-400 group shadow-inner">
-                      <ImagePlus size={14} className="group-hover:text-emerald-400 transition-colors" />
-                      <span className="font-medium group-hover:text-emerald-400 transition-colors">Attach Setup</span>
+                      <ImagePlus size={14} className="group-hover:text-amber-400 transition-colors" />
+                      <span className="font-medium group-hover:text-amber-400 transition-colors">Attach Setup</span>
                       <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                     </label>
                   )}
@@ -559,19 +559,19 @@ export default function JournalPage() {
                       'border-transparent bg-zinc-950 hover:bg-zinc-900 border-white/5 hover:border-white/10'
                     }`}
                   >
-                    <span className={`text-xs sm:text-sm font-bold ${isToday(day) ? 'text-emerald-400' : isSelected ? 'text-emerald-400' : hasEntries ? 'text-zinc-200' : 'text-zinc-600'}`}>
+                    <span className={`text-xs sm:text-sm font-bold ${isToday(day) ? 'text-amber-400' : isSelected ? 'text-amber-400' : hasEntries ? 'text-zinc-200' : 'text-zinc-600'}`}>
                       {format(day, "d")}
                     </span>
                     {hasEntries && (
                       <div className="mt-auto flex flex-col items-center gap-1 w-full">
                         {dayPnl !== 0 && (
-                          <span className={`hidden sm:block text-[9px] font-black tracking-tighter ${dayPnl > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          <span className={`hidden sm:block text-[9px] font-black tracking-tighter ${dayPnl > 0 ? 'text-amber-400' : 'text-red-400'}`}>
                             {dayPnl > 0 ? '+' : ''}${Math.round(dayPnl)}
                           </span>
                         )}
                         <div className="flex gap-0.5">
                            {dayEntries.slice(0, 3).map((_, i) => (
-                             <div key={i} className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${isSelected ? 'bg-emerald-400' : isProfit ? 'bg-emerald-500/50' : isLoss ? 'bg-red-500/50' : 'bg-zinc-500'}`} />
+                             <div key={i} className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${isSelected ? 'bg-amber-400' : isProfit ? 'bg-emerald-500/50' : isLoss ? 'bg-red-500/50' : 'bg-zinc-500'}`} />
                            ))}
                            {dayEntries.length > 3 && <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-zinc-600" />}
                         </div>
@@ -636,11 +636,11 @@ export default function JournalPage() {
                        </div>
                        <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
                          <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Win Rate</span>
-                         <span className="text-xl font-bold text-emerald-400">{dayWinRate.toFixed(0)}%</span>
+                         <span className="text-xl font-bold text-amber-400">{dayWinRate.toFixed(0)}%</span>
                        </div>
                        <div className="bg-zinc-950/50 p-4 rounded-xl border border-white/5 shadow-inner text-center">
                          <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mb-1">Net PnL</span>
-                         <span className={`text-xl font-bold ${netPnl > 0 ? 'text-emerald-400' : netPnl < 0 ? 'text-red-400' : 'text-zinc-300'}`}>
+                         <span className={`text-xl font-bold ${netPnl > 0 ? 'text-amber-400' : netPnl < 0 ? 'text-red-400' : 'text-zinc-300'}`}>
                            {netPnl > 0 ? '+' : ''}${netPnl}
                          </span>
                        </div>
@@ -654,12 +654,12 @@ export default function JournalPage() {
                              <div className="flex flex-wrap gap-2 items-center">
                                <span className="text-[10px] uppercase font-black text-zinc-500 bg-white/5 px-2 py-0.5 rounded tracking-widest">Entry {idx + 1}</span>
                                {e.qualityScore && (
-                                <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${e.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : e.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : e.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
+                                <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border ${e.qualityScore === 'A' ? 'text-amber-400 border-emerald-500/20 bg-emerald-500/10' : e.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : e.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
                                   Grade {e.qualityScore}
                                 </span>
                                )}
                                {e.slFollowed && (
-                                <span className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border text-emerald-400 border-emerald-500/20 bg-emerald-500/10 flex items-center gap-1">
+                                <span className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border text-amber-400 border-emerald-500/20 bg-emerald-500/10 flex items-center gap-1">
                                   <CheckCircle2 size={10} /> Followed SL
                                 </span>
                                )}
@@ -684,7 +684,7 @@ export default function JournalPage() {
 
                            {e.aiScore !== undefined && (
                              <div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-3">
-                               <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shadow-inner border ${e.aiScore >= 80 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : e.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                               <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black shadow-inner border ${e.aiScore >= 80 ? 'bg-emerald-500/20 text-amber-400 border-emerald-500/30' : e.aiScore >= 50 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
                                  {e.aiScore}
                                </div>
                                <div className="flex-1">
@@ -718,7 +718,7 @@ export default function JournalPage() {
                   {format(new Date(viewingEntry.date), "EEEE, MMM dd, yyyy")}
                 </h2>
                 {viewingEntry.qualityScore && (
-                  <span className={`text-[11px] font-black tracking-wider uppercase px-2 py-0.5 rounded border ${viewingEntry.qualityScore === 'A' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' : viewingEntry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : viewingEntry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
+                  <span className={`text-[11px] font-black tracking-wider uppercase px-2 py-0.5 rounded border ${viewingEntry.qualityScore === 'A' ? 'text-amber-400 border-emerald-500/20 bg-emerald-500/10' : viewingEntry.qualityScore === 'B' ? 'text-blue-400 border-blue-500/20 bg-blue-500/10' : viewingEntry.qualityScore === 'C' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' : 'text-red-400 border-red-500/20 bg-red-500/10'}`}>
                     Grade {viewingEntry.qualityScore}
                   </span>
                 )}
@@ -769,7 +769,7 @@ export default function JournalPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={viewingEntry.imageUrl} alt="Trading Chart Snapshot" className="w-full h-auto object-contain bg-black/40" />
                   <div className="p-3 bg-zinc-900 border-t border-white/5 flex justify-center">
-                    <a href={viewingEntry.imageUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-2 uppercase tracking-wider">
+                    <a href={viewingEntry.imageUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-2 uppercase tracking-wider">
                       <Maximize2 size={12} /> View Original Full Resolution
                     </a>
                   </div>
@@ -864,7 +864,7 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
                <label className="block text-[11px] uppercase font-bold text-zinc-500 mb-1">Grade</label>
                <div className="flex gap-2">
                  {QUALITY_SCORES.map(s => (
-                   <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`flex-1 py-1.5 rounded-lg border font-bold text-sm transition-all ${qualityScore === s ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-zinc-950 border-zinc-800 text-zinc-500 shadow-inner'}`}>{s}</button>
+                   <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`flex-1 py-1.5 rounded-lg border font-bold text-sm transition-all ${qualityScore === s ? 'bg-emerald-500/20 border-emerald-500/50 text-amber-400' : 'bg-zinc-950 border-zinc-800 text-zinc-500 shadow-inner'}`}>{s}</button>
                  ))}
                </div>
             </div>
