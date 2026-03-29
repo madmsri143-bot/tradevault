@@ -237,9 +237,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     return (
       <div className="fixed inset-0 z-[100] bg-[#0B0F14] flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-6 animate-in zoom-in-50 fade-in duration-500">
-          <div className="w-24 h-24 bg-[#D4AF37]/10 rounded-3xl flex items-center justify-center border border-[#D4AF37]/20 shadow-[0_0_80px_rgba(0,255,178,0.2)]">
-            <JBLogo size={64} />
-          </div>
+          <JBLogo size={80} />
           <span className="text-4xl font-brand font-black text-white tracking-tight">JournalBud</span>
         </div>
       </div>
@@ -261,9 +259,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
         </div>
 
         <Link href="/" className="relative z-10 flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-[#D4AF37]/10 rounded-xl flex items-center justify-center border border-[#D4AF37]/20">
-            <JBLogo size={24} />
-          </div>
+          <JBLogo size={36} />
           <span className="text-xl font-brand font-black text-white tracking-tight">JournalBud</span>
         </Link>
 

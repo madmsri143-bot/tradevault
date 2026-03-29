@@ -35,18 +35,13 @@ function useReveal() {
 
 /* ═══════════════════════════════════════════════
    HERO VISUAL — Logo Spotlight Vignette
+/* ═══════════════════════════════════════════════
+   HERO VISUAL — Clean Centered Logo
    ═══════════════════════════════════════════════ */
 function LogoSpotlight() {
   return (
-    <div className="relative flex items-center justify-center w-full max-w-[280px] aspect-[4/3] mx-auto mb-8 animate-fade-in-up">
-      {/* Background Spotlight */}
-      <div className="absolute inset-0 bg-gradient-radial from-[#D4AF37]/20 via-[#D4AF37]/5 to-transparent blur-[60px] rounded-full z-0 pointer-events-none" />
-      
-      {/* Glowing vignette edges */}
-      <div className="absolute inset-0 rounded-3xl border border-[#D4AF37]/10 bg-gradient-to-b from-[#D4AF37]/5 to-transparent backdrop-blur-sm z-10" />
-
-      {/* Actual static Image */}
-      <div className="relative z-20 transition-transform duration-700 hover:scale-105">
+    <div className="flex items-center justify-center w-full mx-auto mb-8 animate-fade-in-up">
+      <div className="transition-transform duration-700 hover:scale-105">
         <JBLogo size={200} />
       </div>
     </div>
@@ -178,9 +173,7 @@ export default function LandingPage() {
       {/* ── NAVBAR ── */}
       <nav className="relative z-50 flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#11161D] to-[#0D1218] flex items-center justify-center border border-[#D4AF37]/20 shadow-[0_0_20px_rgba(212,175,55,0.15)] group-hover:shadow-[0_0_35px_rgba(212,175,55,0.3)] transition-all duration-500">
-            <JBLogo size={22} />
-          </div>
+          <JBLogo size={40} />
           <span className="text-xl font-brand font-black tracking-tight">JournalBud</span>
         </Link>
 
