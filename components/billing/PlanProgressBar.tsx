@@ -49,21 +49,21 @@ export default function PlanProgressBar({ plan, isPro, expiryDate }: PlanProgres
 
   return (
     <div className="w-full mt-6 animate-in fade-in duration-1000">
-      <div className="flex items-center justify-between text-xs font-medium text-[#9CA3AF] mb-2">
+      <div className="flex items-center justify-between text-xs font-medium text-[#A0A0A0] mb-2">
         <span>Current Cycle Usage</span>
-        <span className={progress >= 90 ? "text-red-400" : "text-[#C9A646]"}>
+        <span className={progress >= 90 ? "text-[#FF4D6D]" : "text-[#D4AF37]"}>
           {Math.round(progress)}% used
         </span>
       </div>
       
       {/* Premium Progress Bar Wrapper */}
-      <div className="h-3 w-full bg-[#111827] rounded-full overflow-hidden border border-[#111827] relative">
+      <div className="h-3 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
         <div 
-          className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-[#C9A646] rounded-full transition-all duration-1000 ease-out"
+          className="absolute top-0 left-0 h-full bg-[#D4AF37] shadow-[0_0_10px_rgba(212,175,55,0.3)] rounded-full transition-all duration-1000 ease-out"
           style={{ width: `${progress}%` }}
         />
         {/* Shine effect overlay */}
-        <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)] bg-[length:200%_100%] animate-[shimmer_2s_infinite]" style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }} />
+        <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.1)_50%,transparent_100%)] bg-[length:200%_100%] animate-[shimmer_2s_infinite]" style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }} />
       </div>
     </div>
   );

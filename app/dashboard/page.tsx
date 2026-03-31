@@ -10,10 +10,11 @@ import { useAuth } from "@/lib/AuthContext";
 import TradeForm from "@/components/dashboard/TradeForm";
 import MetricsCards from "@/components/dashboard/MetricsCards";
 import { useTrial, FeatureBlockOverlay } from "@/components/TrialGuard";
+import JBLogo from "@/components/ui/JBLogo";
 
 import AnalyticsTab from "@/components/dashboard/AnalyticsTab";
 import HistoryTab from "@/components/dashboard/HistoryTab";
-import { Calendar as CalendarIcon, Plus } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ChevronDown } from "lucide-react";
 
 const Charts = dynamic(() => import("@/components/dashboard/Charts"), {
   ssr: false,
@@ -112,35 +113,38 @@ export default function DashboardPage() {
       {/* Header and Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#111827] pb-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#EAEAEA]">Dashboard Overview</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-[#D4AF37]">Dashboard Overview</h2>
           <p className="text-sm text-[#A0A0A0] mt-1">Track, analyze, and optimize your trading performance.</p>
         </div>
         
-        <div className="flex items-center gap-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-2 rounded-lg">
+        <div className="flex items-center gap-2 luxury-card p-2 rounded-lg">
           <span className="text-sm text-[#A0A0A0] font-medium ml-2">Displaying in:</span>
-          <select
-            value={displayCurrency}
-            onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-            className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-amber-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
-          >
-            <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="INR">INR (₹)</option>
-          </select>
+          <div className="relative">
+            <select
+              value={displayCurrency}
+              onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
+              className="bg-[#0A0A0A] border border-[rgba(212,175,55,0.15)] text-[#D4AF37] appearance-none pr-8 font-semibold rounded-lg p-1.5 text-sm focus:border-[#D4AF37] focus:outline-none focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
+            >
+              <option value="USD" className="bg-[#0A0A0A]">USD ($)</option>
+              <option value="EUR" className="bg-[#0A0A0A]">EUR (€)</option>
+              <option value="INR" className="bg-[#0A0A0A]">INR (₹)</option>
+            </select>
+            <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#D4AF37] pointer-events-none" />
+          </div>
         </div>
       </div>
 
       {/* TABS & GLOBAL DATE FILTER */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-1 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-1 rounded-2xl w-fit">
+        <div className="flex items-center gap-1 luxury-card p-1 rounded-2xl w-fit">
           {["overview", "calendar", "analytics", "history"].map(t => (
             <button 
               key={t}
               onClick={() => setActiveTab(t as any)}
               className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
                 activeTab === t 
-                  ? t === 'overview' ? 'bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md text-[#D4AF37] shadow-sm border border-[#D4AF37]/20' : 'bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md text-[#EAEAEA] shadow-sm border border-[rgba(212,175,55,0.15)]'
-                  : 'text-[#A0A0A0] hover:text-[#EAEAEA]'
+                  ? 'bg-[#D4AF37] text-black shadow-lg'
+                  : 'text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-white/5'
               }`}
             >
               {t === "history" ? "Trade History" : t}
@@ -149,20 +153,20 @@ export default function DashboardPage() {
         </div>
 
         {activeTab !== "calendar" && (
-          <div className="flex items-center gap-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-2 rounded-2xl">
+          <div className="flex items-center gap-3 luxury-card p-2 rounded-2xl">
             <CalendarIcon size={16} className="text-[#A0A0A0] ml-1" />
             <input 
               type="date" 
               value={dateRange.from} 
               onChange={e => setDateRange({...dateRange, from: e.target.value})} 
-              className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37]" 
+              className="bg-transparent border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37] color-scheme-dark" 
             />
             <span className="text-[#A0A0A0] text-xs font-medium">to</span>
             <input 
               type="date" 
               value={dateRange.to} 
               onChange={e => setDateRange({...dateRange, to: e.target.value})} 
-              className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37]" 
+              className="bg-transparent border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37] color-scheme-dark" 
             />
             {(dateRange.from || dateRange.to) && (
               <button onClick={() => setDateRange({from: "", to: ""})} className="text-xs text-[#A0A0A0] hover:text-[#EAEAEA] px-2">Clear</button>
@@ -180,10 +184,10 @@ export default function DashboardPage() {
               {!isTradeModalOpen && (
                 <button 
                   onClick={() => setIsTradeModalOpen(true)}
-                  className="bg-emerald-500 hover:bg-amber-400 text-black p-4 rounded-full shadow-[0_4px_20px_rgba(16,185,129,0.4)] hover:shadow-[0_4px_30px_rgba(16,185,129,0.6)] active:scale-90 hover:scale-[1.05] hover:-translate-y-1 transition-all group flex items-center justify-center relative z-20"
+                  className="bg-[#D4AF37] hover:bg-[#F3D060] text-black w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(212,175,55,0.3)] hover:shadow-[0_4px_30px_rgba(212,175,55,0.5)] active:scale-90 hover:scale-[1.05] hover:-translate-y-1 transition-all group flex items-center justify-center relative z-20 border border-black/10"
                 >
-                  <Plus size={26} className="transition-transform group-hover:rotate-90 duration-300" />
-                  <span className="absolute left-full ml-4 bg-zinc-800/90 backdrop-blur-md text-[#EAEAEA] text-sm font-bold px-4 py-2 rounded-2xl opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-xl border border-[rgba(212,175,55,0.15)]">
+                  <Plus size={28} strokeWidth={3} className="transition-transform group-hover:rotate-90 duration-300" />
+                  <span className="absolute left-full ml-4 luxury-card text-[#EAEAEA] text-sm font-bold px-4 py-2 rounded-2xl opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-xl">
                     Add Trade
                   </span>
                 </button>

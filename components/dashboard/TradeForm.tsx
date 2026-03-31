@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { Trade, Currency } from "@/types";
 import { useAuth } from "@/lib/AuthContext";
 import { useModal } from "@/lib/ModalContext";
-import { Flame, Camera, Loader2, Lock, X, BookText, Sparkles, Cpu, Upload, FileText, Table2 } from "lucide-react";
+import { Flame, Camera, Loader2, Lock, X, BookText, Sparkles, Cpu, Upload, FileText, Table2, ChevronDown } from "lucide-react";
 import BulkPreviewModal from "./BulkPreviewModal";
 import { useTrial, useTrialWindow } from "@/components/TrialGuard";
 import Papa from "papaparse";
@@ -571,22 +571,28 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
               </button>
             </div>
             {!useCustomSymbol ? (
-              <select name="symbol" value={formData.symbol} onChange={handleChange} required className={`w-full h-11 bg-[#0A0D11] border rounded-2xl px-4 text-sm focus:border-[#D4AF37]/30 focus:outline-none appearance-none transition-colors ${formData.symbol === 'XAUUSD' ? 'border-[#111827] text-[#D4AF37]' : 'border-[#111827] text-[#EAEAEA]'}`}>
-                <option value="" disabled>Select pair</option>
-                {commonSymbols.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
+              <div className="relative">
+                <select name="symbol" value={formData.symbol} onChange={handleChange} required className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-2xl px-4 text-sm focus:border-[#D4AF37]/30 focus:outline-none appearance-none transition-colors pr-10 text-[#EAEAEA]">
+                  <option value="" disabled className="bg-[#0A0D11] text-[#A0A0A0]">Select pair</option>
+                  {commonSymbols.map(s => <option key={s} value={s} className="bg-[#0A0D11] text-[#EAEAEA]">{s}</option>)}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A0A0A0] pointer-events-none z-10" size={14} />
+              </div>
             ) : (
-              <input type="text" name="customSymbol" value={formData.customSymbol} onChange={handleChange} required placeholder="e.g. AAPL" className="w-full h-11 bg-[#0A0D11] border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 text-sm focus:border-[#D4AF37]/30 focus:outline-none uppercase text-[#EAEAEA] transition-colors" />
+              <input type="text" name="customSymbol" value={formData.customSymbol} onChange={handleChange} required placeholder="e.g. AAPL" className="w-full h-11 bg-[#0A0D11] border border-[#111827] rounded-2xl px-4 text-sm focus:border-[#D4AF37]/30 focus:outline-none uppercase text-[#EAEAEA] transition-colors" />
             )}
           </div>
 
           {/* Type */}
           <div className="space-y-1.5">
             <label className="text-[10px] uppercase text-[#A0A0A0]/80 font-bold tracking-[0.15em] px-1 block">Type</label>
-            <select name="type" value={formData.type} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 text-sm focus:border-[#D4AF37]/30 focus:outline-none appearance-none text-[#EAEAEA] uppercase transition-colors">
-              <option value="buy">Buy</option>
-              <option value="sell">Sell</option>
-            </select>
+            <div className="relative">
+              <select name="type" value={formData.type} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 pr-10 text-sm focus:border-[#D4AF37]/30 focus:outline-none appearance-none text-[#EAEAEA] uppercase transition-colors">
+                <option value="buy" className="bg-[#0A0D11]">Buy</option>
+                <option value="sell" className="bg-[#0A0D11]">Sell</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A0A0A0] pointer-events-none" size={14} />
+            </div>
           </div>
 
           {/* Lot Size */}
@@ -599,10 +605,13 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
              {/* Result */}
             <div className="space-y-1.5">
               <label className="text-[10px] uppercase text-[#A0A0A0]/80 font-bold tracking-[0.15em] px-1 block">Result</label>
-              <select name="result" value={formData.result} onChange={handleChange} className={`w-full h-11 bg-[#0A0D11] border rounded-2xl px-4 text-sm focus:border-[#D4AF37]/30 focus:outline-none appearance-none transition-colors ${formData.result === 'Profit' ? 'border-[#D4AF37]/20 text-[#D4AF37]' : 'border-red-500/20 text-red-500'}`}>
-                <option value="Profit" className="text-[#D4AF37]">Profit</option>
-                <option value="Loss" className="text-red-500">Loss</option>
-              </select>
+              <div className="relative">
+                <select name="result" value={formData.result} onChange={handleChange} className={`w-full h-11 bg-[#0A0D11] border rounded-2xl px-4 pr-10 text-sm focus:border-transparent focus:outline-none appearance-none transition-colors ${formData.result === 'Profit' ? 'border-emerald-500/20 text-emerald-500' : 'border-red-500/20 text-red-500'}`}>
+                  <option value="Profit" className="bg-[#0A0D11] text-emerald-500">Profit</option>
+                  <option value="Loss" className="bg-[#0A0D11] text-red-500">Loss</option>
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A0A0A0] pointer-events-none z-10" size={14} />
+              </div>
             </div>
              {/* PnL */}
             <div className="space-y-1.5">
@@ -645,11 +654,14 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
           <div className="grid grid-cols-2 gap-4">
              <div className="space-y-1.5">
               <label className="text-[10px] uppercase text-[#A0A0A0]/80 font-bold tracking-[0.15em] px-1 block">Currency</label>
-               <select name="currency" value={formData.currency} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 text-sm focus:border-[#D4AF37]/30 focus:outline-none text-[#EAEAEA] appearance-none uppercase transition-colors">
-                 <option value="USD">USD</option>
-                 <option value="EUR">EUR</option>
-                 <option value="INR">INR</option>
-               </select>
+               <div className="relative">
+                 <select name="currency" value={formData.currency} onChange={handleChange} className="w-full h-11 bg-[#0A0D11] border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 pr-10 text-sm focus:border-[#D4AF37]/30 focus:outline-none text-[#EAEAEA] appearance-none uppercase transition-colors">
+                   <option value="USD" className="bg-[#0A0D11]">USD</option>
+                   <option value="EUR" className="bg-[#0A0D11]">EUR</option>
+                   <option value="INR" className="bg-[#0A0D11]">INR</option>
+                 </select>
+                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A0A0A0] pointer-events-none" size={14} />
+               </div>
              </div>
              <div className="space-y-1.5">
               <label className="text-[10px] uppercase text-[#A0A0A0]/80 font-bold tracking-[0.15em] px-1 block">Date</label>

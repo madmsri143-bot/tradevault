@@ -40,9 +40,9 @@ function useReveal() {
    ═══════════════════════════════════════════════ */
 function LogoSpotlight() {
   return (
-    <div className="flex items-center justify-center w-full mx-auto mb-8 animate-fade-in-up">
+    <div className="flex items-center justify-center w-full mx-auto mb-4 animate-fade-in-up">
       <div className="transition-transform duration-700 hover:scale-105">
-        <JBLogo size={200} />
+        <JBLogo size={100} />
       </div>
     </div>
   );
@@ -171,10 +171,10 @@ export default function LandingPage() {
       </div>
 
       {/* ── NAVBAR ── */}
-      <nav className="relative z-50 flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
+      <nav className="relative z-50 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-3 group">
-          <JBLogo size={40} />
-          <span className="text-xl font-brand font-black tracking-tight">JournalBud</span>
+          <JBLogo size={32} />
+          <span className="text-xl font-brand font-black tracking-tight"><span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-[#A0A0A0]">
@@ -215,18 +215,18 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           1. HERO — "YOU TRADE. YOUR BUDDY UNDERSTANDS."
          ═══════════════════════════════════════ */}
-      <section className="relative z-10 pt-16 md:pt-24 pb-24 px-6 max-w-5xl mx-auto flex flex-col items-center text-center">
+      <section className="relative z-10 pt-8 md:pt-10 pb-10 px-6 max-w-5xl mx-auto flex flex-col items-center text-center">
         
         {/* Cinematic Logo Spotlight */}
         <LogoSpotlight />
 
-        <div className="space-y-8 fade-slide-up mt-8">
+        <div className="space-y-4 fade-slide-up mt-2">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em] mx-auto">
             <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
             AI-Powered Trading Companion
           </div>
 
-          <h1 className="text-5xl md:text-[5.5rem] font-black tracking-tight leading-[1.05]">
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-[1.1]">
             You Trade.<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#D4AF37] to-[#D4AF37] bg-[length:200%_auto] animate-gradient-x">
               Your Buddy
@@ -241,7 +241,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-center gap-4 pt-4">
             <Link href={ctaHref}
-              className="group px-8 py-4 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37] text-[#0B0B0F] font-black rounded-2xl flex items-center justify-center gap-2.5 hover:shadow-[0_0_40px_rgba(212,175,55,0.4)] hover:-translate-y-1 transition-all duration-300 text-lg">
+              className="group px-8 py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37] text-[#0B0B0F] font-black rounded-2xl flex items-center justify-center gap-2.5 hover:shadow-[0_0_40px_rgba(212,175,55,0.4)] hover:-translate-y-1 transition-all duration-300 text-base md:text-lg">
               Start With Your Trading Buddy
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform border-[#0B0B0F]" />
             </Link>
@@ -260,8 +260,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="flex justify-center pt-24 animate-bounce">
+        <div className="flex justify-center pt-16 animate-bounce">
           <ChevronDown size={24} className="text-zinc-600" />
         </div>
       </section>
@@ -269,13 +268,13 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           2. "YOUR BUD IS WATCHING" — Chat Insights
          ═══════════════════════════════════════ */}
-      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-[#111827]">
+      <section className="py-10 md:py-14 px-6 relative z-10 border-t border-[#111827]">
         <div className="max-w-6xl mx-auto">
-          <div className="reveal text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/8 border border-[#D4AF37]/15 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
+          <div className="reveal text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/8 border border-[#D4AF37]/15 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em] mb-4">
               <Eye size={14} /> Always Observing
             </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
               It Watches What<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]">You Miss</span>
             </h2>
@@ -301,10 +300,8 @@ export default function LandingPage() {
                 { icon: Activity, color: "muted", title: "Behavior Patterns", desc: "Your trading DNA mapped across sessions" },
               ].map((f, i) => {
                 const colors: Record<string, string> = {
-                  purple: "from-purple-500/10 to-purple-500/5 border-purple-500/15 text-purple-400",
-                  amber: "from-amber-500/10 to-amber-500/5 border-amber-500/15 text-amber-400",
-                  emerald: "from-[#D4AF37]/10 to-[#D4AF37]/5 border-[#D4AF37]/15 text-[#D4AF37]",
-                  blue: "from-blue-500/10 to-blue-500/5 border-blue-500/15 text-blue-400",
+                  gold: "from-[#D4AF37]/10 to-[#D4AF37]/5 border-[#D4AF37]/15 text-[#D4AF37]",
+                  muted: "from-white/5 to-transparent border-white/10 text-[#A0A0A0]",
                 };
                 return (
                   <div key={i}
@@ -323,13 +320,13 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           3. MAGIC INPUT — "Just Drop Your Trades"
          ═══════════════════════════════════════ */}
-      <section id="how-it-works" className="py-16 md:py-20 px-6 relative z-10 bg-gradient-to-b from-[#0B0F14] via-[#0D1117] to-[#0B0F14] border-t border-[#111827]">
+      <section id="how-it-works" className="py-10 md:py-14 px-6 relative z-10 bg-gradient-to-b from-[#0B0F14] via-[#0D1117] to-[#0B0F14] border-t border-[#111827]">
         <div className="max-w-6xl mx-auto">
-          <div className="reveal text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/20 border border-zinc-600/30 text-[#EAEAEA] text-[11px] font-bold uppercase tracking-[0.15em] mb-6">
+          <div className="reveal text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/20 border border-zinc-600/30 text-[#EAEAEA] text-[11px] font-bold uppercase tracking-[0.15em] mb-4">
               <Upload size={14} /> Core Feature
             </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
               Just Drop Your<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]">Trades</span>
             </h2>
@@ -403,7 +400,7 @@ export default function LandingPage() {
 
                     <div className="space-y-3 flex-1">
                       {[
-                        { label: "Symbol", value: "XAUUSD", color: "emerald" },
+                        { label: "Symbol", value: "XAUUSD", color: "gold" },
                         { label: "Type", value: "BUY", color: "white" },
                         { label: "Lot Size", value: "0.10", color: "white" },
                         { label: "P&L", value: "-$114.65", color: "red" },
@@ -411,11 +408,11 @@ export default function LandingPage() {
                         <div key={i} className="space-y-1">
                           <p className="text-[10px] uppercase text-[#A0A0A0] font-bold tracking-wider">{field.label}</p>
                           <div className={`w-full h-9 bg-[#0B0E13] border rounded-2xl px-3 flex items-center transition-all duration-700 ${mockStep >= 2
-                              ? field.color === "red" ? "border-red-500/30" : field.color === "emerald" ? "border-emerald-500/30" : "border-white/15"
+                              ? field.color === "red" ? "border-[#FF4D6D]/30" : field.color === "gold" ? "border-[#D4AF37]/30" : "border-white/15"
                               : "border-[#111827]"}`}
                             style={{ transitionDelay: `${i * 100}ms` }}>
                             {mockStep >= 2 && (
-                              <span className={`text-xs font-bold ${field.color === "red" ? "text-red-400" : field.color === "emerald" ? "text-amber-400" : "text-[#EAEAEA]"}`}>
+                              <span className={`text-xs font-bold ${field.color === "red" ? "text-[#FF4D6D]" : field.color === "gold" ? "text-[#D4AF37]" : "text-[#EAEAEA]"}`}>
                                 {field.value}
                               </span>
                             )}
@@ -440,10 +437,10 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           4. DATA → INTELLIGENCE TRANSFORMATION
          ═══════════════════════════════════════ */}
-      <section id="features" className="py-16 md:py-20 px-6 relative z-10 border-t border-[#111827]">
+      <section id="features" className="py-10 md:py-14 px-6 relative z-10 border-t border-[#111827]">
         <div className="max-w-6xl mx-auto">
-          <div className="reveal text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+          <div className="reveal text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
               Raw Trades →<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-300">Real Awareness</span>
             </h2>
@@ -455,10 +452,10 @@ export default function LandingPage() {
           {/* Dashboard-like metrics */}
           <div className="reveal grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {[
-              { label: "Win Rate", value: "70.5%", sub: "+5.2% vs last month", color: "#D4AF37" },
+              { label: "Win Rate", value: "70.5%", sub: "+5.2% vs last month", color: "#10B981" },
               { label: "Profit Factor", value: "2.41", sub: "Above breakeven", color: "#D4AF37" },
-              { label: "Avg R:R", value: "1:2.8", sub: "Improving steadily", color: "#A855F7" },
-              { label: "Discipline Score", value: "82/100", sub: "Top 15% of traders", color: "#F59E0B" },
+              { label: "Avg R:R", value: "1:2.8", sub: "Improving steadily", color: "#D4AF37" },
+              { label: "Discipline Score", value: "82/100", sub: "Top 15% of traders", color: "#D4AF37" },
             ].map((m, i) => (
               <div key={i} className="group bg-[#11161D]/60 backdrop-blur-sm border border-[rgba(212,175,55,0.15)] rounded-2xl p-5 hover:border-white/15 hover:bg-[#11161D] transition-all duration-300">
                 <p className="text-[10px] uppercase font-bold tracking-[0.15em] text-[#A0A0A0] mb-2">{m.label}</p>
@@ -483,7 +480,7 @@ export default function LandingPage() {
                     style={{
                       height: `${h}%`,
                       background: h > 60
-                        ? "linear-gradient(to top, rgba(201,166,70,0.3), rgba(201,166,70,0.6))"
+                        ? "linear-gradient(to top, rgba(212,175,55,0.3), rgba(212,175,55,0.6))"
                         : "linear-gradient(to top, rgba(255,255,255,0.05), rgba(255,255,255,0.15))",
                       opacity: 0.6 + (i / 20) * 0.4
                     }} />
@@ -498,8 +495,8 @@ export default function LandingPage() {
                 {[
                   { emotion: "Confident", pct: 45, color: "#D4AF37" },
                   { emotion: "Calm", pct: 25, color: "#D4AF37" },
-                  { emotion: "Anxious", pct: 18, color: "#F59E0B" },
-                  { emotion: "Frustrated", pct: 12, color: "#EF4444" },
+                  { emotion: "Anxious", pct: 18, color: "#A0A0A0" },
+                  { emotion: "Frustrated", pct: 12, color: "#FF4D6D" },
                 ].map((e, i) => (
                   <div key={i}>
                     <div className="flex justify-between text-xs mb-1.5">
@@ -521,15 +518,15 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           5. WEEKLY AI REPORT
          ═══════════════════════════════════════ */}
-      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-[#111827]">
+      <section className="py-10 md:py-14 px-6 relative z-10 border-t border-[#111827]">
         <div className="max-w-5xl mx-auto">
-          <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left: Copy */}
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/8 border border-[#D4AF37]/15 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em]">
                 <Brain size={14} /> Big Selling Point
               </div>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
                 Your Week,<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-300">Explained by AI</span>
               </h2>
@@ -604,9 +601,9 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           6. GOALS ENGINE
          ═══════════════════════════════════════ */}
-      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-[#111827]">
+      <section className="py-10 md:py-14 px-6 relative z-10 border-t border-[#111827]">
         <div className="max-w-5xl mx-auto">
-          <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left: Goals mockup */}
             <div className="order-2 lg:order-1 relative">
               <div className="absolute -inset-4 bg-[#D4AF37]/5 blur-3xl rounded-full" />
@@ -635,11 +632,11 @@ export default function LandingPage() {
             </div>
 
             {/* Right: Copy */}
-            <div className="order-1 lg:order-2 space-y-6">
+            <div className="order-1 lg:order-2 space-y-5">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-[11px] font-bold uppercase tracking-[0.15em]">
                 <Flame size={14} /> Psychology Engine
               </div>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
                 Discipline,<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]">Engineered</span>
               </h2>
@@ -660,10 +657,10 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           7. PRICING
          ═══════════════════════════════════════ */}
-      <section id="pricing" className="py-16 md:py-20 px-6 relative z-10 overflow-hidden border-t border-[#111827]">
+      <section id="pricing" className="py-10 md:py-14 px-6 relative z-10 overflow-hidden border-t border-[#111827]">
         <div className="max-w-4xl mx-auto">
-          <div className="reveal text-center space-y-4 mb-16">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
+          <div className="reveal text-center space-y-4 mb-12">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
               Professional Tools for<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]">Profitable Minds</span>
             </h2>
@@ -732,10 +729,10 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           8. BUDDY EFFECT — Floating personality
          ═══════════════════════════════════════ */}
-      <section className="py-16 md:py-20 px-6 relative z-10 border-t border-[#111827]">
+      <section className="py-10 md:py-14 px-6 relative z-10 border-t border-[#111827]">
         <div className="max-w-4xl mx-auto">
-          <div className="reveal text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+          <div className="reveal text-center mb-12">
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight leading-tight">
               More Than a Tool.<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#D4AF37] to-[#D4AF37]">
                 A Trading Buddy.
@@ -769,18 +766,18 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════
           9. FINAL CTA
          ═══════════════════════════════════════ */}
-      <section className="py-16 md:py-20 px-6 relative z-10">
+      <section className="py-10 md:py-14 px-6 relative z-10">
         <div className="reveal max-w-4xl mx-auto relative">
           {/* Background glow */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/5 via-[#D4AF37]/5 to-[#D4AF37]/5 rounded-[3rem] blur-2xl" />
 
-          <div className="relative bg-[#11161D]/60 backdrop-blur-xl border border-white/8 rounded-[3rem] p-12 md:p-20 text-center space-y-8 overflow-hidden">
+          <div className="relative bg-[#11161D]/60 backdrop-blur-xl border border-white/8 rounded-[3rem] p-10 md:p-14 text-center space-y-6 overflow-hidden">
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none opacity-40">
               <BrainCircuit size={64} className="text-[#D4AF37] animate-pulse opacity-50" />
             </div>
 
-            <div className="relative z-10 space-y-6 pt-8">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tight text-[#EAEAEA] leading-tight">
+            <div className="relative z-10 space-y-4 pt-6">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight text-[#EAEAEA] leading-tight">
                 Stop Trading Blind.
               </h2>
               <p className="text-[#A0A0A0] max-w-xl mx-auto text-lg leading-relaxed">

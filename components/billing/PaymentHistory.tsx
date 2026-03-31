@@ -21,12 +21,12 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
     return (
       <div className="mt-12">
         <h3 className="text-xl font-bold text-[#E5E7EB] mb-6">Payment History</h3>
-        <div className="bg-[#0B0F14] border border-[#111827] rounded-2xl p-8 flex flex-col items-center justify-center text-center">
-          <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-4">
-            <CreditCard size={20} className="text-[#9CA3AF]" />
+        <div className="bg-black/40 border border-white/5 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+          <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
+            <CreditCard size={20} className="text-[#A0A0A0]" />
           </div>
-          <h4 className="text-[#E5E7EB] font-medium mb-1">No payment history</h4>
-          <p className="text-sm text-[#9CA3AF]">You haven&apos;t made any payments yet. Your trial is currently active.</p>
+          <h4 className="text-[#EAEAEA] font-bold mb-1 uppercase tracking-widest text-sm">No payment history</h4>
+          <p className="text-sm text-[#A0A0A0] max-w-xs">You haven&apos;t made any payments yet. Your trial is currently active.</p>
         </div>
       </div>
     );
@@ -58,7 +58,7 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
         [`JournalBud ${payment.plan.replace("pro_", "").toUpperCase()} Subscription`, payment.plan === "pro_yearly" ? "$19.99" : "$2.99"]
       ],
       theme: "striped",
-      headStyles: { fillColor: [0, 255, 178], textColor: [0,0,0] }
+      headStyles: { fillColor: [212, 175, 55], textColor: [0,0,0] }
     });
     
     doc.save(`JournalBud_Receipt_${payment.payment_id}.pdf`);
@@ -69,18 +69,18 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
 
   return (
     <div className="mt-12">
-      <h3 className="text-xl font-bold text-[#E5E7EB] mb-6">Payment History</h3>
+      <h3 className="text-xl font-bold text-[#EAEAEA] mb-6">Payment History</h3>
       
-      <div className="bg-[#0B0F14] border border-[#111827] rounded-2xl overflow-hidden">
+      <div className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="text-xs text-[#9CA3AF] uppercase bg-black/40 border-b border-[#111827]">
+            <thead className="text-xs text-[#A0A0A0] uppercase bg-black/60 border-b border-white/5">
               <tr>
-                <th scope="col" className="px-6 py-4 font-semibold tracking-widest">Date</th>
-                <th scope="col" className="px-6 py-4 font-semibold tracking-widest">Amount</th>
-                <th scope="col" className="px-6 py-4 font-semibold tracking-widest">Plan</th>
-                <th scope="col" className="px-6 py-4 font-semibold tracking-widest">Receipt</th>
-                <th scope="col" className="px-6 py-4 font-semibold tracking-widest text-right">Status</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-[0.2em]">Date</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-[0.2em]">Amount</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-[0.2em]">Plan</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-[0.2em]">Receipt</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-[0.2em] text-right">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -95,14 +95,14 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
                   <td className="px-6 py-4 text-[#9CA3AF] capitalize">
                     {payment.plan.replace("pro_", "")}
                   </td>
-                  <td className="px-6 py-4 text-[#9CA3AF] font-mono text-xs flex items-center gap-2 group-hover:text-[#E5E7EB] transition-colors">
-                    <button onClick={() => generateReceiptPDF(payment)} className="flex items-center gap-1 hover:text-[#C9A646] transition-colors p-1" title="Download Receipt PDF">
+                  <td className="px-6 py-4 text-[#A0A0A0] font-mono text-xs flex items-center gap-2 group-hover:text-[#EAEAEA] transition-colors">
+                    <button onClick={() => generateReceiptPDF(payment)} className="flex items-center gap-1 hover:text-[#D4AF37] transition-colors p-1" title="Download Receipt PDF">
                       <Download size={14} />
                       <span className="truncate w-24">{payment.payment_id !== "mock" ? payment.payment_id : "TRIAL_ACTV"}</span>
                     </button>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20">
                       Paid
                     </span>
                   </td>

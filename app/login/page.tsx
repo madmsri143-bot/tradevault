@@ -238,7 +238,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       <div className="fixed inset-0 z-[100] bg-[#0B0F14] flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-6 animate-in zoom-in-50 fade-in duration-500">
           <JBLogo size={80} />
-          <span className="text-4xl font-brand font-black text-[#EAEAEA] tracking-tight">JournalBud</span>
+          <span className="text-4xl font-brand font-black text-[#EAEAEA] tracking-tight"><span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud</span>
         </div>
       </div>
     );
@@ -260,7 +260,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
         <Link href="/" className="relative z-10 flex items-center gap-3 group">
           <JBLogo size={36} />
-          <span className="text-xl font-brand font-black text-[#EAEAEA] tracking-tight">JournalBud</span>
+          <span className="text-xl font-brand font-black text-[#EAEAEA] tracking-tight"><span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud</span>
         </Link>
 
         <div className="relative z-10 max-w-md space-y-6">
@@ -387,7 +387,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
               <div className="text-center flex flex-col gap-3 group mt-2">
                  <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-[#A0A0A0] font-medium hover:text-[#EAEAEA] transition-colors">
-                   {mode === "login" ? <>New to JournalBud? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign In</span></>}
+                   {mode === "login" ? <>New to <span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
             </>

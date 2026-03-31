@@ -85,17 +85,17 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-black flex items-center justify-center p-6 selection:bg-emerald-500/30">
-      <div className="max-w-md w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-8 rounded-2xl shadow-xl text-center space-y-6 animate-in slide-in-from-bottom-4 fade-in duration-700">
-        <div className="mx-auto w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center shadow-inner border border-emerald-500/20">
-          <Mail className="text-emerald-500" size={32} />
+    <div className="min-h-[100dvh] bg-black flex items-center justify-center p-6 selection:bg-[#D4AF37]/30">
+      <div className="luxury-card max-w-md w-full p-8 rounded-2xl shadow-xl text-center space-y-6 animate-in slide-in-from-bottom-4 fade-in duration-700">
+        <div className="mx-auto w-16 h-16 bg-[#D4AF37]/10 rounded-2xl flex items-center justify-center shadow-inner border border-[#D4AF37]/20">
+          <Mail className="text-[#D4AF37]" size={32} />
         </div>
         
         <div className="space-y-4">
           <h2 className="text-2xl font-black tracking-tight text-[#EAEAEA]">Check your inbox</h2>
           <p className="text-[#A0A0A0] leading-relaxed text-sm">
             We've sent a verification link to <br/>
-            <span className="font-bold text-amber-400 mt-1 block">{displayEmail}</span>
+            <span className="font-bold text-[#D4AF37] mt-1 block">{displayEmail}</span>
           </p>
           <div className="space-y-2 text-xs text-[#A0A0A0] pt-2">
             <p>If you don’t see the email, please check your spam or promotions folder.</p>
@@ -103,11 +103,11 @@ export default function VerifyEmailPage() {
           </div>
         </div>
 
-        <div className="space-y-3 pt-4 border-t border-[#111827]">
+        <div className="space-y-3 pt-4 border-t border-white/5">
           <button 
             onClick={handleCheckVerification}
             disabled={verifyLoading}
-            className="w-full bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-black font-black py-3.5 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(201,166,70,0.2)] disabled:opacity-50"
+            className="luxury-button-gold w-full py-3.5 h-auto text-sm"
           >
             {verifyLoading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle size={18} />}
             I've verified, continue
@@ -116,7 +116,7 @@ export default function VerifyEmailPage() {
           <button 
             onClick={handleResend}
             disabled={cooldown > 0 || resendLoading}
-            className="w-full bg-zinc-800 hover:bg-zinc-700 text-[#EAEAEA] font-semibold py-3.5 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full bg-white/5 hover:bg-white/10 text-[#EAEAEA] font-bold py-3.5 px-4 rounded-2xl border border-white/10 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {resendLoading ? <Loader2 size={18} className="animate-spin" /> : <RefreshCw size={18} />}
             {cooldown > 0 ? `Resend in ${cooldown}s` : sent ? "Verification Email Sent!" : "Resend Verification Email"}

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, BookText, Menu, X, Calculator, Crosshair, Lock, Headset, Sun, Moon } from "lucide-react";
+import { LayoutDashboard, BookText, Menu, X, Calculator, Crosshair, Lock, Headset, Sun, Moon, Download } from "lucide-react";
 import JBLogo from "@/components/ui/JBLogo";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -37,11 +37,13 @@ export default function Sidebar() {
       root.classList.remove("dark");
       root.classList.add("light");
       localStorage.setItem("theme", "light");
+      root.style.colorScheme = "light";
       setIsDarkMode(false);
     } else {
       root.classList.add("dark");
       root.classList.remove("light");
       localStorage.setItem("theme", "dark");
+      root.style.colorScheme = "dark";
       setIsDarkMode(true);
     }
   };
@@ -51,6 +53,7 @@ export default function Sidebar() {
     { label: "Journal", href: "/journal", icon: <BookText size={20} />, proHint: plan === "free" },
     { label: "Calculator", href: "/calculator", icon: <Calculator size={20} /> },
     { label: "Target", href: "/target", icon: <Crosshair size={20} />, proHint: plan === "free" },
+    { label: "Export", href: "/export", icon: <Download size={20} />, proHint: plan === "free" },
   ];
 
   return (

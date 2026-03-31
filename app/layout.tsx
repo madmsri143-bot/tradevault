@@ -28,7 +28,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
-      <body className={`${inter.className} ${outfit.variable} bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md text-zinc-50 min-h-screen selection:bg-emerald-500/30`}>
+      <body className={`${inter.className} ${outfit.variable} bg-black text-zinc-50 min-h-screen selection:bg-[#D4AF37]/30`}>
         <ModalProvider>
           <AuthProvider>
             <AuthWrapper>

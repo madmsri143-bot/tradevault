@@ -4,7 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Trade, Currency } from "@/types";
-import { Lock, ArrowLeft, Calendar as CalendarIcon } from "lucide-react";
+import { Lock, ArrowLeft, Calendar as CalendarIcon, ChevronDown } from "lucide-react";
 
 import MetricsCards from "@/components/dashboard/MetricsCards";
 import TradeList from "@/components/dashboard/TradeList";
@@ -56,15 +56,18 @@ export default function DemoPage() {
           
           <div className="flex items-center gap-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-2 rounded-lg">
             <span className="text-sm text-[#A0A0A0] font-medium ml-2">Displaying in:</span>
-            <select
-              value={displayCurrency}
-              onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-              className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-amber-400 font-semibold rounded p-1.5 text-sm focus:border-emerald-500 focus:outline-none"
-            >
-              <option value="USD">USD ($)</option>
-              <option value="EUR">EUR (€)</option>
-              <option value="INR">INR (₹)</option>
-            </select>
+            <div className="relative">
+              <select
+                value={displayCurrency}
+                onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
+                className="bg-[#0A0A0A] border border-[rgba(212,175,55,0.15)] text-[#D4AF37] appearance-none pr-8 font-semibold rounded-lg p-1.5 text-sm focus:border-[#D4AF37] focus:outline-none focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
+              >
+                <option value="USD" className="bg-[#0A0A0A]">USD ($)</option>
+                <option value="EUR" className="bg-[#0A0A0A]">EUR (€)</option>
+                <option value="INR" className="bg-[#0A0A0A]">INR (₹)</option>
+              </select>
+              <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#D4AF37] pointer-events-none" />
+            </div>
           </div>
         </div>
 

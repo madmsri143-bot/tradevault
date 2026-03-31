@@ -307,7 +307,7 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
                     if (locked) {
                       bgColor = "bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md opacity-40 cursor-not-allowed";
                     } else if (hasTrades) {
-                      bgColor = isProfit ? "bg-[#D4AF37]/10 border-[#D4AF37]/20 hover:bg-[#D4AF37]/20" : "bg-red-500/10 border-red-500/20 hover:bg-red-500/20";
+                      bgColor = isProfit ? "bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20" : "bg-red-500/10 border-red-500/20 hover:bg-red-500/20";
                     }
                     const isSelected = selectedDate && isSameDay(selectedDate, day);
 
@@ -330,7 +330,7 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
                           {format(day, "d")}
                         </span>
                         {hasTrades && !locked && (
-                          <span className={cn("text-[11px] font-bold px-1.5 py-0.5 rounded", isProfit ? "text-[#D4AF37] bg-[#D4AF37]/10" : "text-red-400 bg-red-500/10")}>
+                          <span className={cn("text-[11px] font-bold px-1.5 py-0.5 rounded", isProfit ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10")}>
                             {formatCurrency(Math.abs(pnl), displayCurrency)}
                           </span>
                         )}
@@ -379,7 +379,7 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
                               {trade.type}
                             </span>
                           </div>
-                          <span className={cn("font-black text-sm", (trade.normalizedPnl || 0) >= 0 ? "text-[#D4AF37]" : "text-red-400")}>
+                          <span className={cn("font-black text-sm", (trade.normalizedPnl || 0) >= 0 ? "text-emerald-400" : "text-red-400")}>
                             {formatCurrency(Math.abs(trade.normalizedPnl || trade.pnl), displayCurrency)}
                           </span>
                         </div>
@@ -422,14 +422,14 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
                      <div key={i} className={cn(
                        "p-4 rounded-2xl border flex flex-col items-center justify-center transition-all",
                        !hasTrades ? "bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border-[#111827]" :
-                       isProfit ? "bg-[#D4AF37]/5 border-[#D4AF37]/20 hover:bg-[#D4AF37]/10" : "bg-red-500/5 border-red-500/20 hover:bg-red-500/10"
+                       isProfit ? "bg-emerald-500/5 border-emerald-500/20 hover:bg-emerald-500/10" : "bg-red-500/5 border-red-500/20 hover:bg-red-500/10"
                      )}>
                        <span className={cn("text-xs font-bold uppercase tracking-wider mb-2", hasTrades ? "text-[#EAEAEA]" : "text-[#A0A0A0]")}>
                          {stat.label.substring(0, 3)}
                        </span>
                        {hasTrades ? (
                          <>
-                           <span className={cn("text-sm font-black text-center w-full truncate", isProfit ? "text-[#D4AF37]" : "text-red-400")}>
+                           <span className={cn("text-sm font-black text-center w-full truncate", isProfit ? "text-emerald-400" : "text-red-400")}>
                              {formatCurrency(Math.abs(stat.pnl), displayCurrency)}
                            </span>
                            <span className="text-[10px] text-[#A0A0A0] font-bold mt-1">{stat.count} Trades</span>

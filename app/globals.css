@@ -20,8 +20,7 @@
   }
 
   :root.light {
-    /* REMOVED: No light mode permitted */
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   button {
@@ -56,6 +55,23 @@
   }
   .bg-glow-gold {
     box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+  }
+
+  /* ===== LUXURY UI SYSTEM ===== */
+  .luxury-button-gold {
+    @apply bg-[#D4AF37] text-black font-black py-3.5 rounded-2xl hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-2;
+  }
+  .luxury-button-outline {
+    @apply bg-transparent border border-[#D4AF37]/50 text-[#D4AF37] font-black py-3.5 rounded-2xl hover:bg-[#D4AF37]/10 hover:border-[#D4AF37] transition-all flex items-center justify-center gap-2;
+  }
+  .luxury-input {
+    @apply bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl p-4 text-sm focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/20 focus:outline-none transition-all shadow-inner text-[#EAEAEA];
+  }
+  .luxury-label {
+    @apply block text-[11px] font-bold uppercase tracking-wider text-[#A0A0A0] mb-2;
+  }
+  .luxury-card {
+    @apply bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl;
   }
 }
 

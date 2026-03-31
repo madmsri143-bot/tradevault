@@ -23,20 +23,20 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
       {plan === "trial" ? (
         <div className="flex flex-col gap-3 w-full sm:w-auto">
           {daysLeft === 1 && (
-            <div className="p-3 mb-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold w-full flex items-center gap-2">
+            <div className="p-3 mb-2 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-xs font-bold w-full flex items-center gap-2">
               <AlertCircle size={14} /> Your free trial is ending. Upgrade to Pro or continue with Standard Free plan.
             </div>
           )}
           <div className="flex flex-col sm:flex-row gap-3">
              <button 
                onClick={onUpgradeClick}
-               className="w-full sm:w-auto px-8 py-3.5 bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 font-bold rounded-xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all text-sm"
+               className="luxury-button-gold w-full sm:w-auto px-8 py-3.5 h-auto text-sm"
              >
                Upgrade Now
              </button>
              <button 
                onClick={onCancelTrial}
-               className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-zinc-800 text-[#E5E7EB] font-medium rounded-xl hover:bg-zinc-800 hover:text-[#E5E7EB] transition-all text-sm"
+               className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-white/10 text-[#E5E7EB] font-medium rounded-xl hover:bg-white/5 transition-all text-sm"
              >
                Switch to Standard Free
              </button>
@@ -46,13 +46,13 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
         <>
           <button 
             onClick={onUpgradeClick}
-            className="w-full sm:w-auto px-8 py-3.5 bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 font-bold rounded-xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2"
+            className="luxury-button-gold w-full sm:w-auto px-8 py-3.5 h-auto text-sm"
           >
             Upgrade to Pro
           </button>
           <button 
             onClick={onManageClick}
-            className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-zinc-800 text-[#E5E7EB] font-medium rounded-xl hover:bg-zinc-800 hover:text-[#E5E7EB] transition-all text-sm"
+            className="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-white/10 text-[#E5E7EB] font-medium rounded-xl hover:bg-white/5 transition-all text-sm"
           >
             Contact Support
           </button>
@@ -62,12 +62,12 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
           {isMonthly && (
              <button 
                onClick={onUpgradeClick}
-               className="w-full sm:w-auto px-8 py-3.5 bg-zinc-800 border border-zinc-700 text-[#E5E7EB] font-bold rounded-xl hover:border-[#C9A646] hover:bg-zinc-800 transition-all text-sm group relative overflow-hidden"
+               className="w-full sm:w-auto px-8 py-3.5 bg-white/5 border border-white/10 text-[#E5E7EB] font-bold rounded-xl hover:border-[#D4AF37] hover:bg-white/10 transition-all text-sm group relative overflow-hidden h-auto uppercase tracking-widest"
              >
                <span className="relative z-10 flex items-center gap-2">
-                 Switch to Pro Elite <span className="bg-[#111827] border border-[#C9A646]/50 text-[#C9A646] hover:bg-[#C9A646]/10 px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase">Save 40%</span>
+                 Switch to Pro Elite <span className="bg-black/40 border border-[#D4AF37]/50 text-[#D4AF37] px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase">Save 40%</span>
                </span>
-               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C9A646]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4AF37]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
              </button>
           )}
           <button 

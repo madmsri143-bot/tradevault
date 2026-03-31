@@ -33,7 +33,7 @@ export default function GlobalLoader() {
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-3xl font-black text-[#EAEAEA] tracking-tighter flex items-center gap-0.5">
             <span className="text-3xl font-brand font-black tracking-tight text-[#EAEAEA] drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-              JournalBud
+              <span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud
             </span>
             <span className="w-2 h-2 bg-[#D4AF37] rounded-full animate-pulse mt-3 ml-1" />
           </h1>
