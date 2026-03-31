@@ -60,7 +60,9 @@ const CumulativeTooltip = ({ active, payload, label, displayCurrency }: any) => 
 };
 
 
-export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabProps) {
+import React from "react";
+
+export default React.memo(function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabProps) {
   const { user } = useAuth();
   const [timeframe, setTimeframe] = useState<"daily" | "weekly" | "monthly">("daily");
   
@@ -654,4 +656,4 @@ export default function AnalyticsTab({ trades, displayCurrency }: AnalyticsTabPr
 
     </div>
   );
-}
+});

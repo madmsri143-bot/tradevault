@@ -7,11 +7,13 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { ResponsiveContainer, LineChart, Line } from "recharts";
 
+import React from "react";
+
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export default function MetricsCards({ trades, displayCurrency = "USD" }: { trades: Trade[], displayCurrency?: string }) {
+export default React.memo(function MetricsCards({ trades, displayCurrency = "USD" }: { trades: Trade[], displayCurrency?: string }) {
   const totalTrades = trades.length;
   const totalLots = trades.reduce((acc, t) => acc + t.lot, 0);
   
@@ -141,3 +143,4 @@ export default function MetricsCards({ trades, displayCurrency = "USD" }: { trad
     </div>
   );
 }
+);

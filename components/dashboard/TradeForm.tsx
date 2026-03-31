@@ -21,7 +21,9 @@ interface TradeFormProps {
   onClose?: () => void;
 }
 
-export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
+import React from "react";
+
+export default React.memo(function TradeForm({ isOpen, onClose }: TradeFormProps) {
   const { user } = useAuth();
   const { alert } = useModal();
   const { access } = useTrial();
@@ -735,4 +737,4 @@ export default function TradeForm({ isOpen, onClose }: TradeFormProps) {
     )}
     </>
   );
-}
+});

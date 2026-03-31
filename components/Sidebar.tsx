@@ -11,6 +11,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useModal } from "@/lib/ModalContext";
 import { useTrial } from "@/components/TrialGuard";
+import { useTheme } from "@/lib/ThemeContext";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,28 +26,8 @@ export default function Sidebar() {
 
   const toggleSidebar = () => setIsExpanded(!isExpanded);
 
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  useEffect(() => {
-    setIsDarkMode(!document.documentElement.classList.contains("light"));
-  }, []);
-
-  const toggleTheme = () => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.remove("dark");
-      root.classList.add("light");
-      localStorage.setItem("theme", "light");
-      root.style.colorScheme = "light";
-      setIsDarkMode(false);
-    } else {
-      root.classList.add("dark");
-      root.classList.remove("light");
-      localStorage.setItem("theme", "dark");
-      root.style.colorScheme = "dark";
-      setIsDarkMode(true);
-    }
-  };
+  const { theme, toggleTheme } = useTheme();
+  const isDarkMode = theme === "dark";
 
   const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={20} /> },

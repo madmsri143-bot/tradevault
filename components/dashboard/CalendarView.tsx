@@ -64,7 +64,9 @@ function calcStats(label: string, tradeList: any[]): PeriodStats {
 // ----------------------------------------------------
 // MAIN COMPONENT
 // ----------------------------------------------------
-export default function CalendarView({ trades, displayCurrency = "USD", isFree = false }: { trades: Trade[], displayCurrency?: string, isFree?: boolean }) {
+import React from "react";
+
+export default React.memo(function CalendarView({ trades, displayCurrency = "USD", isFree = false }: { trades: Trade[], displayCurrency?: string, isFree?: boolean }) {
   const [viewMode, setViewMode] = useState<ViewMode>("monthly");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -450,4 +452,4 @@ export default function CalendarView({ trades, displayCurrency = "USD", isFree =
 
       </div>
   );
-}
+});

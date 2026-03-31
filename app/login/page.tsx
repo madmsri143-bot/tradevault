@@ -248,6 +248,21 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
     return <div className="flex h-screen items-center justify-center bg-[#0B0F14]" />;
   }
 
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!forceSignup && mode !== "login") {
+      setMode("login");
+      setFieldErrors({});
+      setSuccessMsg(null);
+    } else {
+      if (window.history.length > 2) {
+        router.back();
+      } else {
+        router.push("/");
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0B0F14] flex flex-col md:flex-row overflow-hidden">
       
@@ -292,13 +307,12 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
       {/* Right Column: Auth Form */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative">
-        <Link 
-          href="/login" 
-          onClick={(e) => { if (!forceSignup && mode !== "login") { e.preventDefault(); setMode("login"); setFieldErrors({}); setSuccessMsg(null); } }} 
-          className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm"
+        <button 
+          onClick={handleBack} 
+          className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm bg-transparent"
         >
           <ChevronLeft size={16} /> Back
-        </Link>
+        </button>
 
         <div className="w-full max-w-sm space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="text-center md:text-left space-y-2">

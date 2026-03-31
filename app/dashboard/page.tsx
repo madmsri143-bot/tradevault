@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -39,6 +39,9 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "calendar" | "analytics" | "history">("overview");
   const [dateRange, setDateRange] = useState<{from: string, to: string}>({from: "", to: ""});
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
+
+  const closeTradeModal = useCallback(() => setIsTradeModalOpen(false), []);
+  const openTradeModal = useCallback(() => setIsTradeModalOpen(true), []);
 
   // Fetch Exchange Rates
   useEffect(() => {
@@ -183,7 +186,7 @@ export default function DashboardPage() {
             <div className="mb-6 w-full flex justify-start">
               {!isTradeModalOpen && (
                 <button 
-                  onClick={() => setIsTradeModalOpen(true)}
+                  onClick={openTradeModal}
                   className="bg-[#D4AF37] hover:bg-[#F3D060] text-black w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(212,175,55,0.3)] hover:shadow-[0_4px_30px_rgba(212,175,55,0.5)] active:scale-90 hover:scale-[1.05] hover:-translate-y-1 transition-all group flex items-center justify-center relative z-20 border border-black/10"
                 >
                   <Plus size={28} strokeWidth={3} className="transition-transform group-hover:rotate-90 duration-300" />
@@ -215,7 +218,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Trade Modal Mount */}
-            <TradeForm isOpen={isTradeModalOpen} onClose={() => setIsTradeModalOpen(false)} />
+            <TradeForm isOpen={isTradeModalOpen} onClose={closeTradeModal} />
           </div>
         )}
 

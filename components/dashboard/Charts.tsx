@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Trade } from "@/types";
 import {
   PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer,
@@ -26,7 +26,7 @@ const CustomBarTooltip = ({ active, payload, displayCurrency }: any) => {
   return null;
 };
 
-export default function Charts({ trades, displayCurrency = "USD" }: { trades: Trade[], displayCurrency?: string }) {
+export default React.memo(function Charts({ trades, displayCurrency = "USD" }: { trades: Trade[], displayCurrency?: string }) {
   const [chartMode, setChartMode] = useState<ChartMode>("horizontal");
 
   // Pie Chart Data: Win vs Loss
@@ -257,4 +257,4 @@ export default function Charts({ trades, displayCurrency = "USD" }: { trades: Tr
       
     </div>
   );
-}
+});

@@ -5,6 +5,7 @@ import "./globals.css";
 import AuthWrapper from "@/components/AuthWrapper";
 import { AuthProvider } from "@/lib/AuthContext";
 import { ModalProvider } from "@/lib/ModalContext";
+import { ThemeProvider } from "@/lib/ThemeContext";
 
 const inter = Inter({ subsets: ["latin"] });
 const outfit = Outfit({ subsets: ["latin"], weight: ["400", "700", "800", "900"], variable: "--font-outfit" });
@@ -29,16 +30,18 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/logo_cropped.png?v=2" />
       </head>
       <body className={`${inter.className} ${outfit.variable} dark:bg-black bg-zinc-50 dark:text-zinc-50 text-zinc-900 min-h-screen selection:bg-[rgba(212,175,55,0.3)]`}>
-        <ModalProvider>
-          <AuthProvider>
-            <AuthWrapper>
-              {children}
-            </AuthWrapper>
-            <CookieBanner />
-            <SupportWidget />
-            <GlobalLoader />
-          </AuthProvider>
-        </ModalProvider>
+        <ThemeProvider>
+          <ModalProvider>
+            <AuthProvider>
+              <AuthWrapper>
+                {children}
+              </AuthWrapper>
+              <CookieBanner />
+              <SupportWidget />
+              <GlobalLoader />
+            </AuthProvider>
+          </ModalProvider>
+        </ThemeProvider>
       </body>
       <Script id="theme-detect" strategy="beforeInteractive">{`
         try {

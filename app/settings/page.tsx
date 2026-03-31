@@ -8,6 +8,7 @@ import { auth, db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/lib/ModalContext";
+import { useTheme } from "@/lib/ThemeContext";
 import { useState, useEffect } from "react";
 
 export default function SettingsPage() {
@@ -19,8 +20,8 @@ export default function SettingsPage() {
   const isFree = access === "free";
   
   // Theme State
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-  
+  const { theme, setTheme } = useTheme();
+
   // Password State
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -28,24 +29,8 @@ export default function SettingsPage() {
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [isResettingEmail, setIsResettingEmail] = useState(false);
 
-  // Initialize theme from HTML tag which is managed by layout script
-  useEffect(() => {
-    if (document.documentElement.classList.contains("light")) {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  }, []);
-
   const handleThemeChange = (newTheme: "dark" | "light") => {
     setTheme(newTheme);
-    if (newTheme === "light") {
-      document.documentElement.classList.add("light");
-      localStorage.setItem("theme", "light");
-    } else {
-      document.documentElement.classList.remove("light");
-      localStorage.setItem("theme", "dark");
-    }
   };
 
   const handleLogout = async () => {
