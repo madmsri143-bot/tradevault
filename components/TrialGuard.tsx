@@ -145,8 +145,8 @@ export function useTrialWindow() {
   const { plan } = useTrial();
   const [trialWindow, setTrialWindow] = useState<{ start: Date | null; end: Date | null }>({ start: null, end: null });
 
-  // Trial restrictions apply when plan is "trial" OR "free" (expired trial)
-  const isTrialRestricted = plan === "trial" || plan === "free";
+  // Trial restrictions apply ONLY when plan is "trial" (Free Trial users), NOT "free" (Standard Free)
+  const isTrialRestricted = plan === "trial";
 
   useEffect(() => {
     if (!user || !isTrialRestricted) {

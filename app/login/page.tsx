@@ -292,7 +292,11 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
 
       {/* Right Column: Auth Form */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative">
-        <Link href={forceSignup ? "/login" : "/"} className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm">
+        <Link 
+          href="/login" 
+          onClick={(e) => { if (!forceSignup && mode !== "login") { e.preventDefault(); setMode("login"); setFieldErrors({}); setSuccessMsg(null); } }} 
+          className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm"
+        >
           <ChevronLeft size={16} /> Back
         </Link>
 

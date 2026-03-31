@@ -11,7 +11,7 @@ export default function JBLogo({
   return (
     <div className={`relative inline-flex items-center justify-center ${className}`}>
       <Image 
-        src="/logo.png" 
+        src="/logo_cropped.png" 
         alt="JournalBud Logo" 
         width={size} 
         height={size} 

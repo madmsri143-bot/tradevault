@@ -26,9 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" href="/logo_cropped.png?v=2" />
       </head>
-      <body className={`${inter.className} ${outfit.variable} bg-black text-zinc-50 min-h-screen selection:bg-[#D4AF37]/30`}>
+      <body className={`${inter.className} ${outfit.variable} dark:bg-black bg-zinc-50 dark:text-zinc-50 text-zinc-900 min-h-screen selection:bg-[rgba(212,175,55,0.3)]`}>
         <ModalProvider>
           <AuthProvider>
             <AuthWrapper>

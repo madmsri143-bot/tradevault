@@ -16,7 +16,7 @@ import { useModal } from "@/lib/ModalContext";
 
 export default function BillingPage() {
   const { user } = useAuth();
-  const { alert } = useModal();
+  const { alert, confirm } = useModal();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +60,7 @@ export default function BillingPage() {
 
   const handleCancelTrial = async () => {
     if (!user) return;
-    const confirmed = await useModal().confirm({
+    const confirmed = await confirm({
       title: "Switch to Standard Free?",
       message: "You will lose access to premium analytics and exports. Once switched, you cannot reactivate your 7-day free trial.",
       confirmLabel: "Yes, Downgrade Now",
