@@ -18,7 +18,7 @@ export default function PlanActions({ plan, isPro, expiryDate, onUpgradeClick, o
   const isExpired = isPro && daysLeft < 0;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 pt-8 border-t border-[#111827]">
+    <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 pt-8 border-t border-zinc-200 dark:border-[#111827]">
       
       {plan === "trial" ? (
         <div className="flex flex-col gap-3 w-full sm:w-auto">

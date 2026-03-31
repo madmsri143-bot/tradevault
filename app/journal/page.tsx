@@ -112,9 +112,9 @@ function SmartText({ text }: { text: string }) {
     <>
       {parts.map((part, i) => {
         const lower = part.toLowerCase();
-        if (lower === "fomo") return <span key={i} className="text-red-400 bg-red-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
-        if (lower === "discipline") return <span key={i} className="text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
-        if (lower.startsWith("mistake")) return <span key={i} className="text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
+        if (lower === "fomo") return <span key={i} className="text-red-600 dark:text-red-400 bg-red-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
+        if (lower === "discipline") return <span key={i} className="text-amber-600 dark:text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
+        if (lower.startsWith("mistake")) return <span key={i} className="text-amber-600 dark:text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wider text-[11px] uppercase">{part}</span>;
         return <span key={i}>{part}</span>;
       })}
     </>
@@ -333,16 +333,16 @@ export default function JournalPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-[#D4AF37] flex items-center gap-3"><Target className="text-[#D4AF37]" /> Journal</h2>
-          <p className="text-sm text-[#A0A0A0] mt-1">Structured reflections and mistake intelligence framework.</p>
+          <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mt-1">Structured reflections and mistake intelligence framework.</p>
         </div>
         
         {/* Month Navigation */}
         <div className="flex items-center gap-2 luxury-card p-2 rounded-2xl">
-          <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded transition-colors"><ChevronLeft size={18} /></button>
-          <span className="text-sm font-bold text-[#EAEAEA] min-w-[120px] text-center tracking-wide">{format(currentMonth, "MMM yyyy")}</span>
-          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded transition-colors"><ChevronRight size={18} /></button>
+          <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded transition-colors"><ChevronLeft size={18} /></button>
+          <span className="text-sm font-bold text-zinc-900 dark:text-[#EAEAEA] min-w-[120px] text-center tracking-wide">{format(currentMonth, "MMM yyyy")}</span>
+          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded transition-colors"><ChevronRight size={18} /></button>
           {!isSameMonth(currentMonth, new Date()) && (
-            <button onClick={() => setCurrentMonth(new Date())} className="text-[10px] text-[#A0A0A0] font-bold uppercase tracking-wider ml-1 px-2 py-1 bg-white/5 rounded hover:text-[#D4AF37] transition-colors">Today</button>
+            <button onClick={() => setCurrentMonth(new Date())} className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] font-bold uppercase tracking-wider ml-1 px-2 py-1 bg-white/5 rounded hover:text-[#D4AF37] transition-colors">Today</button>
           )}
         </div>
       </div>
@@ -354,18 +354,18 @@ export default function JournalPage() {
           <div className="luxury-card p-5 rounded-2xl shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-sm font-bold tracking-wider uppercase text-[#D4AF37]">New Reflection</h2>
-              <span className="text-[11px] font-bold text-[#A0A0A0] luxury-card px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
+              <span className="text-[11px] font-bold text-zinc-600 dark:text-[#A0A0A0] luxury-card px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
             </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div className="space-y-2.5">
                 <label className="luxury-label">Emotional Intelligence</label>
-                <div className="bg-black/20 p-3 rounded-2xl border border-[rgba(212,175,55,0.15)] space-y-4 shadow-inner">
+                <div className="bg-black/20 p-3 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] space-y-4 shadow-inner">
                   <div>
-                    <span className="text-[10px] text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">Before Trade</span>
+                    <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">Before Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_BEFORE.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-[#A0A0A0] hover:border-zinc-700 hover:text-[#EAEAEA]'}`}>
+                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-zinc-900 dark:text-[#EAEAEA]'}`}>
                           {m}
                         </button>
                       ))}
@@ -373,10 +373,10 @@ export default function JournalPage() {
                   </div>
                   <div className="h-px bg-white/5" />
                   <div>
-                    <span className="text-[10px] text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">After Trade</span>
+                    <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">After Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_AFTER.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-[#A0A0A0] hover:border-zinc-700 hover:text-[#EAEAEA]'}`}>
+                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-zinc-900 dark:text-[#EAEAEA]'}`}>
                           {m}
                         </button>
                       ))}
@@ -388,11 +388,11 @@ export default function JournalPage() {
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <label className="luxury-label mb-0">Mistake Intelligence</label>
-                  <span className="text-[9px] text-[#A0A0A0] uppercase tracking-widest bg-white/5 px-1.5 rounded">Multi-select</span>
+                  <span className="text-[9px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest bg-white/5 px-1.5 rounded">Multi-select</span>
                 </div>
-                <div className="flex flex-wrap gap-2 bg-black/20 p-3 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+                <div className="flex flex-wrap gap-2 bg-black/20 p-3 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
                   {MISTAKE_TAGS.map(tag => (
-                    <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-xs px-2.5 py-1 rounded-full border transition-all ${mistakes.includes(tag) ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-[#A0A0A0] hover:border-zinc-700'}`}>
+                    <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-xs px-2.5 py-1 rounded-full border transition-all ${mistakes.includes(tag) ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700'}`}>
                       {tag}
                     </button>
                   ))}
@@ -405,7 +405,7 @@ export default function JournalPage() {
                   {QUALITY_SCORES.map(s => {
                     const activeColor = 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]';
                     return (
-                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-2xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-transparent border-zinc-800 text-[#A0A0A0] hover:text-[#EAEAEA] shadow-inner'}`}>
+                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-2xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] shadow-inner'}`}>
                         {s}
                       </button>
                     )
@@ -425,7 +425,7 @@ export default function JournalPage() {
                   />
                 </div>
                 <div className="space-y-1.5 flex flex-col justify-end">
-                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border rounded-2xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-black/20 border-zinc-800 text-[#A0A0A0] hover:text-[#EAEAEA]'}`} onClick={() => setSlFollowed(!slFollowed)}>
+                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border rounded-2xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-black/20 border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]'}`} onClick={() => setSlFollowed(!slFollowed)}>
                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${slFollowed ? 'border-[#D4AF37] bg-[#D4AF37] text-zinc-950' : 'border-zinc-700 bg-transparent text-transparent'}`}>
                        <CheckCircle2 size={12} strokeWidth={4} />
                     </div>
@@ -459,13 +459,13 @@ export default function JournalPage() {
                     <div className="relative rounded-2xl overflow-hidden luxury-card h-[46px] group flex items-center shadow-inner">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-30" />
-                      <span className="relative z-10 text-xs text-[#EAEAEA] px-4 font-medium truncate">Image attached</span>
-                      <button type="button" onClick={() => { setImageFile(null); setPreviewUrl(null); }} className="absolute z-20 inset-y-0 right-0 px-3 bg-red-500/90 text-[#EAEAEA] text-xs font-bold transition-colors">
+                      <span className="relative z-10 text-xs text-zinc-900 dark:text-[#EAEAEA] px-4 font-medium truncate">Image attached</span>
+                      <button type="button" onClick={() => { setImageFile(null); setPreviewUrl(null); }} className="absolute z-20 inset-y-0 right-0 px-3 bg-red-500/90 text-zinc-900 dark:text-[#EAEAEA] text-xs font-bold transition-colors">
                         X
                       </button>
                     </div>
                   ) : (
-                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-dashed border-zinc-700/50 rounded-2xl bg-black/20 hover:border-[#D4AF37]/50 transition-all text-xs text-[#A0A0A0] group shadow-inner">
+                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-dashed border-zinc-700/50 rounded-2xl bg-black/20 hover:border-[#D4AF37]/50 transition-all text-xs text-zinc-600 dark:text-[#A0A0A0] group shadow-inner">
                       <ImagePlus size={14} className="group-hover:text-[#D4AF37] transition-colors" />
                       <span className="font-medium group-hover:text-[#D4AF37] transition-colors">Attach Setup</span>
                       <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
@@ -475,7 +475,7 @@ export default function JournalPage() {
               </div>
 
               {isFree && dailyJournalLimitReached && (
-                <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-2">
+                <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center gap-2">
                   <Lock size={14} /> Daily limit reached. Upgrade to log unlimited journal entries.
                 </div>
               )}
@@ -498,26 +498,26 @@ export default function JournalPage() {
           <div className="luxury-card p-5 grid grid-cols-2 md:grid-cols-4 gap-4 tracking-tight relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
             
-            <div className="bg-black/20 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-              <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><Activity size={12} className="text-[#D4AF37]" /> Trades View</span>
-              <p className="text-2xl font-bold text-[#EAEAEA] mt-1">{totalTradesCount}</p>
+            <div className="bg-black/20 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+              <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><Activity size={12} className="text-[#D4AF37]" /> Trades View</span>
+              <p className="text-2xl font-bold text-zinc-900 dark:text-[#EAEAEA] mt-1">{totalTradesCount}</p>
             </div>
             
-            <div className="bg-black/20 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-              <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5 cursor-help" title="Win Rate (Winning trades / Total trades)"><TrendingUp size={12} className="text-[#D4AF37]" /> Win Rate</span>
-              <p className="text-2xl font-bold text-[#EAEAEA] mt-1">{winRate.toFixed(2)}%</p>
+            <div className="bg-black/20 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+              <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5 cursor-help" title="Win Rate (Winning trades / Total trades)"><TrendingUp size={12} className="text-[#D4AF37]" /> Win Rate</span>
+              <p className="text-2xl font-bold text-zinc-900 dark:text-[#EAEAEA] mt-1">{winRate.toFixed(2)}%</p>
             </div>
             
-            <div className="bg-black/20 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-              <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><AlertTriangle size={12} className="text-[#D4AF37]" /> Top Mistake</span>
-              <p className="text-base font-bold text-amber-400 mt-2 truncate">
+            <div className="bg-black/20 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+              <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><AlertTriangle size={12} className="text-[#D4AF37]" /> Top Mistake</span>
+              <p className="text-base font-bold text-amber-600 dark:text-amber-400 mt-2 truncate">
                 {topMistake ? `${topMistake[0]} (${topMistake[1]})` : "None 🎉"}
               </p>
             </div>
 
-            <div className="bg-black/20 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-              <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><Flame size={12} className="text-[#D4AF37]" /> Discipline Score</span>
-              <p className="text-sm font-bold text-[#EAEAEA] mt-2">
+            <div className="bg-black/20 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+              <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5"><Flame size={12} className="text-[#D4AF37]" /> Discipline Score</span>
+              <p className="text-sm font-bold text-zinc-900 dark:text-[#EAEAEA] mt-2">
                 <span className="text-[#D4AF37] text-lg mr-1">{streakCount}</span> / 7 Days
               </p>
             </div>
@@ -532,7 +532,7 @@ export default function JournalPage() {
           <div className="luxury-card p-5 rounded-2xl relative overflow-hidden">
             <div className="grid grid-cols-7 gap-1 mb-3">
                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                 <div key={day} className="text-center text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#A0A0A0]">{day}</div>
+                 <div key={day} className="text-center text-[10px] sm:text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-[#A0A0A0]">{day}</div>
                ))}
             </div>
             <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
@@ -577,8 +577,8 @@ export default function JournalPage() {
                       !isCurrentMonth ? 'opacity-30 pointer-events-none border-transparent bg-transparent' :
                       isLocked ? 'opacity-40 cursor-not-allowed border-[rgba(212,175,55,0.05)] bg-black/40' :
                       isSelected ? 'border-[#D4AF37] bg-[#D4AF37]/10 shadow-[0_0_15px_rgba(212,175,55,0.15)] ring-1 ring-[#D4AF37]/50 scale-105 z-10' :
-                      hasEntries ? (isProfit ? 'border-[#10B981]/20 bg-[#10B981]/5 hover:border-[#10B981]/50 hover:bg-[#10B981]/10' : isLoss ? 'border-[#FF4D6D]/20 bg-[#FF4D6D]/5 hover:border-[#FF4D6D]/50 hover:bg-[#FF4D6D]/10' : 'border-[rgba(212,175,55,0.15)] bg-black/20 hover:bg-white/5') :
-                      'border-transparent bg-black/20 hover:border-[rgba(212,175,55,0.15)]'
+                      hasEntries ? (isProfit ? 'border-[#10B981]/20 bg-[#10B981]/5 hover:border-[#10B981]/50 hover:bg-[#10B981]/10' : isLoss ? 'border-[#FF4D6D]/20 bg-[#FF4D6D]/5 hover:border-[#FF4D6D]/50 hover:bg-[#FF4D6D]/10' : 'border-zinc-200 dark:border-[rgba(212,175,55,0.15)] bg-black/20 hover:bg-white/5') :
+                      'border-transparent bg-black/20 hover:border-zinc-200 dark:border-[rgba(212,175,55,0.15)]'
                     }`}
                   >
                     {isLocked && <Lock size={10} className="absolute top-1.5 right-1.5 text-zinc-600" />}
@@ -624,21 +624,21 @@ export default function JournalPage() {
               <div className="w-8 h-8 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 flex items-center justify-center">
                 <CalendarIcon className="text-[#D4AF37]" size={16} />
               </div>
-              <h3 className="text-xl font-bold text-[#EAEAEA] tracking-tight">
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">
                 {format(new Date(selectedDate), "EEEE, MMM dd, yyyy")}
               </h3>
             </div>
-            <button onClick={() => setSelectedDate(null)} className="p-1.5 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded-md transition-colors"><X size={18} /></button>
+            <button onClick={() => setSelectedDate(null)} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded-md transition-colors"><X size={18} /></button>
           </div>
             
             <div className="p-6 overflow-y-auto custom-scrollbar relative z-10 space-y-8">
                {(!groupedEntries[selectedDate] || groupedEntries[selectedDate].length === 0) ? (
                   <div className="py-12 flex flex-col items-center justify-center text-center">
-                    <div className="w-16 h-16 bg-black/20 rounded-full flex items-center justify-center mb-4 border border-[rgba(212,175,55,0.15)] shadow-inner">
+                    <div className="w-16 h-16 bg-black/20 rounded-full flex items-center justify-center mb-4 border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
                       <BookText size={24} className="text-zinc-600" />
                     </div>
-                    <p className="text-[#EAEAEA] font-bold mb-1">No Journal Entries</p>
-                    <p className="text-sm text-[#A0A0A0]">You haven't logged any reflections for this day.</p>
+                    <p className="text-zinc-900 dark:text-[#EAEAEA] font-bold mb-1">No Journal Entries</p>
+                    <p className="text-sm text-zinc-600 dark:text-[#A0A0A0]">You haven't logged any reflections for this day.</p>
                   </div>
                ) : (() => {
                  const dayEntries = groupedEntries[selectedDate];
@@ -653,17 +653,17 @@ export default function JournalPage() {
                    <>
                      {/* Daily Summary */}
                      <div className="grid grid-cols-3 gap-3">
-                       <div className="bg-black/20 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
-                         <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Total Trades</span>
-                         <span className="text-xl font-bold text-[#EAEAEA]">{totalTrades}</span>
+                       <div className="bg-black/20 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner text-center">
+                         <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Total Trades</span>
+                         <span className="text-xl font-bold text-zinc-900 dark:text-[#EAEAEA]">{totalTrades}</span>
                        </div>
-                       <div className="bg-black/20 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
-                         <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Win Rate</span>
+                       <div className="bg-black/20 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner text-center">
+                         <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Win Rate</span>
                          <span className="text-xl font-bold text-[#D4AF37]">{dayWinRate.toFixed(0)}%</span>
                        </div>
-                       <div className="bg-black/20 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner text-center">
-                         <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Net PnL</span>
-                         <span className={`text-xl font-bold ${netPnl > 0 ? 'text-[#10B981]' : netPnl < 0 ? 'text-[#FF4D6D]' : 'text-[#EAEAEA]'}`}>
+                       <div className="bg-black/20 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner text-center">
+                         <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest block mb-1">Net PnL</span>
+                         <span className={`text-xl font-bold ${netPnl > 0 ? 'text-[#10B981]' : netPnl < 0 ? 'text-[#FF4D6D]' : 'text-zinc-900 dark:text-[#EAEAEA]'}`}>
                            {netPnl > 0 ? '+' : ''}${netPnl}
                          </span>
                        </div>
@@ -675,7 +675,7 @@ export default function JournalPage() {
                          <div key={e.id} className="luxury-card p-5 relative overflow-hidden shadow-inner">
                            <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
                              <div className="flex flex-wrap gap-2 items-center">
-                               <span className="text-[10px] uppercase font-black text-[#A0A0A0] bg-white/5 px-2 py-0.5 rounded tracking-widest">Entry {idx + 1}</span>
+                               <span className="text-[10px] uppercase font-black text-zinc-600 dark:text-[#A0A0A0] bg-white/5 px-2 py-0.5 rounded tracking-widest">Entry {idx + 1}</span>
                                {e.qualityScore && (
                                 <span className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded border border-[#D4AF37]/20 bg-[#D4AF37]/10 text-[#D4AF37]">
                                   Grade {e.qualityScore}
@@ -688,20 +688,20 @@ export default function JournalPage() {
                                )}
                              </div>
                              <div className="flex items-center gap-1">
-                               <button onClick={(ev) => { ev.stopPropagation(); setEditingEntry(e); }} className="p-1.5 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded transition-colors" title="Edit"><Pencil size={12} /></button>
-                               <button onClick={(ev) => { ev.stopPropagation(); handleDelete(e.id); }} className="p-1.5 text-[#A0A0A0] hover:text-[#FF4D6D] hover:bg-[#FF4D6D]/10 rounded transition-colors" title="Delete"><Trash2 size={12} /></button>
+                               <button onClick={(ev) => { ev.stopPropagation(); setEditingEntry(e); }} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded transition-colors" title="Edit"><Pencil size={12} /></button>
+                               <button onClick={(ev) => { ev.stopPropagation(); handleDelete(e.id); }} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#FF4D6D] hover:bg-[#FF4D6D]/10 rounded transition-colors" title="Delete"><Trash2 size={12} /></button>
                              </div>
                            </div>
 
                            <div className="flex flex-wrap gap-2 mb-4">
-                             {e.moodBefore && <span className="text-[11px] font-bold text-[#A0A0A0] border border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg">💭 Prep: {e.moodBefore}</span>}
-                             {e.moodAfter && <span className="text-[11px] font-bold text-[#A0A0A0] border border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg">💭 Post: {e.moodAfter}</span>}
+                             {e.moodBefore && <span className="text-[11px] font-bold text-zinc-600 dark:text-[#A0A0A0] border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg">💭 Prep: {e.moodBefore}</span>}
+                             {e.moodAfter && <span className="text-[11px] font-bold text-zinc-600 dark:text-[#A0A0A0] border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg">💭 Post: {e.moodAfter}</span>}
                              {e.mistakes?.map(m => (
                                <span key={m} className="text-[11px] font-bold text-[#FF4D6D] border border-[#FF4D6D]/20 bg-[#FF4D6D]/5 px-2.5 py-1 rounded-lg">🧠 {m}</span>
                              ))}
                            </div>
 
-                           <div className="text-[14px] text-[#EAEAEA] whitespace-pre-wrap leading-relaxed">
+                           <div className="text-[14px] text-zinc-900 dark:text-[#EAEAEA] whitespace-pre-wrap leading-relaxed">
                              <SmartText text={e.text} />
                            </div>
 
@@ -711,8 +711,8 @@ export default function JournalPage() {
                                  {e.aiScore}
                                </div>
                                <div className="flex-1">
-                                 <span className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest block">AI Insight</span>
-                                 <span className="text-xs font-medium text-[#EAEAEA] block">{e.aiInsight || "No insight generated."}</span>
+                                 <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest block">AI Insight</span>
+                                 <span className="text-xs font-medium text-zinc-900 dark:text-[#EAEAEA] block">{e.aiInsight || "No insight generated."}</span>
                                </div>
                              </div>
                            )}
@@ -737,7 +737,7 @@ export default function JournalPage() {
             <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20 shrink-0 rounded-t-2xl">
               <div className="flex items-center gap-3">
                 <CalendarIcon className="text-[#D4AF37]" size={18} />
-                <h2 className="text-lg font-bold text-[#EAEAEA] tracking-tight">
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">
                   {format(new Date(viewingEntry.date), "EEEE, MMM dd, yyyy")}
                 </h2>
                 {viewingEntry.qualityScore && (
@@ -747,8 +747,8 @@ export default function JournalPage() {
                 )}
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => { setEditingEntry(viewingEntry); setViewingEntry(null); }} className="p-1.5 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded transition-colors mr-2" title="Edit"><Pencil size={18} /></button>
-                <button onClick={() => setViewingEntry(null)} className="p-1.5 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded-md transition-colors"><X size={18} /></button>
+                <button onClick={() => { setEditingEntry(viewingEntry); setViewingEntry(null); }} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded transition-colors mr-2" title="Edit"><Pencil size={18} /></button>
+                <button onClick={() => setViewingEntry(null)} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded-md transition-colors"><X size={18} /></button>
               </div>
             </div>
             
@@ -757,20 +757,20 @@ export default function JournalPage() {
                 
                 <div className="flex flex-wrap gap-2">
                   {viewingEntry.moodBefore && (
-                    <span className="text-[11px] font-bold tracking-wider text-[#A0A0A0] border border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg shadow-inner uppercase tracking-widest">Prep: {viewingEntry.moodBefore}</span>
+                    <span className="text-[11px] font-bold tracking-wider text-zinc-600 dark:text-[#A0A0A0] border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg shadow-inner uppercase tracking-widest">Prep: {viewingEntry.moodBefore}</span>
                   )}
                   {viewingEntry.moodAfter && (
-                    <span className="text-[11px] font-bold tracking-wider text-[#A0A0A0] border border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg shadow-inner uppercase tracking-widest">Post: {viewingEntry.moodAfter}</span>
+                    <span className="text-[11px] font-bold tracking-wider text-zinc-600 dark:text-[#A0A0A0] border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] bg-black/20 px-2.5 py-1 rounded-lg shadow-inner uppercase tracking-widest">Post: {viewingEntry.moodAfter}</span>
                   )}
                 </div>
 
-                <div className="text-[#EAEAEA] whitespace-pre-wrap leading-[1.8] font-medium text-[15px] opacity-90">
+                <div className="text-zinc-900 dark:text-[#EAEAEA] whitespace-pre-wrap leading-[1.8] font-medium text-[15px] opacity-90">
                   <SmartText text={viewingEntry.text} />
                 </div>
                 
                 {viewingEntry.mistakes && viewingEntry.mistakes.length > 0 && (
                   <div className="pt-4 border-t border-white/5">
-                    <span className="block text-[10px] text-[#A0A0A0] uppercase tracking-widest font-black mb-3">Identified Mistakes</span>
+                    <span className="block text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest font-black mb-3">Identified Mistakes</span>
                     <div className="flex flex-wrap gap-2">
                        {viewingEntry.mistakes.map(m => (
                          <span key={m} className="text-[11px] font-bold tracking-wider uppercase text-[#FF4D6D] border border-[#FF4D6D]/30 bg-[#FF4D6D]/10 px-3 py-1.5 rounded-lg shadow-sm">{m}</span>
@@ -788,7 +788,7 @@ export default function JournalPage() {
               </div>
               
               {viewingEntry.imageUrl && (
-                <div className="flex-1 rounded-2xl overflow-hidden border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] bg-black/20 flex flex-col">
+                <div className="flex-1 rounded-2xl overflow-hidden border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] bg-black/20 flex flex-col">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={viewingEntry.imageUrl} alt="Trading Chart Snapshot" className="w-full h-auto object-contain bg-black/40" />
                   <div className="p-3 bg-black/40 border-t border-white/5 flex justify-center">
@@ -872,8 +872,8 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
       <div className="luxury-card rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20 shrink-0">
-          <h2 className="text-lg font-bold text-[#EAEAEA]">Edit Journal Entry</h2>
-          <button onClick={onClose} className="p-1.5 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded-md transition-colors"><X size={18} /></button>
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-[#EAEAEA]">Edit Journal Entry</h2>
+          <button onClick={onClose} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded-md transition-colors"><X size={18} /></button>
         </div>
         
         <div className="p-6 overflow-y-auto custom-scrollbar">
@@ -887,7 +887,7 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
                <label className="luxury-label">Grade</label>
                <div className="flex gap-2">
                  {QUALITY_SCORES.map(s => (
-                   <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`flex-1 py-1.5 rounded-lg border font-bold text-sm transition-all ${qualityScore === s ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-[#A0A0A0] shadow-inner'}`}>{s}</button>
+                   <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`flex-1 py-1.5 rounded-lg border font-bold text-sm transition-all ${qualityScore === s ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] shadow-inner'}`}>{s}</button>
                  ))}
                </div>
             </div>
@@ -896,7 +896,7 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
               <label className="luxury-label">Mistakes</label>
               <div className="flex flex-wrap gap-2">
                 {MISTAKE_TAGS.map(tag => (
-                  <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-[11px] px-2 py-1 rounded-md border transition-all ${mistakes.includes(tag) ? 'bg-[#FF4D6D]/20 border-[#FF4D6D]/50 text-[#FF4D6D]' : 'bg-transparent border-zinc-800 text-[#A0A0A0]'}`}>{tag}</button>
+                  <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-[11px] px-2 py-1 rounded-md border transition-all ${mistakes.includes(tag) ? 'bg-[#FF4D6D]/20 border-[#FF4D6D]/50 text-[#FF4D6D]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0]'}`}>{tag}</button>
                 ))}
               </div>
             </div>
@@ -907,7 +907,7 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
             </div>
 
             <div className="pt-2 flex justify-end gap-3 border-t border-white/5">
-              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2.5 text-[13px] text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-white/5 rounded-2xl font-bold transition-colors">Cancel</button>
+              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2.5 text-[13px] text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-white/5 rounded-2xl font-bold transition-colors">Cancel</button>
               <button type="submit" disabled={submitting} className="luxury-button-gold px-6 py-2 h-auto text-[13px]">
                 {submitting && <Loader2 size={14} className="animate-spin" />} Save Updates
               </button>

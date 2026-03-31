@@ -29,10 +29,10 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
             </div>
           )}
           <h4 className="text-[#D4AF37] font-semibold tracking-widest text-sm uppercase mb-2">Pro Starter</h4>
-          <div className="text-[#EAEAEA] text-4xl font-black tracking-tighter mb-1">
-            $2.99 <span className="text-lg font-medium text-[#A0A0A0] tracking-normal">/ mo</span>
+          <div className="text-zinc-900 dark:text-[#EAEAEA] text-4xl font-black tracking-tighter mb-1">
+            $2.99 <span className="text-lg font-medium text-zinc-600 dark:text-[#A0A0A0] tracking-normal">/ mo</span>
           </div>
-          <p className="text-[#9CA3AF] text-sm mb-6 pb-6 border-b border-[#111827]">
+          <p className="text-[#9CA3AF] text-sm mb-6 pb-6 border-b border-zinc-200 dark:border-[#111827]">
             Perfect for casual traders looking to establish their execution baseline.
           </p>
           <ul className="space-y-4 text-sm text-[#E5E7EB]">
@@ -62,10 +62,10 @@ export default function PlanComparison({ currentPlan, onSelectPlan }: PlanCompar
             </div>
           )}
 
-          <h4 className="text-[#EAEAEA] font-semibold tracking-widest text-sm uppercase mb-2">Pro Elite</h4>
-          <div className="text-[#EAEAEA] text-4xl font-black tracking-tighter mb-1 flex items-baseline gap-3">
-            $19.99 <span className="text-lg font-medium text-[#A0A0A0] tracking-normal">/ yr</span>
-            <span className="text-sm text-[#A0A0A0] line-through tracking-normal font-normal">$36</span>
+          <h4 className="text-zinc-900 dark:text-[#EAEAEA] font-semibold tracking-widest text-sm uppercase mb-2">Pro Elite</h4>
+          <div className="text-zinc-900 dark:text-[#EAEAEA] text-4xl font-black tracking-tighter mb-1 flex items-baseline gap-3">
+            $19.99 <span className="text-lg font-medium text-zinc-600 dark:text-[#A0A0A0] tracking-normal">/ yr</span>
+            <span className="text-sm text-zinc-600 dark:text-[#A0A0A0] line-through tracking-normal font-normal">$36</span>
           </div>
           <div className="text-[#D4AF37] text-sm font-bold mb-6 pb-6 border-b border-white/5">
             Breaks down to strictly $1.75/month.

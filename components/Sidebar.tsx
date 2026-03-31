@@ -40,11 +40,11 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "shrink-0 sticky top-0 z-40 h-[100dvh] transition-all duration-300 ease-in-out bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border-r border-[#111827] flex flex-col",
+        "shrink-0 sticky top-0 z-40 h-[100dvh] transition-all duration-300 ease-in-out bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border-r border-zinc-200 dark:border-[#111827] flex flex-col",
         isExpanded ? "w-64 absolute md:relative shadow-2xl md:shadow-none" : "w-16"
       )}
     >
-      <div className={cn("flex items-center border-b border-[#111827] h-16 shrink-0", isExpanded ? "justify-between px-4" : "justify-center")}>
+      <div className={cn("flex items-center border-b border-zinc-200 dark:border-[#111827] h-16 shrink-0", isExpanded ? "justify-between px-4" : "justify-center")}>
         {isExpanded && (
           <div className="flex items-center gap-3 overflow-hidden transition-all">
             <JBLogo size={24} />
@@ -52,7 +52,7 @@ export default function Sidebar() {
         )}
         <button
           onClick={toggleSidebar}
-          className="p-1 text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-800 rounded-md transition-colors"
+          className="p-1 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-md transition-colors"
           aria-label="Toggle Sidebar"
         >
           {isExpanded ? <X size={20} /> : <Menu size={20} />}
@@ -71,8 +71,8 @@ export default function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative",
                 isActive
-                  ? item.href === '/dashboard' ? "bg-[#D4AF37]/10 text-[#D4AF37] font-medium shadow-[inset_2px_0_0_0_#D4AF37]" : "bg-[#111827] text-[#EAEAEA] font-medium shadow-[inset_2px_0_0_0_#EAEAEA]"
-                  : "text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-[#111827]"
+                  ? item.href === '/dashboard' ? "bg-[#D4AF37]/10 text-[#D4AF37] font-medium shadow-[inset_2px_0_0_0_#D4AF37]" : "bg-[#111827] text-zinc-900 dark:text-[#EAEAEA] font-medium shadow-[inset_2px_0_0_0_#EAEAEA]"
+                  : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-[#111827]"
               )}
               title={!isExpanded ? item.label : undefined}
             >
@@ -90,13 +90,13 @@ export default function Sidebar() {
               
               {/* Pro hint badge */}
               {hasProHint && isExpanded && (
-                <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-zinc-600 bg-zinc-800 px-1.5 py-0.5 rounded">
+                <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-zinc-600 bg-zinc-200 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
                   Pro
                 </span>
               )}
 
               {!isExpanded && (
-                <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-[#EAEAEA] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+                <div className="absolute left-14 px-2 py-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
                   {item.label} {hasProHint ? " (Limited)" : ""}
                 </div>
               )}
@@ -105,27 +105,27 @@ export default function Sidebar() {
         })}
       </nav>
       
-      <div className={cn("px-2 py-4 border-t border-[#111827] flex items-center gap-2", isExpanded ? "justify-start pl-4" : "justify-center flex-col")}>
+      <div className={cn("px-2 py-4 border-t border-zinc-200 dark:border-[#111827] flex items-center gap-2", isExpanded ? "justify-start pl-4" : "justify-center flex-col")}>
         <button
           onClick={() => window.dispatchEvent(new Event("openSupportModal"))}
-          className="p-2.5 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-lg transition-colors relative group"
+          className="p-2.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-lg transition-colors relative group"
           title="Support Chat"
         >
           <Headset size={20} />
           {!isExpanded && (
-            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-[#EAEAEA] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+            <div className="absolute left-14 px-2 py-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
               Support
             </div>
           )}
         </button>
         <button
           onClick={toggleTheme}
-          className="p-2.5 text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-800 rounded-lg transition-colors relative group"
+          className="p-2.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-lg transition-colors relative group"
           title="Toggle Theme"
         >
           {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           {!isExpanded && (
-            <div className="absolute left-14 px-2 py-1 bg-zinc-800 text-[#EAEAEA] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+            <div className="absolute left-14 px-2 py-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
               Theme
             </div>
           )}

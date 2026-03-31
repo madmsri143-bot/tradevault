@@ -106,17 +106,17 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
       
       {/* Modal */}
-      <div className="relative w-full max-w-5xl bg-[#0B0F14] rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-5xl bg-zinc-50 dark:bg-[#0B0F14] rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md shrink-0">
+        <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md shrink-0">
           <div>
-            <h2 className="text-xl font-bold text-[#EAEAEA] flex items-center gap-2">
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-2">
               <Check className="text-emerald-500" /> Detected {trades.length} Trades
             </h2>
-            <p className="text-sm text-[#A0A0A0] mt-1">Review the AI-mapped trades below. Correct any false readings before saving.</p>
+            <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mt-1">Review the AI-mapped trades below. Correct any false readings before saving.</p>
           </div>
-          <button onClick={onClose} className="p-2 text-[#A0A0A0] hover:text-[#EAEAEA] rounded-lg hover:bg-white/5 transition-colors">
+          <button onClick={onClose} className="p-2 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] rounded-lg hover:bg-white/5 transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -124,7 +124,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
         {/* Content (Table Grid) */}
         <div className="flex-1 overflow-auto p-6 custom-scrollbar bg-black/20">
           <div className="min-w-[800px]">
-            <div className="grid grid-cols-8 gap-2 mb-3 px-2 text-xs font-bold text-[#A0A0A0] uppercase tracking-widest pb-2 border-b border-[#111827]">
+            <div className="grid grid-cols-8 gap-2 mb-3 px-2 text-xs font-bold text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest pb-2 border-b border-zinc-200 dark:border-[#111827]">
               <div className="col-span-1">Symbol</div>
               <div className="col-span-1">Type</div>
               <div className="col-span-1">Lot</div>
@@ -137,14 +137,14 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
 
             <div className="space-y-3">
               {trades.map((trade, idx) => (
-                <div key={idx} className="grid grid-cols-8 gap-2 items-center bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-2 rounded-2xl group hover:border-emerald-500/30 transition-colors">
+                <div key={idx} className="grid grid-cols-8 gap-2 items-center bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] p-2 rounded-2xl group hover:border-emerald-500/30 transition-colors">
                   
                   <div className="col-span-1">
                     <input 
                       type="text" 
                       value={trade.symbol} 
                       onChange={(e) => handleUpdateTrade(idx, "symbol", e.target.value)}
-                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm font-bold focus:outline-none focus:border-emerald-500 transition-colors ${isValidValue("symbol", trade.symbol) ? "border-transparent text-[#EAEAEA]" : "border-red-500/50 text-red-400 focus:border-red-500"}`}
+                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm font-bold focus:outline-none focus:border-emerald-500 transition-colors ${isValidValue("symbol", trade.symbol) ? "border-transparent text-zinc-900 dark:text-[#EAEAEA]" : "border-red-500/50 text-red-600 dark:text-red-400 focus:border-red-500"}`}
                     />
                   </div>
 
@@ -153,7 +153,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
                       type="text" 
                       value={trade.type} 
                       onChange={(e) => handleUpdateTrade(idx, "type", e.target.value)}
-                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm font-bold uppercase focus:outline-none focus:border-emerald-500 transition-colors ${isValidValue("type", trade.type) ? trade.type.toUpperCase() === "BUY" ? "border-transparent text-emerald-400" : "border-transparent text-red-400" : "border-red-500/50 text-red-400"}`}
+                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm font-bold uppercase focus:outline-none focus:border-emerald-500 transition-colors ${isValidValue("type", trade.type) ? trade.type.toUpperCase() === "BUY" ? "border-transparent text-emerald-600 dark:text-emerald-400" : "border-transparent text-red-600 dark:text-red-400" : "border-red-500/50 text-red-600 dark:text-red-400"}`}
                     />
                   </div>
 
@@ -163,7 +163,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
                       step="any"
                       value={trade.lot} 
                       onChange={(e) => handleUpdateTrade(idx, "lot", e.target.value)}
-                      className="w-full bg-black/40 border border-transparent rounded px-3 py-2 text-sm text-[#EAEAEA] focus:outline-none focus:border-emerald-500 transition-colors"
+                      className="w-full bg-black/40 border border-transparent rounded px-3 py-2 text-sm text-zinc-900 dark:text-[#EAEAEA] focus:outline-none focus:border-emerald-500 transition-colors"
                     />
                   </div>
 
@@ -173,7 +173,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
                       step="any"
                       value={trade.entry} 
                       onChange={(e) => handleUpdateTrade(idx, "entry", e.target.value)}
-                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm text-[#EAEAEA] focus:outline-none transition-colors ${isValidValue("entry", trade.entry) ? "border-transparent focus:border-emerald-500" : "border-red-500/50 text-red-400 focus:border-red-500"}`}
+                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm text-zinc-900 dark:text-[#EAEAEA] focus:outline-none transition-colors ${isValidValue("entry", trade.entry) ? "border-transparent focus:border-emerald-500" : "border-red-500/50 text-red-600 dark:text-red-400 focus:border-red-500"}`}
                     />
                   </div>
 
@@ -183,18 +183,18 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
                       step="any"
                       value={trade.exit} 
                       onChange={(e) => handleUpdateTrade(idx, "exit", e.target.value)}
-                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm text-[#EAEAEA] focus:outline-none transition-colors ${isValidValue("exit", trade.exit) ? "border-transparent focus:border-emerald-500" : "border-red-500/50 text-red-400 focus:border-red-500"}`}
+                      className={`w-full bg-black/40 border rounded px-3 py-2 text-sm text-zinc-900 dark:text-[#EAEAEA] focus:outline-none transition-colors ${isValidValue("exit", trade.exit) ? "border-transparent focus:border-emerald-500" : "border-red-500/50 text-red-600 dark:text-red-400 focus:border-red-500"}`}
                     />
                   </div>
 
                   <div className="col-span-1 relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A0A0A0] text-sm">$</div>
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 dark:text-[#A0A0A0] text-sm">$</div>
                     <input 
                       type="number" 
                       step="any"
                       value={trade.pnl} 
                       onChange={(e) => handleUpdateTrade(idx, "pnl", e.target.value)}
-                      className={`w-full bg-black/40 border rounded pl-7 pr-3 py-2 text-sm focus:outline-none font-bold transition-colors ${isValidValue("pnl", trade.pnl) ? parseFloat(trade.pnl as string) >= 0 ? "border-transparent text-emerald-400 focus:border-emerald-500" : "border-transparent text-red-400 focus:border-red-500" : "border-red-500/50 text-red-400 focus:border-red-500"}`}
+                      className={`w-full bg-black/40 border rounded pl-7 pr-3 py-2 text-sm focus:outline-none font-bold transition-colors ${isValidValue("pnl", trade.pnl) ? parseFloat(trade.pnl as string) >= 0 ? "border-transparent text-emerald-600 dark:text-emerald-400 focus:border-emerald-500" : "border-transparent text-red-600 dark:text-red-400 focus:border-red-500" : "border-red-500/50 text-red-600 dark:text-red-400 focus:border-red-500"}`}
                     />
                   </div>
 
@@ -203,14 +203,14 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
                       type="date" 
                       value={trade.date} 
                       onChange={(e) => handleUpdateTrade(idx, "date", e.target.value)}
-                      className="w-full bg-black/40 border border-transparent rounded px-2 py-2 text-xs text-[#A0A0A0] focus:outline-none focus:border-emerald-500 transition-colors"
+                      className="w-full bg-black/40 border border-transparent rounded px-2 py-2 text-xs text-zinc-600 dark:text-[#A0A0A0] focus:outline-none focus:border-emerald-500 transition-colors"
                     />
                   </div>
 
                   <div className="col-span-1 flex justify-end">
                     <button 
                       onClick={() => handleRemoveTrade(idx)}
-                      className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-[#EAEAEA] rounded-lg transition-colors border border-red-500/20"
+                      className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-zinc-900 dark:text-[#EAEAEA] rounded-lg transition-colors border border-red-500/20"
                       title="Discard Row"
                     >
                       <Trash2 size={16} />
@@ -222,7 +222,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
             </div>
             
             {!validateTrades() && (
-              <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-2 text-red-400 text-sm">
+              <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-2 text-red-600 dark:text-red-400 text-sm">
                 <AlertCircle size={16} /> 
                 <span className="font-semibold">Validation Error:</span> Please correct the fields highlighted in red (Must be numeric, or BUY/SELL type) before saving.
               </div>
@@ -232,13 +232,13 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md shrink-0 flex items-center justify-between">
-          <p className="text-xs text-[#A0A0A0] font-medium">* Commission variables are tracked but ignored for net PnL inputs by default.</p>
+        <div className="p-6 border-t border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md shrink-0 flex items-center justify-between">
+          <p className="text-xs text-zinc-600 dark:text-[#A0A0A0] font-medium">* Commission variables are tracked but ignored for net PnL inputs by default.</p>
           <div className="flex gap-3">
             <button 
               onClick={onClose} 
               disabled={saving}
-              className="px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-[#EAEAEA] font-medium rounded-2xl transition-colors border border-[rgba(212,175,55,0.15)] disabled:opacity-50"
+              className="px-6 py-2.5 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-700 text-zinc-900 dark:text-[#EAEAEA] font-medium rounded-2xl transition-colors border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] disabled:opacity-50"
             >
               Cancel
             </button>

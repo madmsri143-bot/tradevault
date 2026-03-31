@@ -64,8 +64,8 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
 
   return (
     <>
-      <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden mt-6">
-        <div className="p-4 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex justify-between items-center">
+      <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] fade-slide-up shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden mt-6">
+        <div className="p-4 border-b border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md flex justify-between items-center">
           <h2 className="text-xl font-semibold text-[#D4AF37]">Trade History</h2>
           {selectedTradeIds.length > 0 && (
              <button onClick={handleDeleteSelected} className="px-3 py-1.5 bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5">
@@ -75,8 +75,8 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
         </div>
         
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-[#A0A0A0]">
-            <thead className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md text-xs text-[#A0A0A0] uppercase border-b border-[#111827]">
+          <table className="w-full text-left text-sm text-zinc-600 dark:text-[#A0A0A0]">
+            <thead className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md text-xs text-zinc-600 dark:text-[#A0A0A0] uppercase border-b border-zinc-200 dark:border-[#111827]">
               <tr>
                 <th className="px-4 py-3 font-medium w-10">
                   <input type="checkbox" checked={trades.length > 0 && selectedTradeIds.length === trades.length} onChange={handleSelectAll} className="accent-[#D4AF37] w-3.5 h-3.5 cursor-pointer" />
@@ -96,7 +96,7 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
             <tbody className="divide-y divide-white/5">
               {trades.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="px-4 py-8 text-center text-[#A0A0A0]">
+                  <td colSpan={11} className="px-4 py-8 text-center text-zinc-600 dark:text-[#A0A0A0]">
                     No trades found. Start logging!
                   </td>
                 </tr>
@@ -104,51 +104,51 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
                 trades.map((trade) => {
                   const isProfit = (trade.pnl || 0) >= 0;
                   return (
-                    <tr key={trade.id} className="hover:bg-zinc-800/30 transition-colors group">
+                    <tr key={trade.id} className="hover:bg-zinc-200 dark:bg-zinc-800/30 transition-colors group">
                       <td className="px-4 py-3">
                         <input type="checkbox" checked={selectedTradeIds.includes(trade.id || "")} onChange={() => handleSelect(trade.id || "")} className="accent-[#D4AF37] w-3.5 h-3.5 cursor-pointer" />
                       </td>
-                      <td className="px-4 py-3 text-[#EAEAEA]">
+                      <td className="px-4 py-3 text-zinc-900 dark:text-[#EAEAEA]">
                         {format(new Date(trade.date), "MMM d, yyyy")}
                       </td>
-                      <td className="px-4 py-3 font-bold text-[#EAEAEA]">
+                      <td className="px-4 py-3 font-bold text-zinc-900 dark:text-[#EAEAEA]">
                         {trade.symbol || "-"}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                          trade.type === 'buy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'
+                          trade.type === 'buy' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'
                         }`}>
                           {trade.type ? trade.type.toUpperCase() : "-"}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-[#A0A0A0] font-mono">{trade.entryPrice || "-"}</td>
-                      <td className="px-4 py-3 text-[#A0A0A0] font-mono">{trade.exitPrice || "-"}</td>
+                      <td className="px-4 py-3 text-zinc-600 dark:text-[#A0A0A0] font-mono">{trade.entryPrice || "-"}</td>
+                      <td className="px-4 py-3 text-zinc-600 dark:text-[#A0A0A0] font-mono">{trade.exitPrice || "-"}</td>
                       <td className="px-4 py-3">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                          isProfit ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'
+                          isProfit ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'
                         }`}>
                           {trade.result ? trade.result.toUpperCase() : (isProfit ? "PROFIT" : "LOSS")}
                         </span>
                       </td>
-                      <td className={`px-4 py-3 font-black tabular-nums ${isProfit ? 'text-emerald-400' : 'text-red-500'}`}>
+                      <td className={`px-4 py-3 font-black tabular-nums ${isProfit ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`}>
                         {isProfit ? "+" : "-"}{formatCurrency(Math.abs(trade.normalizedPnl || trade.pnl || 0), displayCurrency)}
                       </td>
-                      <td className="px-4 py-3 text-[#EAEAEA] font-medium">{trade.lot || "-"}</td>
-                      <td className="px-4 py-3 max-w-[200px] truncate text-[#A0A0A0]">
+                      <td className="px-4 py-3 text-zinc-900 dark:text-[#EAEAEA] font-medium">{trade.lot || "-"}</td>
+                      <td className="px-4 py-3 max-w-[200px] truncate text-zinc-600 dark:text-[#A0A0A0]">
                         {trade.note || "-"}
                       </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => setEditingTrade(trade)}
-                            className="p-1.5 text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-700 rounded-md transition-colors"
+                            className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-700 rounded-md transition-colors"
                             title="Edit"
                           >
                             <Pencil size={14} />
                           </button>
                           <button
                             onClick={() => handleDelete(trade.id)}
-                            className="p-1.5 text-[#A0A0A0] hover:text-red-400 hover:bg-red-500/20 rounded-md transition-colors"
+                            className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-red-600 dark:text-red-400 hover:bg-red-500/20 rounded-md transition-colors"
                             title="Delete"
                           >
                             <Trash2 size={14} />

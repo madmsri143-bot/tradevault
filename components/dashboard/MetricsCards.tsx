@@ -64,7 +64,7 @@ export default React.memo(function MetricsCards({ trades, displayCurrency = "USD
       title: "Total PnL",
       value: formatCurrency(totalPnl, displayCurrency),
       icon: <DollarSign size={20} className={totalPnl >= 0 ? "text-emerald-500" : "text-red-500"} />,
-      colorClass: totalPnl >= 0 ? "text-emerald-400" : "text-red-400"
+      colorClass: totalPnl >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
     },
     {
       title: "Win Rate",
@@ -79,14 +79,14 @@ export default React.memo(function MetricsCards({ trades, displayCurrency = "USD
       title: "Profit Efficiency",
       value: `${profitEfficiency.toFixed(2)}%`,
       icon: <Target size={20} className="text-amber-500" />,
-      colorClass: "text-amber-400",
+      colorClass: "text-amber-600 dark:text-amber-400",
       chartData: peTrend,
       chartColor: "#fbbf24"
     },
     {
       title: "Total Trades",
       value: totalTrades,
-      icon: <Hash size={20} className="text-[#A0A0A0]" />,
+      icon: <Hash size={20} className="text-zinc-600 dark:text-[#A0A0A0]" />,
       colorClass: "text-zinc-100"
     },
     {
@@ -99,24 +99,24 @@ export default React.memo(function MetricsCards({ trades, displayCurrency = "USD
       title: "Biggest Win",
       value: formatCurrency(biggestWin, displayCurrency),
       icon: <ArrowUpRight size={20} className="text-emerald-500" />,
-      colorClass: "text-emerald-400"
+      colorClass: "text-emerald-600 dark:text-emerald-400"
     },
     {
       title: "Biggest Loss",
       value: formatCurrency(biggestLoss, displayCurrency),
       icon: <ArrowDownRight size={20} className="text-red-500" />,
-      colorClass: "text-red-400"
+      colorClass: "text-red-600 dark:text-red-400"
     }
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mb-2">
       {cards.map((card, i) => (
-        <div key={i} className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-6 rounded-2xl flex flex-col justify-center transition-all hover:-translate-y-[2px] hover:border-[rgba(212,175,55,0.25)] hover:shadow-[0_8px_32px_rgba(212,175,55,0.1),inset_0_1px_0_rgba(255,255,255,0.02)] transition-all duration-300 group">
+        <div key={i} className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] fade-slide-up shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-6 rounded-2xl flex flex-col justify-center transition-all hover:-translate-y-[2px] hover:border-[rgba(212,175,55,0.25)] hover:shadow-[0_8px_32px_rgba(212,175,55,0.1),inset_0_1px_0_rgba(255,255,255,0.02)] transition-all duration-300 group">
           <div className="flex items-center justify-between w-full">
             <div>
               <p 
-                className="text-[13px] text-[#A0A0A0] mb-1.5 font-medium tracking-wide uppercase cursor-help"
+                className="text-[13px] text-zinc-600 dark:text-[#A0A0A0] mb-1.5 font-medium tracking-wide uppercase cursor-help"
                 title={(card as any).tooltip || card.title}
               >
                 {card.title}
@@ -125,7 +125,7 @@ export default React.memo(function MetricsCards({ trades, displayCurrency = "USD
                 {card.value}
               </p>
             </div>
-            <div className="h-12 w-12 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center justify-center rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner shrink-0 group-hover:scale-110 transition-transform">
+            <div className="h-12 w-12 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md flex items-center justify-center rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner shrink-0 group-hover:scale-110 transition-transform">
               {card.icon}
             </div>
           </div>

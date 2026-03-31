@@ -3,20 +3,20 @@ import { ArrowLeft } from "lucide-react";
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-black text-[#EAEAEA] p-8 md:p-16 max-w-4xl mx-auto selection:bg-[#D4AF37]/30 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-black text-zinc-900 dark:text-[#EAEAEA] p-8 md:p-16 max-w-4xl mx-auto selection:bg-[#D4AF37]/30 animate-in fade-in duration-500">
       <div className="mb-10">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#D4AF37]/80 pb-2 transition-colors">
           <ArrowLeft size={16} /> Back to App
         </Link>
-        <h1 className="text-4xl md:text-5xl font-bold text-[#EAEAEA] mt-4 mb-2 tracking-tight">Privacy Policy</h1>
-        <p className="text-[#A0A0A0] font-medium">Last Updated: March 2026</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-[#EAEAEA] mt-4 mb-2 tracking-tight">Privacy Policy</h1>
+        <p className="text-zinc-600 dark:text-[#A0A0A0] font-medium">Last Updated: March 2026</p>
       </div>
 
       <div className="space-y-10 text-base leading-relaxed">
         <section>
           <h2 className="text-2xl font-semibold text-[#D4AF37] mb-3">1. What We Collect</h2>
           <p>We only collect the absolute minimum data required to keep the application functioning seamlessly for you:</p>
-          <ul className="list-disc pl-6 mt-4 space-y-3 text-[#A0A0A0]">
+          <ul className="list-disc pl-6 mt-4 space-y-3 text-zinc-600 dark:text-[#A0A0A0]">
             <li><strong className="text-zinc-200">Account Data:</strong> Your name, username, email address, and profile picture (via your preferred Authentication method).</li>
             <li><strong className="text-zinc-200">Trading Data:</strong> The trades you meticulously log, personal journal notes, targets, and any visual chart images you upload.</li>
             <li><strong className="text-zinc-200">Technical Data:</strong> Basic functional cookies and local storage items (like theme preference and cookie consent) strictly required to run the app.</li>

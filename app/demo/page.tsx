@@ -39,7 +39,7 @@ export default function DemoPage() {
         {/* Sticky Demo Banner */}
         <div className="bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37] px-4 py-3 rounded-2xl mb-6 flex flex-col sm:flex-row items-center justify-between text-sm font-bold animate-pulse">
            <div className="flex items-center gap-2">
-             <Link href="/" className="px-2 py-1 bg-black/40 hover:bg-black/80 rounded transition-colors text-[#EAEAEA] mr-2"><ArrowLeft size={16}/></Link>
+             <Link href="/" className="px-2 py-1 bg-black/40 hover:bg-black/80 rounded transition-colors text-zinc-900 dark:text-[#EAEAEA] mr-2"><ArrowLeft size={16}/></Link>
              🚀 Demo Mode - You are viewing read-only sample data.
            </div>
            <Link href="/signup" className="mt-2 sm:mt-0 px-4 py-1.5 bg-[#D4AF37] text-black rounded-lg hover:bg-white transition-colors">
@@ -48,23 +48,23 @@ export default function DemoPage() {
         </div>
 
         {/* Header and Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#111827] pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 dark:border-[#111827] pb-6">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-[#D4AF37]">Dashboard Overview</h2>
-            <p className="text-sm text-[#A0A0A0] mt-1">Track, analyze, and optimize your trading performance.</p>
+            <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mt-1">Track, analyze, and optimize your trading performance.</p>
           </div>
           
-          <div className="flex items-center gap-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-2 rounded-lg">
-            <span className="text-sm text-[#A0A0A0] font-medium ml-2">Displaying in:</span>
+          <div className="flex items-center gap-2 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] p-2 rounded-lg">
+            <span className="text-sm text-zinc-600 dark:text-[#A0A0A0] font-medium ml-2">Displaying in:</span>
             <div className="relative">
               <select
                 value={displayCurrency}
                 onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-                className="bg-[#0A0A0A] border border-[rgba(212,175,55,0.15)] text-[#D4AF37] appearance-none pr-8 font-semibold rounded-lg p-1.5 text-sm focus:border-[#D4AF37] focus:outline-none focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
+                className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] text-[#D4AF37] appearance-none pr-8 font-semibold rounded-lg p-1.5 text-sm focus:border-[#D4AF37] focus:outline-none focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
               >
-                <option value="USD" className="bg-[#0A0A0A]">USD ($)</option>
-                <option value="EUR" className="bg-[#0A0A0A]">EUR (€)</option>
-                <option value="INR" className="bg-[#0A0A0A]">INR (₹)</option>
+                <option value="USD" className="bg-white dark:bg-[#0A0A0A]">USD ($)</option>
+                <option value="EUR" className="bg-white dark:bg-[#0A0A0A]">EUR (€)</option>
+                <option value="INR" className="bg-white dark:bg-[#0A0A0A]">INR (₹)</option>
               </select>
               <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#D4AF37] pointer-events-none" />
             </div>
@@ -73,13 +73,13 @@ export default function DemoPage() {
 
         {/* TABS & GLOBAL DATE FILTER */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 mt-6">
-          <div className="flex items-center gap-1 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-1 rounded-2xl w-fit">
+          <div className="flex items-center gap-1 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] p-1 rounded-2xl w-fit">
             {(["overview", "calendar", "analytics", "history"] as TabType[]).map(t => (
               <button 
                 key={t}
                 onClick={() => setActiveTab(t)}
                 className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
-                  activeTab === t ? 'bg-zinc-800 text-[#D4AF37] shadow-sm' : 'text-[#A0A0A0] hover:text-[#EAEAEA]'
+                  activeTab === t ? 'bg-zinc-200 dark:bg-zinc-800 text-[#D4AF37] shadow-sm' : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]'
                 }`}
               >
                 {t === "history" ? "Trade History" : t}
@@ -88,11 +88,11 @@ export default function DemoPage() {
           </div>
 
           {activeTab !== "calendar" && (
-            <div className="flex items-center gap-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] p-2 rounded-2xl pointer-events-none opacity-50">
-              <CalendarIcon size={16} className="text-[#A0A0A0] ml-1" />
-              <input type="date" value="" readOnly className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
-              <span className="text-[#A0A0A0] text-xs font-medium">to</span>
-              <input type="date" value="" readOnly className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
+            <div className="flex items-center gap-3 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] p-2 rounded-2xl pointer-events-none opacity-50">
+              <CalendarIcon size={16} className="text-zinc-600 dark:text-[#A0A0A0] ml-1" />
+              <input type="date" value="" readOnly className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
+              <span className="text-zinc-600 dark:text-[#A0A0A0] text-xs font-medium">to</span>
+              <input type="date" value="" readOnly className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none" />
             </div>
           )}
         </div>
@@ -107,7 +107,7 @@ export default function DemoPage() {
                   className="bg-emerald-500 text-black p-4 rounded-full shadow-[0_4px_20px_rgba(16,185,129,0.4)] flex items-center justify-center relative z-20 cursor-not-allowed opacity-80 group hover:scale-[1.02] transition-transform"
                 >
                   <span className="font-bold text-xl">+</span>
-                  <span className="absolute left-full ml-4 bg-zinc-800/90 backdrop-blur-md text-[#EAEAEA] text-sm font-bold px-4 py-2 rounded-2xl opacity-0 group-hover:opacity-100 whitespace-nowrap shadow-xl border border-[rgba(212,175,55,0.15)] transition-opacity">
+                  <span className="absolute left-full ml-4 bg-zinc-200 dark:bg-zinc-800/90 backdrop-blur-md text-zinc-900 dark:text-[#EAEAEA] text-sm font-bold px-4 py-2 rounded-2xl opacity-0 group-hover:opacity-100 whitespace-nowrap shadow-xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] transition-opacity">
                     Add Trade (Demo Mode)
                   </span>
                 </button>
@@ -130,19 +130,19 @@ export default function DemoPage() {
         )}
 
         {activeTab === "calendar" && (
-          <div className="animate-in fade-in duration-300 pt-4 border-t border-[#111827] pointer-events-none">
+          <div className="animate-in fade-in duration-300 pt-4 border-t border-zinc-200 dark:border-[#111827] pointer-events-none">
             <CalendarView trades={mockTrades} displayCurrency={displayCurrency} />
           </div>
         )}
 
         {activeTab === "analytics" && (
-          <div className="animate-in fade-in duration-300 pt-4 border-t border-[#111827] pointer-events-none">
+          <div className="animate-in fade-in duration-300 pt-4 border-t border-zinc-200 dark:border-[#111827] pointer-events-none">
             <AnalyticsTab trades={mockTrades} displayCurrency={displayCurrency} />
           </div>
         )}
 
         {activeTab === "history" && (
-          <div className="animate-in fade-in duration-300 pt-4 border-t border-[#111827] relative">
+          <div className="animate-in fade-in duration-300 pt-4 border-t border-zinc-200 dark:border-[#111827] relative">
              <div className="absolute inset-0 z-10 pointer-events-auto cursor-not-allowed"></div>
              <HistoryTab trades={mockTrades} displayCurrency={displayCurrency} />
           </div>

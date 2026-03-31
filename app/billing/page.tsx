@@ -108,7 +108,7 @@ export default function BillingPage() {
       <section className="fade-slide-up" style={{ animationDelay: "100ms" }}>
         <PlanHeroCard plan={plan} isPro={isPro} expiryDate={effectiveExpiry} />
         
-        <div className="px-8 pb-8 -mt-6 bg-[#0B0F14] border-x border-b border-[#111827] rounded-b-2xl shadow-xl">
+        <div className="px-8 pb-8 -mt-6 bg-zinc-50 dark:bg-[#0B0F14] border-x border-b border-zinc-200 dark:border-[#111827] rounded-b-2xl shadow-xl">
           <PlanProgressBar plan={plan} isPro={isPro} expiryDate={effectiveExpiry} />
           <PlanActions 
             plan={plan} 

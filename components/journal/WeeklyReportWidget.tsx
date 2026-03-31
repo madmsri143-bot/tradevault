@@ -115,33 +115,33 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
         <div className="absolute inset-0 bg-[#D4AF37]/5 blur-3xl rounded-full" />
         
         <div className="relative z-10 flex items-center justify-between mb-6">
-          <h3 className="font-brand font-black tracking-tight text-[#EAEAEA] flex items-center gap-2">
+          <h3 className="font-brand font-black tracking-tight text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-2">
             <BrainCircuit className="text-[#D4AF37]" /> Weekly AI Report
           </h3>
-          <span className="text-[10px] uppercase font-black tracking-widest bg-zinc-800 text-[#A0A0A0] px-2 py-1 rounded">Pro Only</span>
+          <span className="text-[10px] uppercase font-black tracking-widest bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-[#A0A0A0] px-2 py-1 rounded">Pro Only</span>
         </div>
 
         <div className="relative pointer-events-none select-none filter blur-sm opacity-50 space-y-4">
           <div className="flex gap-4">
-            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl flex-1 border border-[rgba(212,175,55,0.15)]">
-              <span className="text-[10px] text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Avg Score</span>
+            <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md p-4 rounded-2xl flex-1 border border-zinc-200 dark:border-[rgba(212,175,55,0.15)]">
+              <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Avg Score</span>
               <p className="text-3xl font-black text-amber-500">68</p>
             </div>
-            <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl flex-1 border border-[rgba(212,175,55,0.15)]">
-              <span className="text-[10px] text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Top Mistake</span>
-              <p className="text-sm font-black text-red-400 mt-3 truncate">Overtrading</p>
+            <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md p-4 rounded-2xl flex-1 border border-zinc-200 dark:border-[rgba(212,175,55,0.15)]">
+              <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Top Mistake</span>
+              <p className="text-sm font-black text-red-600 dark:text-red-400 mt-3 truncate">Overtrading</p>
             </div>
           </div>
-          <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-[rgba(212,175,55,0.15)]">
-            <span className="text-[10px] text-[#A0A0A0] uppercase tracking-widest font-black block mb-1">Advice</span>
-            <p className="text-sm font-medium text-[#A0A0A0]">Reduce trade frequency after losses and stick to your Daily target edge.</p>
+          <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)]">
+            <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest font-black block mb-1">Advice</span>
+            <p className="text-sm font-medium text-zinc-600 dark:text-[#A0A0A0]">Reduce trade frequency after losses and stick to your Daily target edge.</p>
           </div>
         </div>
 
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
-           <Lock size={32} className="text-[#A0A0A0] mb-3" />
-           <p className="text-sm font-bold text-[#EAEAEA] mb-4">Unlock Weekly Behavior Analytics</p>
-           <Link href="/billing" className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 text-xs font-black uppercase tracking-widest px-6 py-3 rounded-2xl hover:scale-105 transition-transform shadow-[0_0_20px_rgba(201,166,70,0.3)]">
+           <Lock size={32} className="text-zinc-600 dark:text-[#A0A0A0] mb-3" />
+           <p className="text-sm font-bold text-zinc-900 dark:text-[#EAEAEA] mb-4">Unlock Weekly Behavior Analytics</p>
+           <Link href="/billing" className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 text-xs font-black uppercase tracking-widest px-6 py-3 rounded-2xl hover:scale-105 transition-transform shadow-[0_0_20px_rgba(201,166,70,0.3)]">
              Upgrade to Professional
            </Link>
         </div>
@@ -150,19 +150,19 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
   }
 
   return (
-    <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-3xl p-6 relative shadow-inner">
+    <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-3xl p-6 relative shadow-inner">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="font-black text-[#EAEAEA] flex items-center gap-2">
+          <h3 className="font-black text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-2">
             <BrainCircuit className="text-[#D4AF37]" /> Weekly Strategy Report
           </h3>
-          <p className="text-[11px] text-[#A0A0A0] mt-1 uppercase tracking-widest font-bold">Past 7 Days AI Synthesis</p>
+          <p className="text-[11px] text-zinc-600 dark:text-[#A0A0A0] mt-1 uppercase tracking-widest font-bold">Past 7 Days AI Synthesis</p>
         </div>
         {!reportData && !loadingCache && (
           <button 
             onClick={generateReport}
             disabled={loading || recentEntries.length === 0}
-            className="bg-white/10 hover:bg-white/20 text-[#EAEAEA] text-xs font-bold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+            className="bg-white/10 hover:bg-white/20 text-zinc-900 dark:text-[#EAEAEA] text-xs font-bold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
           >
             {loading ? <><Loader2 size={12} className="animate-spin" /> Analyzing...</> : "Generate"}
           </button>
@@ -170,7 +170,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
         {reportData && (
           <div className="flex items-center gap-2">
             {isCached && (
-              <span className="text-[9px] uppercase tracking-widest font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg flex items-center gap-1">
+              <span className="text-[9px] uppercase tracking-widest font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg flex items-center gap-1">
                 <CheckCircle2 size={10} /> This Week
               </span>
             )}
@@ -181,11 +181,11 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
       {/* Error State */}
       {error && !loading && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-5 text-center space-y-3 animate-in fade-in duration-300">
-          <AlertCircle size={24} className="text-red-400 mx-auto" />
+          <AlertCircle size={24} className="text-red-600 dark:text-red-400 mx-auto" />
           <p className="text-sm font-bold text-red-300">{error}</p>
           <button 
             onClick={generateReport}
-            className="text-xs font-bold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-lg transition-colors"
+            className="text-xs font-bold text-red-600 dark:text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-lg transition-colors"
           >
             Try Again
           </button>
@@ -193,12 +193,12 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
       )}
 
       {loadingCache ? (
-        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] p-6 flex items-center justify-center gap-3">
-          <Loader2 size={16} className="animate-spin text-[#A0A0A0]" />
-          <p className="text-xs font-bold text-[#A0A0A0] uppercase tracking-widest">Loading report...</p>
+        <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] p-6 flex items-center justify-center gap-3">
+          <Loader2 size={16} className="animate-spin text-zinc-600 dark:text-[#A0A0A0]" />
+          <p className="text-xs font-bold text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest">Loading report...</p>
         </div>
       ) : !reportData && !loading && !error ? (
-        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-dashed border-[#111827] p-8 text-center text-[#A0A0A0] flex flex-col items-center">
+        <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md rounded-2xl border border-dashed border-zinc-200 dark:border-[#111827] p-8 text-center text-zinc-600 dark:text-[#A0A0A0] flex flex-col items-center">
            {recentEntries.length === 0 ? (
              <>
                <CalendarDays size={24} className="mb-2 opacity-50" />
@@ -213,7 +213,7 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
            )}
         </div>
       ) : loading ? (
-        <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] p-8 flex flex-col items-center justify-center gap-4 animate-pulse">
+        <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] p-8 flex flex-col items-center justify-center gap-4 animate-pulse">
            <div className="relative flex items-center justify-center">
              <div className="w-12 h-12 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
              <BrainCircuit size={20} className="text-[#D4AF37] absolute" />
@@ -223,9 +223,9 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
       ) : reportData && (
         <div className="space-y-4 animate-in fade-in zoom-in-95 duration-500">
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-black/40 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-               <span className="text-[10px] text-[#A0A0A0] uppercase tracking-widest font-black block mb-2 flex items-center gap-1.5"><Flame size={12} className="text-orange-500"/> Avg Score</span>
-               <div className={`text-3xl font-black ${reportData.avgScore >= 80 ? 'text-emerald-400' : reportData.avgScore >= 60 ? 'text-amber-400' : 'text-red-400'}`}>
+            <div className="bg-black/40 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+               <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest font-black block mb-2 flex items-center gap-1.5"><Flame size={12} className="text-orange-500"/> Avg Score</span>
+               <div className={`text-3xl font-black ${reportData.avgScore >= 80 ? 'text-emerald-600 dark:text-emerald-400' : reportData.avgScore >= 60 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>
                  {reportData.avgScore} <span className="text-sm text-zinc-600">/100</span>
                </div>
             </div>
@@ -236,13 +236,13 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           </div>
           
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-black/40 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-               <span className="text-[10px] text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Best Day</span>
-               <div className="text-sm font-bold text-emerald-400">{reportData.bestDay}</div>
+            <div className="bg-black/40 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+               <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Best Day</span>
+               <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{reportData.bestDay}</div>
             </div>
-            <div className="bg-black/40 p-4 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-               <span className="text-[10px] text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Weakness</span>
-               <div className="text-sm font-bold text-amber-400">{reportData.weakness}</div>
+            <div className="bg-black/40 p-4 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+               <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest font-black block mb-2">Weakness</span>
+               <div className="text-sm font-bold text-amber-600 dark:text-amber-400">{reportData.weakness}</div>
             </div>
           </div>
 
@@ -252,8 +252,8 @@ export default function WeeklyReportWidget({ recentEntries }: { recentEntries: J
           </div>
 
           {reportData.generatedAt && (
-            <div className="flex flex-col sm:flex-row items-center justify-between mt-4 p-3 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
-               <p className="text-[10px] text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5">
+            <div className="flex flex-col sm:flex-row items-center justify-between mt-4 p-3 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+               <p className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black tracking-widest flex items-center gap-1.5">
                  <RefreshCw size={10} className="text-zinc-600" /> 
                  Last Updated: {new Date(reportData.generatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                </p>

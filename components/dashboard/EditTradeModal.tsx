@@ -138,13 +138,13 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl shadow-2xl w-full max-w-lg flex flex-col scale-100 animate-in zoom-in-95 duration-200 max-h-[80vh] overflow-hidden relative">
+      <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl shadow-2xl w-full max-w-lg flex flex-col scale-100 animate-in zoom-in-95 duration-200 max-h-[80vh] overflow-hidden relative">
         
-        <div className="flex items-center justify-between p-4 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md shrink-0 sticky top-0 z-10">
-          <h2 className="text-lg font-semibold text-[#EAEAEA]">Edit Trade</h2>
+        <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md shrink-0 sticky top-0 z-10">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-[#EAEAEA]">Edit Trade</h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-800 rounded-md transition-colors"
+            className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-md transition-colors"
           >
             <X size={18} />
           </button>
@@ -155,14 +155,14 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
             
             {/* SymbolLine */}
             <div>
-              <label className="block text-xs text-[#A0A0A0] mb-1">Symbol</label>
+              <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Symbol</label>
               <input
                 type="text"
                 name="symbol"
                 value={formData.symbol}
                 onChange={handleChange}
                 placeholder="e.g. AAPL"
-                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none uppercase"
+                className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none uppercase"
                 required
               />
             </div>
@@ -170,19 +170,19 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
             {/* Row: Type, Lot */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Type</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Type</label>
                 <select
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="buy">Buy</option>
                   <option value="sell">Sell</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Lot Size</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Lot Size</label>
                 <input
                   type="number"
                   step="0.01"
@@ -190,7 +190,7 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                   value={formData.lot}
                   onChange={handleChange}
                   required
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -198,19 +198,19 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
             {/* Row: Result, Amount */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Result</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Result</label>
                 <select
                   name="result"
                   value={formData.result}
                   onChange={handleChange}
-                  className={`w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:outline-none focus:border-emerald-500 font-medium ${formData.result === "Profit" ? "text-emerald-500" : "text-red-500"}`}
+                  className={`w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:outline-none focus:border-emerald-500 font-medium ${formData.result === "Profit" ? "text-emerald-500" : "text-red-500"}`}
                 >
                   <option value="Profit" className="text-emerald-500">Profit</option>
                   <option value="Loss" className="text-red-500">Loss</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Amount</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Amount</label>
                 <input
                   type="number"
                   min="0"
@@ -219,16 +219,16 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                   value={formData.pnl}
                   onChange={handleChange}
                   required
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
                 />
-                <p className="text-[10px] text-[#A0A0A0] mt-1 leading-tight">Enter amount (profit or loss will be applied automatically)</p>
+                <p className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mt-1 leading-tight">Enter amount (profit or loss will be applied automatically)</p>
               </div>
             </div>
 
             {/* Row: Risk, SL Followed */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Risk Amount</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Risk Amount</label>
                 <input
                   type="number"
                   min="0"
@@ -239,14 +239,14 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                   placeholder="e.g. 20.00"
                   required={formData.stopLossFollowed}
                   disabled={!formData.stopLossFollowed}
-                  className={`w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${!formData.stopLossFollowed ? 'opacity-40 cursor-not-allowed' : ''} ${riskAutoSynced ? 'border-amber-500/30' : ''}`}
+                  className={`w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none ${!formData.stopLossFollowed ? 'opacity-40 cursor-not-allowed' : ''} ${riskAutoSynced ? 'border-amber-500/30' : ''}`}
                 />
                 {!formData.stopLossFollowed && (
-                   <p className="text-[10px] text-[#A0A0A0] mt-1.5 font-medium">Risk not required when SL is not used</p>
+                   <p className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mt-1.5 font-medium">Risk not required when SL is not used</p>
                 )}
               </div>
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">SL Followed?</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">SL Followed?</label>
                 <div className="flex items-center gap-4 mt-2.5">
                   <label className="flex items-center gap-1.5 cursor-pointer text-sm font-medium">
                     <input 
@@ -256,7 +256,7 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                       onChange={() => setFormData(p => ({...p, stopLossFollowed: true}))} 
                       className="accent-emerald-500 w-4 h-4 cursor-pointer"
                     />
-                    <span className="text-emerald-400">Yes</span>
+                    <span className="text-emerald-600 dark:text-emerald-400">Yes</span>
                   </label>
                   <label className="flex items-center gap-1.5 cursor-pointer text-sm font-medium">
                     <input 
@@ -266,7 +266,7 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                       onChange={() => setFormData(p => ({...p, stopLossFollowed: false}))} 
                       className="accent-red-500 w-4 h-4 cursor-pointer"
                     />
-                    <span className="text-red-400">No</span>
+                    <span className="text-red-600 dark:text-red-400">No</span>
                   </label>
                 </div>
               </div>
@@ -275,12 +275,12 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
             {/* Row: Currency, Date */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Currency</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Currency</label>
                 <select
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
@@ -288,14 +288,14 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Date</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Date</label>
                 <input
                   type="date"
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
                   required
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none color-scheme-dark"
                 />
               </div>
             </div>
@@ -303,7 +303,7 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
             {/* Row: Entry, Exit (Optional) */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Entry Price (Optional)</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Entry Price (Optional)</label>
                 <input
                   type="number"
                   step="any"
@@ -311,11 +311,11 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                   value={formData.entryPrice}
                   onChange={handleChange}
                   placeholder="e.g. 1.0520"
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#A0A0A0] mb-1">Exit Price (Optional)</label>
+                <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Exit Price (Optional)</label>
                 <input
                   type="number"
                   step="any"
@@ -323,37 +323,37 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
                   value={formData.exitPrice}
                   onChange={handleChange}
                   placeholder="e.g. 1.0560"
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Notes */}
             <div>
-              <label className="block text-xs text-[#A0A0A0] mb-1">Notes</label>
+              <label className="block text-xs text-zinc-600 dark:text-[#A0A0A0] mb-1">Notes</label>
               <textarea
                 name="note"
                 value={formData.note}
                 onChange={handleChange}
                 rows={3}
-                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none resize-none"
+                className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-sm focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
           </div>
 
-          <div className="p-4 border-t border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex justify-end gap-3 shrink-0 sticky bottom-0 z-10">
+          <div className="p-4 border-t border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md flex justify-end gap-3 shrink-0 sticky bottom-0 z-10">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 text-sm text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-800 rounded font-medium transition-colors"
+              className="px-4 py-2 text-sm text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded font-medium transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-[#EAEAEA] rounded flex items-center gap-2 font-medium transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-zinc-900 dark:text-[#EAEAEA] rounded flex items-center gap-2 font-medium transition-colors disabled:opacity-50"
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
               Save Changes

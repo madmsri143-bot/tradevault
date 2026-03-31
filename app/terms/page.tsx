@@ -3,13 +3,13 @@ import { ArrowLeft } from "lucide-react";
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-black text-[#EAEAEA] p-8 md:p-16 max-w-4xl mx-auto selection:bg-[#D4AF37]/30 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-black text-zinc-900 dark:text-[#EAEAEA] p-8 md:p-16 max-w-4xl mx-auto selection:bg-[#D4AF37]/30 animate-in fade-in duration-500">
       <div className="mb-10">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#D4AF37] hover:text-[#D4AF37]/80 pb-2 transition-colors">
           <ArrowLeft size={16} /> Back to App
         </Link>
-        <h1 className="text-4xl md:text-5xl font-bold text-[#EAEAEA] mt-4 mb-2 tracking-tight">Terms of Service</h1>
-        <p className="text-[#A0A0A0] font-medium">Last Updated: March 2026</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-[#EAEAEA] mt-4 mb-2 tracking-tight">Terms of Service</h1>
+        <p className="text-zinc-600 dark:text-[#A0A0A0] font-medium">Last Updated: March 2026</p>
       </div>
 
       <div className="space-y-10 text-base leading-relaxed">

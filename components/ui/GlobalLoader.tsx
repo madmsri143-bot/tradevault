@@ -21,7 +21,7 @@ export default function GlobalLoader() {
   if (!loading) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0B0F14] animate-in fade-in duration-500">
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-zinc-50 dark:bg-[#0B0F14] animate-in fade-in duration-500">
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#D4AF37]/10 blur-[100px] rounded-full animate-pulse" />
       
@@ -31,8 +31,8 @@ export default function GlobalLoader() {
         </div>
         
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-3xl font-black text-[#EAEAEA] tracking-tighter flex items-center gap-0.5">
-            <span className="text-3xl font-brand font-black tracking-tight text-[#EAEAEA] drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+          <h1 className="text-3xl font-black text-zinc-900 dark:text-[#EAEAEA] tracking-tighter flex items-center gap-0.5">
+            <span className="text-3xl font-brand font-black tracking-tight text-zinc-900 dark:text-[#EAEAEA] drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
               <span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud
             </span>
             <span className="w-2 h-2 bg-[#D4AF37] rounded-full animate-pulse mt-3 ml-1" />
@@ -41,7 +41,7 @@ export default function GlobalLoader() {
             <div className="w-12 h-1 bg-white/5 rounded-full overflow-hidden">
                <div className="h-full bg-[#D4AF37] animate-loading-bar" style={{ width: "100%" }} />
             </div>
-            <p className="text-[10px] font-bold text-[#A0A0A0] uppercase tracking-[0.2em] animate-pulse">
+            <p className="text-[10px] font-bold text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-[0.2em] animate-pulse">
               Securing Workspace
             </p>
           </div>

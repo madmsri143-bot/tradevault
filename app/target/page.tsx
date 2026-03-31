@@ -141,7 +141,7 @@ export default function TargetPage() {
 
     let status = "IN PROGRESS";
     let statusLabel = "On Track";
-    let colorClass = "text-amber-400";
+    let colorClass = "text-amber-600 dark:text-amber-400";
     let hexColor = "#34d399";
     
     if (target.maxLoss && totalPnl <= -target.maxLoss) {
@@ -157,7 +157,7 @@ export default function TargetPage() {
     } else if (now > target.endDate) {
        status = "FAILED_TIME";
        statusLabel = "Expired Missed";
-       colorClass = "text-[#A0A0A0]";
+       colorClass = "text-zinc-600 dark:text-[#A0A0A0]";
        hexColor = "#71717a";
     } else {
        // Pacing Logic
@@ -218,12 +218,12 @@ export default function TargetPage() {
       <div className="space-y-6 animate-in fade-in duration-500 max-w-[1400px] mx-auto pb-10">
       
       {/* Header & Gamification Banner */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#111827] pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-zinc-200 dark:border-[#111827] pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#EAEAEA] flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-3">
             <Target className="text-[#D4AF37]" size={32} /> Goals Engine
           </h1>
-          <p className="text-sm text-[#A0A0A0] mt-1">Where am I? How far am I? Set explicit targets to drive focused behavior.</p>
+          <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mt-1">Where am I? How far am I? Set explicit targets to drive focused behavior.</p>
         </div>
         
         {currentStreak > 0 && (
@@ -231,7 +231,7 @@ export default function TargetPage() {
              <Medal className="text-[#D4AF37]" size={24} />
              <div>
                <p className="text-xs text-[#D4AF37] uppercase font-black tracking-widest">Consistency Badge</p>
-               <p className="text-sm text-[#EAEAEA] font-bold">{currentStreak} Target{currentStreak > 1 ? 's' : ''} Hit String 🔥</p>
+               <p className="text-sm text-zinc-900 dark:text-[#EAEAEA] font-bold">{currentStreak} Target{currentStreak > 1 ? 's' : ''} Hit String 🔥</p>
              </div>
           </div>
         )}
@@ -256,7 +256,7 @@ export default function TargetPage() {
                   className={`flex-1 py-2 text-xs font-bold transition-all rounded-lg uppercase tracking-wider ${
                     activeTab === tab 
                       ? 'bg-[#D4AF37] text-black shadow-sm' 
-                      : 'text-[#A0A0A0] hover:text-[#EAEAEA]'
+                      : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]'
                   }`}
                 >
                   {tab}
@@ -298,7 +298,7 @@ export default function TargetPage() {
                     type="number" step="0.01" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} placeholder="e.g. 150.00 (Optional)" 
                     className="luxury-input w-full p-3 text-sm text-[#FF4D6D] font-bold placeholder-[#FF4D6D]/20 focus:border-[#FF4D6D]/50"
                   />
-                  <p className="text-[10px] text-[#A0A0A0] mt-1.5 leading-tight">If your actual PnL crosses this negative threshold, the target instantly fails. Prevents revenge trading.</p>
+                  <p className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mt-1.5 leading-tight">If your actual PnL crosses this negative threshold, the target instantly fails. Prevents revenge trading.</p>
                 </div>
               </div>
 
@@ -315,11 +315,11 @@ export default function TargetPage() {
           
           {targets.length === 0 ? (
             <div className="luxury-card p-12 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm h-full min-h-[400px]">
-              <div className="w-20 h-20 bg-black/20 rounded-full flex items-center justify-center mb-4 border border-[rgba(212,175,55,0.15)] shadow-inner">
+              <div className="w-20 h-20 bg-black/20 rounded-full flex items-center justify-center mb-4 border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
                 <Target size={32} className="text-zinc-600" />
               </div>
-              <h3 className="text-lg font-bold text-[#EAEAEA]">No Actionable Targets</h3>
-              <p className="text-sm text-[#A0A0A0] max-w-sm mt-2">
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-[#EAEAEA]">No Actionable Targets</h3>
+              <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] max-w-sm mt-2">
                 Targets should drive action. Set a Daily or Weekly goal to the left to activate the behavioral pacing engine.
               </p>
             </div>
@@ -337,8 +337,8 @@ export default function TargetPage() {
                 return (
                   <div key={target.id} className="luxury-card p-6 md:p-8 rounded-3xl relative overflow-hidden group">
                     <div className="absolute top-4 right-4 bg-black/40 backdrop-blur rounded-lg border border-white/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center p-1 z-20">
-                      <button onClick={() => setEditingTarget(target)} className="p-1.5 text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded transition-colors" title="Edit Goal"><Pencil size={14} /></button>
-                      <button onClick={() => handleDelete(target.id)} className="p-1.5 text-[#A0A0A0] hover:text-[#FF4D6D] hover:bg-white/5 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
+                      <button onClick={() => setEditingTarget(target)} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded transition-colors" title="Edit Goal"><Pencil size={14} /></button>
+                      <button onClick={() => handleDelete(target.id)} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#FF4D6D] hover:bg-white/5 rounded transition-colors" title="Delete"><Trash2 size={14} /></button>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-8 items-center md:items-start relative z-10">
@@ -350,7 +350,7 @@ export default function TargetPage() {
                            <circle cx="70" cy="70" r={circleRadius} stroke={hexColor} strokeWidth="12" fill="transparent" strokeDasharray={circleCircumference} strokeDashoffset={circleOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" style={{ filter: `drop-shadow(0 0 10px ${hexColor}60)` }} />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                           <p className="text-2xl font-black text-[#EAEAEA]">{Math.floor(progressPercentage)}%</p>
+                           <p className="text-2xl font-black text-zinc-900 dark:text-[#EAEAEA]">{Math.floor(progressPercentage)}%</p>
                            <p className={`text-[10px] font-bold uppercase tracking-widest ${status === 'PASSED' ? 'text-[#10B981]' : status === 'FAILED_LOSS' ? 'text-[#FF4D6D]' : 'text-[#D4AF37]'}`}>{statusLabel}</p>
                         </div>
                       </div>
@@ -360,24 +360,24 @@ export default function TargetPage() {
                          
                          <div>
                            <div className="flex items-center gap-2 mb-1">
-                             <span className="bg-zinc-800 text-[#EAEAEA] text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full">{target.type}</span>
-                             <span className="text-xs text-[#A0A0A0] font-bold flex items-center gap-1"><Clock size={12}/> {timeRemainingStr}</span>
+                             <span className="bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full">{target.type}</span>
+                             <span className="text-xs text-zinc-600 dark:text-[#A0A0A0] font-bold flex items-center gap-1"><Clock size={12}/> {timeRemainingStr}</span>
                            </div>
                            <div className="flex justify-between items-baseline mt-2">
-                             <p className="text-sm text-[#A0A0A0] font-medium">Trajectory Progress</p>
+                             <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] font-medium">Trajectory Progress</p>
                              <div className="text-right">
-                               <span className={`text-2xl font-bold ${totalPnl >= 0 ? 'text-[#EAEAEA]' : 'text-red-400'}`}>
+                               <span className={`text-2xl font-bold ${totalPnl >= 0 ? 'text-zinc-900 dark:text-[#EAEAEA]' : 'text-red-600 dark:text-red-400'}`}>
                                  ${totalPnl.toFixed(2)}
                                </span>
-                               <span className="text-[#A0A0A0] font-medium ml-2">/ ${target.targetValue.toFixed(2)}</span>
+                               <span className="text-zinc-600 dark:text-[#A0A0A0] font-medium ml-2">/ ${target.targetValue.toFixed(2)}</span>
                              </div>
                            </div>
                          </div>
 
                          {target.maxLoss && (
-                           <div className="flex items-center justify-between border-t border-[#111827] pt-4">
-                              <span className="text-xs text-[#A0A0A0] font-bold uppercase tracking-wider flex items-center gap-2"><AlertTriangle size={14} className="text-red-500/70" /> Drawdown Limit</span>
-                              <span className="text-sm font-bold text-red-400">-${target.maxLoss.toFixed(2)}</span>
+                           <div className="flex items-center justify-between border-t border-zinc-200 dark:border-[#111827] pt-4">
+                              <span className="text-xs text-zinc-600 dark:text-[#A0A0A0] font-bold uppercase tracking-wider flex items-center gap-2"><AlertTriangle size={14} className="text-red-500/70" /> Drawdown Limit</span>
+                              <span className="text-sm font-bold text-red-600 dark:text-red-400">-${target.maxLoss.toFixed(2)}</span>
                            </div>
                          )}
                          
@@ -418,8 +418,8 @@ export default function TargetPage() {
 
               {/* Inactive / History targets */}
               {targets.length > activeTargets.length && (
-                <div className="mt-8 border-t border-[#111827] pt-8">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#A0A0A0] mb-4 px-2">Archived Resolutions</h3>
+                <div className="mt-8 border-t border-zinc-200 dark:border-[#111827] pt-8">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-[#A0A0A0] mb-4 px-2">Archived Resolutions</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {targets.filter(t => !activeTargets.includes(t)).map(target => {
                       const { totalPnl, status, hexColor } = evaluateTarget(target);
@@ -430,10 +430,10 @@ export default function TargetPage() {
                            </div>
                            <div className="pl-3">
                              <div className="flex items-center gap-2 mb-1">
-                               <span className="text-[10px] font-black uppercase text-[#A0A0A0]">{target.type}</span>
+                               <span className="text-[10px] font-black uppercase text-zinc-600 dark:text-[#A0A0A0]">{target.type}</span>
                                <span className="text-[10px] text-zinc-600 font-bold">{format(target.startDate, "MMM d")} - {format(target.endDate, "MMM d")}</span>
                              </div>
-                             <p className={`text-sm font-bold ${totalPnl >= 0 ? 'text-[#EAEAEA]' : 'text-[#FF4D6D]/80'}`}>${totalPnl.toFixed(2)} <span className="text-zinc-600 text-xs">/ ${target.targetValue}</span></p>
+                             <p className={`text-sm font-bold ${totalPnl >= 0 ? 'text-zinc-900 dark:text-[#EAEAEA]' : 'text-[#FF4D6D]/80'}`}>${totalPnl.toFixed(2)} <span className="text-zinc-600 text-xs">/ ${target.targetValue}</span></p>
                            </div>
                            <div className="flex items-center gap-2">
                              <span className="text-[10px] font-bold uppercase py-1 px-2 rounded-lg" style={{ color: hexColor, backgroundColor: `${hexColor}20` }}>{status}</span>
@@ -498,8 +498,8 @@ function EditTargetModal({ target, onClose }: { target: TradingTarget, onClose: 
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
       <div className="luxury-card rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20">
-           <h2 className="text-sm uppercase tracking-widest font-bold text-[#EAEAEA]">Modify Logic</h2>
-           <button onClick={onClose} className="p-1.5 text-[#A0A0A0] hover:text-[#D4AF37] rounded-md transition-colors"><X size={18} /></button>
+           <h2 className="text-sm uppercase tracking-widest font-bold text-zinc-900 dark:text-[#EAEAEA]">Modify Logic</h2>
+           <button onClick={onClose} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] rounded-md transition-colors"><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
@@ -511,14 +511,14 @@ function EditTargetModal({ target, onClose }: { target: TradingTarget, onClose: 
             <input type="number" step="0.01" value={maxLoss} onChange={e => setMaxLoss(e.target.value)} className="luxury-input w-full p-2.5 text-sm focus:border-[#FF4D6D]/50" />
           </div>
           <div className="space-y-2 pt-2">
-            <span className="block text-[10px] text-[#A0A0A0] uppercase font-black">Edit Date Bounds</span>
+            <span className="block text-[10px] text-zinc-600 dark:text-[#A0A0A0] uppercase font-black">Edit Date Bounds</span>
             <div className="flex gap-2">
               <input type="date" value={startD} onChange={e => setStartD(e.target.value)} required className="luxury-input w-full p-2 text-xs flex-1 color-scheme-dark" />
               <input type="date" value={endD} onChange={e => setEndD(e.target.value)} required className="luxury-input w-full p-2 text-xs flex-1 color-scheme-dark" />
             </div>
           </div>
           <div className="pt-4 flex justify-end gap-3 mt-4 border-t border-white/5">
-             <button type="button" onClick={onClose} className="px-4 py-2.5 text-xs text-[#A0A0A0] hover:text-[#EAEAEA] rounded-lg font-bold transition-colors">Abort</button>
+             <button type="button" onClick={onClose} className="px-4 py-2.5 text-xs text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] rounded-lg font-bold transition-colors">Abort</button>
              <button type="submit" disabled={submitting} className="luxury-button-gold px-6 py-2 h-auto text-[13px]">
                {submitting ? "Saving..." : "Save Params"}
              </button>

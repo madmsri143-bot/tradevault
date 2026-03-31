@@ -20,7 +20,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
       return { text: "Active Trial", color: "text-[#D4AF37]", bg: "bg-[#D4AF37]/10", border: "border-[#D4AF37]/20", icon: Clock };
     }
     
-    if (!isPro) return { text: "Standard Free", color: "text-[#A0A0A0]", bg: "bg-white/5", border: "border-white/10", icon: Clock };
+    if (!isPro) return { text: "Standard Free", color: "text-zinc-600 dark:text-[#A0A0A0]", bg: "bg-white/5", border: "border-white/10", icon: Clock };
     
     // Check if expired
     const isExpired = expiryDate ? new Date(expiryDate).getTime() < Date.now() : false;
@@ -78,7 +78,7 @@ export default function PlanHeroCard({ plan, isPro, expiryDate }: PlanHeroCardPr
           <div className="text-[#D4AF37] font-semibold text-lg mb-2">
             {isYearly ? "$19.99 / year" : isMonthly ? "$2.99 / month" : plan === "trial" ? "$0 for 7 Days" : "$0 / forever"}
           </div>
-          <p className="text-sm text-[#A0A0A0] max-w-sm">
+          <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] max-w-sm">
             {plan === "free" ? "Limited logging, basic analytics, and no data export functions." : "Full analytics, pacing targets, file exports, and artificial intelligence psychological mistake detection."}
           </p>
         </div>

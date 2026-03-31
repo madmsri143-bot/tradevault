@@ -92,12 +92,12 @@ export default function VerifyEmailPage() {
         </div>
         
         <div className="space-y-4">
-          <h2 className="text-2xl font-black tracking-tight text-[#EAEAEA]">Check your inbox</h2>
-          <p className="text-[#A0A0A0] leading-relaxed text-sm">
+          <h2 className="text-2xl font-black tracking-tight text-zinc-900 dark:text-[#EAEAEA]">Check your inbox</h2>
+          <p className="text-zinc-600 dark:text-[#A0A0A0] leading-relaxed text-sm">
             We've sent a verification link to <br/>
             <span className="font-bold text-[#D4AF37] mt-1 block">{displayEmail}</span>
           </p>
-          <div className="space-y-2 text-xs text-[#A0A0A0] pt-2">
+          <div className="space-y-2 text-xs text-zinc-600 dark:text-[#A0A0A0] pt-2">
             <p>If you don’t see the email, please check your spam or promotions folder.</p>
             <p>Once verified, click the continue button to access your dashboard.</p>
           </div>
@@ -116,7 +116,7 @@ export default function VerifyEmailPage() {
           <button 
             onClick={handleResend}
             disabled={cooldown > 0 || resendLoading}
-            className="w-full bg-white/5 hover:bg-white/10 text-[#EAEAEA] font-bold py-3.5 px-4 rounded-2xl border border-white/10 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full bg-white/5 hover:bg-white/10 text-zinc-900 dark:text-[#EAEAEA] font-bold py-3.5 px-4 rounded-2xl border border-white/10 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {resendLoading ? <Loader2 size={18} className="animate-spin" /> : <RefreshCw size={18} />}
             {cooldown > 0 ? `Resend in ${cooldown}s` : sent ? "Verification Email Sent!" : "Resend Verification Email"}
@@ -124,7 +124,7 @@ export default function VerifyEmailPage() {
           
           <button 
             onClick={handleBackToLogin}
-            className="w-full bg-transparent hover:bg-white/5 text-[#A0A0A0] hover:text-[#EAEAEA] font-semibold py-3.5 px-4 rounded-2xl transition-all flex items-center justify-center gap-2"
+            className="w-full bg-transparent hover:bg-white/5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] font-semibold py-3.5 px-4 rounded-2xl transition-all flex items-center justify-center gap-2"
           >
             <ArrowLeft size={18} />
             Back to Login

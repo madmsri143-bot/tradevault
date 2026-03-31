@@ -105,17 +105,17 @@ export default function SupportWidget() {
             <div className="w-16 h-16 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mb-4 border border-[#D4AF37]/20">
               <CheckCircle size={32} className="text-[#D4AF37]" />
             </div>
-            <h3 className="text-xl font-bold text-[#EAEAEA] mb-2">Message sent successfully</h3>
-            <p className="text-sm text-[#A0A0A0]">Our support team will get back to your registered email shortly.</p>
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-[#EAEAEA] mb-2">Message sent successfully</h3>
+            <p className="text-sm text-zinc-600 dark:text-[#A0A0A0]">Our support team will get back to your registered email shortly.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <p className="text-sm text-[#A0A0A0] mb-6">
+            <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mb-6">
               Experiencing issues or have a question? Send us a secure message.
             </p>
 
             {errorMsg && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-xs font-bold text-center">
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-600 dark:text-red-400 text-xs font-bold text-center">
                 {errorMsg}
               </div>
             )}
@@ -129,7 +129,7 @@ export default function SupportWidget() {
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   placeholder="Your Name"
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-zinc-900 dark:text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
                 />
               </div>
               <div>
@@ -140,7 +140,7 @@ export default function SupportWidget() {
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   placeholder="your@email.com"
-                  className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                  className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-zinc-900 dark:text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
                 />
               </div>
             </div>
@@ -153,14 +153,14 @@ export default function SupportWidget() {
                 value={formData.subject}
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 placeholder="e.g. Need help with integrations"
-                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-zinc-900 dark:text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md transition-all font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
               />
             </div>
             
             <div>
               <div className="flex justify-between items-end mb-1.5 ml-1 pr-1">
                 <label className="block text-xs font-bold uppercase tracking-widest text-[#D4AF37]">Message</label>
-                <span className={`text-[10px] font-bold ${formData.message.length > 1000 ? 'text-red-400' : 'text-[#A0A0A0]'}`}>
+                <span className={`text-[10px] font-bold ${formData.message.length > 1000 ? 'text-red-600 dark:text-red-400' : 'text-zinc-600 dark:text-[#A0A0A0]'}`}>
                   {formData.message.length} / 1000
                 </span>
               </div>
@@ -170,7 +170,7 @@ export default function SupportWidget() {
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
                 placeholder="Describe your issue in detail..."
-                className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md transition-all resize-none font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
+                className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl px-4 py-3 text-sm text-zinc-900 dark:text-[#EAEAEA] focus:outline-none focus:border-[#D4AF37]/50 focus:bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md transition-all resize-none font-medium placeholder:text-zinc-600 focus:ring-1 focus:ring-[#D4AF37]/20"
               />
             </div>
 
@@ -179,7 +179,7 @@ export default function SupportWidget() {
             <button 
               type="submit" 
               disabled={loading || formData.message.length === 0 || formData.message.length > 1000}
-              className="w-full mt-2 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-3.5 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center gap-2"
+              className="w-full mt-2 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-3.5 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:-translate-y-0 flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : <><Send size={18} /> Send Support Request</>}
             </button>

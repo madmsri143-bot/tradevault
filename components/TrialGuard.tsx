@@ -220,23 +220,23 @@ export function TrialBanner() {
 
   return (
     <>
-    <div className={`bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border ${currStyle.cardBorder} shadow-[0_1px_2px_rgba(0,0,0,0.05)] p-5 rounded-2xl mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-500`}>
+    <div className={`bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border ${currStyle.cardBorder} shadow-[0_1px_2px_rgba(0,0,0,0.05)] p-5 rounded-2xl mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-500`}>
       <div className="flex items-center gap-4">
         <div className={`w-12 h-12 rounded-full ${currStyle.iconBg} flex items-center justify-center border ${currStyle.iconBorder} shrink-0`}>
           <Icon size={20} className={currStyle.iconColor} />
         </div>
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-lg font-bold text-[#EAEAEA] tracking-tight">{planName}</h3>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">{planName}</h3>
             <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${currStyle.badgeBg} ${currStyle.badgeText} border ${currStyle.badgeBorder}`}>
               {plan === "pro" ? "Active" : plan === "trial" ? "Trial Active" : "Expired"}
             </span>
           </div>
-          <p className="text-sm text-[#A0A0A0] flex items-center gap-2">
-            <Calendar size={14} className="text-[#A0A0A0]" /> 
+          <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] flex items-center gap-2">
+            <Calendar size={14} className="text-zinc-600 dark:text-[#A0A0A0]" /> 
             {expiryDate ? `Expires on ${format(new Date(expiryDate), "MMM dd, yyyy")}` : "No expiry date set"} 
             <span className="text-zinc-600 font-bold">•</span> 
-            <span className="text-[#EAEAEA] font-medium">{daysLeft} days remaining</span>
+            <span className="text-zinc-900 dark:text-[#EAEAEA] font-medium">{daysLeft} days remaining</span>
           </p>
         </div>
       </div>
@@ -244,7 +244,7 @@ export function TrialBanner() {
       {(plan === "trial" || plan === "free") && (
         <button 
           onClick={() => setShowUpgrade(true)} 
-          className="w-full md:w-auto px-6 py-2.5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-bold rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] transition-all text-sm flex items-center justify-center gap-2 shrink-0 group"
+          className="w-full md:w-auto px-6 py-2.5 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-bold rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] transition-all text-sm flex items-center justify-center gap-2 shrink-0 group"
         >
           Upgrade to Pro
           <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -257,8 +257,8 @@ export function TrialBanner() {
     {plan === "trial" && trial_days_left <= 1 && (
       <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl mb-6 flex items-center gap-3 animate-in fade-in">
         <ShieldAlert size={18} className="text-amber-500 shrink-0" />
-        <p className="text-sm text-amber-400 font-medium">
-          Your free trial {trial_days_left === 0 ? "ends today" : "ends tomorrow"}. <span className="text-[#EAEAEA] font-bold">Upgrade to continue Pro features.</span>
+        <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
+          Your free trial {trial_days_left === 0 ? "ends today" : "ends tomorrow"}. <span className="text-zinc-900 dark:text-[#EAEAEA] font-bold">Upgrade to continue Pro features.</span>
         </p>
       </div>
     )}
@@ -279,17 +279,17 @@ export function TrialGuard({ children, featureName }: { children: React.ReactNod
           {children}
         </div>
         <div className="absolute inset-0 flex items-center justify-center p-6 z-10">
-           <div className="bg-[#11161D] border-2 border-[#D4AF37]/20 p-8 rounded-[32px] max-w-sm text-center space-y-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-300">
+           <div className="bg-white dark:bg-[#11161D] border-2 border-[#D4AF37]/20 p-8 rounded-[32px] max-w-sm text-center space-y-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-300">
               <div className="mx-auto w-16 h-16 bg-[#D4AF37]/10 rounded-2xl flex items-center justify-center border border-[#D4AF37]/20">
                 <Lock size={32} className="text-[#D4AF37]" />
               </div>
               <div className="space-y-2">
-                 <h3 className="text-xl font-bold text-[#EAEAEA]">Access Locked</h3>
-                 <p className="text-[#A0A0A0] text-sm leading-relaxed">
+                 <h3 className="text-xl font-bold text-zinc-900 dark:text-[#EAEAEA]">Access Locked</h3>
+                 <p className="text-zinc-600 dark:text-[#A0A0A0] text-sm leading-relaxed">
                    Your free trial has ended. Upgrade to Pro to unlock <strong>{featureName}</strong> and continue tracking like a professional.
                  </p>
               </div>
-              <button onClick={() => setShowUpgrade(true)} className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-4 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] transition-all pointer-events-auto cursor-pointer">
+              <button onClick={() => setShowUpgrade(true)} className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-4 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] transition-all pointer-events-auto cursor-pointer">
                  Unlock Professional Access
               </button>
               <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Immediate unlocking • Cancel anytime</p>
@@ -328,17 +328,17 @@ export function FeatureBlockOverlay({
         {children}
       </div>
       <div className="absolute inset-0 flex items-center justify-center p-6 z-10">
-        <div className="bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#D4AF37]/15 p-8 rounded-[28px] max-w-sm text-center space-y-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] scale-100 animate-in zoom-in-95 duration-300">
-          <div className="mx-auto w-14 h-14 bg-zinc-800/80 rounded-2xl flex items-center justify-center border border-[rgba(212,175,55,0.15)] shadow-inner">
-            <Lock size={28} className="text-[#A0A0A0]" />
+        <div className="bg-white dark:bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#D4AF37]/15 p-8 rounded-[28px] max-w-sm text-center space-y-5 shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] scale-100 animate-in zoom-in-95 duration-300">
+          <div className="mx-auto w-14 h-14 bg-zinc-200 dark:bg-zinc-800/80 rounded-2xl flex items-center justify-center border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
+            <Lock size={28} className="text-zinc-600 dark:text-[#A0A0A0]" />
           </div>
           <div className="space-y-2">
-            <h3 className="text-lg font-bold text-[#EAEAEA] tracking-tight">{title}</h3>
-            <p className="text-[#A0A0A0] text-sm leading-relaxed">{subtitle}</p>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">{title}</h3>
+            <p className="text-zinc-600 dark:text-[#A0A0A0] text-sm leading-relaxed">{subtitle}</p>
           </div>
           <button
             onClick={() => setShowUpgrade(true)}
-            className="w-full bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-3.5 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] transition-all pointer-events-auto cursor-pointer text-sm"
+            className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 font-black py-3.5 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] transition-all pointer-events-auto cursor-pointer text-sm"
           >
             Upgrade to Professional
           </button>

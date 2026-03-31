@@ -18,12 +18,12 @@ import { Calendar as CalendarIcon, Plus, ChevronDown } from "lucide-react";
 
 const Charts = dynamic(() => import("@/components/dashboard/Charts"), {
   ssr: false,
-  loading: () => <div className="h-48 w-full animate-pulse bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl mb-6" />
+  loading: () => <div className="h-48 w-full animate-pulse bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] fade-slide-up shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl mb-6" />
 });
 
 const CalendarView = dynamic(() => import("@/components/dashboard/CalendarView"), {
   ssr: false,
-  loading: () => <div className="h-64 w-full animate-pulse bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl mt-6" />
+  loading: () => <div className="h-64 w-full animate-pulse bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] fade-slide-up shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl mt-6" />
 });
 
 export default function DashboardPage() {
@@ -114,23 +114,23 @@ export default function DashboardPage() {
     <div className="space-y-6 animate-in fade-in duration-500 pb-10">
       
       {/* Header and Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#111827] pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 dark:border-[#111827] pb-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-[#D4AF37]">Dashboard Overview</h2>
-          <p className="text-sm text-[#A0A0A0] mt-1">Track, analyze, and optimize your trading performance.</p>
+          <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mt-1">Track, analyze, and optimize your trading performance.</p>
         </div>
         
         <div className="flex items-center gap-2 luxury-card p-2 rounded-lg">
-          <span className="text-sm text-[#A0A0A0] font-medium ml-2">Displaying in:</span>
+          <span className="text-sm text-zinc-600 dark:text-[#A0A0A0] font-medium ml-2">Displaying in:</span>
           <div className="relative">
             <select
               value={displayCurrency}
               onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
-              className="bg-[#0A0A0A] border border-[rgba(212,175,55,0.15)] text-[#D4AF37] appearance-none pr-8 font-semibold rounded-lg p-1.5 text-sm focus:border-[#D4AF37] focus:outline-none focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
+              className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] text-[#D4AF37] appearance-none pr-8 font-semibold rounded-lg p-1.5 text-sm focus:border-[#D4AF37] focus:outline-none focus:ring-1 focus:ring-[#D4AF37]/50 transition-colors"
             >
-              <option value="USD" className="bg-[#0A0A0A]">USD ($)</option>
-              <option value="EUR" className="bg-[#0A0A0A]">EUR (€)</option>
-              <option value="INR" className="bg-[#0A0A0A]">INR (₹)</option>
+              <option value="USD" className="bg-white dark:bg-[#0A0A0A]">USD ($)</option>
+              <option value="EUR" className="bg-white dark:bg-[#0A0A0A]">EUR (€)</option>
+              <option value="INR" className="bg-white dark:bg-[#0A0A0A]">INR (₹)</option>
             </select>
             <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#D4AF37] pointer-events-none" />
           </div>
@@ -147,7 +147,7 @@ export default function DashboardPage() {
               className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
                 activeTab === t 
                   ? 'bg-[#D4AF37] text-black shadow-lg'
-                  : 'text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-white/5'
+                  : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-white/5'
               }`}
             >
               {t === "history" ? "Trade History" : t}
@@ -157,22 +157,22 @@ export default function DashboardPage() {
 
         {activeTab !== "calendar" && (
           <div className="flex items-center gap-3 luxury-card p-2 rounded-2xl">
-            <CalendarIcon size={16} className="text-[#A0A0A0] ml-1" />
+            <CalendarIcon size={16} className="text-zinc-600 dark:text-[#A0A0A0] ml-1" />
             <input 
               type="date" 
               value={dateRange.from} 
               onChange={e => setDateRange({...dateRange, from: e.target.value})} 
-              className="bg-transparent border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37] color-scheme-dark" 
+              className="bg-transparent border border-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37] color-scheme-dark" 
             />
-            <span className="text-[#A0A0A0] text-xs font-medium">to</span>
+            <span className="text-zinc-600 dark:text-[#A0A0A0] text-xs font-medium">to</span>
             <input 
               type="date" 
               value={dateRange.to} 
               onChange={e => setDateRange({...dateRange, to: e.target.value})} 
-              className="bg-transparent border border-zinc-800 text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37] color-scheme-dark" 
+              className="bg-transparent border border-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37] color-scheme-dark" 
             />
             {(dateRange.from || dateRange.to) && (
-              <button onClick={() => setDateRange({from: "", to: ""})} className="text-xs text-[#A0A0A0] hover:text-[#EAEAEA] px-2">Clear</button>
+              <button onClick={() => setDateRange({from: "", to: ""})} className="text-xs text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] px-2">Clear</button>
             )}
           </div>
         )}
@@ -190,7 +190,7 @@ export default function DashboardPage() {
                   className="bg-[#D4AF37] hover:bg-[#F3D060] text-black w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(212,175,55,0.3)] hover:shadow-[0_4px_30px_rgba(212,175,55,0.5)] active:scale-90 hover:scale-[1.05] hover:-translate-y-1 transition-all group flex items-center justify-center relative z-20 border border-black/10"
                 >
                   <Plus size={28} strokeWidth={3} className="transition-transform group-hover:rotate-90 duration-300" />
-                  <span className="absolute left-full ml-4 luxury-card text-[#EAEAEA] text-sm font-bold px-4 py-2 rounded-2xl opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-xl">
+                  <span className="absolute left-full ml-4 luxury-card text-zinc-900 dark:text-[#EAEAEA] text-sm font-bold px-4 py-2 rounded-2xl opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all whitespace-nowrap pointer-events-none shadow-xl">
                     Add Trade
                   </span>
                 </button>
@@ -223,31 +223,31 @@ export default function DashboardPage() {
         )}
 
       {activeTab === "calendar" && (
-        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-[#111827]">
+        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-zinc-200 dark:border-[#111827]">
           <CalendarView trades={normalizedTrades} displayCurrency={displayCurrency} isFree={isFree} />
         </div>
       )}
 
       {activeTab === "analytics" && (
-        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-[#111827]">
+        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-zinc-200 dark:border-[#111827]">
           {isFree ? (
             <div className="relative min-h-[60vh]">
               {/* Ghosted preview */}
               <div className="filter blur-[6px] pointer-events-none opacity-20 select-none">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-64" />
-                  <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-64 lg:col-span-2" />
-                  <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-80" />
-                  <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-80 lg:col-span-2" />
+                  <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-64" />
+                  <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-64 lg:col-span-2" />
+                  <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-80" />
+                  <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl p-5 h-80 lg:col-span-2" />
                 </div>
               </div>
               {/* Center overlay */}
               <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#D4AF37]/15 p-10 rounded-[28px] max-w-md text-center space-y-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] animate-in zoom-in-95 duration-300">
+                <div className="bg-white dark:bg-[#11161D]/95 backdrop-blur-sm border-2 border-[#D4AF37]/15 p-10 rounded-[28px] max-w-md text-center space-y-5 shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] animate-in zoom-in-95 duration-300">
                   <div className="text-4xl">🔒</div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-[#EAEAEA] tracking-tight">Analytics Disabled</h3>
-                    <p className="text-[#A0A0A0] text-sm leading-relaxed">Upgrade to access advanced trading insights</p>
+                    <h3 className="text-xl font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">Analytics Disabled</h3>
+                    <p className="text-zinc-600 dark:text-[#A0A0A0] text-sm leading-relaxed">Upgrade to access advanced trading insights</p>
                   </div>
                   <button onClick={() => window.location.href = '/billing'} className="w-full bg-[#D4AF37] text-black font-black py-3.5 rounded-2xl hover:shadow-[0_0_10px_rgba(201,166,70,0.15)] transition-all text-sm">
                     Upgrade to Professional
@@ -262,7 +262,7 @@ export default function DashboardPage() {
       )}
 
       {activeTab === "history" && (
-        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-[#111827]">
+        <div className="animate-in fade-in duration-300 mt-6 pt-4 border-t border-zinc-200 dark:border-[#111827]">
           <HistoryTab trades={filteredTrades} displayCurrency={displayCurrency} />
         </div>
       )}

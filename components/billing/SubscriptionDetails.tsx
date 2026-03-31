@@ -13,7 +13,7 @@ export default function SubscriptionDetails({ isPro, expiryDate, lastPaymentId }
   if (!isPro) return null;
 
   return (
-    <div className="mt-8 pt-8 border-t border-[#111827] opacity-80 hover:opacity-100 transition-opacity">
+    <div className="mt-8 pt-8 border-t border-zinc-200 dark:border-[#111827] opacity-80 hover:opacity-100 transition-opacity">
       <h3 className="text-sm font-bold tracking-widest uppercase text-[#9CA3AF] mb-6">Subscription Meta</h3>
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -43,7 +43,7 @@ export default function SubscriptionDetails({ isPro, expiryDate, lastPaymentId }
 
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-            <Calendar size={18} className="text-emerald-400" />
+            <Calendar size={18} className="text-emerald-600 dark:text-emerald-400" />
           </div>
           <div>
             <div className="text-xs font-semibold uppercase tracking-wider text-[#9CA3AF] mb-1">Next Billing Date</div>

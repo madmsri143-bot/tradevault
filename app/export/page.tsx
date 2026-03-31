@@ -321,37 +321,37 @@ export default function ExportPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-[800px] mx-auto pb-10 mt-6 lg:mt-10 overflow-y-auto custom-scrollbar h-[calc(100vh-100px)]">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#111827] pb-6 px-4 sm:px-0">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 dark:border-[#111827] pb-6 px-4 sm:px-0">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#EAEAEA] flex items-center gap-3">
+          <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-3">
             <Download className="text-[#D4AF37]" /> Export Center
           </h2>
-          <p className="text-sm text-[#A0A0A0] mt-1">Download your entire trading history for external accounting, presentations, or offline analytics.</p>
+          <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mt-1">Download your entire trading history for external accounting, presentations, or offline analytics.</p>
         </div>
       </div>
 
       <div className="space-y-8 px-4 sm:px-0 pb-10">
-         <div className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] fade-slide-up shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-[#111827] bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md flex items-center gap-2">
+         <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] fade-slide-up shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
+            <div className="p-5 border-b border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md flex items-center gap-2">
                <Download className="text-[#D4AF37]" size={18} />
-               <h3 className="text-sm font-bold uppercase tracking-wider text-[#EAEAEA]">Data Selection</h3>
+               <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-[#EAEAEA]">Data Selection</h3>
             </div>
             <div className="p-6">
                <div className="mb-6 space-y-4">
-                 <div className="flex flex-col gap-3 p-4 bg-black/20 rounded-2xl border border-[rgba(212,175,55,0.15)] shadow-inner">
+                 <div className="flex flex-col gap-3 p-4 bg-black/20 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
                    <label className="flex items-center gap-3 cursor-pointer group w-fit">
-                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'all' ? 'border-[#D4AF37] bg-[#D4AF37]/20' : 'border-zinc-700 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md group-hover:border-zinc-500'}`}>
+                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'all' ? 'border-[#D4AF37] bg-[#D4AF37]/20' : 'border-zinc-700 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md group-hover:border-zinc-500'}`}>
                        {exportMode === 'all' && <div className="w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />}
                      </div>
-                     <span className={`text-sm font-bold select-none ${exportMode === 'all' ? 'text-[#EAEAEA]' : 'text-[#A0A0A0]'}`}>Entire History</span>
+                     <span className={`text-sm font-bold select-none ${exportMode === 'all' ? 'text-zinc-900 dark:text-[#EAEAEA]' : 'text-zinc-600 dark:text-[#A0A0A0]'}`}>Entire History</span>
                      <input type="radio" className="hidden" checked={exportMode === 'all'} onChange={() => setExportMode('all')} />
                    </label>
                    
                    <label className="flex items-center gap-3 cursor-pointer group w-fit">
-                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'range' ? 'border-orange-500 bg-orange-500/20' : 'border-zinc-700 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md group-hover:border-zinc-500'}`}>
+                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${exportMode === 'range' ? 'border-orange-500 bg-orange-500/20' : 'border-zinc-700 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md group-hover:border-zinc-500'}`}>
                        {exportMode === 'range' && <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />}
                      </div>
-                     <span className={`text-sm font-bold select-none ${exportMode === 'range' ? 'text-[#EAEAEA]' : 'text-[#A0A0A0]'}`}>Specific Date Range</span>
+                     <span className={`text-sm font-bold select-none ${exportMode === 'range' ? 'text-zinc-900 dark:text-[#EAEAEA]' : 'text-zinc-600 dark:text-[#A0A0A0]'}`}>Specific Date Range</span>
                      <input type="radio" className="hidden" checked={exportMode === 'range'} onChange={() => setExportMode('range')} />
                    </label>
 
@@ -361,14 +361,14 @@ export default function ExportPage() {
                          type="date"
                          value={exportFrom}
                          onChange={(e) => setExportFrom(e.target.value)} 
-                         className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-xs text-[#EAEAEA] focus:outline-none focus:border-orange-500" 
+                         className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-xs text-zinc-900 dark:text-[#EAEAEA] focus:outline-none focus:border-orange-500" 
                        />
-                       <span className="text-[#A0A0A0] text-xs font-bold">TO</span>
+                       <span className="text-zinc-600 dark:text-[#A0A0A0] text-xs font-bold">TO</span>
                        <input 
                          type="date" 
                          value={exportTo}
                          onChange={(e) => setExportTo(e.target.value)} 
-                         className="bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-xs text-[#EAEAEA] focus:outline-none focus:border-orange-500" 
+                         className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-800 rounded p-2 text-xs text-zinc-900 dark:text-[#EAEAEA] focus:outline-none focus:border-orange-500" 
                        />
                      </div>
                    )}
@@ -385,28 +385,28 @@ export default function ExportPage() {
                  <button 
                    onClick={handleExportCSV}
                    disabled={isExporting}
-                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-[#D4AF37]/50 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-[#D4AF37]/50 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
-                   <FileText size={28} className="text-[#A0A0A0] group-hover:text-[#D4AF37] transition-colors" />
-                   <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export CSV</span>
+                   <FileText size={28} className="text-zinc-600 dark:text-[#A0A0A0] group-hover:text-[#D4AF37] transition-colors" />
+                   <span className="text-sm font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">Export CSV</span>
                  </button>
                  
                  <button 
                    onClick={handleExportPDF}
                    disabled={isExporting}
-                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-red-500/50 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-red-500/50 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
-                   <Download size={28} className="text-[#A0A0A0] group-hover:text-red-400 transition-colors" />
-                   <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export PDF</span>
+                   <Download size={28} className="text-zinc-600 dark:text-[#A0A0A0] group-hover:text-red-600 dark:text-red-400 transition-colors" />
+                   <span className="text-sm font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">Export PDF</span>
                  </button>
                  
                  <button 
                    onClick={handleExportPPT}
                    disabled={isExporting}
-                   className="p-5 bg-gradient-to-b from-[#0A0A0A] to-[#121212] backdrop-blur-md border border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-orange-500/50 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
+                   className="p-5 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-orange-500/50 hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group disabled:opacity-50"
                  >
-                   <Presentation size={28} className="text-[#A0A0A0] group-hover:text-orange-400 transition-colors" />
-                   <span className="text-sm font-bold text-[#EAEAEA] tracking-tight">Export PPTX</span>
+                   <Presentation size={28} className="text-zinc-600 dark:text-[#A0A0A0] group-hover:text-orange-400 transition-colors" />
+                   <span className="text-sm font-bold text-zinc-900 dark:text-[#EAEAEA] tracking-tight">Export PPTX</span>
                  </button>
                </div>
             </div>

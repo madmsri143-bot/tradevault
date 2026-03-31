@@ -49,7 +49,7 @@ export default function PlanProgressBar({ plan, isPro, expiryDate }: PlanProgres
 
   return (
     <div className="w-full mt-6 animate-in fade-in duration-1000">
-      <div className="flex items-center justify-between text-xs font-medium text-[#A0A0A0] mb-2">
+      <div className="flex items-center justify-between text-xs font-medium text-zinc-600 dark:text-[#A0A0A0] mb-2">
         <span>Current Cycle Usage</span>
         <span className={progress >= 90 ? "text-[#FF4D6D]" : "text-[#D4AF37]"}>
           {Math.round(progress)}% used
