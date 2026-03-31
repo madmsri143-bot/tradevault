@@ -52,7 +52,7 @@ export default function Sidebar() {
         )}
         <button
           onClick={toggleSidebar}
-          className="p-1 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-md transition-colors"
+          className="p-1 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-white/5 rounded-md transition-colors"
           title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
         >
           {isExpanded ? <X size={20} /> : <Menu size={20} />}

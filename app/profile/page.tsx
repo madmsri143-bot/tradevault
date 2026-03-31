@@ -7,6 +7,7 @@ import { updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "@/lib/firebase";
+import { compressImage } from "@/lib/imageUtils";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -58,23 +59,30 @@ export default function ProfilePage() {
     }
 
     setIsSaving(true);
-    const storageRef = ref(storage, `users/${auth.currentUser.uid}/avatar`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    try {
+      const compressedFile = await compressImage(file);
+      const storageRef = ref(storage, `users/${auth.currentUser.uid}/avatar`);
+      const uploadTask = uploadBytesResumable(storageRef, compressedFile);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.error("Upload failed", error);
-        alert("Upload failed. Please try again.");
-        setIsSaving(false);
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        setNewPhotoUrl(downloadURL);
-        setIsSaving(false);
-      }
-    );
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          console.error("Upload failed", error);
+          alert("Upload failed. Please try again.");
+          setIsSaving(false);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          setNewPhotoUrl(downloadURL);
+          setIsSaving(false);
+        }
+      );
+    } catch (err) {
+      console.error("Compression/Upload error", err);
+      alert("Failed to process image.");
+      setIsSaving(false);
+    }
   };
 
   const currentDisplayPhoto = isEditing ? newPhotoUrl : user?.photoURL;

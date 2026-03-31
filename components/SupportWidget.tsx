@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Headset, Send, Loader2, CheckCircle } from "lucide-react";
+import { Headset, Send, Loader2, CheckCircle, ImagePlus, X } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTrial } from "@/components/TrialGuard";
 import Modal from "@/components/ui/Modal";
+import { compressImage, uploadToCloudinary } from "@/lib/imageUtils";
 
 export default function SupportWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,6 +22,8 @@ export default function SupportWidget() {
     message: ""
   });
   
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export default function SupportWidget() {
     return () => window.removeEventListener("openSupportModal", handleOpen);
   }, []);
 
-  // Image attachment temporarily disabled for text-only pipeline
+  // Re-enabled image attachment pipeline
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +59,19 @@ export default function SupportWidget() {
     
     setLoading(true);
     try {
+      let attachmentUrl = "";
+      if (attachment) {
+         try {
+           const compressed = await compressImage(attachment);
+           attachmentUrl = await uploadToCloudinary(compressed);
+         } catch (err) {
+            console.error(err);
+            setErrorMsg("Failed to upload screenshot. Try submitting without it.");
+            setLoading(false);
+            return;
+         }
+      }
+
       const res = await fetch("/api/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -64,7 +80,8 @@ export default function SupportWidget() {
           email: formData.email,
           plan: planName || "Unknown",
           subject: formData.subject,
-          message: formData.message
+          message: formData.message,
+          attachmentUrl
         })
       });
 
@@ -78,6 +95,8 @@ export default function SupportWidget() {
         setIsOpen(false);
         setSuccess(false);
         setFormData({ name: user?.displayName || "", email: user?.email || "", subject: "", message: "" });
+        setAttachment(null);
+        setPreviewUrl(null);
       }, 3000);
     } catch (err: any) {
       console.error(err);
@@ -174,7 +193,35 @@ export default function SupportWidget() {
               />
             </div>
 
-            {/* Image attachment temporarily disabled for text-only pipeline */}
+            {/* Image attachment */}
+            <div className="pt-2">
+              {previewUrl ? (
+                <div className="relative rounded-2xl overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] h-[54px] flex items-center shadow-inner">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+                  <span className="relative z-10 text-xs text-zinc-900 dark:text-[#EAEAEA] px-4 font-bold truncate">Screenshot Attached</span>
+                  <button type="button" onClick={() => { setAttachment(null); setPreviewUrl(null); }} className="absolute z-20 inset-y-0 right-0 px-4 bg-red-500/90 hover:bg-red-500 text-white text-xs font-bold transition-colors">
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[54px] border border-dashed border-zinc-700/50 rounded-2xl bg-black/20 hover:border-[#D4AF37]/50 transition-all text-xs font-bold uppercase tracking-widest text-[#D4AF37] group shadow-inner">
+                  <ImagePlus size={16} className="group-hover:scale-110 transition-transform" />
+                  <span>Add Screenshot (Optional)</span>
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*" 
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setAttachment(e.target.files[0]);
+                        setPreviewUrl(URL.createObjectURL(e.target.files[0]));
+                      }
+                    }} 
+                  />
+                </label>
+              )}
+            </div>
             
             <button 
               type="submit" 

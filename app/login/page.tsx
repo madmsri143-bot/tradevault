@@ -309,7 +309,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative">
         <button 
           onClick={handleBack} 
-          className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm bg-transparent"
+          className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm bg-transparent cursor-pointer"
         >
           <ChevronLeft size={16} /> Back
         </button>
@@ -375,7 +375,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                 <Input label="Confirm Password" value={confirmPassword} onChange={setConfirmPassword} type="password" placeholder="••••••••" error={fieldErrors.confirmPassword} autoComplete="new-password" />
               )}
 
-              <button disabled={loading} type="submit" className="w-full bg-[#D4AF37] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 mt-4">
+              <button disabled={loading} type="submit" className="w-full bg-[#D4AF37] text-black font-black py-4 rounded-2xl hover:shadow-[0_0_25px_rgba(0,185,129,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer mt-4">
                 {loading ? <Loader2 className="animate-spin mx-auto" /> : mode === "login" ? "Sign In" : mode === "signup" ? "Sign Up" : mode === "forgot-password" ? "Send Reset Link" : "Finish Setup"}
               </button>
               {mode === "signup" && (
@@ -393,7 +393,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                 <div className="flex-grow border-t border-zinc-200 dark:border-[#111827]"></div>
               </div>
 
-              <button onClick={handleGoogleLogin} className="w-full bg-white/5 border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] text-zinc-900 dark:text-[#EAEAEA] font-bold py-4 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3">
+              <button onClick={handleGoogleLogin} className="w-full bg-white/5 border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] text-zinc-900 dark:text-[#EAEAEA] font-bold py-4 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3 cursor-pointer">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -404,7 +404,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
               </button>
 
               <div className="text-center flex flex-col gap-3 group mt-2">
-                 <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-600 dark:text-[#A0A0A0] font-medium hover:text-[#EAEAEA] transition-colors">
+                 <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-600 dark:text-[#A0A0A0] font-medium hover:text-[#EAEAEA] transition-colors cursor-pointer">
                    {mode === "login" ? <>New to <span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
@@ -441,7 +441,7 @@ function Input({ label, value, onChange, type, placeholder, error, autofocus = f
           <button 
             type="button" 
             onClick={() => setShowPassword(!showPassword)} 
-            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors outline-none focus:outline-none ${error ? 'text-red-500 hover:text-red-600 dark:text-red-400' : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]'}`}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors outline-none focus:outline-none cursor-pointer ${error ? 'text-red-500 hover:text-red-600 dark:text-red-400' : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]'}`}
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>

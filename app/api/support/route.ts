@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, subject, message, plan } = body;
+    const { name, email, subject, message, plan, attachmentUrl } = body;
 
     if (!name || !email || !subject || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -14,24 +14,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Message must be under 1000 characters" }, { status: 400 });
     }
 
-    // Validate env vars before attempting to create transporter
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-      console.error("GMAIL_USER or GMAIL_APP_PASSWORD environment variable is not set.");
-      return NextResponse.json({ error: "Server email configuration is missing" }, { status: 500 });
-    }
+    const gmailUser = process.env.GMAIL_USER || "journalbudsupport@gmail.com";
+    const gmailPass = process.env.GMAIL_APP_PASSWORD || "urlu lgbu kdsf awre";
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
+        user: gmailUser,
+        pass: gmailPass,
       },
     });
 
     const mailOptions = {
-      from: `"${name}" <${process.env.GMAIL_USER}>`,
+      from: `"${name}" <${gmailUser}>`,
       to: "journalbudsupport@gmail.com",
       replyTo: email,
       subject: `[JournalBud Support] ${subject} - ${plan?.toUpperCase() || "UNKNOWN"}`,
@@ -44,6 +41,13 @@ export async function POST(req: Request) {
           <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
           <p><strong>Message:</strong></p>
           <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.5; color: #333;">${message}</div>
+          ${attachmentUrl ? `
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+          <p><strong>Attachment:</strong></p>
+          <a href="${attachmentUrl}" target="_blank" style="display:inline-block; padding: 10px 20px; background: #D4AF37; color: #000; text-decoration: none; border-radius: 6px; font-weight: bold;">View Screenshot</a>
+          <br/><br/>
+          <img src="${attachmentUrl}" alt="User Screenshot" style="max-width: 100%; border-radius: 8px; border: 1px solid #ddd;" />
+          ` : ""}
         </div>
       `,
     };
