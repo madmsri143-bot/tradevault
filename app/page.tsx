@@ -800,9 +800,7 @@ export default function LandingPage() {
       <footer className="border-t border-zinc-200 dark:border-[#111827] py-12 px-6 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#D4AF37] to-amber-400 flex items-center justify-center">
-              <LineChart size={14} className="text-black" />
-            </div>
+            <JBLogo size={28} />
             <span className="text-sm font-brand font-bold text-zinc-600 dark:text-[#A0A0A0]">JournalBud</span>
           </div>
           <div className="flex items-center gap-6 text-xs text-zinc-600">
