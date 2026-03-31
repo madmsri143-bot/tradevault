@@ -79,7 +79,7 @@ export default function DemoPage() {
                 key={t}
                 onClick={() => setActiveTab(t)}
                 className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
-                  activeTab === t ? 'bg-zinc-200 dark:bg-zinc-800 text-[#D4AF37] shadow-sm' : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]'
+                  activeTab === t ? 'bg-zinc-200 dark:bg-zinc-800 text-[#D4AF37] shadow-sm' : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]'
                 }`}
               >
                 {t === "history" ? "Trade History" : t}

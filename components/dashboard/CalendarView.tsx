@@ -253,14 +253,14 @@ export default React.memo(function CalendarView({ trades, displayCurrency = "USD
              <div className="flex bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md p-1 rounded-lg border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
                <button 
                  onClick={() => setViewMode("monthly")}
-                  className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", effectiveViewMode === "monthly" ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]")}
+                  className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", effectiveViewMode === "monthly" ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]")}
                 >
                  <CalendarIcon size={14} /> Monthly
                 </button>
                 {!isFree && (
                   <button 
                     onClick={() => setViewMode("yearly")}
-                    className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", effectiveViewMode === "yearly" ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]")}
+                    className={cn("px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all", effectiveViewMode === "yearly" ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]")}
                   >
                    <LayoutGrid size={14} /> Yearly
                   </button>
@@ -269,13 +269,13 @@ export default React.memo(function CalendarView({ trades, displayCurrency = "USD
            </div>
 
            <div className="flex items-center gap-4">
-              <button onClick={handlePrev} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-lg transition-colors border border-transparent hover:border-zinc-200 dark:border-[#111827]">
+              <button onClick={handlePrev} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-lg transition-colors border border-transparent hover:border-zinc-200 dark:border-[#111827]">
                 <ChevronLeft size={20} />
               </button>
               <h2 className="text-lg font-black tracking-tight text-zinc-900 dark:text-[#EAEAEA] w-32 text-center pointer-events-none">
                 {effectiveViewMode === "monthly" ? format(currentDate, "MMMM yyyy") : format(currentDate, "yyyy")}
               </h2>
-              <button onClick={handleNext} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-lg transition-colors border border-transparent hover:border-zinc-200 dark:border-[#111827]">
+              <button onClick={handleNext} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-lg transition-colors border border-transparent hover:border-zinc-200 dark:border-[#111827]">
                 <ChevronRight size={20} />
               </button>
            </div>
@@ -349,7 +349,7 @@ export default React.memo(function CalendarView({ trades, displayCurrency = "USD
                     {isFree ? "Day Review" : selectedDate ? format(selectedDate, "MMM do, yyyy") : "Day Review"}
                   </h3>
                   {selectedDate && !isFree && (
-                    <button onClick={() => setSelectedDate(null)} className="p-1.5 bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] rounded-lg transition-colors">
+                    <button onClick={() => setSelectedDate(null)} className="p-1.5 bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] rounded-lg transition-colors">
                       <X size={14} />
                     </button>
                   )}

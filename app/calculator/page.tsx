@@ -134,7 +134,7 @@ export default function CalculatorPage() {
             className={`relative flex items-center gap-2.5 px-4 sm:px-6 py-4 text-sm font-bold transition-all whitespace-nowrap group ${
               activeTab === t.id
                 ? "text-[#D4AF37]"
-                : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]"
+                : "text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]"
             }`}
           >
             <span className={`transition-transform duration-300 ${activeTab === t.id ? 'scale-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]' : 'group-hover:scale-110'}`}>{t.icon}</span>

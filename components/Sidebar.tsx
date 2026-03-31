@@ -52,8 +52,8 @@ export default function Sidebar() {
         )}
         <button
           onClick={toggleSidebar}
-          className="p-1 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-md transition-colors"
-          aria-label="Toggle Sidebar"
+          className="p-1 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-md transition-colors"
+          title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
         >
           {isExpanded ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -72,7 +72,7 @@ export default function Sidebar() {
                 "flex items-center gap-3 px-2 py-2.5 rounded-lg transition-all group relative",
                 isActive
                   ? item.href === '/dashboard' ? "bg-[#D4AF37]/10 text-[#D4AF37] font-medium shadow-[inset_2px_0_0_0_#D4AF37]" : "bg-[#111827] text-zinc-900 dark:text-[#EAEAEA] font-medium shadow-[inset_2px_0_0_0_#EAEAEA]"
-                  : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-[#111827]"
+                  : "text-zinc-600 dark:text-[#A0A0A0] hover:text-white hover:bg-[#111827]"
               )}
               title={!isExpanded ? item.label : undefined}
             >

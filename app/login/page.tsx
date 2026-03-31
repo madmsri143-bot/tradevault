@@ -309,7 +309,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
       <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative">
         <button 
           onClick={handleBack} 
-          className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors font-bold text-sm bg-transparent"
+          className="absolute top-6 left-6 lg:left-12 flex items-center gap-2 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors font-bold text-sm bg-transparent"
         >
           <ChevronLeft size={16} /> Back
         </button>
@@ -361,7 +361,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
                           />
                           <CheckCircle2 size={12} className="absolute text-black opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
                         </div>
-                        <span className="text-xs text-zinc-600 dark:text-[#A0A0A0] group-hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors select-none font-medium">Remember me</span>
+                        <span className="text-xs text-zinc-600 dark:text-[#A0A0A0] group-hover:text-[#EAEAEA] transition-colors select-none font-medium">Remember me</span>
                       </label>
                       <button type="button" onClick={() => { setMode("forgot-password"); setFieldErrors({}); setSuccessMsg(null); }} className="text-xs text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] transition-colors font-medium">
                         Forgot Password?
@@ -404,7 +404,7 @@ export default function LoginPage({ forceSignup }: { forceSignup?: boolean }) {
               </button>
 
               <div className="text-center flex flex-col gap-3 group mt-2">
-                 <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-600 dark:text-[#A0A0A0] font-medium hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors">
+                 <button onClick={() => { setMode(mode === "login" ? "signup" : "login"); setFieldErrors({}); setSuccessMsg(null); setEmail(""); setPassword(""); }} className="text-sm text-zinc-600 dark:text-[#A0A0A0] font-medium hover:text-[#EAEAEA] transition-colors">
                    {mode === "login" ? <>New to <span className="text-[#D4AF37]">J</span>ournal<span className="text-[#D4AF37]">B</span>ud? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign Up</span></> : <>Already have an account? <span className="text-[#D4AF37] font-black underline underline-offset-4">Sign In</span></>}
                  </button>
               </div>
@@ -441,7 +441,7 @@ function Input({ label, value, onChange, type, placeholder, error, autofocus = f
           <button 
             type="button" 
             onClick={() => setShowPassword(!showPassword)} 
-            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors outline-none focus:outline-none ${error ? 'text-red-500 hover:text-red-600 dark:text-red-400' : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]'}`}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors outline-none focus:outline-none ${error ? 'text-red-500 hover:text-red-600 dark:text-red-400' : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]'}`}
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>

@@ -116,7 +116,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
             </h2>
             <p className="text-sm text-zinc-600 dark:text-[#A0A0A0] mt-1">Review the AI-mapped trades below. Correct any false readings before saving.</p>
           </div>
-          <button onClick={onClose} className="p-2 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] rounded-lg hover:bg-white/5 transition-colors">
+          <button onClick={onClose} className="p-2 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] rounded-lg hover:bg-white/5 transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -210,7 +210,7 @@ export default function BulkPreviewModal({ isOpen, onClose, onSuccess, extracted
                   <div className="col-span-1 flex justify-end">
                     <button 
                       onClick={() => handleRemoveTrade(idx)}
-                      className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-zinc-900 dark:text-[#EAEAEA] rounded-lg transition-colors border border-red-500/20"
+                      className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-[#EAEAEA] rounded-lg transition-colors border border-red-500/20"
                       title="Discard Row"
                     >
                       <Trash2 size={16} />

@@ -124,7 +124,7 @@ export default function VerifyEmailPage() {
           
           <button 
             onClick={handleBackToLogin}
-            className="w-full bg-transparent hover:bg-white/5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] font-semibold py-3.5 px-4 rounded-2xl transition-all flex items-center justify-center gap-2"
+            className="w-full bg-transparent hover:bg-white/5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] font-semibold py-3.5 px-4 rounded-2xl transition-all flex items-center justify-center gap-2"
           >
             <ArrowLeft size={18} />
             Back to Login

@@ -365,7 +365,7 @@ export default function JournalPage() {
                     <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">Before Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_BEFORE.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-zinc-900 dark:text-[#EAEAEA]'}`}>
+                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-[#EAEAEA]'}`}>
                           {m}
                         </button>
                       ))}
@@ -376,7 +376,7 @@ export default function JournalPage() {
                     <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">After Trade</span>
                     <div className="flex flex-wrap gap-2">
                       {MOODS_AFTER.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-zinc-900 dark:text-[#EAEAEA]'}`}>
+                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-[#EAEAEA]'}`}>
                           {m}
                         </button>
                       ))}
@@ -405,7 +405,7 @@ export default function JournalPage() {
                   {QUALITY_SCORES.map(s => {
                     const activeColor = 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]';
                     return (
-                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-2xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] shadow-inner'}`}>
+                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-2xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] shadow-inner'}`}>
                         {s}
                       </button>
                     )
@@ -425,7 +425,7 @@ export default function JournalPage() {
                   />
                 </div>
                 <div className="space-y-1.5 flex flex-col justify-end">
-                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border rounded-2xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-black/20 border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]'}`} onClick={() => setSlFollowed(!slFollowed)}>
+                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border rounded-2xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-black/20 border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]'}`} onClick={() => setSlFollowed(!slFollowed)}>
                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${slFollowed ? 'border-[#D4AF37] bg-[#D4AF37] text-zinc-950' : 'border-zinc-700 bg-transparent text-transparent'}`}>
                        <CheckCircle2 size={12} strokeWidth={4} />
                     </div>
@@ -907,7 +907,7 @@ function EditEntryModal({ entry, onClose }: { entry: JournalEntry, onClose: () =
             </div>
 
             <div className="pt-2 flex justify-end gap-3 border-t border-white/5">
-              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2.5 text-[13px] text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-white/5 rounded-2xl font-bold transition-colors">Cancel</button>
+              <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2.5 text-[13px] text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-white/5 rounded-2xl font-bold transition-colors">Cancel</button>
               <button type="submit" disabled={submitting} className="luxury-button-gold px-6 py-2 h-auto text-[13px]">
                 {submitting && <Loader2 size={14} className="animate-spin" />} Save Updates
               </button>

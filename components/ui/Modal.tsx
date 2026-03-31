@@ -53,7 +53,7 @@ export default function Modal({ isOpen, onClose, title, icon, children, maxWidth
             </div>
             <button 
               onClick={onClose} 
-              className="w-10 h-10 flex items-center justify-center text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0"
+              className="w-10 h-10 flex items-center justify-center text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0"
               aria-label="Close modal"
             >
               <X size={20} />
@@ -65,7 +65,7 @@ export default function Modal({ isOpen, onClose, title, icon, children, maxWidth
         {!(title || icon) && (
           <button 
             onClick={onClose} 
-            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] bg-black/20 rounded-full hover:bg-white/10 transition-colors"
+            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] bg-black/20 rounded-full hover:bg-white/10 transition-colors"
             aria-label="Close modal"
           >
             <X size={20} />

@@ -270,7 +270,7 @@ export default function TargetPage() {
                   className={`flex-1 py-2 text-xs font-bold transition-all rounded-lg uppercase tracking-wider ${
                     activeTab === tab 
                       ? 'bg-[#D4AF37] text-black shadow-sm' 
-                      : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]'
+                      : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]'
                   }`}
                 >
                   {tab}
@@ -549,7 +549,7 @@ function EditTargetModal({ target, onClose }: { target: TradingTarget, onClose: 
             </div>
           </div>
           <div className="pt-4 flex justify-end gap-3 mt-4 border-t border-white/5">
-             <button type="button" onClick={onClose} className="px-4 py-2.5 text-xs text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] rounded-lg font-bold transition-colors">Abort</button>
+             <button type="button" onClick={onClose} className="px-4 py-2.5 text-xs text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] rounded-lg font-bold transition-colors">Abort</button>
              <button type="submit" disabled={submitting} className="luxury-button-gold px-6 py-2 h-auto text-[13px]">
                {submitting ? "Saving..." : "Save Params"}
              </button>

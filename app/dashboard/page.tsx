@@ -147,7 +147,7 @@ export default function DashboardPage() {
               className={`px-5 py-2 text-sm font-bold rounded-lg capitalize transition-all ${
                 activeTab === t 
                   ? 'bg-[#D4AF37] text-black shadow-lg'
-                  : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-white/5'
+                  : 'text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-white/5'
               }`}
             >
               {t === "history" ? "Trade History" : t}
@@ -172,7 +172,7 @@ export default function DashboardPage() {
               className="bg-transparent border border-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs px-2 py-1.5 rounded-md focus:outline-none focus:border-[#D4AF37] color-scheme-dark" 
             />
             {(dateRange.from || dateRange.to) && (
-              <button onClick={() => setDateRange({from: "", to: ""})} className="text-xs text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] px-2">Clear</button>
+              <button onClick={() => setDateRange({from: "", to: ""})} className="text-xs text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] px-2">Clear</button>
             )}
           </div>
         )}

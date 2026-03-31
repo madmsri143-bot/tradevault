@@ -95,7 +95,7 @@ export default function PaymentHistory({ history }: PaymentHistoryProps) {
                   <td className="px-6 py-4 text-[#9CA3AF] capitalize">
                     {payment.plan.replace("pro_", "")}
                   </td>
-                  <td className="px-6 py-4 text-zinc-600 dark:text-[#A0A0A0] font-mono text-xs flex items-center gap-2 group-hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors">
+                  <td className="px-6 py-4 text-zinc-600 dark:text-[#A0A0A0] font-mono text-xs flex items-center gap-2 group-hover:text-[#EAEAEA] transition-colors">
                     <button onClick={() => generateReceiptPDF(payment)} className="flex items-center gap-1 hover:text-[#D4AF37] transition-colors p-1" title="Download Receipt PDF">
                       <Download size={14} />
                       <span className="truncate w-24">{payment.payment_id !== "mock" ? payment.payment_id : "TRIAL_ACTV"}</span>

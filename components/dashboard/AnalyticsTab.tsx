@@ -572,7 +572,7 @@ export default React.memo(function AnalyticsTab({ trades, displayCurrency }: Ana
                   <button
                     key={tf}
                     onClick={() => setTimeframe(tf)}
-                    className={`px-4 py-1.5 text-xs font-bold capitalize rounded-md transition-all ${timeframe === tf ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]"}`}
+                    className={`px-4 py-1.5 text-xs font-bold capitalize rounded-md transition-all ${timeframe === tf ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]"}`}
                   >
                     {tf}
                   </button>

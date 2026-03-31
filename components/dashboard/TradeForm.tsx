@@ -556,7 +556,7 @@ export default React.memo(function TradeForm({ isOpen, onClose }: TradeFormProps
             Log New Trade
           </h3>
           {onClose && (
-            <button type="button" onClick={onClose} className="p-1 px-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors">
+            <button type="button" onClick={onClose} className="p-1 px-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] transition-colors">
               <X size={16} />
             </button>
           )}

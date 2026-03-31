@@ -178,16 +178,16 @@ export default function LandingPage() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600 dark:text-[#A0A0A0]">
-          <a href="#how-it-works" className="hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors duration-300">How It Works</a>
-          <a href="#features" className="hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors duration-300">Features</a>
-          <a href="#pricing" className="hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors duration-300">Pricing</a>
+          <a href="#how-it-works" className="hover:text-white transition-colors duration-300">How It Works</a>
+          <a href="#features" className="hover:text-white transition-colors duration-300">Features</a>
+          <a href="#pricing" className="hover:text-white transition-colors duration-300">Pricing</a>
           <Link href="/demo" className="hidden sm:flex text-sm font-medium text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] transition-colors items-center gap-1.5">
             <Play size={14} className="text-[#D4AF37]" /> Demo
           </Link>
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-sm font-medium text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] transition-colors">
+          <Link href="/login" className="text-sm font-medium text-zinc-600 dark:text-[#A0A0A0] hover:text-white transition-colors">
             Login
           </Link>
           <Link href={ctaHref}

@@ -13,8 +13,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const variants = {
       primary: "bg-[#D4AF37] text-black hover:bg-[#F3D060] shadow-[0_4px_20px_rgba(212,175,55,0.3)] hover:shadow-[0_4px_30px_rgba(212,175,55,0.5)] border border-black/10",
       secondary: "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-700 border border-zinc-700",
-      danger: "bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-zinc-900 dark:text-[#EAEAEA] border border-red-500/20",
-      ghost: "bg-transparent text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800",
+      danger: "bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-[#EAEAEA] border border-red-500/20",
+      ghost: "bg-transparent text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800",
       outline: "bg-transparent border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]"
     };
 

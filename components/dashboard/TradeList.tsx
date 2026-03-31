@@ -141,7 +141,7 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
                         <div className="flex items-center justify-end gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => setEditingTrade(trade)}
-                            className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-700 rounded-md transition-colors"
+                            className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-700 rounded-md transition-colors"
                             title="Edit"
                           >
                             <Pencil size={14} />

@@ -144,7 +144,7 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-[#EAEAEA]">Edit Trade</h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-md transition-colors"
+            className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-md transition-colors"
           >
             <X size={18} />
           </button>
@@ -346,7 +346,7 @@ export default function EditTradeModal({ trade, onClose }: { trade: Trade; onClo
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 text-sm text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded font-medium transition-colors"
+              className="px-4 py-2 text-sm text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded font-medium transition-colors"
             >
               Cancel
             </button>

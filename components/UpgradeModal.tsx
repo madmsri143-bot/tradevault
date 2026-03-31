@@ -141,7 +141,7 @@ export default function UpgradeModal({ onClose, initialPlan = "yearly" }: Upgrad
               <p className="text-xs text-zinc-600 dark:text-[#A0A0A0]">Unlock the full power of JournalBud.</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] bg-white/5 rounded-full hover:bg-white/10 transition-colors">
+          <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] bg-white/5 rounded-full hover:bg-white/10 transition-colors">
             <X size={20} />
           </button>
         </div>
