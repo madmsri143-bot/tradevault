@@ -168,8 +168,8 @@ export default function TargetPage() {
        colorClass = "text-emerald-500";
        hexColor = "#10b981";
     } else if (now > target.endDate) {
-       status = "FAILED_TIME";
-       statusLabel = "Expired Missed";
+       status = "INCOMPLETE";
+       statusLabel = "Session Ended";
        colorClass = "text-zinc-600 dark:text-[#A0A0A0]";
        hexColor = "#71717a";
     } else if (totalPnl < 0) {
@@ -224,7 +224,7 @@ export default function TargetPage() {
   }
 
   // Render separation
-  const activeTargets = targets.filter(t => evaluateTarget(t).status !== "FAILED_LOSS" && evaluateTarget(t).status !== "FAILED_TIME" && Date.now() <= t.endDate);
+  const activeTargets = targets.filter(t => evaluateTarget(t).status !== "FAILED_LOSS" && evaluateTarget(t).status !== "INCOMPLETE" && Date.now() <= t.endDate);
   // Show passed targets locally if they haven't explicitly expired by time, or just let them sit in active if date is ongoing
   
   return (
@@ -399,13 +399,27 @@ export default function TargetPage() {
                          )}
                          
                          {/* Intelligent Status Feedback */}
-                         <div className={`p-3 rounded-2xl border flex items-center gap-3 ${status === 'PASSED' ? 'bg-[#10B981]/10 border-[#10B981]/20 text-[#10B981]' : status === 'AHEAD' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : status === 'BEHIND' ? 'bg-[#D4AF37]/10 border-[#D4AF37]/20 text-[#D4AF37]' : 'bg-[#FF4D6D]/10 border-[#FF4D6D]/20 text-[#FF4D6D]'}`}>
-                            {status === 'PASSED' ? <CheckCircle2 size={18} /> : status === 'AHEAD' ? <TrendingUp size={18} /> : status === 'BEHIND' ? <Hourglass size={18} /> : <XCircle size={18} />}
+                         <div className={`p-3 rounded-2xl border flex items-center gap-3 ${
+                           status === 'PASSED' ? 'bg-[#10B981]/10 border-[#10B981]/20 text-[#10B981]' 
+                           : status === 'AHEAD' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' 
+                           : status === 'BEHIND' ? 'bg-[#D4AF37]/10 border-[#D4AF37]/20 text-[#D4AF37]' 
+                           : status === 'INCOMPLETE' ? 'bg-zinc-500/10 border-zinc-500/20 text-zinc-600 dark:text-[#A0A0A0]'
+                           : status === 'DRAWDOWN' ? 'bg-[#FF4D6D]/10 border-[#FF4D6D]/20 text-[#FF4D6D]'
+                           : 'bg-[#FF4D6D]/10 border-[#FF4D6D]/20 text-[#FF4D6D]'
+                         }`}>
+                            {status === 'PASSED' ? <CheckCircle2 size={18} /> 
+                            : status === 'AHEAD' ? <TrendingUp size={18} /> 
+                            : status === 'BEHIND' ? <Hourglass size={18} /> 
+                            : status === 'INCOMPLETE' ? <AlertTriangle size={18} />
+                            : status === 'DRAWDOWN' ? <TrendingDown size={18} />
+                            : <XCircle size={18} />}
                             <span className="text-sm font-bold">
                                {status === 'PASSED' ? "Target obliterated! Unstoppable execution." 
                               : status === 'AHEAD' ? "You are ahead of schedule. Guard your capital." 
                               : status === 'BEHIND' ? "You are trailing the necessary run rate. Do not force setups." 
-                              : "Target failed. Live to trade another day."}
+                              : status === 'INCOMPLETE' ? "Session ended without reaching target."
+                              : status === 'DRAWDOWN' ? "You are in drawdown. Maintain your discipline."
+                              : "Target failed. Drawdown rule broken."}
                             </span>
                          </div>
                       </div>
