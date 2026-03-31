@@ -113,40 +113,6 @@ export default function SettingsPage() {
 
       <div className="space-y-8">
         
-        {/* Section: Preferences */}
-        <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] fade-slide-up shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
-           <div className="p-5 border-b border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md flex items-center gap-2">
-              <Palette className="text-blue-500" size={18} />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-[#EAEAEA]">Preferences</h3>
-           </div>
-           <div className="p-0 divide-y divide-white/5">
-              <div className="flex items-center justify-between p-6 hover:bg-white/[0.02] transition-colors">
-                 <div className="flex items-center gap-4">
-                   <div className="p-2.5 bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner hidden sm:block"><Moon size={20} className="text-zinc-600 dark:text-[#A0A0A0]" /></div>
-                   <div>
-                     <p className="font-bold text-zinc-900 dark:text-[#EAEAEA] text-sm">Application Theme</p>
-                     <p className="text-zinc-600 dark:text-[#A0A0A0] text-xs mt-0.5">Toggle between Dark Mode and Light Mode.</p>
-                   </div>
-                 </div>
-                 <div className="flex bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md p-1 rounded-2xl shadow-inner border border-zinc-200 dark:border-[rgba(212,175,55,0.15)]">
-                   <button 
-                     onClick={() => handleThemeChange("dark")}
-                     className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${theme === "dark" ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]"}`}
-                   >
-                     Dark
-                   </button>
-                   <button 
-                     onClick={() => handleThemeChange("light")}
-                     className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors ${theme === "light" ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] shadow-sm ring-1 ring-white/10" : "text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA]"}`}
-                   >
-                     Light
-                   </button>
-                 </div>
-              </div>
-           </div>
-        </div>
-
-
         {/* Section: Security */}
         <div className="bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] fade-slide-up shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)] rounded-2xl overflow-hidden shadow-sm">
            <div className="p-5 border-b border-zinc-200 dark:border-[#111827] bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md flex items-center gap-2">

@@ -104,7 +104,7 @@ export default function TradeList({ trades, displayCurrency = "USD" }: { trades:
                 trades.map((trade) => {
                   const isProfit = (trade.pnl || 0) >= 0;
                   return (
-                    <tr key={trade.id} className="hover:bg-zinc-200 dark:bg-zinc-800/30 transition-colors group">
+                    <tr key={trade.id} className="hover:bg-white/5 transition-colors group">
                       <td className="px-4 py-3">
                         <input type="checkbox" checked={selectedTradeIds.includes(trade.id || "")} onChange={() => handleSelect(trade.id || "")} className="accent-[#D4AF37] w-3.5 h-3.5 cursor-pointer" />
                       </td>

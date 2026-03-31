@@ -139,6 +139,19 @@ export default function TargetPage() {
        else timeRemainingStr = `${differenceInDays(target.endDate, now)} days left`;
     }
 
+    let unclippedPercentage = 0;
+    if (totalPnl >= 0) {
+      if (target.targetValue > 0) {
+        unclippedPercentage = (totalPnl / target.targetValue) * 100;
+      }
+    } else {
+      if (target.maxLoss && target.maxLoss > 0) {
+        unclippedPercentage = (totalPnl / target.maxLoss) * 100;
+      }
+    }
+
+    const progressPercentage = Math.max(-100, Math.min(200, unclippedPercentage)); // Clamp string visual between -100% and +200%
+
     let status = "IN PROGRESS";
     let statusLabel = "On Track";
     let colorClass = "text-amber-600 dark:text-amber-400";
@@ -159,12 +172,16 @@ export default function TargetPage() {
        statusLabel = "Expired Missed";
        colorClass = "text-zinc-600 dark:text-[#A0A0A0]";
        hexColor = "#71717a";
+    } else if (totalPnl < 0) {
+       status = "DRAWDOWN";
+       statusLabel = "In Drawdown";
+       colorClass = "text-[#FF4D6D]";
+       hexColor = "#ef4444";
     } else {
        // Pacing Logic
        const totalDuration = target.endDate - target.startDate;
        const elapsed = now - target.startDate;
-       let timeFraction = elapsed / totalDuration;
-       if (timeFraction < 0) timeFraction = 0;
+       let timeFraction = Math.max(0, elapsed / totalDuration);
        
        const expectedPnl = target.targetValue * timeFraction;
        if (totalPnl >= expectedPnl) {
@@ -179,9 +196,6 @@ export default function TargetPage() {
           hexColor = "#f59e0b";
        }
     }
-
-    const unclippedPercentage = (totalPnl / target.targetValue) * 100;
-    const progressPercentage = Math.max(0, Math.min(100, unclippedPercentage));
     
     // Line Chart Data Gen
     const chartData = [];
@@ -332,7 +346,8 @@ export default function TargetPage() {
                 // SVG Circle Math
                 const circleRadius = 55;
                 const circleCircumference = 2 * Math.PI * circleRadius;
-                const circleOffset = circleCircumference - (progressPercentage / 100) * circleCircumference;
+                const fillPercentage = Math.abs(progressPercentage);
+                const circleOffset = circleCircumference - (Math.min(100, fillPercentage) / 100) * circleCircumference;
 
                 return (
                   <div key={target.id} className="luxury-card p-6 md:p-8 rounded-3xl relative overflow-hidden group">
@@ -350,8 +365,10 @@ export default function TargetPage() {
                            <circle cx="70" cy="70" r={circleRadius} stroke={hexColor} strokeWidth="12" fill="transparent" strokeDasharray={circleCircumference} strokeDashoffset={circleOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" style={{ filter: `drop-shadow(0 0 10px ${hexColor}60)` }} />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                           <p className="text-2xl font-black text-zinc-900 dark:text-[#EAEAEA]">{Math.floor(progressPercentage)}%</p>
-                           <p className={`text-[10px] font-bold uppercase tracking-widest ${status === 'PASSED' ? 'text-[#10B981]' : status === 'FAILED_LOSS' ? 'text-[#FF4D6D]' : 'text-[#D4AF37]'}`}>{statusLabel}</p>
+                           <p className="text-2xl font-black text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-0.5">
+                             {progressPercentage > 0 ? "+" : ""}{Math.floor(progressPercentage)}%
+                           </p>
+                           <p className={`text-[10px] font-bold uppercase tracking-widest ${status === 'PASSED' ? 'text-[#10B981]' : status === 'FAILED_LOSS' || status === 'DRAWDOWN' ? 'text-[#FF4D6D]' : 'text-[#D4AF37]'}`}>{statusLabel}</p>
                         </div>
                       </div>
 

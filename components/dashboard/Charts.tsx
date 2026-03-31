@@ -176,9 +176,12 @@ export default React.memo(function Charts({ trades, displayCurrency = "USD" }: {
         
         {/* Header with view toggle */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-2">
-            <Calendar size={16} className="text-blue-500" /> Performance by Day of the Week
-          </h3>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-[#EAEAEA] flex items-center gap-2">
+              <Calendar size={16} className="text-blue-500" /> Performance by Day of the Week
+            </h3>
+            <p className="text-[11px] text-zinc-500 dark:text-[#A0A0A0] font-medium ml-6">Each bar = total for that day across the whole month.</p>
+          </div>
           
           {/* View Toggle */}
           <div className="flex items-center bg-white dark:bg-gradient-to-b dark:from-[#0A0A0A] dark:to-[#121212] backdrop-blur-md p-1 rounded-lg border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.02)]">

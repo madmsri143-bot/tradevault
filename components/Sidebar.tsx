@@ -118,18 +118,6 @@ export default function Sidebar() {
             </div>
           )}
         </button>
-        <button
-          onClick={toggleTheme}
-          className="p-2.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-zinc-900 dark:text-[#EAEAEA] hover:bg-zinc-200 dark:bg-zinc-800 rounded-lg transition-colors relative group"
-          title="Toggle Theme"
-        >
-          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          {!isExpanded && (
-            <div className="absolute left-14 px-2 py-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-[#EAEAEA] text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
-              Theme
-            </div>
-          )}
-        </button>
       </div>
     </aside>
   );
