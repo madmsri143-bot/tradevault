@@ -25,9 +25,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <head>
         <link rel="icon" type="image/png" href="/logo_cropped.png?v=2" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            try {
+              if (localStorage.getItem('theme') === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+                document.documentElement.classList.add('light');
+                document.documentElement.classList.remove('dark');
+              } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+              }
+            } catch (e) {}
+          `
+        }} />
       </head>
       <body className={`${inter.className} ${outfit.variable} dark:bg-black bg-zinc-50 dark:text-zinc-50 text-zinc-900 min-h-screen selection:bg-[rgba(212,175,55,0.3)]`}>
         <ThemeProvider>
@@ -43,17 +56,6 @@ export default function RootLayout({
           </ModalProvider>
         </ThemeProvider>
       </body>
-      <Script id="theme-detect" strategy="beforeInteractive">{`
-        try {
-          if (localStorage.getItem('theme') === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-          } else {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-          }
-        } catch (e) {}
-      `}</Script>
     </html>
   );
 }

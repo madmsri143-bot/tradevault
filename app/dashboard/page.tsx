@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -15,7 +15,8 @@ import FloatingActionButton from "@/components/ui/FloatingActionButton";
 
 import AnalyticsTab from "@/components/dashboard/AnalyticsTab";
 import HistoryTab from "@/components/dashboard/HistoryTab";
-import { Calendar as CalendarIcon, Plus, ChevronDown } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ChevronDown, Wifi, RefreshCcw, WifiOff, AlertTriangle } from "lucide-react";
+import ConnectAccountModal from "@/components/dashboard/ConnectAccountModal";
 
 const Charts = dynamic(() => import("@/components/dashboard/Charts"), {
   ssr: false,
@@ -40,9 +41,56 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "calendar" | "analytics" | "history">("overview");
   const [dateRange, setDateRange] = useState<{from: string, to: string}>({from: "", to: ""});
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
+  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+  
+  const [liveAccount, setLiveAccount] = useState<any>(null);
+  const [syncStatus, setSyncStatus] = useState<"Connected" | "Syncing..." | "Disconnected" | "Error">("Disconnected");
+  const [lastSyncTime, setLastSyncTime] = useState<number | null>(null);
+
+  const lastSyncRef = useRef<number>(0);
+  const isSyncingRef = useRef<boolean>(false);
 
   const closeTradeModal = useCallback(() => setIsTradeModalOpen(false), []);
   const openTradeModal = useCallback(() => setIsTradeModalOpen(true), []);
+
+  const triggerSync = useCallback(async () => {
+    if (!user || isSyncingRef.current || Date.now() - lastSyncRef.current < 20000) return;
+    
+    isSyncingRef.current = true;
+    setSyncStatus("Syncing...");
+    
+    try {
+      const res = await fetch("/api/sync-accounts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ uid: user.uid })
+      });
+      // 304 means optimal skip (no new trades). 200 means syncing occurred.
+      if (!res.ok && res.status !== 304) throw new Error("Sync failure");
+      
+      if (res.status === 200) {
+        const data = await res.json();
+        lastSyncRef.current = data.syncedAt || Date.now();
+        setLastSyncTime(lastSyncRef.current);
+      } else {
+        lastSyncRef.current = Date.now();
+        setLastSyncTime(lastSyncRef.current);
+      }
+      setSyncStatus("Connected");
+    } catch (err) {
+      console.error(err);
+      setSyncStatus("Error");
+    } finally {
+      isSyncingRef.current = false;
+    }
+  }, [user]);
+
+  // Client-Side Sync Polling Loop (Triggers every 5s, executes sync roughly every 20s if overview active)
+  useEffect(() => {
+    if (!liveAccount || activeTab !== "overview") return;
+    const intervalId = setInterval(triggerSync, 5000);
+    return () => clearInterval(intervalId);
+  }, [liveAccount, activeTab, triggerSync]);
 
   // Fetch Exchange Rates
   useEffect(() => {
@@ -58,12 +106,12 @@ export default function DashboardPage() {
     fetchRates();
   }, []);
 
-  // Listen to Firestore Trades
+  // Listen to Firestore Trades & Connected Accounts
   useEffect(() => {
     if (!user) return;
-    const q = query(collection(db, "users", user.uid, "trades"), orderBy("date", "desc"));
-    const unsubscribe = onSnapshot(
-      q,
+    const qTrades = query(collection(db, "users", user.uid, "trades"), orderBy("date", "desc"));
+    const unsubscribeTrades = onSnapshot(
+      qTrades,
       (snapshot) => {
         const fetchedTrades: Trade[] = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -78,7 +126,20 @@ export default function DashboardPage() {
       }
     );
 
-    return () => unsubscribe();
+    const qAccounts = query(collection(db, "users", user.uid, "accounts"));
+    const unsubscribeAccounts = onSnapshot(qAccounts, (snapshot) => {
+      if (!snapshot.empty) {
+        setLiveAccount({ id: snapshot.docs[0].id, ...snapshot.docs[0].data() });
+        setSyncStatus("Connected");
+      } else {
+        setLiveAccount(null);
+      }
+    });
+
+    return () => {
+      unsubscribeTrades();
+      unsubscribeAccounts();
+    };
   }, [user]);
 
   // Normalize Trades strictly for currency
@@ -184,12 +245,33 @@ export default function DashboardPage() {
           <div className="animate-in fade-in zoom-in-95 duration-300 relative">
             
             {/* Add Trade Button Line */}
-            <div className="mb-6 w-full flex justify-start">
-              {!isTradeModalOpen && (
-                <FloatingActionButton 
-                  onClick={openTradeModal} 
-                  tooltip="Add Trade" 
-                />
+            <div className="mb-6 w-full flex justify-start items-center gap-4">
+              <div className="flex items-center gap-3">
+                {!isTradeModalOpen && (
+                  <FloatingActionButton 
+                    onClick={openTradeModal} 
+                    tooltip="Add Trade" 
+                  />
+                )}
+                {!isConnectModalOpen && (
+                  <FloatingActionButton 
+                    onClick={() => setIsConnectModalOpen(true)} 
+                    tooltip="Connect Live Account" 
+                  />
+                )}
+              </div>
+              
+              {liveAccount && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#0A0D11] border border-white/5 shadow-md fade-in">
+                  {syncStatus === 'Connected' && <Wifi size={14} className="text-emerald-500" />}
+                  {syncStatus === 'Syncing...' && <RefreshCcw size={14} className="text-[#D4AF37] animate-spin" />}
+                  {syncStatus === 'Disconnected' && <WifiOff size={14} className="text-zinc-500" />}
+                  {syncStatus === 'Error' && <AlertTriangle size={14} className="text-red-500" />}
+                  <span className="text-xs font-bold text-[#EAEAEA]">Live Account Connected ({liveAccount.platform?.toUpperCase() || "MT5"})</span>
+                  <span className="text-xs font-mono text-zinc-500 ml-2 border-l border-white/10 pl-2">
+                    {syncStatus} {lastSyncTime && syncStatus !== 'Syncing...' && `(Last: ${new Date(lastSyncTime).toLocaleTimeString()})`}
+                  </span>
+                </div>
               )}
             </div>
 
@@ -215,6 +297,11 @@ export default function DashboardPage() {
 
             {/* Trade Modal Mount */}
             <TradeForm isOpen={isTradeModalOpen} onClose={closeTradeModal} />
+            <ConnectAccountModal 
+              isOpen={isConnectModalOpen} 
+              onClose={() => setIsConnectModalOpen(false)} 
+              onSuccess={() => setIsConnectModalOpen(false)}
+            />
           </div>
         )}
 

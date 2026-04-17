@@ -145,26 +145,16 @@ export default function NewReflectionModal({ isOpen, onClose, dailyJournalLimitR
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
-      
-      {/* Slide-in Drawer */}
-      <div className="relative w-full max-w-[450px] bg-[#0A0A0A] h-full shadow-2xl border-l border-white/10 animate-in slide-in-from-right duration-300 overflow-y-auto custom-scrollbar">
-        <div className="p-6 space-y-8">
-          
-          <div className="flex items-center justify-between border-b border-white/5 pb-4">
-            <h2 className="text-xl font-bold text-[#D4AF37] tracking-tight">New Reflection</h2>
-            <button 
-              onClick={onClose}
-              className="p-2 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white rounded-full transition-colors"
-            >
-              <X size={18} />
-            </button>
-          </div>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={onClose}>
+      <div className="luxury-card rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] scale-100 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/20 shrink-0">
+          <h2 className="text-xl font-bold text-[#D4AF37] tracking-tight">New Reflection</h2>
+          <button onClick={onClose} className="p-1.5 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#D4AF37] hover:bg-white/5 rounded-md transition-colors">
+            <X size={18} />
+          </button>
+        </div>
+        
+        <div className="p-6 overflow-y-auto custom-scrollbar">
 
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-3 relative group">

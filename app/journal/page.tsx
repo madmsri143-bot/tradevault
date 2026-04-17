@@ -12,6 +12,8 @@ import { useTrial, useTrialWindow } from "@/components/TrialGuard";
 import AIScoreCard from "@/components/journal/AIScoreCard";
 import WeeklyReportWidget from "@/components/journal/WeeklyReportWidget";
 import { compressImage, uploadToCloudinary } from "@/lib/imageUtils";
+import FloatingActionButton from "@/components/ui/FloatingActionButton";
+import NewReflectionModal from "@/components/journal/NewReflectionModal";
 
 // Shared compressImage utility
 // Removed image compression logic to lib/imageUtils.ts
@@ -74,19 +76,7 @@ export default function JournalPage() {
   const dailyJournalLimitReached = isFree && todayEntryCount >= 1;
 
   // Form State
-  const [date, setDate] = useState(getTodayDate());
-  const [text, setText] = useState(DEFAULT_PROMPT);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  // Elite System Form State
-  const [moodBefore, setMoodBefore] = useState("");
-  const [moodAfter, setMoodAfter] = useState("");
-  const [mistakes, setMistakes] = useState<string[]>([]);
-  const [qualityScore, setQualityScore] = useState<"A"|"B"|"C"|"D"|"">("");
-  const [pnl, setPnl] = useState<number | "">("");
-  const [slFollowed, setSlFollowed] = useState(false);
+  const [isReflectionModalOpen, setIsReflectionModalOpen] = useState(false);
 
   // Modal States
   const [viewingEntry, setViewingEntry] = useState<JournalEntry | null>(null);
@@ -115,99 +105,6 @@ export default function JournalPage() {
 
     return () => { unsubJournal(); unsubTrades(); };
   }, [user]);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  };
-
-  const toggleMistake = (tag: string) => {
-    setMistakes(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-
-    if (imageFile && imageFile.size > 2 * 1024 * 1024) {
-      await alert({ message: "Max 2MB image allowed", variant: "info" });
-      return;
-    }
-    
-    setSubmitting(true);
-    try {
-      const newEntry: JournalEntry = {
-        date: new Date(date).getTime(),
-        text,
-        moodBefore,
-        moodAfter,
-        mistakes,
-        ...(qualityScore ? { qualityScore: qualityScore as "A"|"B"|"C"|"D" } : {}),
-        ...(pnl !== "" ? { pnl: Number(pnl) } : {}),
-        slFollowed
-      };
-
-      // 🤖 Fetch AI Score
-      let aiResult = null;
-      try {
-        const res = await fetch("/api/ai-score", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newEntry),
-        });
-        if (res.ok) {
-          aiResult = await res.json();
-        }
-      } catch (err) {
-        console.error("AI Scoring fetch error:", err);
-      }
-
-      const dbEntry = {
-        ...newEntry,
-        ...(aiResult && !aiResult.error ? {
-          aiScore: aiResult.score,
-          aiInsight: aiResult.insight,
-          aiMistake: aiResult.mistake,
-          aiSuggestion: aiResult.suggestion,
-        } : {})
-      };
-
-      const docRef = await addDoc(collection(db, "users", user!.uid, "journal"), dbEntry);
-      
-      const fileToUpload = imageFile;
-      
-      // Reset form instantly
-      setDate(getTodayDate());
-      setText(DEFAULT_PROMPT);
-      setImageFile(null);
-      setPreviewUrl(null);
-      setMoodBefore("");
-      setMoodAfter("");
-      setMistakes([]);
-      setQualityScore("");
-      setPnl("");
-      setSlFollowed(false);
-      setSubmitting(false);
-
-      if (fileToUpload) {
-        try {
-          const compressedFile = await compressImage(fileToUpload);
-          const imageUrl = await uploadToCloudinary(compressedFile);
-          await updateDoc(docRef, { imageUrl });
-        } catch (imgError) {
-          console.error("Image upload failed:", imgError);
-          await alert({ message: "Image upload failed, but your journal text was saved." });
-        }
-      }
-    } catch (error) {
-      console.error("Error saving journal entry:", error);
-      await alert({ message: "Failed to save entry." });
-      setSubmitting(false);
-    }
-  };
 
   const handleDelete = async (id?: string) => {
     if (!id || !user) return;
@@ -281,152 +178,17 @@ export default function JournalPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        
-        {/* LEFT PANEL: Elite Form */}
-        <div className="xl:col-span-1">
-          <div className="luxury-card p-5 rounded-2xl shadow-sm">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-sm font-bold tracking-wider uppercase text-[#D4AF37]">New Reflection</h2>
-              <span className="text-[11px] font-bold text-zinc-600 dark:text-[#A0A0A0] luxury-card px-2.5 py-1 rounded-lg">{format(new Date(), "EEEE, MMM dd, yyyy")}</span>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              
-              <div className="space-y-2.5">
-                <label className="luxury-label">Emotional Intelligence</label>
-                <div className="bg-black/20 p-3 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] space-y-4 shadow-inner">
-                  <div>
-                    <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">Before Trade</span>
-                    <div className="flex flex-wrap gap-2">
-                      {MOODS_BEFORE.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodBefore(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodBefore === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-[#EAEAEA]'}`}>
-                          {m}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="h-px bg-white/5" />
-                  <div>
-                    <span className="text-[10px] text-zinc-600 dark:text-[#A0A0A0] mb-2 block uppercase font-bold tracking-widest">After Trade</span>
-                    <div className="flex flex-wrap gap-2">
-                      {MOODS_AFTER.map(m => (
-                        <button key={m} type="button" onClick={() => setMoodAfter(prev => prev === m ? "" : m)} className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${moodAfter === m ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700 hover:text-[#EAEAEA]'}`}>
-                          {m}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {/* Add Reflection Button Line */}
+      <div className="mb-6 w-full flex justify-start">
+        {!isReflectionModalOpen && (
+          <FloatingActionButton 
+            onClick={() => setIsReflectionModalOpen(true)} 
+            tooltip="New Reflection" 
+          />
+        )}
+      </div>
 
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <label className="luxury-label mb-0">Mistake Intelligence</label>
-                  <span className="text-[9px] text-zinc-600 dark:text-[#A0A0A0] uppercase tracking-widest bg-white/5 px-1.5 rounded">Multi-select</span>
-                </div>
-                <div className="flex flex-wrap gap-2 bg-black/20 p-3 rounded-2xl border border-zinc-200 dark:border-[rgba(212,175,55,0.15)] shadow-inner">
-                  {MISTAKE_TAGS.map(tag => (
-                    <button key={tag} type="button" onClick={() => toggleMistake(tag)} className={`text-xs px-2.5 py-1 rounded-full border transition-all ${mistakes.includes(tag) ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:border-zinc-700'}`}>
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2.5">
-                <label className="luxury-label">Execution Score</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {QUALITY_SCORES.map(s => {
-                    const activeColor = 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]';
-                    return (
-                      <button key={s} type="button" onClick={() => setQualityScore(s as any)} className={`py-2 rounded-2xl border font-bold text-sm transition-all ${qualityScore === s ? activeColor : 'bg-transparent border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA] shadow-inner'}`}>
-                        {s}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="luxury-label">Trade PnL ($)</label>
-                  <input
-                    type="number"
-                    value={pnl}
-                    onChange={(e) => setPnl(e.target.value ? Number(e.target.value) : "")}
-                    placeholder="e.g. 150 or -50"
-                    className="luxury-input w-full p-3 h-[46px]"
-                  />
-                </div>
-                <div className="space-y-1.5 flex flex-col justify-end">
-                  <label className={`cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border rounded-2xl transition-all text-xs group shadow-inner ${slFollowed ? 'bg-[#D4AF37]/20 border-[#D4AF37]/50 text-[#D4AF37]' : 'bg-black/20 border-zinc-800 text-zinc-600 dark:text-[#A0A0A0] hover:text-[#EAEAEA]'}`} onClick={() => setSlFollowed(!slFollowed)}>
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${slFollowed ? 'border-[#D4AF37] bg-[#D4AF37] text-zinc-950' : 'border-zinc-700 bg-transparent text-transparent'}`}>
-                       <CheckCircle2 size={12} strokeWidth={4} />
-                    </div>
-                    <span className="font-bold tracking-wide">Followed SL</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="space-y-2.5 relative group">
-                <label className="luxury-label">Smart Reflection</label>
-                <div className="absolute inset-0 bg-[#D4AF37]/5 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none" />
-                <textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  required
-                  rows={8}
-                  className="luxury-input w-full relative h-[200px] resize-none leading-relaxed"
-                />
-              </div>
-
-              <div className="space-y-2.5 flex gap-4">
-                <input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                  className="luxury-input w-1/3 p-2.5 text-xs color-scheme-dark"
-                />
-                <div className="flex-1 relative">
-                  {previewUrl ? (
-                    <div className="relative rounded-2xl overflow-hidden luxury-card h-[46px] group flex items-center shadow-inner">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-30" />
-                      <span className="relative z-10 text-xs text-zinc-900 dark:text-[#EAEAEA] px-4 font-medium truncate">Image attached</span>
-                      <button type="button" onClick={() => { setImageFile(null); setPreviewUrl(null); }} className="absolute z-20 inset-y-0 right-0 px-3 bg-red-500/90 text-zinc-900 dark:text-[#EAEAEA] text-xs font-bold transition-colors">
-                        X
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="cursor-pointer flex items-center justify-center gap-2 w-full h-[46px] border border-dashed border-zinc-700/50 rounded-2xl bg-black/20 hover:border-[#D4AF37]/50 transition-all text-xs text-zinc-600 dark:text-[#A0A0A0] group shadow-inner">
-                      <ImagePlus size={14} className="group-hover:text-[#D4AF37] transition-colors" />
-                      <span className="font-medium group-hover:text-[#D4AF37] transition-colors">Attach Setup</span>
-                      <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
-                    </label>
-                  )}
-                </div>
-              </div>
-
-              {isFree && dailyJournalLimitReached && (
-                <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center gap-2">
-                  <Lock size={14} /> Daily limit reached. Upgrade to log unlimited journal entries.
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={submitting || !text.trim() || (isFree && dailyJournalLimitReached)}
-                className="luxury-button-gold w-full"
-              >
-                {isFree && dailyJournalLimitReached ? "Limit Reached" : submitting ? <><Loader2 size={16} className="animate-spin" /> Logging...</> : "Log Journal Entry"}
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* RIGHT PANEL: Display & Summary */}
-        <div className="xl:col-span-2 space-y-6">
+      <div className="space-y-6">
           
           {/* ELITE DAILY SUMMARY BLOCK */}
           <div className="luxury-card p-5 grid grid-cols-2 md:grid-cols-4 gap-4 tracking-tight relative overflow-hidden">
@@ -539,10 +301,7 @@ export default function JournalPage() {
               })}
             </div>
           </div>
-
-          </div>
         </div>
-      </div>
 
       {/* Selected Date Modal */}
       {selectedDate && (
@@ -741,6 +500,13 @@ export default function JournalPage() {
       {editingEntry && (
         <EditEntryModal entry={editingEntry} onClose={() => setEditingEntry(null)} />
       )}
+
+      <NewReflectionModal
+        isOpen={isReflectionModalOpen}
+        onClose={() => setIsReflectionModalOpen(false)}
+        dailyJournalLimitReached={dailyJournalLimitReached}
+      />
+      </div>
     </div>
   );
 }
