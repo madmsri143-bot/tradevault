@@ -42,7 +42,7 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body className={`${inter.className} ${outfit.variable} dark:bg-black bg-zinc-50 dark:text-zinc-50 text-zinc-900 min-h-screen selection:bg-[rgba(212,175,55,0.3)]`}>
+      <body suppressHydrationWarning className={`${inter.className} ${outfit.variable} dark:bg-black bg-zinc-50 dark:text-zinc-50 text-zinc-900 min-h-screen selection:bg-[rgba(212,175,55,0.3)]`}>
         <ThemeProvider>
           <ModalProvider>
             <AuthProvider>

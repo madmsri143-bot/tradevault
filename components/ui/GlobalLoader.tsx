@@ -48,22 +48,7 @@ export default function GlobalLoader() {
         </div>
       </div>
 
-      <style jsx global>{`
-        @keyframes loading-bar {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        .animate-loading-bar {
-          animation: loading-bar 1.5s infinite linear;
-        }
-        @keyframes bounce-subtle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-        }
-        .animate-bounce-subtle {
-          animation: bounce-subtle 2s infinite ease-in-out;
-        }
-      `}</style>
+
     </div>
   );
 }
